@@ -112,7 +112,8 @@ class ThrowableAuthoringTests(unittest.TestCase):
         attach = gas['explosion.damage.status_3_type']
         self.assertTrue(attach['editable'] and attach['statusAttach'] and attach['allowNone'])
         self.assertIn('fire', attach['allowedValues'])
-        self.assertNotIn('acid_storm', attach['allowedValues'])   # weather: never attachable
+        self.assertIn('acid_storm', attach['allowedValues'])      # 0.31.2: the one reviewed weather exception
+        self.assertNotIn('blizzard', attach['allowedValues'])     # weather: otherwise never attachable
         self.assertFalse(gas['explosion.damage.status_1_type']['allowNone'], 'only the last used slot can be cleared')
         self.assertEqual(attach['acknowledgements'], ['allow_shared', 'allow_unverified_effect'])
         self.assertEqual(run(r"""
@@ -134,7 +135,10 @@ local function refused(request,needle)
 end
 local base={id='x',target=gas,allow_shared=true,allow_unverified_effect=true}
 local function with(t)local r={};for k,v in pairs(base)do r[k]=v end;for k,v in pairs(t)do r[k]=v end;return r end
-refused(with{field='explosion.damage.status_3_type',expect='none',value='acid_storm'},'not attachable')
+refused(with{field='explosion.damage.status_3_type',expect='none',value='blizzard'},'not attachable')
+writes.validate_patch(with{field='explosion.damage.status_3_type',expect='none',value='acid_storm'})
+refused({id='x',target=gas,allow_shared=true,field='explosion.damage.status_3_type',expect='none',
+ value='acid_storm'},'allow_unverified_effect')
 refused(with{field='explosion.damage.status_3_type',expect='none',value='no_such'},'unknown status')
 refused(with{field='explosion.damage.status_3_type',expect='gas',value='fire'},'expect differs')
 refused(with{field='explosion.damage.status_1_type',expect='gas',value='none'},'cannot be cleared')

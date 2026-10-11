@@ -33,30 +33,46 @@ _CACHE = {}
 
 def policy() -> dict:
     """The reviewed attachment extension (schemas/status_attachment_policy.json), checked against the research:
-    semantic ID -> tier. Only statuses no player-side attack applies yet; never a terrain, stim, weather or system
-    status (a weather-family status the game itself applies through enemy slots, such as tremor, is allowed)."""
+    semantic ID -> tier. See check_policy()."""
     if 'policy' not in _CACHE:
-        research = {item['semanticId']: item for item in json.loads(RESEARCH.read_text(encoding='utf-8'))['statuses']}
-        document = json.loads(POLICY.read_text(encoding='utf-8'))
-        tiers, never = set(document['tiers']), set(document['neverAttachable'])
-        result = {}
-        for entry in document['statuses']:
-            name, tier = entry['semanticId'], entry['tier']
-            status = research.get(name)
-            if status is None or tier not in tiers or name in result or name in never:
-                raise ValueError(f'status attachment policy: invalid entry {entry!r}')
-            if status['attachable']:
-                raise ValueError(f'status attachment policy: {name} is already attachable')
-            if (tier == 'enemy_slot') != (status['slotUsers'] > 0):
-                raise ValueError(f'status attachment policy: {name} tier {tier} contradicts its slot users')
-            if tier == 'other_system' and status['family'] in document['neverAttachableFamilies']:
-                raise ValueError(f'status attachment policy: {name} is a {status["family"]} status')
-            result[name] = tier
-        missing = never - set(research)
-        if missing:
-            raise ValueError(f'status attachment policy: unknown statuses {sorted(missing)}')
-        _CACHE['policy'] = {'tiers': result, 'descriptions': document['tiers']}
+        _CACHE['policy'] = check_policy(json.loads(POLICY.read_text(encoding='utf-8')),
+            json.loads(RESEARCH.read_text(encoding='utf-8'))['statuses'])
     return _CACHE['policy']
+
+
+def check_policy(document: dict, statuses: list[dict]) -> dict:
+    """Only statuses no player-side attack applies yet; never a terrain, stim, weather or system status (a
+    weather-family status the game itself applies through enemy slots, such as tremor, is allowed). An other_system
+    entry may pass the family block only with a reviewed, non-empty `familyException` reason (0.31.2: acid_storm,
+    research/docs/acid-storm-attachment-F5FEE03DCFDB.md); the key is refused on any other tier."""
+    research = {item['semanticId']: item for item in statuses}
+    tiers, never = set(document['tiers']), set(document['neverAttachable'])
+    result, exceptions = {}, {}
+    for entry in document['statuses']:
+        name, tier = entry['semanticId'], entry['tier']
+        status = research.get(name)
+        if status is None or tier not in tiers or name in result or name in never:
+            raise ValueError(f'status attachment policy: invalid entry {entry!r}')
+        if status['attachable']:
+            raise ValueError(f'status attachment policy: {name} is already attachable')
+        if (tier == 'enemy_slot') != (status['slotUsers'] > 0):
+            raise ValueError(f'status attachment policy: {name} tier {tier} contradicts its slot users')
+        if 'familyException' in entry:
+            exception = entry['familyException']
+            if tier != 'other_system':
+                raise ValueError(f'status attachment policy: {name} familyException needs the other_system tier')
+            if not isinstance(exception, str) or not exception.strip():
+                raise ValueError(f'status attachment policy: {name} familyException needs a reason')
+            if status['family'] not in document['neverAttachableFamilies']:
+                raise ValueError(f'status attachment policy: {name} familyException without a blocked family')
+            exceptions[name] = exception.strip()
+        elif tier == 'other_system' and status['family'] in document['neverAttachableFamilies']:
+            raise ValueError(f'status attachment policy: {name} is a {status["family"]} status')
+        result[name] = tier
+    missing = never - set(research)
+    if missing:
+        raise ValueError(f'status attachment policy: unknown statuses {sorted(missing)}')
+    return {'tiers': result, 'descriptions': document['tiers'], 'exceptions': exceptions}
 
 
 def load() -> dict:

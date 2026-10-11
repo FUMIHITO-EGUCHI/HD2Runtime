@@ -36,7 +36,7 @@
     "attachPolicy": "schemas/status_attachment_policy.json (0.30.2): enemy_slot and other_system statuses need allow_unverified_effect on every row until a live test passes",
     "blocked": [
       "adding a fifth status (the slot array is fixed at four)",
-      "terrain, stim, weather and system statuses (schemas/status_attachment_policy.json)",
+      "terrain, stim, weather and system statuses, except reviewed per-status family exceptions (schemas/status_attachment_policy.json; 0.31.2: acid_storm)",
       "removing a status from any but the last used slot (it would leave a gap)"
     ],
     "damageRows": 649,
@@ -50,11 +50,11 @@
   },
   "summary": {
     "statuses": 71,
-    "attachable": 34,
+    "attachable": 35,
     "attachableByTier": {
       "player_attack": 11,
       "enemy_slot": 8,
-      "other_system": 15
+      "other_system": 16
     },
     "families": {
       "acid": 2,
@@ -1486,9 +1486,9 @@
       "appliedBy": [],
       "slotUsers": 0,
       "strengthObserved": null,
-      "attachable": false,
-      "attachTier": null,
-      "attachableReason": "no DamageInfo slot applies it (applied by another system)",
+      "attachable": true,
+      "attachTier": "other_system",
+      "attachableReason": "EXPERIMENTAL: the game never applies it through a DamageInfo slot; its definition is an attack effect (damage over time or a debuff), but whether a slot-applied instance behaves like the game's own is unknown. A weather status by origin, but its own status handler lowers the armour of every armoured zone of the target by one level while it lasts, and the game applies it to enemies itself during acid storms.",
       "sharedGlobal": true,
       "assetDependency": "none known: StatusEffectSettings is a global settings table resident in every mission",
       "durationField": "status.duration (shared: every attack applying this status)"

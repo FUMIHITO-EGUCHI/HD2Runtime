@@ -70,7 +70,8 @@ def build():
             'appliedBy': s['knownConsumers'], 'slotUsers': s['slotUsers'],
             'strengthObserved': s['strength'],
             'attachable': attachable(s), 'attachTier': tier(s),
-            'attachableReason': (extension['descriptions'][tiers[s['semanticId']]] if s['semanticId'] in tiers
+            'attachableReason': (' '.join(filter(None, (extension['descriptions'][tiers[s['semanticId']]],
+                    extension['exceptions'].get(s['semanticId'])))) if s['semanticId'] in tiers
                 else s['attachableReason']),
             'sharedGlobal': True,
             'assetDependency': 'none known: StatusEffectSettings is a global settings table resident in every mission',
@@ -109,7 +110,8 @@ def build():
             'attachPolicy': 'schemas/status_attachment_policy.json (0.30.2): enemy_slot and other_system statuses '
                 'need allow_unverified_effect on every row until a live test passes',
             'blocked': ['adding a fifth status (the slot array is fixed at four)',
-                'terrain, stim, weather and system statuses (schemas/status_attachment_policy.json)',
+                'terrain, stim, weather and system statuses, except reviewed per-status family exceptions '
+                    '(schemas/status_attachment_policy.json; 0.31.2: acid_storm)',
                 'removing a status from any but the last used slot (it would leave a gap)'],
             'damageRows': model['damageRows'], 'rowsBySlotsUsed': model['rowsBySlotsUsed']},
         'summary': {'statuses': len(statuses), 'attachable': sum(attachable(s) for s in statuses),

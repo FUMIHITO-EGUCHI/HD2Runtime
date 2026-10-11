@@ -168,11 +168,12 @@ return 'ok'
 ATTACHABLE = {'fire', 'fire_panic', 'burning_heavy', 'stun_small', 'stun_medium', 'stun_large', 'gas', 'gas_2',
     'gas_confusion', 'gas_confusion_2', 'flamer_slowed'}
 # The reviewed extension (schemas/status_attachment_policy.json, 0.30.2): statuses enemies or hazards apply through
-# DamageInfo slots, and attack effects other systems apply. Never terrain, stim, weather or system statuses.
+# DamageInfo slots, and attack effects other systems apply. Never terrain, stim, weather or system statuses, except a
+# reviewed per-status family exception (0.31.2: acid_storm, a weather status whose own handler lowers armour).
 ENEMY_SLOT = {'confusion', 'lava', 'acid_splash', 'choked', 'stun_massive', 'inverted_aim_assist', 'tremor',
     'tornado_stun'}
 OTHER_SYSTEM = {'acid_stream', 'thermite', 'cyborg_fire', 'burning_light', 'radiation_light', 'radiation_heavy',
-    'electric', 'bleed', 'poison', 'gloom', 'slowed', 'rooted', 'blind', 'deaf', 'stun_illuminate'}
+    'electric', 'bleed', 'poison', 'gloom', 'slowed', 'rooted', 'blind', 'deaf', 'stun_illuminate', 'acid_storm'}
 
 
 class StatusTests(unittest.TestCase):
@@ -194,14 +195,18 @@ class StatusTests(unittest.TestCase):
         # the reviewed policy extends the published catalog (0.30.2).
         self.assertFalse(statuses['electric']['attachable'])
         self.assertFalse(statuses['acid_splash']['attachable'])
-        self.assertEqual(self.catalog['summary'], {'statuses': 71, 'attachable': 34,
-            'attachableByTier': {'player_attack': 11, 'enemy_slot': 8, 'other_system': 15},
+        self.assertEqual(self.catalog['summary'], {'statuses': 71, 'attachable': 35,
+            'attachableByTier': {'player_attack': 11, 'enemy_slot': 8, 'other_system': 16},
             'families': self.catalog['summary']['families']})
         published = {s['semanticId']: s for s in self.catalog['statuses']}
         self.assertEqual({k for k, s in published.items() if s['attachTier'] == 'enemy_slot'}, ENEMY_SLOT)
         self.assertEqual({k for k, s in published.items() if s['attachTier'] == 'other_system'}, OTHER_SYSTEM)
         never = {k for k, s in published.items() if not s['attachable']}
-        self.assertTrue({'acid_storm', 'blizzard', 'mud', 'stim_heal', 'pure_damage', 'hidden'} <= never)
+        self.assertTrue({'sandstorm', 'blizzard', 'mud', 'stim_heal', 'pure_damage', 'hidden'} <= never)
+        # The one reviewed family exception: a weather status, attachable on the experimental tier.
+        self.assertEqual((published['acid_storm']['family'], published['acid_storm']['attachTier']),
+            ('weather', 'other_system'))
+        self.assertIn('armour', published['acid_storm']['attachableReason'])
         self.assertTrue(all(published[k]['family'] in ('terrain', 'stim', 'weather', 'system', 'sense') for k in never))
         self.assertNotRegex(json.dumps(self.catalog), r'nativeType|0x[0-9A-Fa-f]{8}')
 
@@ -212,6 +217,30 @@ class StatusTests(unittest.TestCase):
         self.assertFalse(model['packingViolations'])
         self.assertEqual(sum(model['rowsBySlotsUsed'].values()), model['damageRows'])
         self.assertEqual(model['rowsBySlotsUsed']['4'], 0)
+
+    def test_policy_family_exceptions(self):
+        # 0.31.2: a blocked-family status passes only as a reviewed other_system familyException with a reason.
+        import copy
+        import status_fields
+        document = json.loads((ROOT / 'schemas/status_attachment_policy.json').read_text(encoding='utf-8'))
+        statuses = self.research['statuses']
+        self.assertEqual(status_fields.check_policy(document, statuses)['exceptions'].keys(), {'acid_storm'})
+
+        def refused(change, needle):
+            changed = copy.deepcopy(document)
+            change(changed)
+            with self.assertRaisesRegex(ValueError, needle):
+                status_fields.check_policy(changed, statuses)
+
+        def entry(doc, name):
+            return next(item for item in doc['statuses'] if item['semanticId'] == name)
+        refused(lambda doc: entry(doc, 'acid_storm').pop('familyException'), 'acid_storm is a weather status')
+        refused(lambda doc: doc['statuses'].append({'semanticId': 'blizzard', 'tier': 'other_system'}),
+            'blizzard is a weather status')
+        refused(lambda doc: entry(doc, 'acid_storm').update(familyException='  '), 'needs a reason')
+        refused(lambda doc: entry(doc, 'acid_storm').update(familyException=None), 'needs a reason')
+        refused(lambda doc: entry(doc, 'confusion').update(familyException='x'), 'needs the other_system tier')
+        refused(lambda doc: entry(doc, 'electric').update(familyException='x'), 'without a blocked family')
 
     def test_slot_fields(self):
         def slots(name):
@@ -297,7 +326,20 @@ patches.validate{id='x',target=bullets,allow_shared=true,allow_unverified_effect
  field=hd2.fields.damage.status_1_type,expect='none',value='electric'}
 patches.validate{id='x',target=bullets,allow_shared=true,allow_unverified_effect=true,
  field=hd2.fields.damage.status_1_type,expect='none',value='acid_splash'}
-for _,never in ipairs({'acid_storm','stim_heal','pure_damage','mud'})do
+-- 0.31.2: acid_storm (a weather status, reviewed family exception) is attachable on the experimental tier only.
+ok,why=pcall(patches.validate,{id='x',target=bullets,allow_shared=true,
+ field=hd2.fields.damage.status_1_type,expect='none',value='acid_storm'})
+assert(not ok and tostring(why):find('requires allow_unverified_effect',1,true),tostring(why))
+patches.validate{id='x',target=bullets,allow_shared=true,allow_unverified_effect=true,
+ field=hd2.fields.damage.status_1_type,expect='none',value='acid_storm'}
+-- The request behind it: the TX-41 Sterilizer's spray (gas_2, gas_confusion_2) takes acid_storm in slot 3.
+local spray=hd2.support_weapon('TX-41 Sterilizer'):attack('primary')
+local acid={{field=hd2.fields.damage.status_3_type,expect='none',value='acid_storm'},
+ {field=hd2.fields.damage.status_3_strength,expect=0,value=1}}
+ok,why=pcall(transactions.validate,{id='acid',target=spray,allow_shared=true,changes=acid})
+assert(not ok and tostring(why):find('allow_unverified_effect',1,true),tostring(why))
+assert(#transactions.validate{id='acid',target=spray,allow_shared=true,allow_unverified_effect=true,changes=acid}.changes==2)
+for _,never in ipairs({'blizzard','stim_heal','pure_damage','mud'})do
  ok,why=pcall(patches.validate,{id='x',target=bullets,allow_shared=true,allow_unverified_effect=true,
   field=hd2.fields.damage.status_1_type,expect='none',value=never})
  assert(not ok and tostring(why):find('not attachable',1,true),never..': '..tostring(why))

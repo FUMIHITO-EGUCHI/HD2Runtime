@@ -93,19 +93,27 @@ hd2.ensure({plan={id='maxigun-stun',operations={
 ```
 
 - **Values.** A status reference takes catalog semantic IDs, or `'none'`. Only attachable statuses are accepted,
-  plus the slot's current status. 34 of the 71 statuses are attachable (`attachTier` in `StatusEffectCatalog.json`):
+  plus the slot's current status. 35 of the 71 statuses are attachable (`attachTier` in `StatusEffectCatalog.json`):
   - `player_attack` (11): a player-side attack already applies it (fire, fire_panic, burning_heavy, the stuns, the
     gases, flamer_slowed);
   - `enemy_slot` (8, 0.30.2): the game applies it through DamageInfo slots of enemy or hazard attacks (confusion,
     lava, acid_splash, choked, stun_massive, inverted_aim_assist, tremor, tornado_stun);
-  - `other_system` (15, 0.30.2, **experimental**): an attack effect the game applies by other means, never through a
+  - `other_system` (16, 0.30.2, **experimental**): an attack effect the game applies by other means, never through a
     slot (acid_stream, thermite, cyborg_fire, burning_light, radiation_light/heavy, electric, bleed, poison, gloom,
-    slowed, rooted, blind, deaf, stun_illuminate). Whether a slot-applied instance behaves like the game's own is
-    unknown; `bleed` lasts 9999 s by definition.
+    slowed, rooted, blind, deaf, stun_illuminate, and since 0.31.2 acid_storm). Whether a slot-applied instance
+    behaves like the game's own is unknown; `bleed` lasts 9999 s by definition.
 
-  Terrain, stim, weather (including `acid_storm`, the acid-rain weather marker, which carries no damage) and system
-  statuses are never attachable (`schemas/status_attachment_policy.json`). For acid on enemies use `acid_splash` or
-  `acid_stream`.
+  `acid_storm` (0.31.2) is the one weather status that is attachable, as a reviewed exception. Its own status
+  handler lowers the armour of every armoured zone of the target by one level (never below 0) while it is applied,
+  and restores it when it ends: about 1 s after the last hit that applied it. It deals no damage and shows no
+  particles or sound. Some enemy types (about a dozen, among them the Illuminate war machine and the hive lord) are
+  not susceptible to it and are unaffected. Like every status, it is applied only by a hit that penetrates the zone
+  it lands on. Use strength 1: it triggers on the first penetrating hit (0.5 triggers on about half). For damaging
+  acid use `acid_stream` or `acid_splash`; a row with two free slots can take `acid_storm` and one of those. Not
+  live-tested.
+
+  Every other terrain, stim, weather and system status is never attachable (`schemas/status_attachment_policy.json`).
+  For acid damage on enemies use `acid_splash` or `acid_stream`.
 - **The extended statuses always need `allow_unverified_effect`**, on every row, live-proven direct-hit rows
   included: no attack has been live-tested with them.
 - **Packing (0.31.2).** The slots stay packed from slot 1. Slot k takes a status (or a changed strength) only when
@@ -199,7 +207,7 @@ pointers masked.
 - A fifth status: the slot array is fixed at four, and growing it would need object cloning.
 - Stratagem, throwable and booster attacks: their DamageInfo rows have the same slots, but their write domains do not
   yet accept status references.
-- Terrain, stim, weather and system statuses (see Values).
+- Terrain, stim, weather (except `acid_storm`) and system statuses (see Values).
 
 ## Live tests (2026-09-29, [live evidence](live-evidence.md))
 

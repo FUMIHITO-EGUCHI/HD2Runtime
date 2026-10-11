@@ -258,7 +258,7 @@ local worker=coroutine.create(function()
       -- no range: an unknown status and one that no attack can apply (a weather status) are refused instead
       rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,'no_such_status'))end,
        'unknown status','unknown status')
-      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,'acid_storm'))end,
+      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,'blizzard'))end,
        'not attachable','unattachable status')
      else
       rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,field.range.max+1))end,
