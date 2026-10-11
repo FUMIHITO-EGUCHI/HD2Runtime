@@ -53,9 +53,11 @@ class LiveEvidenceTests(unittest.TestCase):
         generate_live_evidence.generate(check=True)
         catalog = load('LiveEvidenceCatalog.json')
         self.assertEqual(catalog['summary']['families'], {
-            'live_proven': ['attack_output_cross_class', 'custom_icon_resource_family',
+            'live_proven': ['attack_output_cross_class', 'beam_conversion_same_mod_reedit_0_31_2',
+                'custom_icon_resource_family',
                 'custom_stratagem_expendable_availability', 'custom_stratagem_expendable_clone',
-                'custom_stratagem_expendable_payload', 'custom_stratagem_weapon_variant', 'donor_row_slot_composition',
+                'custom_stratagem_expendable_payload', 'custom_stratagem_revalidation_stutter_0_31_2',
+                'custom_stratagem_weapon_variant', 'donor_row_slot_composition',
                 'enemy_main_health',
                 'enemy_zone_armor',
                 'event_action_explosion_named', 'event_action_heal', 'event_action_projectile', 'event_action_status',
@@ -96,7 +98,7 @@ class LiveEvidenceTests(unittest.TestCase):
                 'orbital_pattern_fields', 'projectile_homing', 'projectile_more_donors', 'quasar_overheated_cooling_0_31_2', 'sentry_component_fields', 'stratagem_call_in_time', 'support_charge_level_rows',
                 'support_overcharge_explosion_rows', 'support_payload_0_31_2', 'support_projectile_traced_hosts_0_31_2', 'weapon_fire_rate_wind_up', 'weapon_presentation_traits',
                 'weapon_sound_template']})
-        self.assertEqual((catalog['summary']['tests'], catalog['summary']['passed']), (136, 107))   # + WeaponRootsTest (5), 0.30.4 dev2 (2) and dev3 (1), BugHoleEventTest (1), F10 (1)
+        self.assertEqual((catalog['summary']['tests'], catalog['summary']['passed']), (138, 109))   # + WeaponRootsTest (5), 0.30.4 dev2 (2) and dev3 (1), BugHoleEventTest (1), F10 (1), 0.31.2 dev5 (2)
         for name, entry in self.registry['families'].items():
             if entry['status'] == 'live_proven':
                 self.assertTrue(any(t['result'] == 'PASS' for t in live_evidence.tests(name)), name)

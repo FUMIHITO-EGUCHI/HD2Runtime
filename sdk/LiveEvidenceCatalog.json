@@ -19,16 +19,18 @@
   "note": "A failed host is host-path evidence, never evidence against the donor output. null means the test did not establish that part."
  },
  "summary": {
-  "sessions": 53,
-  "tests": 136,
-  "passed": 107,
+  "sessions": 54,
+  "tests": 138,
+  "passed": 109,
   "families": {
    "live_proven": [
     "attack_output_cross_class",
+    "beam_conversion_same_mod_reedit_0_31_2",
     "custom_icon_resource_family",
     "custom_stratagem_expendable_availability",
     "custom_stratagem_expendable_clone",
     "custom_stratagem_expendable_payload",
+    "custom_stratagem_revalidation_stutter_0_31_2",
     "custom_stratagem_weapon_variant",
     "donor_row_slot_composition",
     "enemy_main_health",
@@ -2364,6 +2366,46 @@
    "acknowledgementRemoved": null,
    "nextTests": [
     "a support payload test, solo: the APW-1 impact set to throwable/g6_frag/detonation explodes on hit (the frag package loads first); the AC-8 flak impact set to stratagem/orbital_120mm_he_barrage/shell_impact changes only the flak rounds, the HE rounds keep their own; the RL-77 cluster expiry set to none stops its bomblets; restoring each own value brings the vanilla shot back"
+   ]
+  },
+  "custom_stratagem_revalidation_stutter_0_31_2": {
+   "status": "live_proven",
+   "domain": "stratagem",
+   "fields": [],
+   "scope": "With custom stratagem mods installed, the carrier revalidation every 5 s aboard the ship (the ship allocation and the custom panel's availability view) no longer stutters: one carrier discovery per update shared by every custom stratagem, not one per custom stratagem (0a0f2b9). The user's report on dev5, 2026-10-12, without a log or numbers.",
+   "tests": [
+    "HD2Runtime custom stratagems"
+   ],
+   "acknowledgementRemoved": null,
+   "notPromoted": [
+    "the F10 numbers after the fix (not reported; offline, tests/test_custom_stratagem_performance.py: the worst ship update 93,275 -> 590 reads with three custom stratagems)",
+    "a mission and several players (not reported)",
+    "the F10 Performance tab's lighter drawing (5f82b66, in the same build; not reported separately)"
+   ],
+   "notPromotedNote": "a performance fix; no field or acknowledgement changes",
+   "nextTests": [
+    "the F10 PERFORMANCE tab aboard the ship with every installed custom stratagem mod, sent as a screenshot: the custom stratagems' peak against the 53.8 ms before the fix"
+   ]
+  },
+  "beam_conversion_same_mod_reedit_0_31_2": {
+   "status": "live_proven",
+   "domain": "support_weapon",
+   "fields": [],
+   "scope": "One mod's option-bound ensures on the APW-1 Anti-Materiel Rifle's beam conversion values (the HD2R Editor's) change a value again and revert it without CONFLICT: the settings and per-weapon row checks accept the ensure's own previous value (change.owned, 3d84b89). The user's report on dev4/dev5, 2026-10-12, without a log. Only this re-edit and revert behaviour is promoted; every beam conversion field keeps its acknowledgements.",
+   "tests": [
+    "HD2R Editor (beam conversion)"
+   ],
+   "acknowledgementRemoved": null,
+   "notPromoted": [
+    "the gameplay effect of any beam conversion field or value (allow_unverified_effect and allow_component_swap still apply)",
+    "beam conversion on any weapon other than the APW-1",
+    "another mod's operation or a writer outside HD2Runtime being refused with CONFLICT (offline only)",
+    "a rate-only request keeping an explicitly set pulse (offline only)",
+    "multiplayer"
+   ],
+   "notPromotedNote": "every beam conversion write still needs allow_component_swap and allow_unverified_effect",
+   "nextTests": [
+    "the same editor session with the HD2Runtime.log sent: beam.fire_rate 300 -> 60 -> 120 -> 300 and the beam pulse, each APPLIED, with no CONFLICT line"
    ]
   }
  },
@@ -5244,6 +5286,30 @@
      "family": "f10_performance_tab",
      "writes": [],
      "observation": "The user opened the PERFORMANCE tab in game and reported that the metric works. Which mods and parts were listed, the numbers, the Interface size and the panel's own cost were not reported."
+    }
+   ]
+  },
+  {
+   "id": "hotfix-0-31-2-dev5-2026-10-12",
+   "date": "2026-10-12",
+   "runtime": "HD2Runtime 0.31.2 development dev4 (build/0.31.2-dev4/HD2Runtime-0.31.1-runtime.zip, B45090F3...2E7; commit 5f9124e) and dev5 (build/0.31.2-dev5/HD2Runtime-0.31.1-runtime.zip, E8365295...F89D; commit 5f82b66), with the HD2R Editor 0.9.3-dev-f491c9e (its payload category fix, editor-side, also reported working; not a Runtime capability, so no family). Played 2026-10-11/12. The user's verbal report (\"it works really well. same with the previous fixes before this fix\"); no log or screenshot.",
+   "logSignals": [],
+   "tests": [
+    {
+     "mod": "HD2Runtime custom stratagems",
+     "operation": "carrier revalidation aboard the ship (0a0f2b9)",
+     "result": "PASS",
+     "family": "custom_stratagem_revalidation_stutter_0_31_2",
+     "writes": [],
+     "observation": "Before the fix the user reported a periodic stutter with custom stratagem mods and an F10 Performance tab peak of 53.8 ms for the custom stratagems, one long update about every 5 s. On dev5 the user reported that the fix works really well. The F10 numbers after the fix, the installed custom stratagem mods and whether the check covered a mission or several players were not reported."
+    },
+    {
+     "mod": "HD2R Editor (beam conversion)",
+     "operation": "repeated edits and revert of the APW-1 Anti-Materiel Rifle's beam conversion values (3d84b89)",
+     "result": "PASS",
+     "family": "beam_conversion_same_mod_reedit_0_31_2",
+     "writes": [],
+     "observation": "Before the fix the user's editor applied beam.fire_rate 300 -> 60 on the APW-1, then every later change and the reset to 300 were refused with CONFLICT until a restart. On these builds the user reported that this fix works too: the values are edited again and reverted. Which fields and values were edited, the pulse and the gameplay effect of each value were not reported (no log)."
     }
    ]
   }

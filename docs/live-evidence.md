@@ -107,6 +107,8 @@ Composition tests record four separate facts: the donor output works, the refere
 | `quasar_overheated_cooling_0_31_2` | pending | `heat.cool_per_second_overheated` | The LAS-99 Quasar Cannon's own WeaponHeat +140 (sole owner): the heat lost per second while overheated, read every frame by the heat step only when +144 is 0; the lockout is (100 - 0) / 6.66 = 15 s. Code-proven offline in research/overheat-cooling-F5FEE03DCFDB.json. | unchanged |
 | `support_projectile_traced_hosts_0_31_2` | pending | `attack.<role>.projectile` | Projectile swaps on the LAS-99 Quasar Cannon (heat) and the RS-422 Railgun (charge): hosts outside the live controls' magazine-fed structure, admitted by the offline fired-type trace (research/fired-type-callers-F5FEE03DCFDB.json); every donor also needs allow_unverified_reference (HOST_STRUCTURE_UNVERIFIED). Offline evidence: validation/projectile-builder-snapshot.json. | unchanged |
 | `support_payload_0_31_2` | pending | `terminal.<role>.<phase>.explosion` | Impact and expiry payloads on support weapons (scripts/payload_fields.py): the ExplosionType members of the projectile row an attack fires, per feed (primary, programmable, charge levels, rounds feed), with any catalogued explosion whose package is known (domains/payload_options.lua). Offline evidence: validation/explosion-catalogue-snapshot.json (supportPayloadWrites, supportRecursion), research/support-weapon-authoring-validation-F5FEE03DCFDB.json (payloadTerminals). | unchanged |
+| `custom_stratagem_revalidation_stutter_0_31_2` | live-proven |  | With custom stratagem mods installed, the carrier revalidation every 5 s aboard the ship (the ship allocation and the custom panel's availability view) no longer stutters: one carrier discovery per update shared by every custom stratagem, not one per custom stratagem (0a0f2b9). The user's report on dev5, 2026-10-12, without a log or numbers. | unchanged |
+| `beam_conversion_same_mod_reedit_0_31_2` | live-proven |  | One mod's option-bound ensures on the APW-1 Anti-Materiel Rifle's beam conversion values (the HD2R Editor's) change a value again and revert it without CONFLICT: the settings and per-weapon row checks accept the ensure's own previous value (change.owned, 3d84b89). The user's report on dev4/dev5, 2026-10-12, without a log. Only this re-edit and revert behaviour is promoted; every beam conversion field keeps its acknowledgements. | unchanged |
 
 ## Notes
 
@@ -422,6 +424,14 @@ Composition tests record four separate facts: the donor output works, the refere
 **`status_effect_definition_0_30_4`**
 - Observation: 0.1.0 on 0.30.4-dev2: fire 3 -> 10 s and 100 -> 300 per tick, gas 25 -> 100 per tick applied cleanly and read back through hd2.inspect; the effect in play was not reported.
 - Not promoted (still need `allow_unverified_effect`): every field: the gameplay effect is not reported yet.
+
+**`custom_stratagem_revalidation_stutter_0_31_2`**
+- Not promoted (a performance fix; no field or acknowledgement changes): the F10 numbers after the fix (not reported; offline, tests/test_custom_stratagem_performance.py: the worst ship update 93,275 -> 590 reads with three custom stratagems), a mission and several players (not reported), the F10 Performance tab's lighter drawing (5f82b66, in the same build; not reported separately).
+- Next tests: `the F10 PERFORMANCE tab aboard the ship with every installed custom stratagem mod, sent as a screenshot: the custom stratagems' peak against the 53.8 ms before the fix`.
+
+**`beam_conversion_same_mod_reedit_0_31_2`**
+- Not promoted (every beam conversion write still needs allow_component_swap and allow_unverified_effect): the gameplay effect of any beam conversion field or value (allow_unverified_effect and allow_component_swap still apply), beam conversion on any weapon other than the APW-1, another mod's operation or a writer outside HD2Runtime being refused with CONFLICT (offline only), a rate-only request keeping an explicitly set pulse (offline only), multiplayer.
+- Next tests: `the same editor session with the HD2Runtime.log sent: beam.fire_rate 300 -> 60 -> 120 -> 300 and the beam pulse, each APPLIED, with no CONFLICT line`.
 
 ## Session coverage-pass-2026-09-29
 
@@ -1021,3 +1031,12 @@ Runtime: HD2Runtime 0.31.1 development dev4 (build/0.31.1-dev4/HD2Runtime-0.31.0
 | Mod | Result | Writes | Donor / write / host reads / output changed | Observation |
 | --- | --- | --- | --- | --- |
 | HD2Runtime F10 panel | pass |  |  | The user opened the PERFORMANCE tab in game and reported that the metric works. Which mods and parts were listed, the numbers, the Interface size and the panel's own cost were not reported. |
+
+## Session hotfix-0-31-2-dev5-2026-10-12
+
+Runtime: HD2Runtime 0.31.2 development dev4 (build/0.31.2-dev4/HD2Runtime-0.31.1-runtime.zip, B45090F3...2E7; commit 5f9124e) and dev5 (build/0.31.2-dev5/HD2Runtime-0.31.1-runtime.zip, E8365295...F89D; commit 5f82b66), with the HD2R Editor 0.9.3-dev-f491c9e (its payload category fix, editor-side, also reported working; not a Runtime capability, so no family). Played 2026-10-11/12. The user's verbal report ("it works really well. same with the previous fixes before this fix"); no log or screenshot..
+
+| Mod | Result | Writes | Donor / write / host reads / output changed | Observation |
+| --- | --- | --- | --- | --- |
+| HD2Runtime custom stratagems | pass |  |  | Before the fix the user reported a periodic stutter with custom stratagem mods and an F10 Performance tab peak of 53.8 ms for the custom stratagems, one long update about every 5 s. On dev5 the user reported that the fix works really well. The F10 numbers after the fix, the installed custom stratagem mods and whether the check covered a mission or several players were not reported. |
+| HD2R Editor (beam conversion) | pass |  |  | Before the fix the user's editor applied beam.fire_rate 300 -> 60 on the APW-1, then every later change and the reset to 300 were refused with CONFLICT until a restart. On these builds the user reported that this fix works too: the values are edited again and reverted. Which fields and values were edited, the pulse and the gameplay effect of each value were not reported (no log). |
