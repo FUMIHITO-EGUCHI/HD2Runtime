@@ -108,6 +108,23 @@ has been tested in game.
   Fire (type 5) and Stun Large (type 39) are named by correlation across several throwables. The gas labels
   ("Gas", "Gas Confusion") rest on slot order only and are marked unconfirmed. The status fields themselves
   are native-proven either way.
+- **Adding or swapping a status (0.31.1, not live-tested).** The explosion's DamageInfo status slots are fields of
+  `:explosion()`, the same model as a weapon explosion's (`sdk/StatusEffectCatalog.json`, "attachmentModel"):
+  - `explosion.damage.status_<k>_type` for each used slot: its status, a catalog ID (`'gas'`, `'fire'`, ...);
+  - the first empty slot's `status_<k>_type` and `status_<k>_strength`: a new status and its strength.
+
+  The values are the 34 attachable statuses. Weather, terrain, stim and system statuses (Acid Storm included) are
+  never attachable: their definitions carry no attack effect. The slots stay packed from slot 1, so only the last
+  used slot can be cleared (`'none'`). Each field needs `allow_shared` (the row is a settings definition) and
+  `allow_unverified_effect`. Every write re-reads the live status table's names, like a weapon's slot.
+
+  ```lua
+  -- the G-4 Gas also sets enemies on fire (its third slot)
+  hd2.transaction{id='gas-fire', target=hd2.throwable('G-4 Gas'):explosion(), allow_shared=true,
+      allow_unverified_effect=true, changes={
+          {field='explosion.damage.status_3_type', expect='none', value='fire'},
+          {field='explosion.damage.status_3_strength', expect=0, value=100}}}
+  ```
 - **Submunitions.** The G-7 Pineapple's bomblet projectile reuses the grenade's own explosion DamageInfo for
   its direct hit. That row is published once, under the grenade's explosion. Each bomblet's own explosion is
   `:bomblets():explosion()`.

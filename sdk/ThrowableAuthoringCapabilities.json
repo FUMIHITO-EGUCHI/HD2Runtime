@@ -654,6 +654,111 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-12-high-explosive:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-12-high-explosive:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         }
@@ -1357,6 +1462,111 @@
                 "wikiFingerprint": {
                   "status": "exact",
                   "wiki": 40
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-6-frag:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-6-frag:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
                 },
                 "gameplayWriteEffect": "unproven"
               }
@@ -2509,6 +2719,180 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-10-incendiary:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "fire",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": false,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-10-incendiary:explosion:explosion.damage.status_2_type",
+              "semanticFieldId": "explosion.damage.status_2_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_type",
+              "displayName": "Explosion status 2",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 2,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-10-incendiary:explosion:explosion.damage.status_2_strength",
+              "semanticFieldId": "explosion.damage.status_2_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_strength",
+              "displayName": "Explosion status 2 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 2,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         },
@@ -3283,6 +3667,111 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:ted-63-dynamite:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:ted-63-dynamite:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         }
@@ -4005,6 +4494,111 @@
                 "wikiFingerprint": {
                   "status": "exact",
                   "wiki": 40
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-7-pineapple:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-7-pineapple:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
                 },
                 "gameplayWriteEffect": "unproven"
               }
@@ -5285,6 +5879,111 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-16-impact:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-16-impact:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         }
@@ -6302,6 +7001,180 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-23-stun:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "stun_large",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": false,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-23-stun:explosion:explosion.damage.status_2_type",
+              "semanticFieldId": "explosion.damage.status_2_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_type",
+              "displayName": "Explosion status 2",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 2,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-23-stun:explosion:explosion.damage.status_2_strength",
+              "semanticFieldId": "explosion.damage.status_2_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_strength",
+              "displayName": "Explosion status 2 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 2,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         },
@@ -7075,6 +7948,111 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-123-thermite:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-123-thermite:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         }
@@ -7747,6 +8725,180 @@
                 "wikiFingerprint": {
                   "status": "exact",
                   "wiki": 15
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-13-incendiary-impact:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "fire",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": false,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-13-incendiary-impact:explosion:explosion.damage.status_2_type",
+              "semanticFieldId": "explosion.damage.status_2_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_type",
+              "displayName": "Explosion status 2",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 2,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-13-incendiary-impact:explosion:explosion.damage.status_2_strength",
+              "semanticFieldId": "explosion.damage.status_2_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_strength",
+              "displayName": "Explosion status 2 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 2,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
                 },
                 "gameplayWriteEffect": "unproven"
               }
@@ -9022,6 +10174,249 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-4-gas:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "gas",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": false,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": false,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-4-gas:explosion:explosion.damage.status_2_type",
+              "semanticFieldId": "explosion.damage.status_2_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_type",
+              "displayName": "Explosion status 2",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "gas_confusion",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 2,
+              "statusAttach": false,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-4-gas:explosion:explosion.damage.status_3_type",
+              "semanticFieldId": "explosion.damage.status_3_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_3_type",
+              "displayName": "Explosion status 3",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 3,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 3 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-4-gas:explosion:explosion.damage.status_3_strength",
+              "semanticFieldId": "explosion.damage.status_3_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_3_strength",
+              "displayName": "Explosion status 3 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 3,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 3 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         },
@@ -9904,6 +11299,111 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-50-seeker:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-50-seeker:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         }
@@ -10574,6 +12074,180 @@
                 "wikiFingerprint": {
                   "status": "exact",
                   "wiki": 40
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-142-pyrotech:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "fire",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": false,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-142-pyrotech:explosion:explosion.damage.status_2_type",
+              "semanticFieldId": "explosion.damage.status_2_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_type",
+              "displayName": "Explosion status 2",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 2,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-142-pyrotech:explosion:explosion.damage.status_2_strength",
+              "semanticFieldId": "explosion.damage.status_2_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_strength",
+              "displayName": "Explosion status 2 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 2,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
                 },
                 "gameplayWriteEffect": "unproven"
               }
@@ -11359,6 +13033,180 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-109-urchin:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "stun_large",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": false,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-109-urchin:explosion:explosion.damage.status_2_type",
+              "semanticFieldId": "explosion.damage.status_2_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_type",
+              "displayName": "Explosion status 2",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 2,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-109-urchin:explosion:explosion.damage.status_2_strength",
+              "semanticFieldId": "explosion.damage.status_2_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_strength",
+              "displayName": "Explosion status 2 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 2,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         },
@@ -12134,6 +13982,111 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-31-arc:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-31-arc:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         }
@@ -12839,6 +14792,111 @@
                 "wikiFingerprint": {
                   "status": "exact",
                   "wiki": 40
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:tm-1-lure-mine:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:tm-1-lure-mine:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
                 },
                 "gameplayWriteEffect": "unproven"
               }
@@ -14349,6 +16407,109 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-sh-39-shield:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": false,
+              "reason": "No wiki explosion fingerprint for this throwable; the native explosion is published read-only.",
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared"
+              ],
+              "acknowledgementReason": null,
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-sh-39-shield:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": false,
+              "reason": "No wiki explosion fingerprint for this throwable; the native explosion is published read-only.",
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared"
+              ],
+              "acknowledgementReason": null,
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         },
@@ -15099,6 +17260,111 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-48-giga-grenade:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-48-giga-grenade:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         }
@@ -15761,6 +18027,111 @@
                 "wikiFingerprint": {
                   "status": "exact",
                   "wiki": 40
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-40-k-melta-mine:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-40-k-melta-mine:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
                 },
                 "gameplayWriteEffect": "unproven"
               }
@@ -16479,6 +18850,180 @@
                 "wikiFingerprint": {
                   "status": "exact",
                   "wiki": 0
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-8-immolation:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "fire",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": false,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-8-immolation:explosion:explosion.damage.status_2_type",
+              "semanticFieldId": "explosion.damage.status_2_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_type",
+              "displayName": "Explosion status 2",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 2,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-8-immolation:explosion:explosion.damage.status_2_strength",
+              "semanticFieldId": "explosion.damage.status_2_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_2_strength",
+              "displayName": "Explosion status 2 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 2,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 2 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
                 },
                 "gameplayWriteEffect": "unproven"
               }
@@ -17253,6 +19798,111 @@
                 },
                 "gameplayWriteEffect": "unproven"
               }
+            },
+            {
+              "instanceKey": "throwable:g-60-anti-tank-seeker:explosion:explosion.damage.status_1_type",
+              "semanticFieldId": "explosion.damage.status_1_type",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type",
+              "displayName": "Explosion status 1",
+              "type": "status_reference",
+              "unit": null,
+              "baseline": "none",
+              "editable": true,
+              "reason": null,
+              "range": null,
+              "statusSlot": 1,
+              "statusAttach": true,
+              "allowedValues": [
+                "blind",
+                "bleed",
+                "deaf",
+                "confusion",
+                "fire",
+                "lava",
+                "fire_panic",
+                "slowed",
+                "rooted",
+                "acid_splash",
+                "acid_stream",
+                "thermite",
+                "cyborg_fire",
+                "choked",
+                "burning_light",
+                "burning_heavy",
+                "radiation_light",
+                "radiation_heavy",
+                "electric",
+                "stun_small",
+                "stun_medium",
+                "stun_large",
+                "stun_massive",
+                "stun_illuminate",
+                "gas",
+                "gas_2",
+                "gas_confusion",
+                "gas_confusion_2",
+                "inverted_aim_assist",
+                "tremor",
+                "tornado_stun",
+                "flamer_slowed",
+                "gloom",
+                "poison"
+              ],
+              "allowNone": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
+            },
+            {
+              "instanceKey": "throwable:g-60-anti-tank-seeker:explosion:explosion.damage.status_1_strength",
+              "semanticFieldId": "explosion.damage.status_1_strength",
+              "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength",
+              "displayName": "Explosion status 1 strength",
+              "type": "number",
+              "unit": "factor",
+              "baseline": 0.0,
+              "editable": true,
+              "reason": null,
+              "range": {
+                "min": 0,
+                "max": 1000,
+                "integer": false
+              },
+              "statusSlot": 1,
+              "statusAttach": true,
+              "acknowledgements": [
+                "allow_shared",
+                "allow_unverified_effect"
+              ],
+              "acknowledgementReason": "The native owner and value are proven (typed chain plus exact wiki fingerprint where published), but no in-game test has confirmed the effect of a changed value.",
+              "scope": {
+                "shared": true,
+                "kind": "settings_definition",
+                "note": "Status slot 1 of this explosion's DamageInfo row (every hit of the explosion applies it). Settings rows are global definitions. Every consumer reached through typed native references is listed, but code-selected consumers cannot be excluded, so every edit requires allow_shared=true."
+              },
+              "evidence": {
+                "tier": "native_member",
+                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "wikiFingerprint": {
+                  "status": "not_published"
+                },
+                "gameplayWriteEffect": "unproven"
+              }
             }
           ]
         }
@@ -17613,6 +20263,90 @@
       "apiFieldConstant": "hd2.fields.projectile.gravity"
     },
     {
+      "id": "explosion.damage.status_1_type",
+      "display_name": "Explosion status 1",
+      "type": "status_reference",
+      "unit": null,
+      "range": null,
+      "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+      "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type"
+    },
+    {
+      "id": "explosion.damage.status_1_strength",
+      "display_name": "Explosion status 1 strength",
+      "type": "number",
+      "unit": "factor",
+      "range": [
+        0,
+        1000
+      ],
+      "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+      "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength"
+    },
+    {
+      "id": "explosion.damage.status_2_type",
+      "display_name": "Explosion status 2",
+      "type": "status_reference",
+      "unit": null,
+      "range": null,
+      "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+      "apiFieldConstant": "hd2.fields.explosion.damage_status_2_type"
+    },
+    {
+      "id": "explosion.damage.status_2_strength",
+      "display_name": "Explosion status 2 strength",
+      "type": "number",
+      "unit": "factor",
+      "range": [
+        0,
+        1000
+      ],
+      "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+      "apiFieldConstant": "hd2.fields.explosion.damage_status_2_strength"
+    },
+    {
+      "id": "explosion.damage.status_3_type",
+      "display_name": "Explosion status 3",
+      "type": "status_reference",
+      "unit": null,
+      "range": null,
+      "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+      "apiFieldConstant": "hd2.fields.explosion.damage_status_3_type"
+    },
+    {
+      "id": "explosion.damage.status_3_strength",
+      "display_name": "Explosion status 3 strength",
+      "type": "number",
+      "unit": "factor",
+      "range": [
+        0,
+        1000
+      ],
+      "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+      "apiFieldConstant": "hd2.fields.explosion.damage_status_3_strength"
+    },
+    {
+      "id": "explosion.damage.status_4_type",
+      "display_name": "Explosion status 4",
+      "type": "status_reference",
+      "unit": null,
+      "range": null,
+      "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+      "apiFieldConstant": "hd2.fields.explosion.damage_status_4_type"
+    },
+    {
+      "id": "explosion.damage.status_4_strength",
+      "display_name": "Explosion status 4 strength",
+      "type": "number",
+      "unit": "factor",
+      "range": [
+        0,
+        1000
+      ],
+      "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+      "apiFieldConstant": "hd2.fields.explosion.damage_status_4_strength"
+    },
+    {
       "id": "status.strength",
       "display_name": "Status applied per hit",
       "type": "number",
@@ -17678,16 +20412,16 @@
     "throwables": 23,
     "resolved": 23,
     "writableThrowables": 23,
-    "fieldInstances": 411,
-    "writableFieldInstances": 388,
-    "sharedFieldInstances": 316,
+    "fieldInstances": 459,
+    "writableFieldInstances": 434,
+    "sharedFieldInstances": 364,
     "fieldsByTarget": {
       "bomblet_explosion": 12,
       "bomblets": 4,
       "damage": 9,
       "detonation": 22,
       "entity": 2,
-      "explosion": 249,
+      "explosion": 297,
       "shield": 2,
       "shrapnel": 26,
       "status_effect": 16,
@@ -17699,7 +20433,7 @@
       "damage": 9,
       "detonation": 11,
       "entity": 2,
-      "explosion": 237,
+      "explosion": 283,
       "shield": 2,
       "shrapnel": 26,
       "status_effect": 16,

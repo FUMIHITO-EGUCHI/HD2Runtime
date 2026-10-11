@@ -32,7 +32,9 @@ class ThrowableAuthoringTests(unittest.TestCase):
         self.assertEqual(self.catalog['contract'], 'hd2runtime.throwable.guarded_authoring.v1')
         summary = self.catalog['summary']
         self.assertEqual((summary['throwables'], summary['resolved'], summary['writableThrowables']), (23, 23, 23))
-        self.assertEqual((summary['fieldInstances'], summary['writableFieldInstances']), (411, 388))
+        # 0.31.1: + the explosion DamageInfo status slots (each used slot's status, the first empty slot's status and
+        # strength) on every throwable explosion row: 48 fields, 46 writable.
+        self.assertEqual((summary['fieldInstances'], summary['writableFieldInstances']), (459, 434))
 
     def test_every_wiki_throwable_resolves_to_one_native_entity(self):
         self.assertEqual(tuple(item['name'] for item in self.research['catalog']), NAMES)
@@ -95,6 +97,46 @@ class ThrowableAuthoringTests(unittest.TestCase):
         gas = [t for t in self.throwables['G-4 Gas']['targets'] if t['path'] == 'status_effect']
         self.assertEqual([t['key'] for t in gas], ['gas', 'gas-confusion'])
         self.assertTrue(all('unconfirmed' in t['labelConfidence'] for t in gas))
+
+    def test_explosion_status_slots_take_a_status_in_the_first_empty_slot(self):
+        # 0.31.1 (a player request: "the gas grenade has no space to add statuses"): the G-4 Gas explosion applies
+        # Gas and Gas Confusion (slots 1 and 2); slot 3 takes a status and its strength, like a weapon explosion's.
+        gas = self.targets[('G-4 Gas', 'explosion', None)]
+        self.assertEqual({k: v['baseline'] for k, v in gas.items() if '.status_' in k},
+            {'explosion.damage.status_1_type': 'gas', 'explosion.damage.status_2_type': 'gas_confusion',
+             'explosion.damage.status_3_type': 'none', 'explosion.damage.status_3_strength': 0.0})
+        attach = gas['explosion.damage.status_3_type']
+        self.assertTrue(attach['editable'] and attach['statusAttach'] and attach['allowNone'])
+        self.assertIn('fire', attach['allowedValues'])
+        self.assertNotIn('acid_storm', attach['allowedValues'])   # weather: never attachable
+        self.assertFalse(gas['explosion.damage.status_1_type']['allowNone'], 'only the last used slot can be cleared')
+        self.assertEqual(attach['acknowledgements'], ['allow_shared', 'allow_unverified_effect'])
+        self.assertEqual(run(r"""
+local hd2=require('hd2runtime/api/session').new({},function()end)
+local writes=require('hd2runtime/domains/throwable_writes')
+local gas=hd2.throwable('G-4 Gas'):explosion()
+local spec=writes.validate_transaction{id='gas-fire',target=gas,allow_shared=true,allow_unverified_effect=true,
+ changes={{field='explosion.damage.status_3_type',expect='none',value='fire'},
+  {field='explosion.damage.status_3_strength',expect=0,value=100}}}
+assert(#spec.changes==2 and spec.changes[1].status_type==require('hd2runtime/domains/status_catalog').statuses.fire.nativeType)
+local function refused(request,needle)
+ local ok,why=pcall(writes.validate_patch,request)
+ assert(not ok and tostring(why):find(needle,1,true),tostring(why))
+end
+local base={id='x',target=gas,allow_shared=true,allow_unverified_effect=true}
+local function with(t)local r={};for k,v in pairs(base)do r[k]=v end;for k,v in pairs(t)do r[k]=v end;return r end
+refused(with{field='explosion.damage.status_3_type',expect='none',value='acid_storm'},'not attachable')
+refused(with{field='explosion.damage.status_3_type',expect='none',value='no_such'},'unknown status')
+refused(with{field='explosion.damage.status_3_type',expect='gas',value='fire'},'expect differs')
+refused(with{field='explosion.damage.status_1_type',expect='gas',value='none'},'cannot be cleared')
+refused(with{field='explosion.damage.status_3_type',expect='none',value=3},'semantic ID')
+refused({id='x',target=gas,allow_unverified_effect=true,field='explosion.damage.status_3_type',expect='none',
+ value='fire'},'allow_shared')
+-- the last used slot can be swapped or cleared
+writes.validate_patch(with{field='explosion.damage.status_2_type',expect='gas_confusion',value='none'})
+writes.validate_patch(with{field='explosion.damage.status_1_type',expect='gas',value='stun_small'})
+return 'ok'
+"""), b'ok')
 
     def test_fuse_is_never_flattened_or_invented(self):
         dynamite = self.throwables['TED-63 Dynamite']['detonation']

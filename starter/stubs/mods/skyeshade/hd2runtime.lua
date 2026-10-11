@@ -1715,6 +1715,9 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@field damage_status_2_type "explosion.damage.status_2_type"
 ---@field damage_status_3_strength "explosion.damage.status_3_strength"
 ---@field damage_status_3_type "explosion.damage.status_3_type"
+---@field damage_status_2_strength "explosion.damage.status_2_strength"
+---@field damage_status_4_type "explosion.damage.status_4_type"
+---@field damage_status_4_strength "explosion.damage.status_4_strength"
 
 ---@class HD2Fields_fire_mode
 ---@field burst_rounds "fire_mode.burst_rounds"

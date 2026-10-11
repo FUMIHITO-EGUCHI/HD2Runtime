@@ -122,8 +122,22 @@ local function rejects(fn,needle,label)
  assert(tostring(why):find(needle,1,true),label..' rejected for the wrong reason: '..tostring(why))
  return true
 end
--- A changed value that stays inside the reviewed range and storage.
+-- A status slot (0.31.1): its value is a status semantic ID; the bytes are the status's native type.
+local status_catalog=require('hd2runtime/domains/status_catalog')
+local function native_status(id)return id=='none'and 0 or status_catalog.statuses[id].nativeType end
+local function encode(field,value)
+ if field.type=='status_reference'then return b.encode(native_status(value),'u32')end
+ return b.encode(value,field.backing.storage)
+end
+-- A changed value that stays inside the reviewed range and storage (a status slot: another attachable status).
 local function changed(field)
+ if field.type=='status_reference'then
+  local pick=field.currentDefault=='fire'and'stun_small'or'fire'
+  local ok=false
+  for _,id in ipairs(field.allowedValues)do if id==pick then ok=true end end
+  assert(ok,'no attachable replacement status for '..field.instanceKey)
+  return pick
+ end
  local v=field.currentDefault;local range=field.range
  local candidate=field.type=='integer'and v+1 or(v==0 and 0.5 or v*1.25)
  if candidate>range.max then candidate=field.type=='integer'and v-1 or (v+range.min)/2 end
@@ -167,7 +181,7 @@ local worker=coroutine.create(function()
      writable=writable or id
      -- 1. reviewed baseline and guarded no-op
      local plan=resolve(domain.validate_patch(request(name,owned,id,field.currentDefault,field.currentDefault)))
-     assert(plan.changes[1].before==b.encode(field.currentDefault,field.backing.storage),
+     assert(plan.changes[1].before==encode(field,field.currentDefault),
       'live bytes differ from the reviewed baseline: '..field.instanceKey)
      local checked=guarded.apply(runtime,plan)
      assert(checked.status=='ALREADY_DESIRED'and checked.writes==0 and checked.protection_changes==0,
@@ -193,7 +207,8 @@ local worker=coroutine.create(function()
      for _ in pairs(protection)do error('page protection not restored for '..field.instanceKey)end
      result.changedWrites=result.changedWrites+1;result.rollbacks=result.rollbacks+1
      -- 3. third-party value at the target
-     local third=field.backing.storage=='f32'and b.encode(f32(field.currentDefault)+7,'f32')
+     local third=field.type=='status_reference'and b.encode(native_status(field.currentDefault)+7,'u32')
+      or field.backing.storage=='f32'and b.encode(f32(field.currentDefault)+7,'f32')
       or b.encode(field.currentDefault+7,field.backing.storage)
      poke(change.owner.base+change.offset,third)
      rejects(function()resolve(spec)end,'CONFLICT','conflict')
@@ -211,10 +226,18 @@ local worker=coroutine.create(function()
        {allow_shared=false}))end,'allow_shared','missing shared acknowledgement')
       result.acknowledgementRejections=result.acknowledgementRejections+1
      end
-     rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,field.range.max+1))end,
-      'reviewed range','range above')
-     rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,field.range.min-1))end,
-      'reviewed range','range below')
+     if field.type=='status_reference'then
+      -- no range: an unknown status and one that no attack can apply (a weather status) are refused instead
+      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,'no_such_status'))end,
+       'unknown status','unknown status')
+      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,'acid_storm'))end,
+       'not attachable','unattachable status')
+     else
+      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,field.range.max+1))end,
+       'reviewed range','range above')
+      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,field.range.min-1))end,
+       'reviewed range','range below')
+     end
      result.rangeRejections=result.rangeRejections+2
     end
    end

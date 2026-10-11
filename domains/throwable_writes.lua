@@ -9,6 +9,7 @@ local discover=require('hd2runtime/runtime/discover')
 local entities=require('hd2runtime/core/entity_catalog')
 local profile=require('hd2runtime/schemas/current')
 local database=require('hd2runtime/domains/throwable_authoring')
+local status_catalog=require('hd2runtime/domains/status_catalog')
 local M={}
 local component_names={'ThrowableComponentData','ExplosiveComponentData','StickyComponentData',
     'ShieldComponentData','HealthComponentData'}
@@ -49,6 +50,29 @@ local function validate_change(entry,owned,item,request)
     assert(not field.shared or request.allow_shared==true,'shared field requires allow_shared=true: '..item.field)
     assert(request.allow_unverified_effect==true,
         'throwable writes require allow_unverified_effect=true: '..item.field..' ('..field.acknowledgementReason..')')
+    if field.type=='status_reference'then
+        -- An explosion DamageInfo status slot (0.31.1): catalog semantic IDs ('gas', 'fire', ...) or 'none', the same
+        -- rules as a weapon's slot (domains/player_weapon_writes.lua): a used slot's status, or the first empty one.
+        local function native(value,label)
+            assert(type(value)=='string',label..' must be a status semantic ID or "none"')
+            if value=='none'then return 0 end
+            return assert(status_catalog.statuses[value],label..' names an unknown status: '..value).nativeType
+        end
+        assert(item.expect==field.currentDefault,'expect differs from the reviewed status for '..item.field
+            ..': declared='..tostring(item.expect)..' reviewed='..tostring(field.currentDefault))
+        local expected,desired=native(item.expect,'expect'),native(item.value,'value')
+        if item.value=='none'then
+            assert(field.allowNone,'status slot '..item.field..' cannot be cleared: only the last used slot can, '
+                ..'so the slots stay packed')
+        elseif item.value~=item.expect then
+            local allowed=false
+            for _,candidate in ipairs(field.allowedValues or{})do if candidate==item.value then allowed=true end end
+            assert(allowed,'status '..item.value..' is not attachable (no attack can apply it through a DamageInfo '
+                ..'slot); see StatusEffectCatalog.json')
+        end
+        return {field=item.field,canonical_field=field.semanticFieldId,descriptor=field,expect=item.expect,
+            value=item.value,expected=b.encode(expected,'u32'),desired=b.encode(desired,'u32'),status_type=desired}
+    end
     local expected,desired=item.expect,item.value
     assert(type(expected)=='number'and expected==expected and expected>-math.huge and expected<math.huge,
         'expect must be a finite number')
@@ -133,6 +157,7 @@ local function collect_needs(spec)
     for _,change in ipairs(spec.changes)do
         local backing=change.descriptor.backing
         if backing.kind=='settings'then needed[backing.settings]=true end
+        if change.descriptor.type=='status_reference'then needed.status=true end   -- the status names are re-read
     end
     return needed
 end
@@ -171,6 +196,38 @@ function M.prepare(resolved,reader,spec)
         end
         assert(backing.offset+backing.width<=#record.bytes,'field outside reviewed record')
         local current=record.bytes:sub(backing.offset+1,backing.offset+backing.width)
+        if backing.statusSlot then
+            -- Status slots stay packed from slot 1: the slots before this one are still used, and a slot is cleared
+            -- only when every later slot is empty.
+            local slot=backing.statusSlot
+            for index=1,slot-1 do
+                assert(b.u32(record.bytes,44+(index-1)*8)~=0,'CONFLICT: status slot '..index..' is now empty')
+            end
+            if change.status_type==0 then
+                for index=slot+1,4 do
+                    assert(b.u32(record.bytes,44+(index-1)*8)==0,'CONFLICT: a later status slot is used')
+                end
+            end
+            -- The reviewed and desired statuses must still carry the names the catalog was built from, so a
+            -- renumbered status table can never be written through.
+            local function verify_status(semantic)
+                if semantic=='none'then return end
+                local status=assert(status_catalog.statuses[semantic],'unknown status '..tostring(semantic))
+                local root=assert(resolved.roots.status,'live status table absent')
+                local row=assert(root.records[status.nativeType],'status '..semantic..' has no row in the live status table')
+                local pointer=b.pointer(row.bytes,8)
+                local table_owner=root.owner
+                assert(pointer>=table_owner.base and pointer<table_owner.base+table_owner.size,
+                    'status name outside the status table')
+                local text=reader.read(table_owner,pointer-table_owner.base,
+                    math.min(64,table_owner.base+table_owner.size-pointer))
+                assert(text:match('^([^%z]*)')==status.name,'CONFLICT: the live status table no longer names '
+                    ..semantic..' "'..status.name..'" (status catalog is stale for this build)')
+            end
+            if change.descriptor.type=='status_reference'then
+                verify_status(change.descriptor.currentDefault);verify_status(change.value)
+            end
+        end
         local expected=ownership.expected(change,current)
         local offset=record.offset+backing.offset
         local key=tostring(owner.base)..':'..tostring(offset)..':'..backing.width

@@ -1,9 +1,9 @@
 {
-  "acknowledgementRejections": 692,
-  "alreadyDesired": 388,
-  "changedWrites": 388,
-  "conflictRejections": 388,
-  "fieldChecks": 388,
+  "acknowledgementRejections": 784,
+  "alreadyDesired": 434,
+  "changedWrites": 434,
+  "conflictRejections": 434,
+  "fieldChecks": 434,
   "fixtureFallback": "disabled",
   "mode": "snapshot-overlay",
   "proofRejections": {
@@ -12,11 +12,11 @@
     "wrongBuild": 71
   },
   "protectionChanges": 336,
-  "rangeRejections": 776,
-  "readOnlyRejections": 23,
-  "rollbacks": 388,
+  "rangeRejections": 868,
+  "readOnlyRejections": 25,
+  "rollbacks": 434,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
-  "staleExpectRejections": 388,
+  "staleExpectRejections": 434,
   "status": "VALIDATED",
   "targets": 83,
   "targetsByPath": {
@@ -32,5 +32,5 @@
     "throwable": 23
   },
   "throwables": 23,
-  "writes": 776
+  "writes": 868
 }

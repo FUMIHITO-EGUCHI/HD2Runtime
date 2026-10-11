@@ -31,6 +31,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from migration import overlay as migration_overlay  # noqa: E402  build-migration hook
 import generate_entity_authoring  # noqa: E402
+import status_fields  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / 'research/throwable-authoring-F5FEE03DCFDB.json'
@@ -132,7 +133,7 @@ def outputs(research_path=RESEARCH):
             shared = backing['kind'] == 'settings' if shared is None else shared
             instance = 'throwable:' + slug(name) + ':' + tgt['path'] + (':' + tgt['key'] if tgt['key'] else '') \
                 + ':' + field_id
-            low, high = spec['range']
+            low, high = spec['range'] or (None, None)   # a status reference has no numeric range
             entry_field = {'instanceKey': instance, 'semanticFieldId': field_id, 'displayName': spec['display_name'],
                 'type': spec['type'], 'unit': spec['unit'], 'currentDefault': baseline, 'editable': editable,
                 'reason': reason, 'backing': backing, 'shared': shared,
@@ -140,6 +141,8 @@ def outputs(research_path=RESEARCH):
                     + str(backing.get('recordIndex', backing.get('recordType'))),
                 'acknowledgement': 'allow_unverified_effect', 'acknowledgementReason': UNVERIFIED,
                 'range': {'min': low, 'max': high, 'integer': spec['type'] == 'integer'}}
+            if spec['range'] is None:
+                entry_field['range'] = None
             if extra:
                 entry_field.update(extra)
             tgt['fields'][field_id] = entry_field
@@ -148,7 +151,10 @@ def outputs(research_path=RESEARCH):
             tgt.setdefault('public', []).append({'instanceKey': instance, 'semanticFieldId': field_id,
                 'apiFieldConstant': api[field_id], 'displayName': spec['display_name'], 'type': spec['type'],
                 'unit': spec['unit'], 'baseline': baseline, 'editable': editable, 'reason': reason,
-                'range': {'min': low, 'max': high, 'integer': spec['type'] == 'integer'},
+                'range': None if spec['range'] is None else {'min': low, 'max': high,
+                    'integer': spec['type'] == 'integer'},
+                **({key: extra[key] for key in ('statusSlot', 'statusAttach', 'allowedValues', 'allowNone')
+                    if key in extra} if extra else {}),
                 'acknowledgements': (['allow_shared'] if shared else []) + (['allow_unverified_effect']
                     if editable else []),
                 'acknowledgementReason': UNVERIFIED if editable else None,
@@ -264,6 +270,17 @@ def outputs(research_path=RESEARCH):
                             'Native value does not reproduce the wiki fingerprint.'),
                         wiki=wiki_value(fact, None) if fact else None,
                         tier='wiki_exact' if fact and fact in matched else 'native_member')
+                # ---- the explosion DamageInfo's status slots as references (0.31.1) ------------------------
+                # The same model as a weapon explosion's (scripts/status_fields.py): each used slot's status, and
+                # the first empty slot, which takes a status and its strength. Slots stay packed from slot 1.
+                for spec in status_fields.slot_specs(exp_damage['recordType']):
+                    extra = status_fields.type_extra(spec)
+                    backing = settings_backing(exp_damage, spec['offset'], spec['storage'])
+                    backing.update(status_fields.backing_extra(spec))
+                    field(ex, 'explosion.damage.' + spec['suffix'], spec['current'], backing, explosion_wiki,
+                        None if explosion_wiki else why, extra=extra,
+                        scope_note='Status slot ' + str(spec['slot']) + " of this explosion's DamageInfo row (every "
+                            'hit of the explosion applies it). ' + SHARED_SETTINGS)
                 # ---- status slots on the explosion DamageInfo ----------------------------------------------
                 labels = entry['statusLabels']
                 slots = values['status']
