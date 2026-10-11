@@ -207,6 +207,23 @@ assert(has(d,'4.00 ms')and has(d,'0.50 ms'))
 local order={}
 for _,t in ipairs(d.texts)do if t.s=='hog'or t.s=='small'or t.s=='custom stratagems'then order[#order+1]=t.s end end
 assert(order[1]=='hog'and order[2]=='custom stratagems'and order[3]=='small',table.concat(order,','))
+-- 0.31.2: what the tab draws is built once per bin; another frame in the same bin replays it exactly (only the window's
+-- footer is fitted again, no row name).
+local fits=0
+local again=builder(1920,1080)
+local wrap=again.wrap
+function again:wrap(s,...)fits=fits+1;return wrap(self,s,...)end
+settings.draw(again,m,input)
+assert(fits==1,'fitted again: '..fits)
+assert(#again.rects==#d.rects and #again.texts==#d.texts)
+for i,t in ipairs(d.texts)do
+    local u=again.texts[i]
+    assert(u.s==t.s and u.x==t.x and u.y==t.y and u.size==t.size and u.colour==t.colour,'text '..i)
+end
+for i,r in ipairs(d.rects)do
+    local u=again.rects[i]
+    assert(u.x==r.x and u.y==r.y and u.w==r.w and u.h==r.h and u.c==r.c and u.z==r.z,'rect '..i)
+end
 -- Every column draws six rectangles: the frame's rectangle count does not change when a bin completes.
 local count=#d.rects
 for _=1,15 do work('mods/x/hog','a',0.004);perf.update(1/60)end

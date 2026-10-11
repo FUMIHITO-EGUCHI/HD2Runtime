@@ -117,34 +117,28 @@ function M.stats(h)
 end
 function M.colour(id)local index=state.colour[id];return index and M.PALETTE[index]or M.REST end
 
--- Draws the tab into box {x, y, w, h} at scale k. ctx = {d, text(d, s, x, cy, size, colour, font, align), C, S}.
-function M.draw(ctx,box,k)
-    local d,text,C,S=ctx.d,ctx.text,ctx.C,ctx.S
+-- What the tab draws for one bin, in drawing order: {{rect = {x, y, w, h, colour, z}} | {text = {s, x, cy, size, colour,
+-- font, align}}}. 0.31.2: built once per bin (and per box, scale and language) and replayed every frame: the numbers,
+-- the translated labels, each row's fitted name and the graph's rectangles change only when a bin completes, and the
+-- F10 panel used to format, translate and fit them again at every frame (about 0.8 ms a frame while the tab was shown).
+local function build(d,C,S,box,k,st)
+    local ops={}
+    local function rect(x,y,w,h,c,z)ops[#ops+1]={rect={x,y,w,h,c,z}}end
+    local function text(s,x,cy,size,colour,font,align)ops[#ops+1]={text={s,x,cy,size,colour,font,align}}end
     local x,y,w=box.x,box.y,box.w
-    perf.record(true)
-    if not metrics.now()then
-        text(d,T('No precise clock: nothing can be measured.'),x,y+20*k,S.body*k,C.dim,'body')
-        return
-    end
-    local h=perf.history()
-    if not h or h.head==0 then
-        text(d,T('Measuring...'),x,y+20*k,S.body*k,C.dim,'body')
-        return
-    end
-    local st=M.stats(h)
     -- The summary: the total per update, its share of the frame time and the frame rate.
-    text(d,T('Runtime and mods: %s per frame',ms(st.total)),x,y+12*k,S.body*k,C.text,'body')
+    text(T('Runtime and mods: %s per frame',ms(st.total)),x,y+12*k,S.body*k,C.text,'body')
     local share=st.frame>0 and st.total/st.frame*100 or 0
     local fps=st.frame>0 and math.floor(1/st.frame+0.5)or 0
-    text(d,T('%s of the frame time  |  %d FPS',('%.1f%%'):format(share),fps),x,y+32*k,S.small*k,C.dim,'body')
+    text(T('%s of the frame time  |  %d FPS',('%.1f%%'):format(share),fps),x,y+32*k,S.small*k,C.dim,'body')
     -- The graph: a gutter with the scale on the left, three grid lines, one column per bin.
     local gutter=62*k
     local gx,gy,gw,gh=x+gutter,y+52*k,w-gutter,190*k
-    d:rect(gx,gy,gw,gh,C.header,3)
+    rect(gx,gy,gw,gh,C.header,3)
     for n=0,2 do
         local ly=gy+gh-gh*n/2
-        d:rect(gx,ly-math.max(1,k)/2,gw,math.max(1,k),n==0 and C.line_strong or C.line,4)
-        text(d,ms(st.top*n/2),gx-8*k,ly,S.tiny*k,C.faint,'body','right')
+        rect(gx,ly-math.max(1,k)/2,gw,math.max(1,k),n==0 and C.line_strong or C.line,4)
+        text(ms(st.top*n/2),gx-8*k,ly,S.tiny*k,C.faint,'body','right')
     end
     local columns=perf.BINS
     local cw=gw/columns
@@ -159,31 +153,63 @@ function M.draw(ctx,box,k)
             local sh=math.min(gh,v/st.top*gh)
             if sh>=0.5 then
                 base=base-sh
-                d:rect(cx,base,cw-gap,sh,index<=#M.PALETTE and M.PALETTE[index]or M.REST,5)
+                rect(cx,base,cw-gap,sh,index<=#M.PALETTE and M.PALETTE[index]or M.REST,5)
             else
-                d:rect(cx,gy+gh-1,cw-gap,1,M.CLEAR,5)
+                rect(cx,gy+gh-1,cw-gap,1,M.CLEAR,5)
             end
         end
     end
     -- The table: the heaviest series of the last two seconds.
     local ty=gy+gh+28*k
-    text(d,T('AVERAGE'),x+w-120*k,ty,S.tiny*k,C.gold_dim,'title','right')
-    text(d,T('PEAK'),x+w,ty,S.tiny*k,C.gold_dim,'title','right')
+    text(T('AVERAGE'),x+w-120*k,ty,S.tiny*k,C.gold_dim,'title','right')
+    text(T('PEAK'),x+w,ty,S.tiny*k,C.gold_dim,'title','right')
     ty=ty+24*k
     local most=st.rows[1]and st.rows[1].average or 0
     for i=1,math.min(M.ROWS,#st.rows)do
         local row=st.rows[i]
         local ry=ty+(i-1)*26*k
-        d:rect(x,ry-5*k,10*k,10*k,M.colour(row.id),5)
+        rect(x,ry-5*k,10*k,10*k,M.colour(row.id),5)
         local tag=row.kind=='mod'and i18n.upper(T('MOD'))or'HD2R'
-        text(d,tag,x+18*k,ry,S.tiny*k,row.kind=='mod'and C.faint or C.gold_dim,'title')
+        text(tag,x+18*k,ry,S.tiny*k,row.kind=='mod'and C.faint or C.gold_dim,'title')
         local lines=d:wrap(row.name,w*0.45,{size=S.small*k,lines=1})
-        text(d,lines[1]or row.name,x+70*k,ry,S.small*k,C.text,'body')
+        text(lines[1]or row.name,x+70*k,ry,S.small*k,C.text,'body')
         -- a bar for its share of the heaviest
         local bw=most>0 and(w*0.18)*row.average/most or 0
-        if bw>=1 then d:rect(x+w*0.56,ry-3*k,bw,6*k,M.colour(row.id),4)end
-        text(d,ms(row.average),x+w-120*k,ry,S.small*k,C.dim,'body','right')
-        text(d,ms(row.peak),x+w,ry,S.small*k,C.faint,'body','right')
+        if bw>=1 then rect(x+w*0.56,ry-3*k,bw,6*k,M.colour(row.id),4)end
+        text(ms(row.average),x+w-120*k,ry,S.small*k,C.dim,'body','right')
+        text(ms(row.peak),x+w,ry,S.small*k,C.faint,'body','right')
+    end
+    return ops
+end
+
+-- Draws the tab into box {x, y, w, h} at scale k. ctx = {d, text(d, s, x, cy, size, colour, font, align), C, S}.
+function M.draw(ctx,box,k)
+    local d,text,C,S=ctx.d,ctx.text,ctx.C,ctx.S
+    local x,y=box.x,box.y
+    perf.record(true)
+    if not metrics.now()then
+        text(d,T('No precise clock: nothing can be measured.'),x,y+20*k,S.body*k,C.dim,'body')
+        return
+    end
+    local h=perf.history()
+    if not h or h.head==0 then
+        text(d,T('Measuring...'),x,y+20*k,S.body*k,C.dim,'body')
+        return
+    end
+    local st=M.stats(h)
+    local language=i18n.language()
+    local f=state.frame
+    if not(f and f.stats==st and f.k==k and f.x==x and f.y==y and f.w==box.w and f.language==language)then
+        f={stats=st,k=k,x=x,y=y,w=box.w,language=language,ops=build(d,C,S,box,k,st)}
+        state.frame=f
+    end
+    for _,op in ipairs(f.ops)do
+        local r=op.rect
+        if r then d:rect(r[1],r[2],r[3],r[4],r[5],r[6])
+        else
+            local t=op.text
+            text(d,t[1],t[2],t[3],t[4],t[5],t[6],t[7])
+        end
     end
 end
 return M
