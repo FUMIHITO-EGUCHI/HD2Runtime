@@ -9,6 +9,9 @@ evidence family `stratagem_presentation_custom_text`). It is still not public:
 
 The development path is `runtime/stratagem_presentation.lua` `apply_text`. Making it public is a separate step.
 
+Reading the game's own texts (its names of weapons, stratagems, boosters ... in the game's language) is a separate,
+read-only API: `hd2.text` (0.31.2, `game-text.md`). It uses the same registry lookup and never writes.
+
 It never borrows, overwrites or replaces a game text. Evidence: `research/stratagem-text-F5FEE03DCFDB.json`
 (`scripts/research_stratagem_text.py`), proven on the helldivers2.exe and game.dll of build F5FEE03DCFDB, all retained
 snapshots and the game's 264 text resources.

@@ -21,6 +21,8 @@
 -- Before anything is registered every id must be absent from every game table (the first table holding an id wins).
 -- Codes: UNSUPPORTED_BUILD (pins), UNAVAILABLE (no registry or language yet), UNSUPPORTED_LANGUAGE (not one of the 15),
 -- NO_TEXT, ID_COLLISION, REGISTRY_FULL (no spare capacity), TEXT_BUDGET, REGISTRY_CHANGED, VERIFY_FAILED.
+--
+-- 0.31.2: M.game_text / M.available read the game's own texts (the names hd2.text shows; api/text.lua), read-only.
 local b=require('hd2runtime/core/bytes')
 local profile=require('hd2runtime/schemas/current')
 local D=require('hd2runtime/domains/text_resources')
@@ -42,13 +44,14 @@ local function u32(n)return string.char(n%256,math.floor(n/256)%256,math.floor(n
 local function u64(n)return u32(n%TWO32)..u32(math.floor(n/TWO32))end
 
 --------------------------------------------------------------------------------------------------- texts --
--- Well-formed UTF-8 with no NUL and no control character other than a line feed.
-local function valid_utf8(s)
+-- Well-formed UTF-8 with no NUL and no control character other than a line feed (`layout`: also a tab and a carriage
+-- return, which the game's own texts may hold).
+local function valid_utf8(s,layout)
     local i,n=1,#s
     while i<=n do
         local c=s:byte(i)
         if c<0x80 then
-            if c<0x20 and c~=0x0A then return false end
+            if c<0x20 and c~=0x0A and not(layout and(c==0x09 or c==0x0D))then return false end
             i=i+1
         else
             local extra,cp,min
@@ -573,6 +576,112 @@ function M.language(runtime)
     return pins and CODE[current_language(runtime,pins.exe)]or nil
 end
 
+------------------------------------------------------------------------------------------ the game's own texts --
+-- 0.31.2 (docs/game-text.md; research/docs/game-text-api-F5FEE03DCFDB.md): the game's own text of an id, such as a
+-- weapon's or a stratagem's name, read exactly as the game's reader finds it (the first registered table holding
+-- (current language, id) wins). Read-only: nothing is written and no table pointer is kept. Only the current game
+-- language is in memory (the game registers one language's tables and swaps them on a language change), so another
+-- language is LANGUAGE_NOT_LOADED. A text is copied out with a bounded NUL scan (chunks that never cross a page, at
+-- most GAME_TEXT_LIMIT bytes) and must be well-formed UTF-8. Copies are cached by the registry's state (language,
+-- registry, array, count, first table): a language change clears and refills the registry, so the next lookup reads the
+-- new language. Codes: UNSUPPORTED_BUILD, UNAVAILABLE (no registry or language yet, or the game is re-registering:
+-- retry later), LANGUAGE_NOT_LOADED, UNSUPPORTED_LANGUAGE, NO_TEXT (no table holds it, or its text is empty),
+-- INVALID_TEXT (longer than the limit, or not UTF-8).
+M.GAME_TEXT_LIMIT=4096
+M.GAME_TEXT_CACHE=4096
+local GAME_TEXT_CHUNK=256
+local game_cache={key=nil,texts={},size=0}
+-- Up to n bytes at address: a shorter read where the full chunk is not readable (the end of an allocation another
+-- reader adapter bounds tighter than a page), never less than one byte.
+local function some_bytes(runtime,address,n)
+    while n>=1 do
+        local ok,s=pcall(runtime.read,address,n)
+        if ok and type(s)=='string'and#s==n then return s end
+        n=math.floor(n/2)
+    end
+    busy('unreadable')
+end
+local function cstring(runtime,at)
+    local parts,size={},0
+    while size<M.GAME_TEXT_LIMIT do
+        local address=at+size
+        local n=math.min(GAME_TEXT_CHUNK,M.GAME_TEXT_LIMIT-size,4096-address%4096)
+        local s=some_bytes(runtime,address,n)
+        n=#s
+        local nul=s:find('\0',1,true)
+        if nul then parts[#parts+1]=s:sub(1,nul-1);return table.concat(parts)end
+        parts[#parts+1]=s
+        size=size+n
+    end
+    return nil
+end
+M.read_cstring_for_tests=cstring
+local function strip_markup(text)return(text:gsub('</?c[^>]*>',''))end
+local function game_lookup(runtime,id,wanted)
+    local ok,pins,why=pcall(M.prove,runtime)
+    if not ok then return nil,'UNSUPPORTED_BUILD',tostring(pins)end
+    if not pins then return nil,'UNSUPPORTED_BUILD',tostring(why)end
+    local language=current_language(runtime,pins.exe)
+    if language==0 then return nil,'UNAVAILABLE','the game has no text language yet'end
+    if wanted~=nil and wanted~=CODE[language]then
+        return nil,'LANGUAGE_NOT_LOADED',('only the game\'s current language (%s) is in memory'):format(
+            CODE[language]or string.format('0x%08X',language))
+    end
+    local reg,unavailable=registry(runtime,pins.exe)
+    if not reg then return nil,'UNAVAILABLE',unavailable end
+    if reg.count==0 then return nil,'UNAVAILABLE','the game is registering its text (a language change)'end
+    local key=table.concat({language,reg.list,reg.array,reg.count,reg.tables[1]},':')
+    if game_cache.key~=key then game_cache={key=key,texts={},size=0}end
+    local hit=game_cache.texts[id]
+    if hit==nil then
+        hit={code='NO_TEXT',reason=string.format('no registered table holds text 0x%08X',id)}
+        for _,at in ipairs(reg.tables)do
+            local offset=offset_in(runtime,at,id,language)
+            if offset then
+                local text=cstring(runtime,at+offset)
+                if text==nil then hit={code='INVALID_TEXT',reason='longer than '..M.GAME_TEXT_LIMIT..' bytes'}
+                elseif not valid_utf8(text,true)then hit={code='INVALID_TEXT',reason='not UTF-8 text'}
+                elseif text==''then hit={code='NO_TEXT',reason=string.format('text 0x%08X is empty',id)}
+                else hit=text end
+                break
+            end
+        end
+        if game_cache.size>=M.GAME_TEXT_CACHE then game_cache.texts,game_cache.size={},0 end
+        game_cache.texts[id],game_cache.size=hit,game_cache.size+1
+    end
+    if type(hit)=='table'then return nil,hit.code,hit.reason end
+    return hit,CODE[language]
+end
+-- The game's text of `id` (a u32) in its current language: text and the language code, or nil, code and reason. opts:
+-- {language = a code the caller expects (LANGUAGE_NOT_LOADED unless it is the current one), plain = true strips the
+-- <c=...>...</c> colour markup some texts carry}. Never raises on game state.
+function M.game_text(runtime,id,opts)
+    local wanted=opts and opts.language
+    if wanted~=nil and not LANGUAGE[wanted]then
+        return nil,'UNSUPPORTED_LANGUAGE','not one of the game\'s languages: '..tostring(wanted)
+    end
+    local ok,text,code,reason=pcall(game_lookup,runtime,id,wanted)
+    if not ok then return nil,'UNAVAILABLE',tostring(text)end
+    if text and opts and opts.plain then text=strip_markup(text)end
+    return text,code,reason
+end
+-- Whether the game's texts can be read now: true and the language code, or false, code and reason.
+function M.available(runtime)
+    local ok,pins,why=pcall(M.prove,runtime)
+    if not ok or not pins then return false,'UNSUPPORTED_BUILD',tostring(ok and why or pins)end
+    local read,result,reason=pcall(function()
+        local language=current_language(runtime,pins.exe)
+        if language==0 then return nil,'the game has no text language yet'end
+        local reg,unavailable=registry(runtime,pins.exe)
+        if not reg then return nil,unavailable end
+        if reg.count==0 then return nil,'the game is registering its text (a language change)'end
+        return CODE[language]or string.format('0x%08X',language)
+    end)
+    if not read then return false,'UNAVAILABLE',tostring(result)end
+    if not result then return false,'UNAVAILABLE',reason end
+    return true,result
+end
+
 -- Removes the Runtime table from the registry when it is the last entry (count - 1, guarded); otherwise leaves it (it
 -- stays valid). true when it is no longer registered.
 function M.unregister(runtime)
@@ -659,5 +768,6 @@ function M.reset_for_tests()
     if keeper then keeper.stop()end
     identities=setmetatable({},{__mode='k'});by_key,by_loc,ordered={},{},{};version=0
     state={table=nil,version=-1,tables=0,index=nil,language=nil};proven={};reported=nil
+    game_cache={key=nil,texts={},size=0}
 end
 return M

@@ -945,6 +945,12 @@ def outputs():
         '---@return table[]','function HD2Diagnostics.foreign_values() end',
         '---@type HD2Diagnostics','hd2.diagnostics = {}']
     stub+=event_functions
+    # 0.31.2: target:display_name() (api/text.lua; docs/game-text.md), the game's own name in the game's language.
+    for owner in ('HD2Weapon','HD2Subweapon','HD2SupportWeapon','HD2Throwable','HD2Backpack','HD2Vehicle',
+            'HD2VehicleEntity','HD2Booster','HD2Stratagem'):
+        stub+=['---HD2Runtime 0.31.2+: the game\'s own name of this object in the game\'s language (\'AR-23 Liberator\') and its',
+            '---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).',
+            '---@return string|nil, HD2GameName|string|nil, string?','function '+owner+':display_name() end']
     for method,spec in schema['api']['functions'].items():
         stub+=['---'+spec['doc']]
         for name,kind in spec['params']:stub.append('---@param '+name+' '+kind)
@@ -957,6 +963,17 @@ def outputs():
          'Writable means an enabled, reviewed transition for that resource; it does not mean arbitrary values are allowed.','',
          '## Operations','']
     for method,spec in schema['api']['functions'].items():doc+=['- `hd2.'+method+'(...)`: '+spec['doc']]
+    # 0.31.2: the game's own names (api/text.lua), read-only; not an operation.
+    doc+=['','## Game names and texts (HD2Runtime 0.31.2+)','',
+        'Read-only, in the language the game is set to; not live-tested. See `game-text.md`.','',
+        '- `hd2.text.language()` -> the game language code, or `nil, code, reason`.',
+        '- `hd2.text.available()` -> `true, language`, or `false, code, reason`.',
+        '- `hd2.text.name(kind, key)` -> `name, {prefix, name, name_upper, description, language}`, or `nil, code, '
+            'reason`; kind: weapon, support_weapon, throwable, backpack, vehicle, booster, stratagem.',
+        '- `target:display_name()` -> the same for a target of those kinds.',
+        '- `hd2.text.game(id[, language | {language, plain}])` -> `text, language`, or `nil, code, reason`.',
+        '- Codes: UNAVAILABLE, UNSUPPORTED_BUILD, LANGUAGE_NOT_LOADED, UNSUPPORTED_LANGUAGE, NO_TEXT, INVALID_TEXT, '
+            'UNKNOWN_OBJECT, NO_NAME.']
     for domain,t in types.items():
         doc+=['','## '+t['class'],'']
         for method,to in t['methods'].items():doc+=['- `:'+method+'()` → `'+types[to]['class']+'` (only where mapped).']
@@ -1017,6 +1034,7 @@ def outputs():
             'sdk/docs/stratagem-presentation.md':(ROOT/'docs/stratagem-presentation.md').read_text(encoding='utf-8'),
             'sdk/docs/custom-images.md':(ROOT/'docs/custom-images.md').read_text(encoding='utf-8'),
             'sdk/docs/custom-text.md':(ROOT/'docs/custom-text.md').read_text(encoding='utf-8'),
+            'sdk/docs/game-text.md':(ROOT/'docs/game-text.md').read_text(encoding='utf-8'),
             'sdk/docs/diagnostics.md':(ROOT/'docs/diagnostics.md').read_text(encoding='utf-8'),
             'sdk/docs/custom-stratagem-api.md':(ROOT/'docs/custom-stratagem-api.md').read_text(encoding='utf-8'),
             'sdk/docs/custom-stratagem-builder.md':(ROOT/'docs/custom-stratagem-builder.md').read_text(encoding='utf-8'),

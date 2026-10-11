@@ -88,6 +88,8 @@ NEXT_RELEASE = '0.30.2'
 # Features new in 0.31.1 (pinned at its release): the bughole_destroyed event and hd2.ui.open_settings / language. Its
 # new weapon rows (Peacemaker / Redeemer rounds, missile direct hit, the programmable rows) are not used by an example.
 RELEASE_0_31_1 = '0.31.1'
+# Features new in 0.31.2: hd2.text (the game's own names and texts) and target:display_name(). No example uses them yet.
+RELEASE_0_31_2 = '0.31.2'
 WEAPON_ROOTS_0_30_2 = {'GP-31 Grenade Pistol', 'P-72 Crisper', 'LAS-5 Scythe', 'LAS-7 Dagger', 'CQC-42 Machete',
     'CQC-73 Entrenchment Tool', 'SMG-37 Defender'}
 PLAYER_EXPLOSION_STATUS = re.compile(r'^explosion\.[^.]+\.(impact|expiry)\.damage\.status_\d+_(type|strength)$')
@@ -197,6 +199,7 @@ local function run_example(body,name)
  report.usesHoming=body:find('projectiles%.homing')~=nil
  report.usesBugHoleEvent=body:find('bughole_destroyed',1,true)~=nil
  report.usesRuntimeSettings=body:find('ui%.open_settings')~=nil or body:find('ui%.language%(')~=nil
+ report.usesGameText=body:find('hd2%.text%.')~=nil or body:find(':display_name%(')~=nil
  report.usesSpawnWeights=body:find('enemies%.spawn_')~=nil
  report.usesMoreDonors=body:find('%(projectile %d+%)')~=nil
  report.usesExplosionCatalogue=body:find('hd2%.explosion%(')~=nil or body:find('explosions%.list%(')~=nil
@@ -328,6 +331,8 @@ def required_version(report):
         bump(RELEASE_0_31_1, 'the bughole_destroyed event')
     if report.get('usesRuntimeSettings'):
         bump(RELEASE_0_31_1, 'hd2.ui.open_settings / hd2.ui.language')
+    if report.get('usesGameText'):
+        bump(RELEASE_0_31_2, 'hd2.text / target:display_name()')
     if report.get('usesSpawnWeights'):
         bump(UNRELEASED, 'hd2.enemies spawn weights')
     if report.get('usesExplosionCatalogue'):

@@ -24,6 +24,7 @@ import equipment_fields
 import beam_fields
 import missile_fields
 import ammunition_attacks
+import game_names  # noqa: E402  the game's own name text ids (0.31.2)
 
 ROOT=Path(__file__).resolve().parents[1]
 DEFAULT_REPORT=ROOT/'build/snapshot-results-authoring/PlayerWeaponRuntimeMap.json'
@@ -1027,7 +1028,9 @@ def outputs(catalog_path=CATALOG):
             constants.setdefault('explosion',{})[
                 definition['id'][len('explosion.'):].replace('.','_')]=definition['id']
     runtime={'version':value['hd2RuntimeVersion'],
-        'weapons':{w['name']:w for w in value['weapons']+value['subweapons']},
+        # 0.31.2: the game's own name text ids (internal; sub-weapons have none).
+        'weapons':game_names.stamped({w['name']:w for w in value['weapons']+value['subweapons']},
+            lambda key,w:None if w.get('subweaponOf') else game_names.equipment(key,w)),
         'summary':value['summary'],'fields':constants,'semanticAliases':value['semanticAliases'],
         'backingCollisionAudit':value['backingCollisionAudit']}
     ammo={'schemaVersion':1,'hd2RuntimeVersion':value['hd2RuntimeVersion'],

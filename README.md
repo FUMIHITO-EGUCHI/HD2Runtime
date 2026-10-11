@@ -77,6 +77,8 @@ HD2Runtime is designed to fail safely when a game structure or ownership relatio
   (`hd2.input.down` / `pressed` / `released`), a per-frame callback (`hd2.on_frame`), per-mod saved data
   (`hd2.store`, see `docs/mod-store.md`), the game build status (`hd2.build()`) and the live values of the weapon in
   hand (`player:weapon_state()`, see `docs/player-equipment.md`)
+- The game's own names in the game's language (0.31.2, not live-tested): `hd2.text.name(kind, key)` /
+  `target:display_name()` give `AR-23 Liberator` in the player's language, read-only (see `docs/game-text.md`)
 - Explosion catalogue (not live-tested): 241 of the game's 422 explosions named from their owners
   (`hd2.explosions.list` / `describe`, `sdk/ExplosionCatalogue.json`); edit any of them (`hd2.explosion(name)`: radii,
   shrapnel count, damage), use one with a known package as a weapon's impact or expiry explosion, and request 141 of

@@ -3303,6 +3303,35 @@ function HD2UI:settings_open() end
 ---@return string, string
 function HD2UI:language() end
 
+---hd2.text: the game's own texts and object names in the language the game is set to (HD2Runtime 0.31.2+; docs/game-text.md). Read-only; nothing raises on game state: a lookup that cannot answer returns nil (or false), a code and a reason, and you show your own text (the object's key). Ask when drawing, not at load: the game registers its text after mods load. Not live-tested.
+---@class HD2Text
+local HD2Text = {}
+---The game's text language code ('us', 'de', 'cn' ...), or nil, code (UNAVAILABLE, UNSUPPORTED_BUILD, UNSUPPORTED_LANGUAGE) and reason. Not hd2.ui.language, the language HD2Runtime's own panels use.
+---@return string|nil, string?, string?
+function HD2Text.language() end
+---Whether the game's texts can be read now: true and the language code, or false, code (UNAVAILABLE: not registered yet or switching language, ask again later; UNSUPPORTED_BUILD) and reason.
+---@return boolean, string?, string?
+function HD2Text.available() end
+---The game's text of a text id (a u32, or 8 hex digits) in its current language: text and the language code, or nil, code (UNAVAILABLE, UNSUPPORTED_BUILD, LANGUAGE_NOT_LOADED: only the current language is in memory, NO_TEXT, INVALID_TEXT) and reason. opts: a language code you expect, or {language, plain = true: strip the <c=...> colour markup}.
+---@param id integer|string
+---@param opts? string|{language: string|nil, plain: boolean|nil}
+---@return string|nil, string?, string?
+function HD2Text.game(id, opts) end
+---The game's display name of a reviewed object by kind and key (the name hd2.<kind>(key) takes), in the game's language: '<designation> <name>' ('AR-23 Liberator' in the game's language) and an HD2GameName; or nil, code (UNAVAILABLE, UNSUPPORTED_BUILD, NO_TEXT, INVALID_TEXT, UNKNOWN_OBJECT, NO_NAME: an underbarrel has none) and reason: show the key then. The key stays the object's identity. target:display_name() is the same for a target.
+---@param kind "weapon"|"support_weapon"|"throwable"|"backpack"|"vehicle"|"booster"|"stratagem"
+---@param key string
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2Text.name(kind, key) end
+
+---The parts of a game display name (hd2.text.name, target:display_name()).
+---@class HD2GameName
+---@field prefix string|nil The designation ('AR-23'); the en-US model number where a language or the game's record has none.
+---@field name string The name: the cased text, else the upper-case one.
+---@field name_upper string|nil The upper-case name.
+---@field description string|nil The game's description, colour markup stripped.
+---@field language string The game language code the texts are in.
+local HD2GameName = {}
+
 ---@class HD2OverlayOptions
 ---@field id string|nil 1 to 48 letters, digits, _ . - (default 'main').
 ---@field layer integer|nil The base layer of its band, 1..1023 (default 1011); an item's z is added to it.
@@ -4258,6 +4287,7 @@ function HD2ModContext:once(name, callback, opts) end
 ---@field custom_stratagem HD2CustomStratagems
 ---@field ownership HD2Ownership
 ---@field ui HD2UI
+---@field text HD2Text
 ---@field passives HD2Passives
 ---@field player_passives HD2PlayerPassivesApi|fun(): HD2PlayerPassives|nil, string?, string?
 ---@field armor_stats HD2ArmorStatsApi
@@ -4464,6 +4494,42 @@ function hd2.armor_kits(filter) end
 ---@param slot? 'armor'|'helmet'|'cape'
 ---@return HD2ArmorKit|nil, string?, string?
 function hd2.armor_kit(kit, slot) end
+---HD2Runtime 0.31.2+: the game's own name of this object in the game's language ('AR-23 Liberator') and its
+---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2Weapon:display_name() end
+---HD2Runtime 0.31.2+: the game's own name of this object in the game's language ('AR-23 Liberator') and its
+---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2Subweapon:display_name() end
+---HD2Runtime 0.31.2+: the game's own name of this object in the game's language ('AR-23 Liberator') and its
+---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2SupportWeapon:display_name() end
+---HD2Runtime 0.31.2+: the game's own name of this object in the game's language ('AR-23 Liberator') and its
+---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2Throwable:display_name() end
+---HD2Runtime 0.31.2+: the game's own name of this object in the game's language ('AR-23 Liberator') and its
+---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2Backpack:display_name() end
+---HD2Runtime 0.31.2+: the game's own name of this object in the game's language ('AR-23 Liberator') and its
+---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2Vehicle:display_name() end
+---HD2Runtime 0.31.2+: the game's own name of this object in the game's language ('AR-23 Liberator') and its
+---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2VehicleEntity:display_name() end
+---HD2Runtime 0.31.2+: the game's own name of this object in the game's language ('AR-23 Liberator') and its
+---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2Booster:display_name() end
+---HD2Runtime 0.31.2+: the game's own name of this object in the game's language ('AR-23 Liberator') and its
+---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
+---@return string|nil, HD2GameName|string|nil, string?
+function HD2Stratagem:display_name() end
 ---Describe schema and prior evidence without reading memory.
 ---@param resource HD2Resource
 ---@return table

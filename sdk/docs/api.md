@@ -26,6 +26,17 @@ Writable means an enabled, reviewed transition for that resource; it does not me
 - `hd2.asset_dependency(...)`: Offline: whether a typed handle's package dependency is known and auto-loadable, and how it was derived. No IDs.
 - `hd2.inspect(...)`: Read only (HD2Runtime 0.31.0+): who owns the live value of one to 64 fields of a typed target, through the same guarded resolution a patch runs; nothing is written. request = {target, fields = {id | {field, expect}}, on_result?}. When complete, result.fields (request order) and result.by_field[id] hold {field, state, owner, operation, value, vanilla, bytes, reason}: state 'vanilla' (the reviewed value), 'runtime' (an HD2Runtime operation applied it; owner = its mod), 'foreign' (owned by an unknown mod outside HD2Runtime, owner 'unknown': writes to it are refused, show it read-only), 'changed' (a link or slot it depends on is not as reviewed), 'unavailable' or 'invalid' (reason). docs/diagnostics.md.
 
+## Game names and texts (HD2Runtime 0.31.2+)
+
+Read-only, in the language the game is set to; not live-tested. See `game-text.md`.
+
+- `hd2.text.language()` -> the game language code, or `nil, code, reason`.
+- `hd2.text.available()` -> `true, language`, or `false, code, reason`.
+- `hd2.text.name(kind, key)` -> `name, {prefix, name, name_upper, description, language}`, or `nil, code, reason`; kind: weapon, support_weapon, throwable, backpack, vehicle, booster, stratagem.
+- `target:display_name()` -> the same for a target of those kinds.
+- `hd2.text.game(id[, language | {language, plain}])` -> `text, language`, or `nil, code, reason`.
+- Codes: UNAVAILABLE, UNSUPPORTED_BUILD, LANGUAGE_NOT_LOADED, UNSUPPORTED_LANGUAGE, NO_TEXT, INVALID_TEXT, UNKNOWN_OBJECT, NO_NAME.
+
 ## HD2Weapon
 
 - `:projectile()` → `HD2Projectile` (only where mapped).

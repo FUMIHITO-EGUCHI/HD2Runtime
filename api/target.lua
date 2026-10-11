@@ -10,6 +10,11 @@ function M.new(describe)
         if type(value)~='table'then return value end
         local result={};for key,item in pairs(value)do result[key]=copy(item)end;return result
     end
+    -- 0.31.2 (docs/game-text.md): target:display_name() -> the game's own name of the object in the game's language,
+    -- and {prefix, name, name_upper, description, language}; or nil, code, reason (show the key then).
+    local function display_name(record)
+        return function()return require('hd2runtime/api/text').display(record)end
+    end
     local function target(key,domain)
         local resource=metadata.resources[key]
         local methods={}
@@ -650,6 +655,7 @@ function M.new(describe)
             return {name=name,kind=weapon.kind,subweaponOf=weapon.subweaponOf,link=weapon.link,
                 sharedDefinitions=copy(weapon.sharedDefinitions),notExposed=copy(weapon.notExposed),fields=fields}
         end
+        methods.display_name=display_name(weapon.nameText)
         return setmetatable({resource='player_weapon',path='weapon',weapon=name},{__index=methods})
     end
     -- Beam swaps (0.31.0; docs/attack-outputs.md "Beam swaps"): a beam weapon's own beam handle (the expect, and the
@@ -897,6 +903,7 @@ function M.new(describe)
             end
             error('unknown '..slot..' attachment for '..name..': '..tostring(identity),0)
         end
+        methods.display_name=display_name(weapon.nameText)
         return setmetatable({resource='player_weapon',path='weapon',weapon=name},{__index=methods})
     end
     for method,domain in pairs(metadata.builders)do
@@ -1066,6 +1073,7 @@ function M.new(describe)
         function methods.feed(_,id)return feed_handle('support',name,id)end
         function methods.programmable_ammo(self)return programmable_builder(name,self)end
         function methods.presentation()return presentation_view(support_authoring.weapons[name],name)end
+        methods.display_name=display_name((support_authoring.weapons[name]or{}).nameText)
         return setmetatable({resource='support_weapon',path='weapon',weapon=name},{__index=methods})
     end
     local legacy_stratagem=builders.stratagem
@@ -1460,6 +1468,7 @@ function M.new(describe)
             return result
         end
         function methods.mount(_,identity)return mount_target(mount_identity(identity))end
+        methods.display_name=display_name(entry.nameText)
         return setmetatable({resource='vehicle',vehicle=name,path='entity'},{__index=methods})
     end
     -- Any slot's definition by semantic id or unique native name (magazine, muzzle, optics, underbarrel).
@@ -1568,6 +1577,7 @@ function M.new(describe)
             end
             error('unknown reviewed damage zone for '..name..': '..tostring(identity),0)
         end
+        methods.display_name=display_name(entry.nameText)
         return setmetatable({resource='backpack',backpack=name,path='backpack'},{__index=methods})
     end
     -- Drop-pod payloads: a stratagem's primary payload is a hellpod rack whose slots name the items the pod
@@ -1691,6 +1701,7 @@ function M.new(describe)
         function methods.status_damage()return owned_target('status_damage')end
         function methods.granted_stratagem()return owned_target('granted_stratagem')end
         function methods.deployed_entity()return owned_target('deployed_entity')end
+        methods.display_name=display_name(entry.nameText)
         return setmetatable({resource='booster',booster=entry.name,path='booster'},{__index=methods})
     end
     -- Throwables: every accessor is a native record the throwable entity owns or reaches through
@@ -1932,6 +1943,7 @@ function M.new(describe)
         function methods.damage()return owned_target('damage')end
         function methods.entity()return owned_target('entity')end
         function methods.shield()return owned_target('shield')end
+        methods.display_name=display_name(entry.nameText)
         return setmetatable({resource='throwable',throwable=entry.name,path='throwable'},{__index=methods})
     end
     function builders.stratagem(name)
@@ -1980,6 +1992,7 @@ function M.new(describe)
             return setmetatable({resource='stratagem',stratagem=name,path='eagle_rearm'},
                 {__index=rearm_methods})
         end
+        methods.display_name=display_name(entry.nameText)
         return setmetatable({resource='stratagem',stratagem=name,path='stratagem'},
             {__index=methods})
     end

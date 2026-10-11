@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from migration import overlay as migration_overlay  # noqa: E402  build-migration hook
 import generate_entity_authoring
 import support_callin_linkage
+import game_names  # noqa: E402  the game's own name text ids (0.31.2)
 
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / 'research/booster-authoring-F5FEE03DCFDB.json'
@@ -467,6 +468,8 @@ def build(research_path=RESEARCH, native_path=NATIVE):
     text = json.dumps(document).lower()
     if '0x' in text:
         raise ValueError('public booster capability leaks a native identifier')
+    # 0.31.2: the game's own name text ids (internal), by the booster table row of each enum value.
+    runtime = game_names.stamped(runtime, lambda key, entry: game_names.booster(key, entry['enumValue']))
     return {'version': document['hd2RuntimeVersion'], 'native': native_block, 'boosters': runtime}, document
 
 

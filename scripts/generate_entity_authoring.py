@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from migration import overlay as migration_overlay  # noqa: E402  build-migration hook
 import support_callin_linkage
 import jump_hover_fields
+import game_names  # noqa: E402  the game's own name text ids (0.31.2)
 
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / 'research/entity-authoring-runtime-F5FEE03DCFDB.json'
@@ -1085,7 +1086,9 @@ def build(research_path=RESEARCH):
             if resource[2:].lower() in text:
                 raise ValueError('public entity capability leaks a native resource hash')
 
-    runtime = {'version': version, 'vehicles': runtime_vehicles, 'backpacks': runtime_backpacks,
+    # 0.31.2: the game's own name text ids (internal).
+    runtime = {'version': version, 'vehicles': game_names.stamped(runtime_vehicles, game_names.equipment),
+        'backpacks': game_names.stamped(runtime_backpacks, game_names.equipment),
         'mountedWeapons': runtime_weapons,
         'summary': {'vehicles': vehicle_summary, 'backpacks': backpack_summary}}
     return runtime, vehicle_doc, backpack_doc

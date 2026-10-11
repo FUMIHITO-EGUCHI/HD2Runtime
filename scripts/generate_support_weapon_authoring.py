@@ -30,6 +30,7 @@ import support_callin_linkage
 import ability_explosion_fields
 import live_evidence
 import submunition_links
+import game_names  # noqa: E402  the game's own name text ids (0.31.2)
 
 ROOT=Path(__file__).resolve().parents[1]
 CATALOG=ROOT/'schemas/support_weapon_authoring_catalog.json'
@@ -1298,7 +1299,9 @@ def build(catalog_path=CATALOG):
     for definition_item in schema['fields']:
         domain,_,name=definition_item['id'].partition('.')
         if domain in('charge','status'):constants.setdefault(domain,{})[name.replace('.','_')]=definition_item['id']
-    runtime={'version':(ROOT/'VERSION').read_text().strip(),'weapons':runtime_weapons,
+    # 0.31.2: the game's own name text ids (internal), from the delivered weapon's record first.
+    runtime={'version':(ROOT/'VERSION').read_text().strip(),
+        'weapons':game_names.stamped(runtime_weapons,game_names.equipment),
         'fields':constants,'summary':summary}
     public={'schemaVersion':2,'contract':'hd2runtime.support_weapon.guarded_authoring.v2',
         'hd2RuntimeVersion':runtime['version'],'summary':summary,'weapons':public_weapons,
