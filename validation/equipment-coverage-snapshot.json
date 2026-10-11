@@ -1028,7 +1028,7 @@
   "fixtureFallback": "disabled",
   "mode": "snapshot-overlay",
   "noOps": 89,
-  "rangeRejections": 68,
+  "rangeRejections": 72,
   "readOnlyRejections": 7,
   "rollbacks": 89,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
