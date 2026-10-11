@@ -44,6 +44,7 @@ and the LuaLS stubs). Subscribing to a name that is not in it, or to a `blocked`
 | `player_hit` | stats | post | local player only: projectile `hits` since the last check (the projectile system adds one per projectile that hits), `total`, `sources` (hits per weapon), `unattributed` |
 | `player_damage_dealt` | stats | post | local player only: `damage` the game recorded since the last check, `total`, `sources` (damage per weapon, throwable or stratagem), `unattributed` |
 | `explosion` | explosions | post | `name`, `position`, `observed` (`queue` or `request`), `source_id` / `source_type` / `source_name`, `owner_id` / `owner_type` / `owner_name`, `creditor_peer`, `player`, `local_player`; see [Explosions](#explosions). Not live-tested |
+| `bughole_destroyed` | bug_holes | post | `hole` (`warrior`, `bile_titan`, ...), `name`, `bile_titan`, `entity_id`, `type`, `unit_id`, `level`, `position`, `owned`; see [Bug holes](#bug-holes). Experimental, not live-tested |
 | `key_down` / `key_up` | input | post | `binding`, `key`, `owner` |
 | `entity_damage_pre` | — | blocked | see [Damage](#damage) |
 
@@ -81,6 +82,7 @@ module bases.
 | `stats` | The local player's `projectiles_fired`, `dealt_kills`, `projectiles_hit` and `dealt_damage` (only those with subscribers): main table plus the 64 source blocks (as the game's own `get_stat` sums them), per source type, 10 times per second | one bulk read of the source blocks for all four |
 | `weapons` | The local avatar's wielder slot 0 (the entity in hand), the inventory selection and the held entity's descriptor type, 10 times per second | the local player only |
 | `explosions` | The explosion queue's count (and its entries only when some are queued), and the explosions Runtime requested since the last tick | an idle tick is two reads; see [Explosions](#explosions) |
+| `bug_holes` | The Destructible manager's instance count, descriptor pointers and destruction world indices, and the bug holes' destruction world records, 4 times per second | six reads a poll; a descriptor is read once per instance; see [Bug holes](#bug-holes) |
 | `input` | Bound keys only, while the game window has focus | |
 
 Health record fields used (all pinned): current health `+0x14` (stored as `max(health, -Constitution)`), life state
@@ -198,6 +200,44 @@ host's and its own. Which other players' explosions a machine queues, and when, 
 entries once and resolves each new entry's two entity types once per mission. Validated on the seven snapshots
 (drained queue: count and kicked 0, no event) and on the offline fixture (`tests/test_event_sources.py`,
 `tests/test_event_scripting.py`).
+
+## Bug holes
+
+`bughole_destroyed` reports a bug hole the game closed (a grenade, an explosive stratagem, a Hellbomb for a Bile Titan
+hole). It reads the game's own destruction state, 4 times per second; nothing is hooked. **Experimental: not
+live-tested** (no retained snapshot holds a closed hole).
+
+**What the game keeps** (`research/event-destruction-F5FEE03DCFDB.json`, `scripts/research_event_destruction.py`):
+
+- A bug hole is an entity whose type is a `content/env_bugs/assets/gameplay/bug_spawner_*` entity (`warrior`,
+  `hunter`, `hiveguard`, `boomer`, `stalker`, `scavenger`, `prowler`, `spitter`, `bile_titan`, `shrieker`, and the
+  `warrior_ceiling` / `_captive` / `_tutorial` variants). It has a Destructible component and no health (the
+  shrieker spawner excepted), so the health events never see it.
+- The Destructible manager (`game+0x3326550`) holds `count` (`+0xC`) instances: instance i's descriptor pointer
+  (`+0x4030 + 8i`, the generic descriptor: entity type, entity, unit, owned bit) and its destruction world record
+  index (`+0x6030 + 4i`).
+- The destruction world (`game+0x346D528`) keeps one 12-byte record per registered unit (`+0xC5F78 + 12i`:
+  unit, definition, stage `+7`, flags `+8`, bit 0 = registered). The game's destruction update writes the stage
+  (1 to 3); a destruction is only queued for a stage above the current one, so it only grows. A closed hole keeps
+  its entity (no bug hole definition destroys it).
+- The game's network handler applies a destruction on the receiving peer through the same queue: the host and every
+  client reach the same stage in their own records.
+
+**When it fires.** Once per hole, when its stage leaves 0. The holes a poll first sees are the baseline: a hole
+already closed when Runtime starts watching (a mission joined late, a subscription made after the closing) is not
+reported. An instance is linked to its record only while the record carries the instance's unit and is registered.
+
+**Payload.** `hole` is the kind (the entity name after `bug_spawner_`), `name` the entity name, `bile_titan` true for
+a Bile Titan hole, `entity_id` / `type` / `unit_id` the hole's identity, `level` the stage the game set, `position`
+where the hole is (`nil` when unreadable), `owned` true on the machine that owns the hole entity (the host). The Bile
+Titan holes are level-placed units of another unit class (scene graph at `+0x48`); their position is read through
+that class's own reviewed accessor, the same engine path. **Who closed the hole is not known:** the game keeps no
+creditor for a destruction.
+
+**Validated** offline (`tests/test_event_sources.py`) and on the retained snapshots
+(`validation/event-world-snapshot.json`): the production source finds the 33 open holes of the Terminid mission
+captures (none aboard the ship or after the mission), and a read overlay that shows one hole's record at stage 2
+makes it report that hole once, with its position.
 
 ## Handles
 

@@ -13,7 +13,10 @@ the corpse that replaced the first avatar (origin 602 -> corpse 851 on the same 
 Every snapshot also checks: the Hellbomb explosions' settings records, the local player's equipped weapon (the R-36
 Eruptor in hand before the death, nothing aboard the ship), the projectile system gate (active only in a mission),
 the status request queue, and the explosion event: the queue read as the `explosion` source reads it (drained: count
-and kicked 0, so no event; research/event-explosions-F5FEE03DCFDB.json) and one poll of the production source.
+and kicked 0, so no event; research/event-explosions-F5FEE03DCFDB.json) and one poll of the production source; and the
+bug holes (research/event-destruction-F5FEE03DCFDB.json): the production `bug_holes` source finds the 33 open holes of
+the Terminid mission captures (none elsewhere), and a read overlay that shows one hole's record at stage 2 makes it
+report that hole closed, once.
 """
 from __future__ import annotations
 
@@ -116,6 +119,46 @@ events.tick(0.016)
 out.explosionEvent={status=sources.explosions.status,observed=observed}
 sub:unsubscribe()
 events.reset_for_tests()
+-- Bug holes (research/event-destruction-F5FEE03DCFDB.json): the production source on this world, then one simulated
+-- closing: a read overlay shows the first hole's record at stage 2, as the game's destruction update writes it.
+local D=natives.destruction
+local list=world_module.destructibles(world,world.view.slot(),world.view.slot())
+local stage_at,first_hole
+for i=0,(list and list.count or 0)-1 do
+ local d=world_module.destructible_descriptor(world,list.pointers:ptr(i*8))
+ if d and world_module.bug_hole_kind(d.resource)and not stage_at then
+  stage_at=list.world+D.records+list.indices:i32(i*4)*D.stride+D.stage
+  first_hole={entity=d.entity,kind=world_module.bug_hole_kind(d.resource)}
+ end
+end
+local closing=false
+local overlay={}
+for k,v in pairs(source)do overlay[k]=v end
+function overlay.read(address,size)
+ local bytes=source.read(address,size)
+ if closing and bytes and address<=stage_at and stage_at<address+size then
+  local at=stage_at-address+1
+  bytes=bytes:sub(1,at-1)..string.char(2)..bytes:sub(at+1)
+ end
+ return bytes
+end
+world_module.set_runtime(overlay)
+events.reset_for_tests()
+local closed={}
+sub=events.subscribe('bughole_destroyed',function(e)closed[#closed+1]=e end,{owner='validation'})
+events.tick(0.3);events.tick(0.3)
+local holes=0
+for _,item in pairs(sources.bug_holes.known or{})do if item.kind then holes=holes+1 end end
+closing=stage_at~=nil
+events.tick(0.3);events.tick(0.3)
+local e=closed[1]
+out.bugHoles={status=sources.bug_holes.status,count=list and list.count,holes=holes,first=first_hole or false,
+ events=#closed,event=e and{hole=e.hole,entity=e.entity_id,level=e.level,owned=e.owned,
+  position=e.position and true or false}or false}
+sub:unsubscribe()
+events.reset_for_tests()
+world_module.set_runtime(source)
+world=world_module.open()
 -- What the local player holds (wielder slot 0 + inventory selection), through the production reader.
 local me=handles.local_player()
 local weapon,weapon_why
@@ -233,6 +276,13 @@ def validate(snapshots=SNAPSHOTS):
         elif phase == 'ended':
             if report['projectileSystemActive'] != 0:
                 problems.append('the projectile system is active after the mission')
+        holes = report['bugHoles']
+        if phase in ('alive', 'reinforced'):
+            if (holes['status'], holes['holes'], holes['events']) != ('active', 33, 1) or holes['event'] != dict(
+                    hole=holes['first']['kind'], entity=holes['first']['entity'], level=2, owned=True, position=True):
+                problems.append('the bug holes or one simulated closing were not read as the research says')
+        elif holes['holes'] or holes['events']:
+            problems.append('bug holes outside a Terminid mission')
         if not report['tamperRefused']:
             problems.append('a tampered pin was not refused')
         results[name] = dict(report, passed=not problems, problems=problems)

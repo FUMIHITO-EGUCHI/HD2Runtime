@@ -26,6 +26,7 @@ MISSION = ROOT / 'research/event-mission-F5FEE03DCFDB.json'
 INJURY = ROOT / 'research/player-injury-path-F5FEE03DCFDB.json'
 AVATAR = ROOT / 'research/player-avatar-actions-F5FEE03DCFDB.json'
 EXPLOSIONS = ROOT / 'research/event-explosions-F5FEE03DCFDB.json'
+DESTRUCTION = ROOT / 'research/event-destruction-F5FEE03DCFDB.json'
 OUTPUT = ROOT / 'domains/event_natives.lua'
 
 
@@ -33,15 +34,18 @@ class Pins:
     """Pinned instructions from the research outputs, per module ('game' = game.dll, 'exe' = the executable)."""
 
     def __init__(self, combat: dict, state: dict, mission: dict, actions: dict, wielder: dict,
-            injury: dict | None = None, avatar: dict | None = None, explosions: dict | None = None):
+            injury: dict | None = None, avatar: dict | None = None, explosions: dict | None = None,
+            destruction: dict | None = None):
         self.by_rva = {'game': {}, 'exe': {}}
         for group in (list(mission['proofs'].values()) + list(actions['proofs'].values())
                 + list(wielder['proofs'].values()) + list((injury or {}).get('proofs', {}).values())
                 + list((avatar or {}).get('proofs', {}).values())
-                + list((explosions or {}).get('proofs', {}).values())):
+                + list((explosions or {}).get('proofs', {}).values())
+                + list((destruction or {}).get('proofs', {}).values())):
             for pin in group:
                 self.by_rva['game'].setdefault(pin['rva'], pin)
-        for group in (injury or {}).get('exeProofs', {}).values():
+        for group in (list((injury or {}).get('exeProofs', {}).values())
+                + list((destruction or {}).get('exeProofs', {}).values())):
             for pin in group:
                 self.by_rva['exe'].setdefault(pin['rva'], pin)
         for name, function in combat['functions'].items():
@@ -591,6 +595,54 @@ def velocity_section(pins: Pins, research: dict) -> dict:
         'velocity': layout['velocity'], 'launch': velocity['gameLaunch']}
 
 
+def destruction_section(pins: Pins, research: dict) -> dict:
+    """Bug holes and their destruction stage (research/event-destruction-F5FEE03DCFDB.json, the `bughole_destroyed`
+    event): the Destructible manager's instances, each linked to its destruction world record."""
+    layout = research['layout']
+    pins.rip(0x526646, 'mov rbx, qword ptr [rip + 0x2dfff03]', 'Destructible manager global (create)', layout['manager'])
+    pins.use(0x526691, 'inc dword ptr [rbx + 0xc]', 'Destructible instance count')
+    pins.use(0x52672C, 'mov r8d, dword ptr [rbx + 0xc]', 'Destructible instance count (remove)')
+    pins.use(0x5266F0, 'mov qword ptr [r9 + r8*8 + 0x4030], r10', 'Destructible descriptor pointers')
+    pins.use(0x88330B, 'mov dword ptr [r14 + rsi*4 + 0x6030], eax', 'Destructible destruction world index')
+    pins.rip(0x883522, 'mov r11, qword ptr [rip + 0x2aa3027]', 'Destructible manager global (destroyed-callback)',
+        layout['manager'])
+    pins.use(0x8835AB, 'mov rax, qword ptr [r11 + rax*8 + 0x4030]', 'destroyed-callback: the descriptor')
+    pins.use(0x8835CB, 'mov edx, dword ptr [rax + 0xc]', 'Destructible descriptor unit')
+    pins.use(0x88382D, 'test byte ptr [rax + 0x14], 1', 'Destructible descriptor flag bit0 = owned by this peer')
+    pins.use(0x88384C, 'mov edx, dword ptr [rax + 8]', 'Destructible descriptor entity')
+    pins.use(0x88383F, 'test byte ptr [rcx + 0x90], 1', 'a destruction destroys the entity only when its definition says')
+    pins.rip(0x13E1B64, 'mov r11, qword ptr [rip + 0x208b9bd]', 'destruction world global (stage getter)', layout['world'])
+    pins.use(0x13E1BDF, 'lea rax, [rcx + rcx*2]', 'destruction record stride 12 (x3)')
+    pins.use(0x13E1BE3, 'movzx eax, byte ptr [r11 + rax*4 + 0xc5f7f]', 'destruction record stage (+7)')
+    pins.use(0x13E2161, 'mov ebx, dword ptr [rsi + rdx*4 + 0xc5f78]', 'destruction record unit (+0)')
+    pins.use(0x13E2037, 'mov byte ptr [r15 + 7], al', 'destruction update writes the stage')
+    pins.use(0x13E163D, 'jge 0x13e1719', 'a stage only grows')
+    pins.use(0xBBA6EE, 'call 0x13e15c0', 'a peer applies the same destruction')
+    pins.use(0x526932, 'mov byte ptr [rax + rcx*4 + 0xc5f80], 0', 'destruction record flags (+8) cleared with the entity')
+    level = research['levelUnit']
+    pins.use(0x2CAC50, 'lea rax, [rcx + 0x48]', 'level unit class: scene graph at +0x48 (Bile Titan holes)', 'exe')
+    pins.use(0x2CAC54, 'ret ', 'level unit class: the accessor returns it', 'exe')
+    if (level['slot'], level['methodRva'], level['bytes'], level['sceneGraphOffset']) != (0xE8, 0x2CAC50, '488d4148c3',
+            0x48):
+        raise ValueError('level unit class changed')
+    for o in research['observations']:
+        if o.get('holes') and o['posesOrthonormal'] != o['holes']:
+            raise ValueError('a hole pose is not readable in ' + o['snapshot'])
+    if (layout['count'], layout['descriptors'], layout['worldIndex'], layout['records'], layout['stride'],
+            layout['unit'], layout['stage'], layout['flags']) != (0xC, 0x4030, 0x6030, 0xC5F78, 12, 0, 7, 8):
+        raise ValueError('destruction layout changed')
+    for o in research['observations']:
+        if o.get('holes') and (o['unlinked'] or o['destroysEntity'] or o['stages'] != {'0': o['holes']}):
+            raise ValueError('bug holes not linked, or not open, in ' + o['snapshot'])
+    if len(research['holes']) < 10 or 'bile_titan' not in research['holes'].values():
+        raise ValueError('the bug hole family is incomplete')
+    return {'global': layout['manager'], 'count': 0xC, 'descriptors': 0x4030, 'worldIndex': 0x6030,
+        'maxInstances': (0x6030 - 0x4030) // 8, 'world': layout['world'], 'records': 0xC5F78, 'stride': 12,
+        'unit': 0, 'stage': 7, 'flags': 8, 'holes': research['holes'],
+        'levelUnit': {'vtable': level['vtableRva'], 'method': level['methodRva'], 'methodBytes': level['bytes'],
+            'sceneGraphOffset': 0x48}}
+
+
 def build() -> dict:
     combat = json.loads(COMBAT.read_text(encoding='utf-8'))
     state = json.loads(STATE.read_text(encoding='utf-8'))
@@ -600,23 +652,24 @@ def build() -> dict:
     injury = json.loads(INJURY.read_text(encoding='utf-8'))
     avatar = json.loads(AVATAR.read_text(encoding='utf-8'))
     explosions = json.loads(EXPLOSIONS.read_text(encoding='utf-8'))
-    for research in (combat, state, mission, actions, wielder, injury, avatar, explosions):
+    destruction = json.loads(DESTRUCTION.read_text(encoding='utf-8'))
+    for research in (combat, state, mission, actions, wielder, injury, avatar, explosions, destruction):
         if research['writes'] or research['protectionChanges']:
             raise ValueError('event research must be read-only')
     if state['gameDll']['sha256'] != combat['gameDll']['sha256']:
         raise ValueError('event research covers different game.dll builds')
     if not (state['gameDll']['sha256'] == mission['gameDll']['sha256'] == actions['gameDll']['sha256']
             == wielder['gameDll']['sha256'] == injury['gameDll']['sha256'] == avatar['gameDll']['sha256']
-            == explosions['gameDll']['sha256']):
+            == explosions['gameDll']['sha256'] == destruction['gameDll']['sha256']):
         raise ValueError('event research covers different game.dll builds')
     if injury['exe']['sha256'] != state['exe']['sha256'] or injury['exe']['imageSize'] != state['exe']['imageSize']:
         raise ValueError('the injury research covers another executable')
     if any(any(r['pinnedBytesMismatchPerSnapshot'].values()) for r in (state, mission, actions, wielder, injury,
-            avatar, explosions)):
+            avatar, explosions, destruction)):
         raise ValueError('a pinned instruction differs between retained snapshots')
-    pins = Pins(combat, state, mission, actions, wielder, injury, avatar, explosions)
+    pins = Pins(combat, state, mission, actions, wielder, injury, avatar, explosions, destruction)
     value = {'source': {'research': [COMBAT.name, STATE.name, MISSION.name, ACTIONS.name, WIELDER.name, INJURY.name,
-            AVATAR.name, EXPLOSIONS.name],
+            AVATAR.name, EXPLOSIONS.name, DESTRUCTION.name],
             'gameDllSha256': combat['gameDll']['sha256'],
             'imageSize': combat['gameDll']['imageSize'], 'exeImageSize': state['exe']['imageSize']},
         'health': health_section(pins, combat), 'players': players_section(pins, combat),
@@ -626,7 +679,7 @@ def build() -> dict:
         'explosion': explosion_section(pins, actions, explosions), 'projectile': projectile_section(pins, actions),
         'status': status_section(pins, actions), 'wielder': wielder_section(pins, wielder),
         'injury': injury_section(pins, injury), 'limbHeal': limb_heal_section(pins, avatar),
-        'velocity': velocity_section(pins, avatar)}
+        'velocity': velocity_section(pins, avatar), 'destruction': destruction_section(pins, destruction)}
     value['pins'] = sorted(pins.used, key=lambda pin: (pin['module'], pin['rva']))
     return value
 

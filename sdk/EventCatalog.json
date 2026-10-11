@@ -3,8 +3,9 @@
  "schemaVersion": 1,
  "hd2RuntimeVersion": "0.31.0",
  "summary": {
-  "events": 21,
+  "events": 22,
   "available": [
+   "bughole_destroyed",
    "entity_damaged",
    "entity_died",
    "entity_killed",
@@ -44,7 +45,8 @@
   "health": "One bulk scan per tick of the health manager: every entity with a HealthComponent, its health, life state (alive, downed, dead) and last-hit creditor. When a tracked record disappears, the corpse manager is read once: the game replaces a dead entity by a corpse entity that takes over its unit and names the dead entity, so a death that happened between two polls is still reported.",
   "stats": "The local player's mission stats as the game keeps them: the main table plus one block per source type (the weapon, throwable or stratagem payload the game recorded the stat under), checked 10 times per second.",
   "weapons": "What the local player's avatar holds: its wielder slot 0 (the entity in hand) and the inventory selection the game's weapon switch writes in the same call, checked 10 times per second.",
-  "explosions": "This machine's explosion queue, read once per tick: the requests queued now (the game processes at most 8 a frame, first in first out, and a request made after the frame's processing started stays queued until the next frame), and the explosions Runtime itself requested since the last tick."
+  "explosions": "This machine's explosion queue, read once per tick: the requests queued now (the game processes at most 8 a frame, first in first out, and a request made after the frame's processing started stays queued until the next frame), and the explosions Runtime itself requested since the last tick.",
+  "bug_holes": "The bug holes (Destructible instances whose entity is a bug_spawner_* entity) and each one's destruction stage in the game's destruction world, checked 4 times a second."
  },
  "events": [
   {
@@ -1094,6 +1096,61 @@
      "name": "local_player",
      "type": "boolean",
      "doc": "The local player is credited."
+    }
+   ]
+  },
+  {
+   "name": "bughole_destroyed",
+   "status": "available",
+   "source": "bug_holes",
+   "phase": "post",
+   "hot": false,
+   "summary": "A bug hole was closed: its destruction stage left 0 (a grenade, a stratagem, a Hellbomb for a Bile Titan hole). Reported once per hole, on the host and on clients (each machine applies the same destruction). A hole already closed when Runtime starts watching is not reported. Who closed it is not known. Experimental: not live-tested; see docs/events.md#bug-holes.",
+   "payload": [
+    {
+     "name": "hole",
+     "type": "string",
+     "doc": "The hole's kind, named after what it spawns: 'warrior', 'hunter', 'hiveguard', 'boomer', 'stalker', 'scavenger', 'prowler', 'spitter', 'bile_titan', 'shrieker', 'warrior_ceiling', 'warrior_captive', 'scavenger_captive', 'warrior_tutorial', 'base'."
+    },
+    {
+     "name": "name",
+     "type": "string",
+     "doc": "The game's entity name: 'bug_spawner_' .. hole."
+    },
+    {
+     "name": "bile_titan",
+     "type": "boolean",
+     "doc": "A Bile Titan hole (it needs a heavy explosive)."
+    },
+    {
+     "name": "entity_id",
+     "type": "integer",
+     "doc": "The hole's entity id. A closed hole stays an entity."
+    },
+    {
+     "name": "type",
+     "type": "string",
+     "doc": "The hole's entity type (16 hex digits)."
+    },
+    {
+     "name": "unit_id",
+     "type": "integer",
+     "doc": "The hole's unit id."
+    },
+    {
+     "name": "level",
+     "type": "integer",
+     "doc": "The destruction stage the game set (1 to 3)."
+    },
+    {
+     "name": "position",
+     "type": "HD2Position|nil",
+     "doc": "Where the hole is (a read-only snapshot), or nil when its unit's position is unreadable."
+    },
+    {
+     "name": "owned",
+     "type": "boolean",
+     "doc": "This machine owns the hole entity (the host)."
     }
    ]
   },

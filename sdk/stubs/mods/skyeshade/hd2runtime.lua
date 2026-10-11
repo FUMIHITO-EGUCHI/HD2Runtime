@@ -2145,7 +2145,7 @@ function HD2Resources.game_icon(kind, name) end
 ---@return string[]
 function HD2Resources.game_icons(kind) end
 
----@alias HD2EventName "mission_started"|"mission_ended"|"player_spawned"|"player_died"|"entity_spawned"|"entity_died"|"entity_killed"|"entity_damaged"|"player_damaged"|"player_healed"|"player_fired"|"player_kill_credited"|"player_hit"|"player_damage_dealt"|"weapon_equipped"|"weapon_unequipped"|"weapon_changed"|"explosion"|"entity_damage_pre"|"key_down"|"key_up"
+---@alias HD2EventName "mission_started"|"mission_ended"|"player_spawned"|"player_died"|"entity_spawned"|"entity_died"|"entity_killed"|"entity_damaged"|"player_damaged"|"player_healed"|"player_fired"|"player_kill_credited"|"player_hit"|"player_damage_dealt"|"weapon_equipped"|"weapon_unequipped"|"weapon_changed"|"explosion"|"bughole_destroyed"|"entity_damage_pre"|"key_down"|"key_up"
 
 ---A world position snapshot (metres).
 ---@class HD2Vector3
@@ -3974,6 +3974,19 @@ local HD2Event_weapon_changed = {}
 ---@field local_player boolean The local player is credited.
 local HD2Event_explosion = {}
 
+---A bug hole was closed: its destruction stage left 0 (a grenade, a stratagem, a Hellbomb for a Bile Titan hole). Reported once per hole, on the host and on clients (each machine applies the same destruction). A hole already closed when Runtime starts watching is not reported. Who closed it is not known. Experimental: not live-tested; see docs/events.md#bug-holes.
+---@class HD2Event_bughole_destroyed : HD2Event
+---@field hole string The hole's kind, named after what it spawns: 'warrior', 'hunter', 'hiveguard', 'boomer', 'stalker', 'scavenger', 'prowler', 'spitter', 'bile_titan', 'shrieker', 'warrior_ceiling', 'warrior_captive', 'scavenger_captive', 'warrior_tutorial', 'base'.
+---@field name string The game's entity name: 'bug_spawner_' .. hole.
+---@field bile_titan boolean A Bile Titan hole (it needs a heavy explosive).
+---@field entity_id integer The hole's entity id. A closed hole stays an entity.
+---@field type string The hole's entity type (16 hex digits).
+---@field unit_id integer The hole's unit id.
+---@field level integer The destruction stage the game set (1 to 3).
+---@field position HD2Position|nil Where the hole is (a read-only snapshot), or nil when its unit's position is unreadable.
+---@field owned boolean This machine owns the hole entity (the host).
+local HD2Event_bughole_destroyed = {}
+
 ---Blocked: A pre-damage callback would have to run inside the native damage path before it applies (game.dll 0x9235F0). Runtime patches no game code, and nothing read at damage time can scale one attacker's or one weapon's damage: every multiplier there is global (Vitality, the relation table, mission modifiers) or belongs to the target (research/event-combat-F5FEE03DCFDB.json). Observe damage with entity_damaged.
 ---@class HD2Event_entity_damage_pre : HD2Event
 local HD2Event_entity_damage_pre = {}
@@ -4009,6 +4022,7 @@ local HD2Event_key_up = {}
 ---@alias HD2WeaponUnequippedEvent HD2Event_weapon_unequipped
 ---@alias HD2WeaponChangedEvent HD2Event_weapon_changed
 ---@alias HD2ExplosionEvent HD2Event_explosion
+---@alias HD2BugholeDestroyedEvent HD2Event_bughole_destroyed
 ---@alias HD2EntityDamagePreEvent HD2Event_entity_damage_pre
 ---@alias HD2KeyDownEvent HD2Event_key_down
 ---@alias HD2KeyUpEvent HD2Event_key_up
@@ -4065,6 +4079,7 @@ function HD2Events.mission_id() end
 ---@overload fun(name: "weapon_unequipped", callback: fun(event: HD2Event_weapon_unequipped), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(name: "weapon_changed", callback: fun(event: HD2Event_weapon_changed), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(name: "explosion", callback: fun(event: HD2Event_explosion), opts?: HD2SubscribeOptions): HD2Subscription
+---@overload fun(name: "bughole_destroyed", callback: fun(event: HD2Event_bughole_destroyed), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(name: "key_down", callback: fun(event: HD2Event_key_down), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(name: "key_up", callback: fun(event: HD2Event_key_up), opts?: HD2SubscribeOptions): HD2Subscription
 ---@param name HD2EventName
@@ -4091,6 +4106,7 @@ function HD2Events.on(name, callback, opts) end
 ---@overload fun(name: "weapon_unequipped", callback: fun(event: HD2Event_weapon_unequipped), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(name: "weapon_changed", callback: fun(event: HD2Event_weapon_changed), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(name: "explosion", callback: fun(event: HD2Event_explosion), opts?: HD2SubscribeOptions): HD2Subscription
+---@overload fun(name: "bughole_destroyed", callback: fun(event: HD2Event_bughole_destroyed), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(name: "key_down", callback: fun(event: HD2Event_key_down), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(name: "key_up", callback: fun(event: HD2Event_key_up), opts?: HD2SubscribeOptions): HD2Subscription
 ---@param name HD2EventName
@@ -4168,6 +4184,7 @@ function HD2ModContext:store() end
 ---@overload fun(self: HD2ModContext, name: "weapon_unequipped", callback: fun(event: HD2Event_weapon_unequipped), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(self: HD2ModContext, name: "weapon_changed", callback: fun(event: HD2Event_weapon_changed), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(self: HD2ModContext, name: "explosion", callback: fun(event: HD2Event_explosion), opts?: HD2SubscribeOptions): HD2Subscription
+---@overload fun(self: HD2ModContext, name: "bughole_destroyed", callback: fun(event: HD2Event_bughole_destroyed), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(self: HD2ModContext, name: "key_down", callback: fun(event: HD2Event_key_down), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(self: HD2ModContext, name: "key_up", callback: fun(event: HD2Event_key_up), opts?: HD2SubscribeOptions): HD2Subscription
 ---@param name HD2EventName
@@ -4194,6 +4211,7 @@ function HD2ModContext:on(name, callback, opts) end
 ---@overload fun(self: HD2ModContext, name: "weapon_unequipped", callback: fun(event: HD2Event_weapon_unequipped), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(self: HD2ModContext, name: "weapon_changed", callback: fun(event: HD2Event_weapon_changed), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(self: HD2ModContext, name: "explosion", callback: fun(event: HD2Event_explosion), opts?: HD2SubscribeOptions): HD2Subscription
+---@overload fun(self: HD2ModContext, name: "bughole_destroyed", callback: fun(event: HD2Event_bughole_destroyed), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(self: HD2ModContext, name: "key_down", callback: fun(event: HD2Event_key_down), opts?: HD2SubscribeOptions): HD2Subscription
 ---@overload fun(self: HD2ModContext, name: "key_up", callback: fun(event: HD2Event_key_up), opts?: HD2SubscribeOptions): HD2Subscription
 ---@param name HD2EventName

@@ -470,6 +470,58 @@ assert(names.name(12)==nil)
 return 'ok'
 """)
 
+    def test_a_closed_bug_hole_is_reported_once(self):
+        self.lua(r"""
+local seen={}
+local sub=api.events.on('bughole_destroyed',function(e)seen[#seen+1]=e end,{owner='mods/t/holes'})
+assert(sub.state=='active')
+local WARRIOR,TITAN,ROCK='8C31B749759CBD61','3A2CEF12ED32A088','0123456789ABCDEF'
+W.state(4)
+W.unit(0x400101,10,20,3)
+W.destructible({type=ROCK,entity=700,unit=0x400100,index=0x17000})
+W.destructible({type=WARRIOR,entity=701,unit=0x400101,index=0x17004})
+W.destructible({type=TITAN,entity=702,unit=0x400102,index=0x17010,owned=false})
+W.destructible({type=WARRIOR,entity=703,unit=0x400103,index=0x17020})
+W.destruction_stage(0x17020,1)                     -- already closed when Runtime starts watching: the baseline
+tick(4);assert(#seen==0,'nothing closed yet: '..#seen)
+-- A rock's destruction is not a bug hole.
+W.destruction_stage(0x17000,2);tick(4);assert(#seen==0)
+W.destruction_stage(0x17004,1);tick(4)
+assert(#seen==1,#seen)
+local e=seen[1]
+assert(e.event=='bughole_destroyed'and e.hole=='warrior'and e.name=='bug_spawner_warrior'and not e.bile_titan)
+assert(e.entity_id==701 and e.type==WARRIOR and e.unit_id==0x400101 and e.level==1 and e.owned==true)
+assert(e.position.x==10 and e.position.y==20 and e.position.z==3)
+-- A later stage of the same hole is not another closing.
+W.destruction_stage(0x17004,2);tick(4);assert(#seen==1)
+-- The Bile Titan hole on a client (not owned): a level unit, its position through its own class's accessor.
+W.unit(0x400102,-5,6,7,nil,true)
+assert(world_module.unit_position(world_module.open(),0x400102)==nil,'other readers keep the reviewed class only')
+W.destruction_stage(0x17010,3);tick(4)
+assert(#seen==2 and seen[2].hole=='bile_titan'and seen[2].bile_titan and seen[2].level==3 and seen[2].owned==false)
+assert(seen[2].position.x==-5 and seen[2].position.z==7)
+-- A hole whose unit is unreadable has no position.
+W.destructible({type=WARRIOR,entity=705,unit=0x400105,index=0x17040})
+tick(4);W.destruction_stage(0x17040,1);tick(4)
+assert(#seen==3 and seen[3].entity_id==705 and seen[3].position==nil)
+-- Instances move when one is removed: the moved hole keeps its state (no event), a new hole is a new baseline.
+W.remove_destructible(0)
+W.destructible({type=WARRIOR,entity=704,unit=0x400104,index=0x17030})
+tick(4);assert(#seen==3)
+W.destruction_stage(0x17030,1);tick(4)
+assert(#seen==4 and seen[4].entity_id==704,#seen)
+-- Checked 4 times a second, and nothing is read while nobody subscribes.
+local view=world_module.open().view
+api.events.on('mission_started',function()end,{owner='mods/t/holes'})
+tick(2);local before=view.reads;tick(2)
+local with_source=view.reads-before
+sub:unsubscribe()
+tick(2);before=view.reads;tick(2)
+assert(with_source-(view.reads-before)==6,'reads per poll '..with_source..' vs '..(view.reads-before))
+return 'ok'
+""")
+
+
 class EventWorldSnapshotReportTests(unittest.TestCase):
     def test_the_snapshot_validation_is_current_and_passed(self):
         import json

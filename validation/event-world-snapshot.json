@@ -3,6 +3,14 @@
  "build": "F5FEE03DCFDB",
  "snapshots": {
   "F5FEE03DCFDB-20260926T222226Z.hd2snap": {
+   "bugHoles": {
+    "count": 0,
+    "event": false,
+    "events": 0,
+    "first": false,
+    "holes": 0,
+    "status": "active"
+   },
    "corpses": {
     "count": 0,
     "of602": false,
@@ -134,7 +142,7 @@
      "type": 293
     }
    ],
-   "pins": 272,
+   "pins": 293,
    "players": [
     {
      "avatar": 249,
@@ -146,7 +154,7 @@
    ],
    "projectileSystemActive": 0,
    "queueEntries": {},
-   "reads": 471,
+   "reads": 338,
    "sources": {},
    "stats": {
     "dealt_damage": 0,
@@ -162,6 +170,14 @@
    "problems": []
   },
   "F5FEE03DCFDB-20260927T155654Z.hd2snap": {
+   "bugHoles": {
+    "count": 0,
+    "event": false,
+    "events": 0,
+    "first": false,
+    "holes": 0,
+    "status": "active"
+   },
    "corpses": {
     "count": 0,
     "of602": false,
@@ -293,7 +309,7 @@
      "type": 293
     }
    ],
-   "pins": 272,
+   "pins": 293,
    "players": [
     {
      "avatar": 249,
@@ -305,7 +321,7 @@
    ],
    "projectileSystemActive": 0,
    "queueEntries": {},
-   "reads": 471,
+   "reads": 338,
    "sources": {},
    "stats": {
     "dealt_damage": 0,
@@ -321,6 +337,14 @@
    "problems": []
   },
   "F5FEE03DCFDB-20260927T160033Z.hd2snap": {
+   "bugHoles": {
+    "count": 0,
+    "event": false,
+    "events": 0,
+    "first": false,
+    "holes": 0,
+    "status": "active"
+   },
    "corpses": {
     "count": 0,
     "of602": false,
@@ -452,7 +476,7 @@
      "type": 293
     }
    ],
-   "pins": 272,
+   "pins": 293,
    "players": [
     {
      "avatar": 249,
@@ -464,7 +488,7 @@
    ],
    "projectileSystemActive": 0,
    "queueEntries": {},
-   "reads": 471,
+   "reads": 338,
    "sources": {},
    "stats": {
     "dealt_damage": 0,
@@ -480,6 +504,23 @@
    "problems": []
   },
   "F5FEE03DCFDB-20260929T172647Z-mission-host.hd2snap": {
+   "bugHoles": {
+    "count": 156,
+    "event": {
+     "entity": 359,
+     "hole": "bile_titan",
+     "level": 2,
+     "owned": true,
+     "position": true
+    },
+    "events": 1,
+    "first": {
+     "entity": 359,
+     "kind": "bile_titan"
+    },
+    "holes": 33,
+    "status": "active"
+   },
    "corpses": {
     "count": 1,
     "of602": false,
@@ -617,7 +658,7 @@
      "type": 293
     }
    ],
-   "pins": 272,
+   "pins": 293,
    "players": [
     {
      "avatar": 602,
@@ -636,7 +677,7 @@
      "type": 113
     }
    ],
-   "reads": 518,
+   "reads": 354,
    "sources": {},
    "stats": {
     "dealt_damage": 0,
@@ -652,6 +693,23 @@
    "problems": []
   },
   "F5FEE03DCFDB-20260929T172918Z-mission-host-alive.hd2snap": {
+   "bugHoles": {
+    "count": 156,
+    "event": {
+     "entity": 359,
+     "hole": "bile_titan",
+     "level": 2,
+     "owned": true,
+     "position": true
+    },
+    "events": 1,
+    "first": {
+     "entity": 359,
+     "kind": "bile_titan"
+    },
+    "holes": 33,
+    "status": "active"
+   },
    "corpses": {
     "count": 9,
     "of602": false,
@@ -789,7 +847,7 @@
      "type": 293
     }
    ],
-   "pins": 272,
+   "pins": 293,
    "players": [
     {
      "avatar": 602,
@@ -808,7 +866,7 @@
      "type": 50
     }
    ],
-   "reads": 518,
+   "reads": 354,
    "sources": [
     {
      "damage": 17272,
@@ -839,6 +897,23 @@
    "problems": []
   },
   "F5FEE03DCFDB-20260929T173206Z-mission-host-after-reinforce.hd2snap": {
+   "bugHoles": {
+    "count": 156,
+    "event": {
+     "entity": 359,
+     "hole": "bile_titan",
+     "level": 2,
+     "owned": true,
+     "position": true
+    },
+    "events": 1,
+    "first": {
+     "entity": 359,
+     "kind": "bile_titan"
+    },
+    "holes": 33,
+    "status": "active"
+   },
    "corpses": {
     "count": 31,
     "of602": 851,
@@ -971,7 +1046,7 @@
      "type": 293
     }
    ],
-   "pins": 272,
+   "pins": 293,
    "players": [
     {
      "avatar": 852,
@@ -1002,7 +1077,7 @@
      "type": 50
     }
    ],
-   "reads": 499,
+   "reads": 344,
    "sources": [
     {
      "damage": 1721,
@@ -1041,6 +1116,14 @@
    "problems": []
   },
   "F5FEE03DCFDB-20260929T173443Z-mission-end-transition.hd2snap": {
+   "bugHoles": {
+    "count": 0,
+    "event": false,
+    "events": 0,
+    "first": false,
+    "holes": 0,
+    "status": "active"
+   },
    "corpses": {
     "count": 0,
     "of602": false,
@@ -1154,7 +1237,7 @@
      "type": 293
     }
    ],
-   "pins": 272,
+   "pins": 293,
    "players": [
     {
      "entity": 5,
@@ -1184,7 +1267,7 @@
      "type": 50
     }
    ],
-   "reads": 405,
+   "reads": 314,
    "sources": [
     {
      "damage": 7360,

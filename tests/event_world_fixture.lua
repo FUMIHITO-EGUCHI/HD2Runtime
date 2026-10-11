@@ -231,6 +231,45 @@ function W.corpse(origin,corpse,unit,type_hex)
     write(corpse_manager+C.count,u32(corpse_count))
 end
 
+-- Destructible instances (domains/event_natives.lua destruction): W.destructible{type, entity, unit, index, owned}
+-- appends one (its descriptor, its destruction world record at `index`, registered at stage 0) and returns its
+-- instance number; W.destruction_stage(index, stage) is the game's destruction update; W.remove_destructible(i)
+-- removes instance i as the game does (the last instance moves down), clearing its record's flags.
+local DS=natives.destruction
+local destructible_manager=alloc(DS.worldIndex+DS.maxInstances*4+0x100)
+local destruction_world=alloc(DS.records+0x18000*DS.stride)
+write(GAME+DS.global,u64(destructible_manager));write(GAME+DS.world,u64(destruction_world))
+local destructible_count=0
+local destructible_records={}
+function W.destructible(spec)
+    local descriptor=alloc(0x18)
+    write(descriptor,type_bytes(spec.type)..u32(spec.entity)..u32(spec.unit)..u32(0x7FFF)..u32(spec.owned==false and 0 or 1))
+    local i=destructible_count
+    write(destructible_manager+DS.descriptors+i*8,u64(descriptor))
+    write(destructible_manager+DS.worldIndex+i*4,u32(spec.index))
+    local record=destruction_world+DS.records+spec.index*DS.stride
+    write(record+DS.unit,u32(spec.unit));write(record+DS.stage,string.char(0));write(record+DS.flags,string.char(1))
+    destructible_records[i]={descriptor=descriptor,index=spec.index}
+    destructible_count=i+1
+    write(destructible_manager+DS.count,u32(destructible_count))
+    return i
+end
+function W.destruction_stage(index,stage)
+    local record=destruction_world+DS.records+index*DS.stride
+    write(record+DS.stage,string.char(stage))
+    write(record+DS.flags,string.char(read(record+DS.flags,1):byte()+2^stage))
+end
+function W.remove_destructible(i)
+    local last=destructible_count-1
+    write(destruction_world+DS.records+destructible_records[i].index*DS.stride+DS.flags,string.char(0))
+    local moved=destructible_records[last]
+    write(destructible_manager+DS.descriptors+i*8,u64(moved.descriptor))
+    write(destructible_manager+DS.worldIndex+i*4,u32(moved.index))
+    destructible_records[i]=moved;destructible_records[last]=nil
+    destructible_count=last
+    write(destructible_manager+DS.count,u32(destructible_count))
+end
+
 -- The explosion queue and the settings table the drain indexes by type (a record starts with its type).
 local explosion_queue=alloc(0x28+X.capacity*0x98)
 write(GAME+X.queue,u64(explosion_queue))
@@ -491,13 +530,16 @@ function W.heal_now(entity,fraction)
 end
 -- Units: a position for a unit id.
 -- A unit at (x, y, z); axes (optional) = {right, forward, up} rotation rows of its root world pose, each {x, y, z}.
-function W.unit(unit,x,y,z,axes)
+-- level: a level-placed unit (the Bile Titan holes' class: its own vtable in the executable, scene graph at +0x48).
+local level_vtable=EXE+natives.destruction.levelUnit.vtable
+write(level_vtable+0xE8,u64(EXE+natives.destruction.levelUnit.method))
+function W.unit(unit,x,y,z,axes,level)
     local index,generation=unit%4194304,math.floor(unit/4194304)%256
     write(unit_generations+index,string.char(generation))
     local object=alloc(0x100)
-    write(object,u64(vtable));write(object+E.unitId,u32(unit))
+    write(object,u64(level and level_vtable or vtable));write(object+E.unitId,u32(unit))
     local poses=alloc(0x100)
-    write(object+E.sceneGraphOffset+E.poses,u64(poses))
+    write(object+(level and natives.destruction.levelUnit.sceneGraphOffset or E.sceneGraphOffset)+E.poses,u64(poses))
     for row,axis in ipairs(axes or{{x=1,y=0,z=0},{x=0,y=1,z=0},{x=0,y=0,z=1}})do
         write(poses+(row-1)*16,f32(axis.x)..f32(axis.y)..f32(axis.z))
     end

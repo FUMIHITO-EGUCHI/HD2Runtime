@@ -541,8 +541,85 @@ function explosions.poll(source)
 end
 M.explosions=events.register_source(explosions)
 
+---------------------------------------------------------------------------------------------------- bug holes --
+-- bughole_destroyed: a bug hole's destruction stage left 0 (research/event-destruction-F5FEE03DCFDB.json), checked 4
+-- times a second. The holes are the Destructible instances whose entity is a bug_spawner_* entity; each is linked to
+-- its destruction world record while that record carries the hole's unit and is registered. The stage only grows and
+-- a closed hole keeps its entity, so one hole is reported once. Every machine applies the same destruction to its own
+-- record (the game's network handler), host and clients alike. A hole seen for the first time is the baseline (one
+-- already closed then is not reported). Who closed it is not known: the game keeps no creditor. A poll costs six reads
+-- (the two globals, the count, the two instance arrays, the holes' records); a descriptor is read once per instance.
+local bug_holes={name='bug_holes',events={'bughole_destroyed'},depends={'game_state'},interval=0.25}
+function bug_holes.start(source)
+    local ok,why=open(source)
+    if not ok then return nil,why end
+    local view=source.world.view
+    source.pointer_block,source.index_block,source.record_block=view.slot(),view.slot(),view.slot()
+    source.known={};source.next=0;source.epoch=events.state.epoch;source.stamp=0
+    return true
+end
+function bug_holes.stop(source)source.world=nil;source.known=nil end
+function bug_holes.poll(source)
+    local now=events.state.now
+    if now<source.next then return end
+    source.next=now+bug_holes.interval
+    if source.epoch~=events.state.epoch then source.known={};source.epoch=events.state.epoch end
+    local world=source.world
+    local list=world_module.destructibles(world,source.pointer_block,source.index_block)
+    if not list then return end
+    -- Instances are remembered by descriptor pointer and record index: a new instance in a reused descriptor gets a
+    -- new record, so the pair changing makes its descriptor read again.
+    local known,stamp=source.known,source.stamp+1
+    source.stamp=stamp
+    local first,last
+    for i=0,list.count-1 do
+        local pointer,index=list.pointers:ptr(i*8),list.indices:i32(i*4)
+        if pointer and index>=0 then
+            local item=known[pointer]
+            if not item or item.index~=index then
+                local d=world_module.destructible_descriptor(world,pointer)
+                local kind=d and world_module.bug_hole_kind(d.resource)
+                item={index=index,kind=kind,resource=d and d.resource,entity=d and d.entity,unit=d and d.unit,
+                    owned=d and d.owned}
+                if not d then item=nil end
+                known[pointer]=item
+            end
+            if item then
+                item.stamp=stamp
+                if item.kind then
+                    if not first or index<first then first=index end
+                    if not last or index>last then last=index end
+                end
+            end
+        end
+    end
+    for pointer,item in pairs(known)do if item.stamp~=stamp then known[pointer]=nil end end
+    if not first then return end
+    local records=world_module.destruction_records(world,list,first,last,source.record_block)
+    if not records then return end
+    local D=natives.destruction
+    for pointer,item in pairs(known)do
+        if item.kind then
+            local unit,stage,registered=world_module.destruction_record(records,(item.index-first)*D.stride)
+            if unit~=item.unit or not registered then
+                known[pointer]=nil      -- not this hole's record (any more): read again next poll
+            else
+                if item.stage==0 and stage>0 then
+                    local at=world_module.unit_position(world,item.unit,true)   -- Bile Titan holes are level units
+                    events.queue('bughole_destroyed',{hole=item.kind,name='bug_spawner_'..item.kind,
+                        bile_titan=item.kind=='bile_titan',entity_id=item.entity,type=item.resource,
+                        unit_id=item.unit,level=stage,position=at and position(at)or nil,owned=item.owned})
+                end
+                item.stage=stage
+            end
+        end
+    end
+    metrics.count('events.bug_hole_scans')
+end
+M.bug_holes=events.register_source(bug_holes)
+
 function M.reset_for_tests()
-    for _,source in ipairs({M.game_state,M.players,M.health,M.stats,M.weapons,M.explosions})do
+    for _,source in ipairs({M.game_state,M.players,M.health,M.stats,M.weapons,M.explosions,M.bug_holes})do
         source.world=nil;source.known=nil
     end
     world_module.observe_explosion_requests('explosion_event',nil)

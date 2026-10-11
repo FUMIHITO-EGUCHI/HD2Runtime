@@ -16,6 +16,7 @@ local C=natives.corpses
 local X=natives.explosion
 local PJ,ST=natives.projectile,natives.status
 local WI=natives.wielder
+local D=natives.destruction
 local IMAGE_SIZE,EXE_IMAGE_SIZE=natives.source.imageSize,natives.source.exeImageSize
 local opened,adapter_override,created
 local request_observers={}   -- observers of Runtime's own explosion requests (explode)
@@ -270,7 +271,9 @@ end
 -- must still carry the unit id, and its scene-graph accessor must be the reviewed one (lea rax,[rcx+0x60]; ret).
 -- The world pose array of a unit (its root node's 4x4 world matrix first), after the generation, identity and
 -- scene-graph accessor checks; nil otherwise.
-local function unit_poses(world,unit)
+-- level: also a level-placed unit (research/event-destruction-F5FEE03DCFDB.json: the Bile Titan holes' class, its
+-- scene graph at +0x48 through its own reviewed accessor; the engine's world_position path is the same for both).
+local function unit_poses(world,unit,level)
     if type(unit)~='number'or unit<=0 or unit>=4294967296 then return nil end
     local index,generation=unit%4194304,math.floor(unit/4194304)%256
     local registry=world.view.pointer(world.exe+E.units)
@@ -285,11 +288,15 @@ local function unit_poses(world,unit)
     if not object or world.view.u32(object+E.unitId)~=unit then return nil end
     local vtable=world.view.pointer(object)
     local method=vtable and world.view.pointer(vtable+0xE8)
+    if level and vtable==world.exe+D.levelUnit.vtable and method==world.exe+D.levelUnit.method
+        and world.view.proves(method,D.levelUnit.methodBytes)then
+        return world.view.pointer(object+D.levelUnit.sceneGraphOffset+E.poses)
+    end
     if method~=world.exe+E.sceneGraphMethod or not world.view.proves(method,E.sceneGraphMethodBytes)then return nil end
     return world.view.pointer(object+E.sceneGraphOffset+E.poses)
 end
-function M.unit_position(world,unit)
-    local poses=unit_poses(world,unit)
+function M.unit_position(world,unit,level)
+    local poses=unit_poses(world,unit,level)
     local bytes=poses and world.view.read(poses+E.translation,12)
     if not bytes then return nil end
     local x,y,z=b.value(bytes,0,'f32'),b.value(bytes,4,'f32'),b.value(bytes,8,'f32')
@@ -1082,4 +1089,43 @@ function M.add_velocity(world,spec)
     metrics.count('events.native_velocity_changes')
     return {before={x=v.x,y=v.y,z=v.z},after=after}
 end
+------------------------------------------------------------------------------------------------- bug holes --
+-- Destructible entities and their destruction stage (research/event-destruction-F5FEE03DCFDB.json). The Destructible
+-- manager holds `count` instances: instance i's descriptor pointer and its destruction world record index. The world
+-- record ({u32 unit, u16 definition, u8, u8 stage, u8 flags}) belongs to the instance while it carries the
+-- descriptor's unit and is registered (flags bit 0). The stage only grows; a closed bug hole keeps its entity.
+
+-- {count, world, pointers, indices} (two bulk reads into the given blocks), or nil when unreadable or implausible.
+function M.destructibles(world,pointer_block,index_block)
+    local manager=world.view.pointer(world.game+D.global)
+    local destruction=world.view.pointer(world.game+D.world)
+    if not manager or not destruction then return nil end
+    local count=world.view.u32(manager+D.count)
+    if not count or count>D.maxInstances then return nil end
+    local result={count=count,world=destruction}
+    if count==0 then return result end
+    result.pointers=world.view.fill(pointer_block,manager+D.descriptors,count*8)
+    result.indices=world.view.fill(index_block,manager+D.worldIndex,count*4)
+    if not result.pointers or not result.indices then return nil end
+    return result
+end
+-- A Destructible descriptor: {resource (16 hex digits), entity, unit, owned}, or nil when unreadable.
+function M.destructible_descriptor(world,pointer)
+    local bytes=pointer and world.view.read(pointer,H.descriptor.size)
+    if not bytes then return nil end
+    local P=H.descriptor
+    return {resource=string.format('%08X%08X',b.u32(bytes,P.type+4),b.u32(bytes,P.type)),entity=b.u32(bytes,P.entity),
+        unit=b.u32(bytes,P.unit),owned=b.u32(bytes,P.flags)%2==1}
+end
+-- The destruction world records first..last (one read), as a block; record i is at (i - first) * D.stride.
+function M.destruction_records(world,destructibles,first,last,block)
+    if first<0 or last<first then return nil end
+    return world.view.fill(block,destructibles.world+D.records+first*D.stride,(last-first+1)*D.stride)
+end
+-- {unit, stage, registered} of the record at `offset` in a destruction_records block.
+function M.destruction_record(records,offset)
+    return records:u32(offset+D.unit),records:u8(offset+D.stage),records:u8(offset+D.flags)%2==1
+end
+-- The bug hole kind ('warrior', 'bile_titan', ...) of an entity resource, or nil when it is not a bug hole.
+function M.bug_hole_kind(resource)return D.holes[resource]end
 return M
