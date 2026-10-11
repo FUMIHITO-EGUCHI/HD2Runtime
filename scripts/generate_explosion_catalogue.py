@@ -12,8 +12,10 @@ Rules carried into the tables:
 * every field of a catalogued explosion needs allow_unverified_effect (no edit through this target is live-tested);
   a row more than one owner requests, or a damage row more than one reference uses, also needs allow_shared;
 * a payload (an impact or expiry explosion of a weapon projectile, an attack output slot, a custom projectile row) may
-  reference an explosion whose package is known and is not an objective package; a donor without a live test needs
-  allow_unverified_reference (and allow_unverified_effect, as every projectile donor);
+  reference an explosion whose package is known; a donor without a live test needs allow_unverified_reference (and
+  allow_unverified_effect, as every projectile donor). An objective's explosion (OBJECTIVE: the Cyborg Production
+  Unit's, the MS-N223 Shredder Silo blast) is one since 0.31.2, with BOTH its objective packages (effect and sound,
+  package.keys); before, it was refused (docs/explosions.md "The Cyborg Production Unit as a payload");
 * a spawn (hd2.explosions.spawn) needs a package (or the mission effects package resident) and the type proven against
   the settings table; an explosion outside the reviewed spawn set (event-actions: the named explosions and the
   catalogued weapon explosions) also needs allow_unverified_effect;
@@ -72,9 +74,15 @@ LABELS = {'explosion.inner_radius': 'Inner radius', 'explosion.outer_radius': 'O
     'explosion.damage.ap_large': 'AP: large angle', 'explosion.damage.ap_extreme': 'AP: extreme angle',
     'explosion.damage.demolition': 'Demolition', 'explosion.damage.stagger': 'Stagger',
     'explosion.damage.push_force': 'Push force'}
-# Packages a payload may load: an objective package (the Cyborg Production Unit's effect and sound) is never one.
+# Packages a payload may load.
 PAYLOAD_VIA = {'own_loadout_package', 'stratagem_call_in_package', 'effect_loadout_package', 'mission_effects_package',
     'named_explosion_package'}
+# Named explosions an objective's ability requests: their effect and their sound ship in two objective packages
+# (research event-actions assets; package-residency 'explosion/<name>' and 'explosion/<name>/sound'). A payload or a
+# spawn of one loads BOTH (package.keys). Before 0.31.2 such an explosion was never a payload: the catalogue key holds
+# its effect package only, so its sound would have been missing. The MS-N223 Shredder Silo loads the same two packages
+# and requests the same explosion (live: drawn and sounded, schemas/live_evidence.json custom_stratagem_silo).
+OBJECTIVE = {'Cyborg Production Unit'}
 
 
 def load(path):
@@ -153,8 +161,17 @@ def outputs(research_path=RESEARCH):
                 'currentDefault': value, 'editable': editable, 'reason': reason, 'shared': shared,
                 'range': {'min': ranges[field_id][0], 'max': ranges[field_id][1]}}
         via = package and package['via']
-        payload = known and via in PAYLOAD_VIA and not (item['type'] in legacy and legacy[item['type']]['kind'] == 'named'
-            and legacy[item['type']]['name'] == 'Cyborg Production Unit')
+        keys = [key]
+        objective = (item['type'] in legacy and legacy[item['type']]['kind'] == 'named'
+            and legacy[item['type']]['name'] in OBJECTIVE)
+        if objective:
+            name = legacy[item['type']]['name']
+            effect, sound = residency.get('explosion/' + name), residency.get('explosion/' + name + '/sound')
+            if not (effect and sound and effect['known'] and sound['known']
+                    and effect['dependency']['package'] == dependency['dependency']['package']):
+                raise ValueError(f'objective explosion {item["name"]}: its effect and sound packages changed')
+            keys = [key, 'explosion/' + name + '/sound']
+        payload = known and via in PAYLOAD_VIA
         owners = []
         for owner in item['owners']:
             entry = {'category': owner.get('category'), 'name': owner.get('name'), 'role': owner.get('role'),
@@ -170,7 +187,8 @@ def outputs(research_path=RESEARCH):
                 'shared': damage['users'] > 1} if damage else None,
             'shrapnel': stats['shrapnelProjectile'] != 0, 'arc': stats['arc'] != 0,
             'package': {'key': key, 'via': via, 'mission': bool(package.get('mission')), 'name': package.get('name'),
-                'bytes': package.get('bytes')} if known else None,
+                'bytes': package.get('bytes'), **({'keys': keys, 'objective': True} if objective else {})}
+                if known else None,
             'payload': payload, 'spawn': bool(item['settingsVerified'] and known),
             'legacy': legacy.get(item['type']), 'values': [fields[f[0]]['currentDefault'] for f in FIELDS]}
         if item['name'] in aliases_of:
@@ -179,7 +197,8 @@ def outputs(research_path=RESEARCH):
                 if item['name'] in aliases_of else {}), 'label': item['label'], 'family': item['family'],
             'evidence': item['evidenceTier'], 'shared': item['shared'], 'owners': owners,
             'package': {'known': known, 'name': (package or {}).get('name') if known else None,
-                'via': via if known else None, 'mission': bool(known and package.get('mission'))},
+                'via': via if known else None, 'mission': bool(known and package.get('mission')),
+                **({'objective': True, 'packages': len(keys)} if known and objective else {})},
             'payload': payload, 'spawn': runtime[item['name']]['spawn'],
             'reviewedSpawn': item['type'] in legacy, 'legacyName': (legacy.get(item['type']) or {}).get('name'),
             'stats': {'innerRadius': stats['innerRadius'], 'outerRadius': stats['outerRadius'],

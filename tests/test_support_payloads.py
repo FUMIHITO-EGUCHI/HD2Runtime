@@ -282,10 +282,10 @@ class OptionTests(unittest.TestCase):
         names = [item['name'] for item in OPTIONS['options']]
         self.assertEqual(len(names), len(set(names)))
         self.assertEqual(set(names), payload)
-        self.assertEqual(OPTIONS['summary']['options'], 138)
+        self.assertEqual(OPTIONS['summary']['options'], 139)
         self.assertEqual(OPTIONS['summary']['byGroup'], {'weapon': 18, 'support_weapon': 31, 'throwable': 23,
             'orbital': 13, 'eagle': 12, 'hellbomb': 2, 'sentry': 7, 'mine': 4, 'vehicle': 11, 'backpack': 1,
-            'enemy': 7, 'other': 9})
+            'enemy': 7, 'other': 10})
         by = {item['name']: item for item in OPTIONS['options']}
         for name in ('stratagem/nux223_hellbomb/behavior', 'backpack/b100_portable_hellbomb/behavior'):
             self.assertEqual(by[name]['group'], 'hellbomb')
@@ -305,6 +305,52 @@ class OptionTests(unittest.TestCase):
         order = [groups.index(item['group']) for item in OPTIONS['options']]
         self.assertEqual(order, sorted(order))
 
+    def test_the_excessively_large_nuke_is_the_silo_blast_with_both_objective_packages(self):
+        # 0.31.2: the MS-N223 Shredder Silo's blast (the Cyborg Production Unit explosion, native and unmodified) as a
+        # payload option, its two objective packages (effect and sound) loaded before the write.
+        nuke = next(item for item in OPTIONS['options'] if item['label'] == 'EXCESSIVELY LARGE NUKE')
+        self.assertEqual(nuke['name'], 'entity/cyborg_production_unit/ability')
+        self.assertEqual((nuke['group'], nuke['owner']), ('other', 'Cyborg Production Unit'))
+        self.assertEqual(nuke['warnings'], ['very_large', 'objective_packages'])
+        self.assertEqual((nuke['damage'], nuke['innerRadius'], nuke['outerRadius']), (10000, 50, 100))
+        self.assertEqual(nuke['package'], {'mission': False, 'loadedByRuntime': True, 'via': 'named_explosion_package',
+            'objective': True, 'packages': 2})
+        self.assertIn('Shredder Silo', nuke['note'])
+        self.assertEqual(OPTIONS['summary']['objectivePackages'], 1)
+        self.assertIn('objective_packages', OPTIONS['warnings'])
+        self.assertEqual(run(r'''
+local hd2=require('hd2runtime/api/hd2')
+local W=require('hd2runtime/domains/player_weapon_writes')
+local O=require('hd2runtime/domains/output_writes')
+local residency=require('hd2runtime/domains/package_residency')
+local found=hd2.explosions.payload_options({search='nuke'})
+assert(#found==1 and found[1].label=='EXCESSIVELY LARGE NUKE'and found[1].package.objective and found[1].note)
+-- the same two packages the silo's named blast loads (api/actions.lua resolve('Cyborg Production Unit'))
+local want={[residency.dependencies['explosion/Cyborg Production Unit'].package]=true,
+    [residency.dependencies['explosion/Cyborg Production Unit/sound'].package]=true}
+local function packages(spec)
+    local got,n={},0
+    for _,d in ipairs(require('hd2runtime/core/assets').collect(spec))do got[d.package]=true;n=n+1 end
+    for p in pairs(want)do assert(got[p],'missing objective package')end
+    return n
+end
+-- a support weapon's impact, a primary's impact, an attack output's impact slot
+local apw=hd2.support_weapon('APW-1 Anti-Materiel Rifle'):attack('primary'):projectile():terminal_action('impact')
+assert(packages(W.validate_patch({id='n1',target=apw,field='terminal.explosion',expect=apw:current(),
+    value=found[1].value,allow_shared=true,allow_unverified_effect=true,allow_unverified_reference=true}))==2)
+local lib=hd2.weapon('AR-23 Liberator'):attack('primary'):projectile():terminal_action('impact')
+local o=lib:payload_options({search='nuke'})
+assert(#o.options==1)
+local acks={}for _,a in ipairs(o.options[1].acknowledgements)do acks[a]=true end
+assert(packages(W.validate_patch({id='n2',target=lib,field='terminal.explosion',expect=lib:current(),
+    value=o.options[1].value,allow_shared=acks.allow_shared,allow_unverified_effect=acks.allow_unverified_effect,
+    allow_unverified_reference=acks.allow_unverified_reference}))==2)
+-- still refused without the catalogue acknowledgement
+assert(not pcall(W.validate_patch,{id='n3',target=apw,field='terminal.explosion',expect=apw:current(),
+    value=found[1].value,allow_shared=true,allow_unverified_effect=true}))
+return 'ok'
+'''), b'ok')
+
     def test_fields_list_their_refusals(self):
         self.assertEqual(OPTIONS['summary']['payloadFields'], 185)
         self.assertEqual(OPTIONS['summary']['payloadFieldsByResource'], {'player_weapon': 134, 'support_weapon': 51})
@@ -321,7 +367,7 @@ class OptionTests(unittest.TestCase):
         self.assertEqual(run(r'''
 local hd2=require('hd2runtime/api/hd2')
 local W=require('hd2runtime/domains/player_weapon_writes')
-assert(#hd2.explosions.payload_options()==138)
+assert(#hd2.explosions.payload_options()==139)
 assert(#hd2.explosions.payload_options({group='hellbomb'})==2)
 assert(#hd2.explosions.payload_groups()==12 and hd2.explosions.payload_warnings().very_large)
 local function check(target,expected_options)
@@ -344,16 +390,16 @@ local function check(target,expected_options)
     return o
 end
 -- the APW-1's bullet (no explosion: every option) and the AC-8 flak (its own explosion is not repeated as an option)
-local apw=check(hd2.support_weapon('APW-1 Anti-Materiel Rifle'):attack('primary'):projectile():terminal_action('impact'),138)
+local apw=check(hd2.support_weapon('APW-1 Anti-Materiel Rifle'):attack('primary'):projectile():terminal_action('impact'),139)
 assert(apw.own==nil and apw.none and apw.shared and#apw.excluded==0)
-local flak=check(hd2.support_weapon('AC-8 Autocannon'):attack('programmable'):projectile():terminal_action('impact'),137)
+local flak=check(hd2.support_weapon('AC-8 Autocannon'):attack('programmable'):projectile():terminal_action('impact'),138)
 assert(flak.own.name=='support_weapon/ac8_autocannon/function_impact')
 -- the W.A.S.P.'s carried row refuses the explosion that releases it as shrapnel
 local wasp=hd2.explosions.payload_options(
     hd2.support_weapon('StA-X3 W.A.S.P. Launcher'):attack('primary'):projectile():terminal_action('impact'))
 assert(#wasp.excluded==1 and wasp.excluded[1].reason:find('RECURSIVE_COMPOSITION',1,true))
 -- a primary: another primary's own explosion keeps that weapon's handle (no catalogue acknowledgement)
-local eruptor=check(hd2.weapon('R-36 Eruptor'):attack('primary'):projectile():terminal_action('impact'),137)
+local eruptor=check(hd2.weapon('R-36 Eruptor'):attack('primary'):projectile():terminal_action('impact'),138)
 local via=0
 for _,item in ipairs(eruptor.options)do if item.via=='weapon_handle'then via=via+1;assert(#item.acknowledgements==0)end end
 assert(via>0)
@@ -364,11 +410,32 @@ local orbital=hd2.support_weapon('AC-8 Autocannon'):attack('programmable'):proje
 assert(#orbital.options==13)
 for _,g in ipairs(orbital.groups)do assert(g.id=='orbital'and g.count==13 or g.count==0)end
 assert(#hd2.explosions.payload_options({search='hellbomb'})==2)
-assert(#hd2.explosions.payload_options({without_warning='very_large'})==138-17)
+assert(#hd2.explosions.payload_options({without_warning='very_large'})==139-18)
 local ok=pcall(hd2.explosions.payload_options,{colour='red'})
 assert(not ok)
 return 'ok'
 '''), b'ok')
+
+
+class NukeSnapshotTests(unittest.TestCase):
+    def test_the_nuke_payload_resolves_against_the_live_row_on_the_snapshot(self):
+        from test_multi_mod_composition import build_profile, snapshot_run
+        if not build_profile.SNAPSHOT.is_file():
+            self.skipTest('retained current-build snapshot not available')
+        # The write path re-proves the Cyborg Production Unit's live ExplosionSettings row (type, damage link, radii)
+        # and writes only its type into the APW-1's impact member; read-only here (no write, no protection change).
+        result = snapshot_run(r'''
+local nuke=hd2.explosions.payload_options({search='nuke'})[1]
+local apw=hd2.support_weapon('APW-1 Anti-Materiel Rifle'):attack('primary'):projectile():terminal_action('impact')
+local changes=resolve('patch',{id='nuke',target=apw,field='terminal.explosion',expect=apw:current(),value=nuke.value,
+ allow_shared=true,allow_unverified_effect=true,allow_unverified_reference=true})
+check(#changes==1,'one member')
+check(b.u32(changes[1].desired,0)==require('hd2runtime/domains/explosion_catalogue').explosions[nuke.name].type,
+ 'the explosion type')
+check(changes[1].before~=changes[1].desired,'the APW-1 had another explosion')
+check(counts.writes==0 and counts.protection_changes==0,'read-only')
+return json.encode({ok=true})''')
+        self.assertTrue(result['ok'])
 
 
 class SnapshotReportTests(unittest.TestCase):

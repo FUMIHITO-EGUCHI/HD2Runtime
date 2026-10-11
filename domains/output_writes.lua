@@ -137,7 +137,7 @@ local function validate_change(output,item,request)
             or desired.donor.id..'#'..desired.slot
         assert(request.allow_unverified_effect==true or live_proven(field,key),'field requires '
             ..'allow_unverified_effect=true: '..item.field..' ('..tostring(field.acknowledgementReason)..')')
-        local dependency
+        local dependency,more
         if desired.catalogue then
             -- Any catalogued explosion whose package is known; not live-tested as a slot donor.
             if not desired.entry.payload then
@@ -146,11 +146,9 @@ local function validate_change(output,item,request)
             end
             assert(request.allow_unverified_reference==true,'a catalogued explosion donor is not live-tested and '
                 ..'requires allow_unverified_reference=true: '..desired.catalogue)
-            if not desired.entry.package.mission then
-                dependency=require('hd2runtime/core/assets').dependency(desired.entry.package.key)
-                assert(dependency,'ASSET_UNAVAILABLE: the package of the '..desired.catalogue..' explosion is not '
-                    ..'catalogued')
-            end
+            -- Its package; an objective's explosion both of its objective packages.
+            local dependencies=require('hd2runtime/core/assets').explosion_dependencies(desired.entry,desired.catalogue)
+            if dependencies then dependency,more=dependencies[1],{unpack(dependencies,2)}end
         end
         assert(not expected.catalogue,'expect must be this output\'s own '..item.field..' handle or "none"')
         assert(expected.type==field.currentDefault and(expected.none or expected.donor.id==output.id
@@ -161,7 +159,8 @@ local function validate_change(output,item,request)
             expected=b.encode(expected.type,'u32'),desired=b.encode(desired.type,'u32'),donor=desired.donor,
             donor_field=desired.donor_field,expect=item.expect,value=item.value,catalogue_explosion=desired.entry,
             catalogue_name=desired.catalogue,
-            asset_dependency=desired.donor and donor_dependency(output,desired.donor)or dependency}
+            asset_dependency=desired.donor and donor_dependency(output,desired.donor)or dependency,
+            asset_dependencies=not desired.donor and more or nil}
     end
     assert(field.editable,'field is read-only: '..item.field)
     assert(not field.shared or request.allow_shared==true,'shared field requires allow_shared=true: '..item.field
@@ -210,6 +209,10 @@ local function validate(request,multiple)
         if change.asset_dependency then
             result.asset_dependencies=result.asset_dependencies or{}
             result.asset_dependencies[#result.asset_dependencies+1]=change.asset_dependency
+        end
+        for _,dependency in ipairs(change.asset_dependencies or{})do
+            result.asset_dependencies=result.asset_dependencies or{}
+            result.asset_dependencies[#result.asset_dependencies+1]=dependency
         end
     end
     result.field=request.field;result.expect=request.expect;result.value=request.value

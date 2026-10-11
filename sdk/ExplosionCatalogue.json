@@ -221,7 +221,7 @@
     },
     "shared": 108,
     "packageKnown": 139,
-    "payload": 138,
+    "payload": 139,
     "spawn": 139,
     "reviewedSpawn": 16,
     "unnamed": {
@@ -12808,9 +12808,11 @@
         "known": true,
         "name": null,
         "via": "named_explosion_package",
-        "mission": false
+        "mission": false,
+        "objective": true,
+        "packages": 2
       },
-      "payload": false,
+      "payload": true,
       "spawn": true,
       "reviewedSpawn": true,
       "legacyName": "Cyborg Production Unit",

@@ -52,7 +52,7 @@ Read-only vanilla values from the game data (no live read; `hd2.inspect` reads l
 Offline metadata; no payload write is live-tested. See `explosions.md` ("Payloads on support weapons", "Payload options").
 
 - `hd2.support_weapon(name):attack(role):projectile():terminal_action(phase)` -> the impact or expiry payload of that projectile row (also `attack("programmable")`, the charge levels and the rounds feed): `hd2.fields.terminal.explosion`, expect `:current()` (`:explosion()` / `:no_explosion()`).
-- `hd2.explosions.payload_options([filter])` -> every catalogued explosion a payload accepts: `{name, label, owner, group, group_label, family, damage, durable_damage, inner_radius, outer_radius, statuses, lingering_field, fire, shrapnel, arc, warnings, shared_row, package, acknowledgements, value}`.
+- `hd2.explosions.payload_options([filter])` -> every catalogued explosion a payload accepts: `{name, label, owner, group, group_label, family, damage, durable_damage, inner_radius, outer_radius, statuses, lingering_field, fire, shrapnel, arc, warnings, shared_row, package, acknowledgements, value, note}`. `EXCESSIVELY LARGE NUKE` (group `other`) is the Cyborg Production Unit explosion, the MS-N223 Shredder Silo blast: warnings `very_large` and `objective_packages` (two objective packages, about 300 MB).
 - `hd2.explosions.payload_options(terminal[, filter])` / `terminal:payload_options([filter])` -> what one payload field takes: `{field, resource, weapon, attack, phase, current, current_label, editable, reason, shared, acknowledgements {own, none, catalogue}, own, none, options, excluded, groups}`.
 - Filters: `group`, `search`, `warning`, `without_warning`. `hd2.explosions.payload_groups()`, `hd2.explosions.payload_warnings()`.
 

@@ -172,8 +172,8 @@ hd2.ensure({patch = {id = 'eruptor-loyalist-blast', target = impact, field = hd2
 - A catalogued donor is not live-tested: `allow_unverified_reference` and `allow_unverified_effect`. The existing
   donors (another weapon's explosion handle, an output's slot handle) keep their rules unchanged.
 - Its package is loaded before the write (the operation waits, `WAITING_FOR_ASSETS`); a mission-effects donor needs no
-  load. An explosion without a known package is refused (`ASSET_UNAVAILABLE`); so is the Cyborg Production Unit's
-  (objective packages).
+  load. An explosion without a known package is refused (`ASSET_UNAVAILABLE`). The Cyborg Production Unit's (two
+  objective packages) was refused too before 0.31.2; it now loads both (below, "EXCESSIVELY LARGE NUKE").
 - Before the write the donor's live row is re-proven, and a donor whose shrapnel chain would release the written
   projectile again is refused (`RECURSIVE_COMPOSITION`).
 - The explosion row is shared by reference only: nothing is written to the donor.
@@ -261,8 +261,9 @@ hd2.explosions.payload_options({group = 'hellbomb'})
 
 - `hd2.explosions.payload_options(filter)`: every catalogued explosion a payload accepts, in display order, as `{name,
   label, owner, group, group_label, family, damage, durable_damage, inner_radius, outer_radius, statuses,
-  lingering_field, fire, shrapnel, arc, warnings, shared_row, package {mission, loaded_by_runtime, via},
-  acknowledgements, value}`; `value` is `hd2.explosion(name)`.
+  lingering_field, fire, shrapnel, arc, warnings, shared_row, package {mission, loaded_by_runtime, via, objective,
+  packages}, acknowledgements, value, note}`; `value` is `hd2.explosion(name)`. `note` says why an option's label differs
+  from the catalogue's.
 - `hd2.explosions.payload_options(terminal, filter)` and `terminal:payload_options(filter)` (primary, secondary and
   support terminal actions): `{field, resource, weapon, attack, phase, current, current_label, editable, reason,
   shared, acknowledgements {own, none, catalogue}, own, none, options, excluded, groups}`. `own` and `none` carry the
@@ -285,18 +286,47 @@ hd2.explosions.payload_options({group = 'hellbomb'})
 | Vehicles and exosuits (`vehicle`) | 11 |
 | Backpacks (`backpack`) | 1 |
 | Enemies (`enemy`) | 7 |
-| Other (world objects) (`other`) | 9 |
+| Other (world objects) (`other`) | 10 |
 
-138 options: every catalogued explosion whose package is known (`payload = true`). The other 103 named explosions
-(most enemy explosions, whose effects ship in faction content, and the Cyborg Production Unit's objective package) are
-refused as payloads (`ASSET_UNAVAILABLE`). 14 options are in the mission effects package (no load). An explosion is a
+139 options: every catalogued explosion whose package is known (`payload = true`). The other 102 named explosions
+(most enemy explosions, whose effects ship in faction content) are refused as payloads (`ASSET_UNAVAILABLE`). 14
+options are in the mission effects package (no load). An explosion is a
 row of one ExplosionSettings table that the game looks up by type whatever requests it, so an option's source family
 does not limit it: a Hellbomb's or an orbital shell's explosion works from a projectile's impact like a weapon's.
 
 **Warnings** (`warnings`, texts from `payload_warnings()`): `very_large` (2000 damage or more, or an outer radius of
-20 m or more: 17 options, the Hellbombs among them, 10000 damage), `lingering_field` (a status field the explosion
+20 m or more: 18 options, the Hellbombs among them, 10000 damage), `lingering_field` (a status field the explosion
 leaves; the game holds at most 4096 and does not check the count, so avoid it on fast-firing weapons: 12), `fire`,
-`shrapnel`, `arc`, `no_damage`. They inform; none is a refusal.
+`shrapnel`, `arc`, `no_damage`, `objective_packages` (two objective packages of about 300 MB load before the write:
+1, the nuke below). They inform; none is a refusal.
+
+### EXCESSIVELY LARGE NUKE (0.31.2, offline only)
+
+The payload option labelled `EXCESSIVELY LARGE NUKE` (group `other`, name `entity/cyborg_production_unit/ability`) is
+the blast of the MS-N223 Shredder Silo's nuclear missile (`proof/ShredderSiloExample`, `silo.blast = 'Cyborg Production
+Unit'`): the Cyborg Production Unit's explosion, the native catalogued row, unmodified. The silo writes nothing to it;
+it requests that same explosion where its missile detonates. 10000 standard and durable damage, AP 10, demolition 60,
+a 50 m inner and a 100 m outer and shockwave radius, no shrapnel, no status field, no fire. The option has the same
+values, rules and acknowledgements as every catalogued payload (`allow_unverified_reference`,
+`allow_unverified_effect`, the field's own), and warnings `very_large` and `objective_packages`.
+
+- **Its packages.** Its effect ships only in an Automaton objective package that holds the whole production unit
+  (about 217 MB), and its sound in a second objective package (about 81 MB). Before 0.31.2 the catalogue knew only the
+  first as its package and refused the explosion as a payload, because its sound would have been missing. Since 0.31.2
+  the catalogue entry lists both (`package.keys`). A payload write, an attack output slot and a custom projectile row
+  load both before the write (`core/assets.lua` `explosion_dependencies`). These are the same two packages the silo
+  loads for the same explosion.
+- **Why it is safe to offer.** Both packages are in this build's bundle database. Loading them through the game's
+  package system during a mission and then requesting this explosion was seen live with the silo
+  (`schemas/live_evidence.json` `custom_stratagem_silo`: drawn and sounded, on the host and on a client). A payload
+  write only references the row: its live settings row is re-proven first (type, damage link, radii), and nothing is
+  written to it. It releases no shrapnel, so no chain can make a projectile spawn itself.
+- **Not live-tested as a payload.** The game setting it off from a projectile's impact (instead of a request) has not
+  been seen live, so it stays behind `allow_unverified_reference` and `allow_unverified_effect`.
+- **Cost.** About 300 MB load before the write, which can take up to 90 s and cause a hitch. They stay loaded for the
+  session. With other players, each compatible Runtime loads them too (`runtime/asset_sync.lua`), as for every payload.
+- **Range.** Anything within 100 m of the impact is caught, the shooter included: give it to a weapon that fires far
+  (the APW-1, a rocket), never to one fired at close range. Every round sets one off.
 
 **Packages.** Choosing an option loads its package before the write: the operation waits (`waiting_for_assets`) and
 writes once the package is resident. A mission effects option needs no load. A package that is not resident after

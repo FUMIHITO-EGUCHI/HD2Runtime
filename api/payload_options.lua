@@ -24,8 +24,9 @@ local function public(name)
         damage=o.damage,durable_damage=o.durableDamage,inner_radius=o.innerRadius,outer_radius=o.outerRadius,
         statuses=copy(o.statuses),lingering_field=o.lingeringField,fire=o.fire,shrapnel=o.shrapnel,arc=o.arc,
         warnings=copy(o.warnings),shared_row=o.sharedRow,
-        package={mission=o.package.mission,loaded_by_runtime=o.package.loadedByRuntime,via=o.package.via},
-        acknowledgements=copy(o.acknowledgements)}
+        package={mission=o.package.mission,loaded_by_runtime=o.package.loadedByRuntime,via=o.package.via,
+            objective=o.package.objective,packages=o.package.packages},
+        acknowledgements=copy(o.acknowledgements),note=o.note}
 end
 -- Filter keys: group (a group id), search (a substring of the name, label or owner, case-insensitive), warning (keep
 -- only options with this warning code), without_warning (drop options with this warning code).

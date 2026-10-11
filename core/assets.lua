@@ -139,6 +139,24 @@ function M.dependency(key)
     assert(package and package.inBundleDatabase,'catalog package absent from this build')
     return {key=key,package=item.package,label=item.label,name=package.name,via=item.via}
 end
+-- The packages a catalogued explosion (a domains/explosion_catalogue.lua entry) needs before a payload write or a
+-- spawn: its package, or, for an objective's explosion (package.keys: the Cyborg Production Unit's effect and its sound,
+-- two objective packages), every one of them. nil for the mission effects package (resident in every mission, never
+-- loaded). Raises ASSET_UNAVAILABLE when a key is not catalogued (never guessed).
+function M.explosion_dependencies(entry,label)
+    local package=entry and entry.package
+    assert(package,'ASSET_UNAVAILABLE: no package is known that ships the effect of the '..tostring(label)..' explosion')
+    if package.mission then return nil end
+    local out={}
+    for _,key in ipairs(package.keys or{package.key})do
+        local dependency=M.dependency(key)
+        if not dependency then
+            error('ASSET_UNAVAILABLE: the package of the '..tostring(label)..' explosion is not catalogued',0)
+        end
+        out[#out+1]=dependency
+    end
+    return out
+end
 function M.dependency_for_resource(resource,label)
     local id=database.byResource[resource]
     if not id then return nil end

@@ -42,9 +42,11 @@ class CatalogueTests(unittest.TestCase):
         gas = by['stratagem/orbital_gas_strike/shell_impact']
         self.assertTrue(gas['shared'] and not gas['reviewedSpawn'] and gas['spawn'])
         self.assertIn('explosion.damage.standard_damage', gas['values'])
-        # The Cyborg Production Unit ships in objective packages: spawnable through its reviewed name, never a payload.
+        # The Cyborg Production Unit ships in two objective packages (effect and sound): spawnable through its reviewed
+        # name and, since 0.31.2, a payload that loads both (EXCESSIVELY LARGE NUKE in the payload options).
         cpu = by['entity/cyborg_production_unit/ability']
-        self.assertTrue(cpu['reviewedSpawn'] and not cpu['payload'])
+        self.assertTrue(cpu['reviewedSpawn'] and cpu['payload'])
+        self.assertEqual((cpu['package']['objective'], cpu['package']['packages']), (True, 2))
 
     def test_list_describe_and_handles(self):
         self.assertEqual(lua_ok(r'''

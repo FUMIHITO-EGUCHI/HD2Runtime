@@ -252,13 +252,12 @@ function M.define(spec)
             if not ok then return nil,code,reason end
             summaries[#summaries+1]={id=id,name=projectile_rows.component(id).name,from='explosion:'..explosion_name,
                 explosion=explosion_name,differs=#applied>before,assets='donor'}
-            if not explosion.package.mission then
-                local dependency=core_assets.dependency(explosion.package.key)
-                if not dependency then
-                    return nil,'ASSET_UNKNOWN','the package of the '..explosion_name..' explosion is not catalogued'
-                end
-                add_package({dependency=dependency})
+            -- Its package; an objective's explosion both of its objective packages.
+            local okd,dependencies=pcall(core_assets.explosion_dependencies,explosion,explosion_name)
+            if not okd then
+                return nil,'ASSET_UNKNOWN','the package of the '..explosion_name..' explosion is not catalogued'
             end
+            for _,dependency in ipairs(dependencies or{})do add_package({dependency=dependency})end
         elseif name then
             local component=projectile_rows.component(id)
             local donor

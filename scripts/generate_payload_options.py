@@ -61,6 +61,16 @@ WARNINGS = {
     'shrapnel': 'Releases shrapnel or bomblets (projectiles of their own).',
     'arc': 'Releases an electric arc.',
     'no_damage': 'Deals no damage itself (its effect is a status field, smoke or a push).',
+    'objective_packages': 'Loads two objective packages of about 300 MB before the write (up to 90 s, a hitch while '
+        'they load); they stay loaded for the session.',
+}
+# Options offered under another label (0.31.2), with a note. The Cyborg Production Unit's explosion is the blast of the
+# MS-N223 Shredder Silo's nuclear missile (proof/ShredderSiloExample, silo.blast): the native explosion, unmodified (no
+# explosion write), the same row and the same two objective packages the silo loads.
+LABELS = {
+    'entity/cyborg_production_unit/ability': ('EXCESSIVELY LARGE NUKE',
+        "The Cyborg Production Unit explosion, the MS-N223 Shredder Silo's nuclear blast, unmodified: 10000 damage, "
+        'a 50 m inner and a 100 m outer radius. A shooter closer than 100 m to the impact is caught in it.'),
 }
 VERY_LARGE_DAMAGE = 2000
 VERY_LARGE_RADIUS = 20.0
@@ -95,7 +105,8 @@ local explosions={}
 for id,e in pairs(explosion_catalogue.explosions)do
  explosions[id]={type=e.type,label=e.label,family=e.family,payload=e.payload==true,shared=e.shared==true,
   mission=e.package and e.package.mission==true or false,via=e.package and e.package.via or json.null,
-  owners=e.owners,values=e.values,shrapnel=e.shrapnel==true,arc=e.arc==true,damage=e.damage~=nil}
+  owners=e.owners,values=e.values,shrapnel=e.shrapnel==true,arc=e.arc==true,damage=e.damage~=nil,
+  objective=e.package~=nil and e.package.objective==true,packages=e.package and e.package.keys and#e.package.keys or 1}
 end
 local statuses={}
 for t,id in pairs(status_catalog.byType)do statuses[tostring(t)]=id end
@@ -186,15 +197,19 @@ def build() -> tuple[dict, dict]:
             warnings.append('arc')
         if not damage and not durable:
             warnings.append('no_damage')
+        if entry['objective']:
+            warnings.append('objective_packages')
         group = group_of(name, entry)
-        item = {'name': name, 'label': entry['label'], 'owner': owner_name(entry), 'group': group,
+        label, note = LABELS.get(name, (entry['label'], None))
+        item = {'name': name, 'label': label, 'owner': owner_name(entry), 'group': group,
             'family': entry['family'], 'damage': damage, 'durableDamage': durable,
             'innerRadius': values[0], 'outerRadius': outer, 'statuses': statuses,
             'lingeringField': bool(row['statusTemplate']), 'fire': bool(row['fireTemplate']),
             'shrapnel': bool(row['shrapnelCount'] and row['shrapnelProjectile']), 'arc': bool(row['arc']),
             'warnings': warnings, 'sharedRow': entry['shared'],
-            'package': {'mission': entry['mission'], 'loadedByRuntime': not entry['mission'], 'via': entry['via']},
-            'acknowledgements': list(ACKNOWLEDGEMENTS)}
+            'package': {'mission': entry['mission'], 'loadedByRuntime': not entry['mission'], 'via': entry['via'],
+                **({'objective': True, 'packages': entry['packages']} if entry['objective'] else {})},
+            'acknowledgements': list(ACKNOWLEDGEMENTS), **({'note': note} if note else {})}
         options.append(item)
         runtime_options[name] = dict(item, releases=released.get(entry['type'], []))
     options.sort(key=lambda item: (group_index[item['group']], item['label'].lower(), item['name']))
@@ -224,6 +239,7 @@ def build() -> tuple[dict, dict]:
     summary = {'options': len(options), 'byGroup': {key: counts.get(key, 0) for key, _ in GROUPS},
         'missionPackage': sum(item['package']['mission'] for item in options),
         'veryLarge': sum('very_large' in item['warnings'] for item in options),
+        'objectivePackages': sum('objective_packages' in item['warnings'] for item in options),
         'lingeringField': sum(item['lingeringField'] for item in options),
         'payloadFields': len(fields),
         'payloadFieldsByResource': {kind: sum(f['resource'] == kind for f in fields)
@@ -241,8 +257,10 @@ def build() -> tuple[dict, dict]:
             'option below as hd2.explosion(name).',
             'An option is a catalogued explosion whose package is known: Runtime loads that package before the write '
             '(the operation waits, waiting_for_assets) or, for the mission effects package, needs none (resident in '
-            'every mission). A package that cannot be loaded within 90 s rejects the operation with ASSET_UNAVAILABLE '
-            'and the row keeps its value.',
+            "every mission). An objective's explosion (warning objective_packages: EXCESSIVELY LARGE NUKE, the "
+            "Cyborg Production Unit's) loads both of its objective packages, effect and sound. A package that cannot "
+            'be loaded within 90 s rejects the operation with ASSET_UNAVAILABLE and the row keeps its value.',
+            "An option's label may differ from the catalogue's (note says why); its name is the catalogue id.",
             'Every option needs allow_unverified_reference and allow_unverified_effect (no catalogued payload is '
             'live-tested), plus the field\'s own acknowledgements (fields[].acknowledgements.catalogue).',
             'A field refuses an option whose shrapnel chain releases the row it writes (fields[].excluded); the write '

@@ -440,14 +440,13 @@ function catalogued_explosion_change(item,field,expected,desired,allow_unverifie
         ..'allow_unverified_reference=true: '..desired.catalogue)
     assert(allow_unverified_effect==true,'a catalogued explosion donor is not live-tested and requires '
         ..'allow_unverified_effect=true: '..desired.catalogue)
-    local dependency
-    if not entry.package.mission then
-        dependency=require('hd2runtime/core/assets').dependency(entry.package.key)
-        assert(dependency,'ASSET_UNAVAILABLE: the package of the '..desired.catalogue..' explosion is not catalogued')
-    end
+    -- Its package; an objective's explosion both of its objective packages (core/assets.lua explosion_dependencies).
+    local dependencies=require('hd2runtime/core/assets').explosion_dependencies(entry,desired.catalogue)
     return {field=item.field,canonical_field=field.semanticFieldId,descriptor=field,
         semantic_aliases={item.field},expect=item.expect,value=item.value,
-        expected_selector=expected,desired_selector=desired,catalogue_explosion=entry,asset_dependency=dependency}
+        expected_selector=expected,desired_selector=desired,catalogue_explosion=entry,
+        asset_dependency=dependencies and dependencies[1],
+        asset_dependencies=dependencies and{unpack(dependencies,2)}or nil}
 end
 -- The catalogued explosion a weapon's terminal explosion handle names (its reviewed reference): {catalogue, entry}.
 local explosion_ids

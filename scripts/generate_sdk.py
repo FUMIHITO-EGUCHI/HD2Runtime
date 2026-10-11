@@ -296,8 +296,9 @@ def outputs():
         '---@field durable_damage number','---@field inner_radius number','---@field outer_radius number',
         '---@field statuses string[]','---@field lingering_field boolean','---@field fire boolean',
         '---@field shrapnel boolean','---@field arc boolean','---@field warnings string[]','---@field shared_row boolean',
-        '---@field package {mission: boolean, loaded_by_runtime: boolean, via: string}',
+        '---@field package {mission: boolean, loaded_by_runtime: boolean, via: string, objective?: boolean, packages?: integer} objective: two objective packages (effect and sound) load before the write',
         '---@field acknowledgements string[]','---@field value table the write value (hd2.explosion(name), or a weapon handle)',
+        '---@field note? string why the label differs from the catalogue label (EXCESSIVELY LARGE NUKE: the Cyborg Production Unit explosion)',
         '---@field via "weapon_handle"|nil','',
         '---@class HD2PayloadFieldOptions','---@field field "terminal.explosion"',
         '---@field resource "player_weapon"|"support_weapon"','---@field weapon string','---@field attack string',
@@ -1055,7 +1056,9 @@ def outputs():
             '`hd2.fields.terminal.explosion`, expect `:current()` (`:explosion()` / `:no_explosion()`).',
         '- `hd2.explosions.payload_options([filter])` -> every catalogued explosion a payload accepts: `{name, label, '
             'owner, group, group_label, family, damage, durable_damage, inner_radius, outer_radius, statuses, '
-            'lingering_field, fire, shrapnel, arc, warnings, shared_row, package, acknowledgements, value}`.',
+            'lingering_field, fire, shrapnel, arc, warnings, shared_row, package, acknowledgements, value, note}`. '
+            '`EXCESSIVELY LARGE NUKE` (group `other`) is the Cyborg Production Unit explosion, the MS-N223 Shredder '
+            'Silo blast: warnings `very_large` and `objective_packages` (two objective packages, about 300 MB).',
         '- `hd2.explosions.payload_options(terminal[, filter])` / `terminal:payload_options([filter])` -> what one '
             'payload field takes: `{field, resource, weapon, attack, phase, current, current_label, editable, reason, '
             'shared, acknowledgements {own, none, catalogue}, own, none, options, excluded, groups}`.',

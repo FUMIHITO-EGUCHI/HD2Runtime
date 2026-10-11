@@ -540,9 +540,10 @@ function HD2TerminalAction:payload_options(filter) end
 ---@field arc boolean
 ---@field warnings string[]
 ---@field shared_row boolean
----@field package {mission: boolean, loaded_by_runtime: boolean, via: string}
+---@field package {mission: boolean, loaded_by_runtime: boolean, via: string, objective?: boolean, packages?: integer} objective: two objective packages (effect and sound) load before the write
 ---@field acknowledgements string[]
 ---@field value table the write value (hd2.explosion(name), or a weapon handle)
+---@field note? string why the label differs from the catalogue label (EXCESSIVELY LARGE NUKE: the Cyborg Production Unit explosion)
 ---@field via "weapon_handle"|nil
 
 ---@class HD2PayloadFieldOptions

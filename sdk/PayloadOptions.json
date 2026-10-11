@@ -6,7 +6,8 @@
   "source": "domains/explosion_catalogue.lua, research/explosion-identities, research/projectile-stats (scripts/generate_payload_options.py)",
   "model": [
     "A payload field takes its own explosion (terminal:explosion()), none (terminal:no_explosion()) or any option below as hd2.explosion(name).",
-    "An option is a catalogued explosion whose package is known: Runtime loads that package before the write (the operation waits, waiting_for_assets) or, for the mission effects package, needs none (resident in every mission). A package that cannot be loaded within 90 s rejects the operation with ASSET_UNAVAILABLE and the row keeps its value.",
+    "An option is a catalogued explosion whose package is known: Runtime loads that package before the write (the operation waits, waiting_for_assets) or, for the mission effects package, needs none (resident in every mission). An objective's explosion (warning objective_packages: EXCESSIVELY LARGE NUKE, the Cyborg Production Unit's) loads both of its objective packages, effect and sound. A package that cannot be loaded within 90 s rejects the operation with ASSET_UNAVAILABLE and the row keeps its value.",
+    "An option's label may differ from the catalogue's (note says why); its name is the catalogue id.",
     "Every option needs allow_unverified_reference and allow_unverified_effect (no catalogued payload is live-tested), plus the field's own acknowledgements (fields[].acknowledgements.catalogue).",
     "A field refuses an option whose shrapnel chain releases the row it writes (fields[].excluded); the write path re-proves the chain live.",
     "The option's explosion row is only referenced: its own values stay those of its owner, and editing them (hd2.explosion(name)) changes every owner."
@@ -70,7 +71,7 @@
     {
       "id": "other",
       "label": "Other (world objects)",
-      "count": 9
+      "count": 10
     }
   ],
   "warnings": {
@@ -79,10 +80,11 @@
     "fire": "Leaves fire on the ground.",
     "shrapnel": "Releases shrapnel or bomblets (projectiles of their own).",
     "arc": "Releases an electric arc.",
-    "no_damage": "Deals no damage itself (its effect is a status field, smoke or a push)."
+    "no_damage": "Deals no damage itself (its effect is a status field, smoke or a push).",
+    "objective_packages": "Loads two objective packages of about 300 MB before the write (up to 90 s, a hitch while they load); they stay loaded for the session."
   },
   "summary": {
-    "options": 138,
+    "options": 139,
     "byGroup": {
       "weapon": 18,
       "support_weapon": 31,
@@ -95,10 +97,11 @@
       "vehicle": 11,
       "backpack": 1,
       "enemy": 7,
-      "other": 9
+      "other": 10
     },
     "missionPackage": 14,
-    "veryLarge": 17,
+    "veryLarge": 18,
+    "objectivePackages": 1,
     "lingeringField": 12,
     "payloadFields": 185,
     "payloadFieldsByResource": {
@@ -3878,6 +3881,39 @@
         "allow_unverified_reference",
         "allow_unverified_effect"
       ]
+    },
+    {
+      "name": "entity/cyborg_production_unit/ability",
+      "label": "EXCESSIVELY LARGE NUKE",
+      "owner": "Cyborg Production Unit",
+      "group": "other",
+      "family": "entity",
+      "damage": 10000,
+      "durableDamage": 10000,
+      "innerRadius": 50,
+      "outerRadius": 100,
+      "statuses": [],
+      "lingeringField": false,
+      "fire": false,
+      "shrapnel": false,
+      "arc": false,
+      "warnings": [
+        "very_large",
+        "objective_packages"
+      ],
+      "sharedRow": true,
+      "package": {
+        "mission": false,
+        "loadedByRuntime": true,
+        "via": "named_explosion_package",
+        "objective": true,
+        "packages": 2
+      },
+      "acknowledgements": [
+        "allow_unverified_reference",
+        "allow_unverified_effect"
+      ],
+      "note": "The Cyborg Production Unit explosion, the MS-N223 Shredder Silo's nuclear blast, unmodified: 10000 damage, a 50 m inner and a 100 m outer radius. A shooter closer than 100 m to the impact is caught in it."
     },
     {
       "name": "entity/habs_barrel_fuel/detonation",
