@@ -411,6 +411,7 @@ function M.timer(kind,seconds,callback,opts,level)
         label=(kind=='every'and'repeating timer 'or kind=='frame'and'frame callback 'or'timer ')..state.sequence},Timer)
     -- A timer started from a callback keeps the event that callback handled, so its actions stay attributable.
     timer.origin_event=state.current_event
+    timer.perf_name=opts.id   -- its name in the F10 Performance tab when it is the Runtime's own (runtime/perf_watch.lua)
     state.timer_keys[key]=timer
     if kind=='frame'then
         timer.due,timer.interval=nil,0
@@ -560,6 +561,7 @@ function M.mission()return state.in_mission,state.epoch end
 function M.now()return state.now end
 
 ------------------------------------------------------------------------------------------------------ tick --
+local function describe_source(source)return 'event source '..tostring(source.name):gsub('_',' ')end
 tick=function(dt)
     local started=metrics.now()
     state.now=state.now+dt
@@ -571,7 +573,10 @@ tick=function(dt)
     for _,source in ipairs(state.source_order)do
         if source.status=='retry'and state.now>=(source.retry_at or 0)then M.refresh_source(source)end
         if source.active then
+            -- Timed as its own part of the Runtime (runtime/perf_watch.lua: the F10 Performance tab, the log lines).
+            local timed=perf.begin()
             local ok,why=pcall(source.poll,source)
+            perf.finish(timed,'HD2Runtime',source,describe_source)
             if not ok then
                 source.failures=(source.failures or 0)+1
                 if source.failures<=3 then emit('event source '..source.name..' poll failed: '..tostring(why))end

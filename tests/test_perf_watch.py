@@ -121,6 +121,55 @@ local hd2=require('hd2runtime/api/hd2')
 assert(hd2.diagnostics.performance==perf.snapshot)
 """)
 
+    def test_the_live_history_records_only_while_shown_per_mod_and_per_part_of_the_runtime(self):
+        self.lua(r"""
+-- Not recording: nothing is kept (the F10 Performance tab is closed).
+call('mods/a/heavy_mod','x',0.002);perf.update(1)
+assert(perf.history()==nil and not perf.recording())
+perf.record(true)
+assert(perf.history().head==0)
+-- One update: two callbacks of one mod, a nested mod call (own time only), the Runtime's watch and event source.
+local watch={}
+local function describe_watch()return 'update of hd2runtime/runtime/custom_stratagems'end
+local source={name='bug_holes'}
+for _=1,10 do
+    call('mods/a/heavy_mod','x',0.002)
+    call('mods/a/heavy_mod','y',0.001,function()call('mods/b/light','z',0.0005)end)
+    local timed=perf.begin();T=T+0.0003;perf.finish(timed,'HD2Runtime',watch,describe_watch)
+    timed=perf.begin();T=T+0.0001
+    perf.finish(timed,'HD2Runtime',source,function(s)return 'event source '..s.name:gsub('_',' ')end)
+    perf.update(0.025)
+end
+local h=perf.history()
+assert(h.head==1,'one bin of 0.25 s: '..h.head)
+local by={}
+for _,s in ipairs(h.list)do by[s.id]=s end
+local heavy=by['mods/a/heavy_mod']
+assert(heavy and heavy.kind=='mod'and heavy.name=='heavy mod',tostring(heavy and heavy.name))
+assert(math.abs(heavy.values[1]-0.003)<1e-12,'own time per update: '..heavy.values[1])
+assert(math.abs(by['mods/b/light'].values[1]-0.0005)<1e-12)
+local stratagems=by['runtime:custom stratagems']
+assert(stratagems and stratagems.kind=='runtime'and math.abs(stratagems.values[1]-0.0003)<1e-12)
+assert(by['runtime:event source bug holes'],'an event source is its own part')
+assert(math.abs(h.frames[1]-0.025)<1e-12 and math.abs(h.peaks[1]-0.0039)<1e-12,h.peaks[1])
+-- A ring: the last M.BINS bins only.
+for _=1,perf.BINS*10+3 do call('mods/a/heavy_mod','x',0.001);perf.update(0.025)end
+h=perf.history()
+assert(h.head>perf.BINS)
+local n=0;for _ in pairs(heavy.values)do n=n+1 end
+assert(n==perf.BINS,'a fixed ring: '..n)
+-- Stopping drops it.
+perf.record(false)
+assert(perf.history()==nil)
+call('mods/a/heavy_mod','x',0.002);perf.update(1)
+assert(perf.history()==nil)
+-- The names of the Runtime's parts.
+assert(perf.service_name('update of hd2runtime/runtime/custom_stratagems')=='custom stratagems')
+assert(perf.service_name('frame (hd2runtime.overlay.settings)')=='overlay settings')
+assert(perf.service_name('event source health')=='event source health')
+assert(perf.service_name('hd2runtime.overlay.settings')=='overlay settings','a named frame callback')
+""")
+
     def test_without_a_precise_clock_nothing_is_timed(self):
         self.lua(r"""
 metrics.set_clock(function()return nil end)

@@ -7,6 +7,9 @@
 --   * startup_progress  the asset loading panel in the top-right corner while mods load.
 -- 0.31.1: a Language setting (a list: Automatic follows the game's language, or one of the game languages), the language
 -- every text the Runtime shows is in (runtime/i18n.lua); and hd2.ui.open_settings() opens the panel from a mod.
+-- 0.31.1: an Interface size (the HD2R Editor's choices, 90 to 150 %, kept to what fits the screen), and two tabs:
+-- SETTINGS and PERFORMANCE (runtime/performance_panel.lua: a live graph of the time the Runtime and each mod take,
+-- measured only while that tab is shown).
 -- Every setting is on by default and saved between sessions in the Runtime's own store (hd2.store's file for the owner
 -- "hd2runtime"). Turning one off hides it at once; the log keeps every line either way. The panel is drawn through the
 -- Runtime's mod overlay (runtime/mod_overlay.lua: a screen GUI in the Ui World) and frees the cursor while it is open.
@@ -30,10 +33,15 @@ M.ITEMS={
 }
 local KNOWN={}
 for _,item in ipairs(M.ITEMS)do KNOWN[item.key]=item end
+-- The interface sizes (the HD2R Editor's, theme.UI_SCALES).
+M.UI_SCALES={0.9,1,1.1,1.25,1.4,1.5}
 -- Settings that hold a value rather than on / off: their default, and the values they accept.
 M.VALUES={language={default=i18n.AUTO,valid=function(v)
     if v==i18n.AUTO then return true end
     for _,item in ipairs(i18n.languages())do if item.code==v then return true end end
+    return false
+end},ui_scale={default=1,valid=function(v)
+    for _,s in ipairs(M.UI_SCALES)do if s==v then return true end end
     return false
 end}}
 -- The HD2R Editor's theme (HD2RuntimeEditor src/editor/ui/theme.lua), the colours a, r, g, b as {r, g, b, a}.
@@ -43,10 +51,11 @@ M.COLOUR={panel={11,14,18,240},header={7,9,12,250},footer={7,9,12,250},rail={255
     hover={255,255,255,10},shadow={0,0,0,110},error={255,96,84,255},error_soft={255,96,84,44}}
 M.SIZE={title=22,heading=13,body=16,small=13,tiny=12}
 M.CAP_OFFSET=(49.25-34.75/2)/56   -- FS Sinclair: from a line's vertical centre to its top
-M.W,M.HEADER,M.FOOTER,M.ROW,M.PAD=620,58,46,52,18
+M.W,M.HEADER,M.FOOTER,M.ROW,M.PAD=700,58,46,52,18
 M.OPTION=30   -- a row of the language list
 
 local function log(text)pcall(log_module.emit,'[HD2Runtime] settings '..text)end
+local function performance()return require('hd2runtime/runtime/performance_panel')end
 
 -------------------------------------------------------------------------------------------------- the values --
 -- The Runtime's store (only inside the game: offline, and in tests unless replaced, the values live in memory).
@@ -113,22 +122,52 @@ end
 function M.on_change(fn)listeners[#listeners+1]=fn end
 
 -------------------------------------------------------------------------------------------------- the panel --
-local panel={overlay=nil,binding=nil,was_left=false,hover=nil}
+local panel={overlay=nil,binding=nil,was_left=false,hover=nil,tab='settings'}
+M.TABS={{id='settings',label='SETTINGS'},{id='performance',label='PERFORMANCE'}}
 local function clicked_in(m,box)
     return m and m.x>=box.x and m.x<=box.x+box.w and m.y>=box.y and m.y<=box.y+box.h
 end
--- Lays the panel out for a w x h overlay at scale s: {x, y, w, h, k, rows = {{item, box, toggle}}, close}. Pure.
+-- Steps the interface size one choice up (+1) or down (-1); returns the new size.
+function M.step_ui_scale(direction)
+    local list,now,index=M.UI_SCALES,M.value('ui_scale'),1
+    for i,v in ipairs(list)do if v==now then index=i end end
+    local target=list[math.max(1,math.min(#list,index+direction))]
+    if target~=now then M.set_value('ui_scale',target)end
+    return target
+end
+-- Lays the panel out for a w x h overlay at scale s: {x, y, w, h, k, rows = {{item, box, toggle}}, close, tabs,
+-- content}. The interface size multiplies the screen's scale, kept to what fits (L.fits: the size shown). Pure.
 function M.layout(width,height,scale)
-    local h=M.HEADER+M.PAD+22+M.ROW+M.PAD+22+#M.ITEMS*M.ROW+M.PAD+22+3*22+M.PAD+M.FOOTER
-    local k=math.max(0.5,math.min(scale,width/(M.W+24),height/(h+24)))
+    local settings_h=22+M.ROW+M.PAD+22+M.ROW+M.PAD+22+#M.ITEMS*M.ROW+M.PAD+22+3*22
+    local h=M.HEADER+M.PAD+math.max(settings_h,performance().HEIGHT)+M.PAD+M.FOOTER
+    local chosen=M.value('ui_scale')
+    local k=math.max(0.5,math.min(scale*chosen,width/(M.W+24),height/(h+24)))
     local w=M.W*k
     local x,y=math.floor((width-w)/2),math.floor((height-h*k)/2)
-    local L={x=x,y=y,w=w,h=h*k,k=k,rows={}}
+    local L={x=x,y=y,w=w,h=h*k,k=k,rows={},fits=scale>0 and k/scale or chosen,chosen=chosen}
+    L.content={x=x+M.PAD*k,y=y+(M.HEADER+M.PAD)*k,w=w-2*M.PAD*k,h=(h-M.HEADER-M.FOOTER-2*M.PAD)*k}
+    -- the tabs, right of the title
+    local tx=x+w-62*k
+    L.tabs={}
+    for n=#M.TABS,1,-1 do
+        local tw=(M.TABS[n].id=='performance'and 150 or 112)*k
+        tx=tx-tw
+        L.tabs[n]={tab=M.TABS[n],box={x=tx,y=y+10*k,w=tw,h=M.HEADER*k-20*k}}
+        tx=tx-6*k
+    end
     local cy=y+(M.HEADER+M.PAD)*k
     -- LANGUAGE: one list row
     L.language_y=cy
     cy=cy+22*k
     L.language={x=x+M.PAD*k,y=cy,w=w-2*M.PAD*k,h=(M.ROW-6)*k}
+    cy=cy+(M.ROW+M.PAD)*k
+    -- INTERFACE: the size row, its - and + buttons
+    L.interface_y=cy
+    cy=cy+22*k
+    L.size={x=x+M.PAD*k,y=cy,w=w-2*M.PAD*k,h=(M.ROW-6)*k}
+    local by=L.size.y+L.size.h/2-14*k
+    L.size_up={x=L.size.x+L.size.w-30*k,y=by,w=30*k,h=28*k}
+    L.size_down={x=L.size_up.x-110*k,y=by,w=30*k,h=28*k}
     cy=cy+(M.ROW+M.PAD)*k
     L.messages_y=cy
     cy=cy+22*k
@@ -188,12 +227,37 @@ function M.draw(d,mouse,input)
     local hy=y+M.HEADER*k/2
     text(d,'HD2R',x+20*k,hy,S.title*k,C.text,'title')
     text(d,'RUNTIME',x+20*k+d:text_width('HD2R ',S.title*k,'title'),hy,S.title*k,C.gold,'title')
-    text(d,i18n.upper(T('SETTINGS')),x+w-62*k,hy,S.heading*k,C.faint,'title','right')
+    -- The tabs: the open one gold and underlined.
+    local tab_hit
+    for _,t in ipairs(L.tabs)do
+        local open=panel.tab==t.tab.id
+        local hovered=not panel.menu and clicked_in(mouse,t.box)
+        if hovered and not open then tab_hit=t;d:rect(t.box.x,t.box.y,t.box.w,t.box.h,C.hover,2)end
+        if open then d:rect(t.box.x,t.box.y+t.box.h-2*k,t.box.w,2*k,C.gold,4)end
+        text(d,i18n.upper(T(t.tab.label)),t.box.x+t.box.w/2,t.box.y+t.box.h/2,S.heading*k,
+            open and C.gold or(hovered and C.text or C.faint),'title','center')
+    end
     local close_hover=clicked_in(mouse,L.close)
     d:rect(L.close.x,L.close.y,L.close.w,L.close.h,close_hover and C.error_soft or C.panel,3)
     d:rect(L.close.x,L.close.y,L.close.w,math.max(1,k),close_hover and C.error or C.line_strong,4)
     d:rect(L.close.x,L.close.y+L.close.h-math.max(1,k),L.close.w,math.max(1,k),close_hover and C.error or C.line_strong,4)
     text(d,'x',L.close.x+L.close.w/2,L.close.y+L.close.h/2,20*k,close_hover and C.error or C.dim,'title','center')
+    -- The footer (before the tab's own items, so a tab's changing rows never move it).
+    local fy=y+L.h-M.FOOTER*k
+    d:rect(x,fy,w,M.FOOTER*k,C.footer,1)
+    d:rect(x,fy,w,math.max(1,k),C.line_strong,2)
+    local footer_text=panel.tab=='performance'
+        and T('Time spent in HD2Runtime and its mods, not in the game itself  |  F10 or Esc closes')
+        or T('F10 or Esc closes  |  click a row to turn it on or off')
+    local footer=d:wrap(footer_text,w-2*M.PAD*k,{size=S.small*k,lines=1})
+    text(d,footer[1]or'',x+M.PAD*k,fy+M.FOOTER*k/2,S.small*k,C.faint,'body')
+    local escape=input and input.pressed('ESCAPE')
+    if panel.tab=='performance'then
+        performance().draw({d=d,text=text,C=C,S=S},L.content,k)
+        if press and tab_hit then M.select_tab(tab_hit.tab.id)
+        elseif(press and close_hover)or escape then M.close()end
+        return L
+    end
     -- MESSAGES: one toggle row per setting.
     local function section(label,sy)
         text(d,label,x+M.PAD*k,sy,S.tiny*k,C.gold_dim,'title')
@@ -217,6 +281,28 @@ function M.draw(d,mouse,input)
     local shown=d:wrap(M.language_text(current),bw-34*k,{size=S.small*k,lines=1})
     text(d,shown[1]or'',lbox.x+lbox.w-bw+10*k,ly,S.small*k,C.text,'body')
     text(d,menu and'^'or'v',lbox.x+lbox.w-12*k,ly,S.small*k,C.gold,'title','right')
+    -- INTERFACE: the size, - and + (the HD2R Editor's sizes); the size that fits when the chosen one does not.
+    section(i18n.upper(T('INTERFACE')),L.interface_y)
+    local sbox=L.size
+    local sy=sbox.y+sbox.h/2
+    text(d,T('Interface size'),sbox.x,sy-8*k,S.body*k,C.text,'body')
+    local size_lines=d:wrap(T('The size of this panel and its text.'),sbox.w*0.5,{size=S.small*k,lines=1})
+    text(d,size_lines[1]or'',sbox.x,sy+10*k,S.small*k,C.dim,'body')
+    local size_hit
+    for _,b in ipairs({{box=L.size_down,sign='-',step=-1,on=L.chosen>M.UI_SCALES[1]},
+            {box=L.size_up,sign='+',step=1,on=L.chosen<M.UI_SCALES[#M.UI_SCALES]}})do
+        local hovered=not menu and b.on and clicked_in(mouse,b.box)
+        if hovered then size_hit=b end
+        d:rect(b.box.x,b.box.y,b.box.w,b.box.h,hovered and C.hover or C.header,3)
+        d:rect(b.box.x,b.box.y+b.box.h-math.max(1,k),b.box.w,math.max(1,k),b.on and C.line_strong or C.line,4)
+        text(d,b.sign,b.box.x+b.box.w/2,b.box.y+b.box.h/2,S.body*k,b.on and C.gold or C.faint,'title','center')
+    end
+    text(d,('%d%%'):format(math.floor(L.chosen*100+0.5)),(L.size_down.x+L.size_down.w+L.size_up.x)/2,sy,S.body*k,C.text,
+        'title','center')
+    if math.floor(L.fits*100+0.5)<math.floor(L.chosen*100+0.5)then
+        text(d,T('(%d%% fits this screen)',math.floor(L.fits*100+0.5)),L.size_down.x-10*k,sy,S.tiny*k,C.faint,'body',
+            'right')
+    end
     section(i18n.upper(T('MESSAGES ON SCREEN')),L.messages_y)
     local hit
     for _,row in ipairs(L.rows)do
@@ -236,12 +322,6 @@ function M.draw(d,mouse,input)
     for n,line in ipairs(about_lines())do
         text(d,line,x+M.PAD*k,L.about_y+(14+(n-1)*22)*k,S.small*k,n==3 and C.faint or C.dim,'body')
     end
-    -- The footer.
-    local fy=y+L.h-M.FOOTER*k
-    d:rect(x,fy,w,M.FOOTER*k,C.footer,1)
-    d:rect(x,fy,w,math.max(1,k),C.line_strong,2)
-    local footer=d:wrap(T('F10 or Esc closes  |  click a row to turn it on or off'),w-2*M.PAD*k,{size=S.small*k,lines=1})
-    text(d,footer[1]or'',x+M.PAD*k,fy+M.FOOTER*k/2,S.small*k,C.faint,'body')
     -- The open language list, over everything: a click picks a language; a click elsewhere or Esc closes the list.
     local picked
     if menu then
@@ -259,8 +339,7 @@ function M.draw(d,mouse,input)
             if chosen then text(d,'*',o.box.x+o.box.w-12*k,o.box.y+o.box.h/2,S.small*k,C.gold,'title','right',24)end
         end
     end
-    -- Input: the list first; a click on a row toggles it; the x or Esc closes.
-    local escape=input and input.pressed('ESCAPE')
+    -- Input: the list first; a click on a row toggles it; a tab or a size button; the x or Esc closes.
     if menu then
         if press then
             if picked then M.set_value('language',picked.option.code)end
@@ -270,11 +349,24 @@ function M.draw(d,mouse,input)
     end
     if press and language_hover then panel.menu=true;return L end
     if press and hit then M.set(hit.item.key,not M.enabled(hit.item.key))end
+    if press and size_hit then M.step_ui_scale(size_hit.step)end
+    if press and tab_hit then M.select_tab(tab_hit.tab.id)end
     if(press and close_hover)or escape then M.close()end
     return L
 end
 
-function M.open()
+-- Shows a tab ('settings' or 'performance'). The Performance tab's measurements run only while it is shown.
+function M.select_tab(id)
+    assert(id=='settings'or id=='performance','unknown HD2Runtime settings tab: '..tostring(id))
+    if id~=panel.tab then
+        panel.tab=id;panel.menu=nil
+        if id~='performance'then require('hd2runtime/runtime/perf_watch').record(false);performance().reset()end
+    end
+    return id
+end
+function M.tab()return panel.tab end
+function M.open(tab)
+    if tab then M.select_tab(tab)end
     if not panel.overlay then
         local overlay=require('hd2runtime/runtime/mod_overlay')
         panel.overlay=overlay.open(M.OWNER,{id='settings',visible=false,layer=980})
@@ -295,6 +387,8 @@ function M.open()
 end
 function M.close()
     panel.menu=nil
+    require('hd2runtime/runtime/perf_watch').record(false)
+    performance().reset()
     if panel.overlay then panel.overlay:hide()end
 end
 function M.toggle()
@@ -310,7 +404,9 @@ function M.start()
 end
 function M.reset_for_tests()
     if panel.overlay then pcall(panel.overlay.close,panel.overlay)end
-    panel={overlay=nil,binding=nil,was_left=false}
+    panel={overlay=nil,binding=nil,was_left=false,tab='settings'}
+    require('hd2runtime/runtime/perf_watch').record(false)
+    performance().reset()
     memory,listeners={},{}
     i18n.reset_for_tests()
 end

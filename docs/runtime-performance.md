@@ -181,6 +181,21 @@ function at mods/author/name:120` or `update of hd2runtime/runtime/custom_strata
 `hd2.diagnostics.performance()` returns every owner's totals, its slowest call and its last 10 s window. Nothing is
 formatted on the timing path, and offline (no precise clock) nothing is timed.
 
+**Live view (0.31.1).** The F10 panel's PERFORMANCE tab (`runtime/performance_panel.lua`) draws the same measurements
+live. While it is shown, `perf_watch.record(true)` keeps a history:
+
+- One series per mod (all its callbacks), and one per part of the Runtime: a scheduler watch's module, each event
+  source (every source's poll is now timed as `event source <name>`), the Runtime's own overlays. A part's name comes
+  from its label once per callback.
+- Every 0.25 s of game time each series gets one value, its own time per update averaged over that quarter second.
+  The last 60 values are kept, with each quarter's largest single update and frame time.
+- Recording adds one addition per timed call and one pass over the series per update. Closing the tab stops it and
+  drops the history.
+
+The graph changes only when a quarter completes. Every column always draws six rectangles (an empty segment is
+transparent), so the overlay updates rectangles in place. The panel's own drawing is measured too, as
+`overlay settings`.
+
 **Per-frame cost removed in the same pass:**
 - `event_world.open()` reuses one memory adapter. It ran several times per update and built a new adapter each time,
   about 40 closures and FFI buffers, all discarded.

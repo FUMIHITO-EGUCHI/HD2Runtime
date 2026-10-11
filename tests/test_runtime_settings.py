@@ -129,5 +129,98 @@ label.reset_for_tests()
 ''')
 
 
+    def test_interface_size_steps_saves_and_keeps_to_the_screen(self):
+        self.check(r'''
+assert(settings.value('ui_scale')==1)
+local a=settings.layout(1920,1080,1)
+-- + twice: 110 %, then 125 %, saved; the window grows with it
+local function click(box)
+    local m={x=box.x+box.w/2,y=box.y+box.h/2,left=false}
+    settings.draw(builder(1920,1080),m,input)
+    m.left=true;settings.draw(builder(1920,1080),m,input)
+end
+click(settings.layout(1920,1080,1).size_up)
+click(settings.layout(1920,1080,1).size_up)
+assert(settings.value('ui_scale')==1.25 and saved['setting.ui_scale']==1.25,tostring(settings.value('ui_scale')))
+local b=settings.layout(1920,1080,1)
+assert(math.abs(b.w/a.w-1.25)<1e-9 and b.k==1.25)
+local d=builder(1920,1080);settings.draw(d,nil,input)
+assert(has(d,'INTERFACE')and has(d,'Interface size')and has(d,'125%'))
+-- the largest size fits every real screen (the overlay's scale follows the smaller ratio)
+for _=1,5 do settings.step_ui_scale(1)end
+assert(settings.value('ui_scale')==1.5)
+for _,res in ipairs({{1920,1080},{1280,720},{1024,768},{3440,1440},{1920,1200}})do
+    local L=settings.layout(res[1],res[2],math.min(res[1]/1920,res[2]/1080))
+    assert(L.x>=0 and L.y>=0 and L.x+L.w<=res[1]and L.y+L.h<=res[2]and math.abs(L.fits-1.5)<1e-9,res[1]..'x'..res[2])
+end
+-- an overlay shorter than its scale says: kept to what fits, and the panel says so
+local L=settings.layout(1920,900,1)
+assert(L.y>=0 and L.y+L.h<=900 and L.fits<1.5)
+d=builder(1920,900);d.scale=1;settings.draw(d,nil,input)
+assert(has(d,('(%d%% fits this screen)'):format(math.floor(L.fits*100+0.5))),'the size that fits is shown')
+-- - steps down to 90 % and no further; an unknown saved size is the default
+for _=1,8 do settings.step_ui_scale(-1)end
+assert(settings.value('ui_scale')==0.9)
+saved['setting.ui_scale']=3
+assert(settings.value('ui_scale')==1)
+''')
+
+    def test_the_performance_tab_measures_only_while_shown_and_graphs_every_part(self):
+        self.check(r'''
+local perf=require('hd2runtime/runtime/perf_watch')
+local metrics=require('hd2runtime/runtime/metrics')
+perf.reset_for_tests()
+local T=0
+metrics.set_clock(function()return T end)
+local function work(owner,key,seconds,label)
+    local timed=perf.begin();T=T+seconds
+    perf.finish(timed,owner,key,function()return label or tostring(key)end)
+end
+-- The settings tab measures nothing.
+settings.draw(builder(1920,1080),nil,input)
+assert(not perf.recording())
+-- A click on PERFORMANCE switches tabs; drawing it starts the measurements.
+local L=settings.layout(1920,1080,1)
+local tab=L.tabs[2]
+assert(tab.tab.id=='performance')
+local m={x=tab.box.x+tab.box.w/2,y=tab.box.y+tab.box.h/2,left=false}
+settings.draw(builder(1920,1080),m,input)
+m.left=true;settings.draw(builder(1920,1080),m,input)
+assert(settings.tab()=='performance')
+m.left=false
+local d=builder(1920,1080);settings.draw(d,m,input)
+assert(perf.recording()and has(d,'PERFORMANCE')and has(d,'Measuring...'))
+-- Two mods and a part of the Runtime, for 3 seconds of 60 updates a second.
+local watch={}
+for _=1,180 do
+    work('mods/x/hog','a',0.004)
+    work('mods/y/small','b',0.0005)
+    work('HD2Runtime',watch,0.001,'update of hd2runtime/runtime/custom_stratagems')
+    perf.update(1/60)
+end
+d=builder(1920,1080);settings.draw(d,m,input)
+assert(has(d,'Runtime and mods: 5.50 ms per frame'),'the total per update')
+assert(has(d,'33.0% of the frame time  |  60 FPS'))
+assert(has(d,'hog')and has(d,'small')and has(d,'custom stratagems')and has(d,'HD2R')and has(d,'MOD'))
+assert(has(d,'4.00 ms')and has(d,'0.50 ms'))
+-- the heaviest first in the table
+local order={}
+for _,t in ipairs(d.texts)do if t.s=='hog'or t.s=='small'or t.s=='custom stratagems'then order[#order+1]=t.s end end
+assert(order[1]=='hog'and order[2]=='custom stratagems'and order[3]=='small',table.concat(order,','))
+-- Every column draws six rectangles: the frame's rectangle count does not change when a bin completes.
+local count=#d.rects
+for _=1,15 do work('mods/x/hog','a',0.004);perf.update(1/60)end
+local e=builder(1920,1080);settings.draw(e,m,input)
+assert(#e.rects==count,#e.rects..' vs '..count)
+-- Back to SETTINGS, or closing: the measurements stop and are dropped.
+settings.select_tab('settings')
+assert(not perf.recording()and perf.history()==nil)
+settings.select_tab('performance');settings.draw(builder(1920,1080),m,input)
+assert(perf.recording())
+settings.close()
+assert(not perf.recording())
+''')
+
+
 if __name__ == '__main__':
     unittest.main()

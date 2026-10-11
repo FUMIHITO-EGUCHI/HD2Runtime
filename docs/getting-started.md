@@ -527,6 +527,23 @@ panel, the notices, the alert cards, the custom stratagem panel, the startup pro
 - A mod can open the panel from its own settings: `hd2.ui.open_settings()` (the HD2R Editor's Settings has a button).
   `hd2.ui.language()` returns the language in use and the setting.
 
+**Interface size (0.31.1).** The INTERFACE row sizes the panel and its text with **-** and **+**: 90, 100, 110, 125,
+140 or 150 % (the HD2R Editor's sizes), saved like the other settings. The panel is never larger than the screen: when
+the chosen size does not fit, the row says which size is used.
+
+**Performance (0.31.1).** The PERFORMANCE tab at the top of the panel shows, live, how much time HD2Runtime and each
+mod take per frame:
+
+- The summary: the total per frame, its share of the frame time, and the frame rate.
+- A stacked graph of the last 15 seconds (one column per quarter second, newest on the right). The five heaviest keep
+  their own colour; everything else is grey.
+- A table of the heaviest: each mod (`MOD`, named after its id) and each part of the Runtime (`HD2R`: an event source,
+  the custom stratagems, an overlay, ...), with its average per frame over the last second and its largest single
+  frame over the last two seconds.
+- Only time spent in HD2Runtime and its mods is measured, not the game's own work. Each call counts only its own time
+  (docs/runtime-performance.md, "Which mod is slow"). The tab measures only while it is shown; closing the panel or
+  switching to SETTINGS stops it and drops the history.
+
 ## 11. Common problems
 
 | You see | Meaning | What to do |

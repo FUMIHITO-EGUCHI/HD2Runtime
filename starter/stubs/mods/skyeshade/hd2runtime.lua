@@ -3974,7 +3974,7 @@ local HD2Event_weapon_changed = {}
 ---@field local_player boolean The local player is credited.
 local HD2Event_explosion = {}
 
----A bug hole was closed: its destruction stage left 0 (a grenade, a stratagem, a Hellbomb for a Bile Titan hole). Reported once per hole, on the host and on clients (each machine applies the same destruction). A hole already closed when Runtime starts watching is not reported. Who closed it is not known. Experimental: not live-tested; see docs/events.md#bug-holes.
+---A bug hole was closed: its destruction stage left 0 (a grenade, a stratagem, a Hellbomb for a Bile Titan hole). Reported once per hole, on the host and on clients (each machine applies the same destruction). A hole already closed when Runtime starts watching is not reported. Who closed it is not known. Live-tested in a mission by the user's report (2026-10-11, no log); clients and Bile Titan holes not yet: see docs/events.md#bug-holes.
 ---@class HD2Event_bughole_destroyed : HD2Event
 ---@field hole string The hole's kind, named after what it spawns: 'warrior', 'hunter', 'hiveguard', 'boomer', 'stalker', 'scavenger', 'prowler', 'spitter', 'bile_titan', 'shrieker', 'warrior_ceiling', 'warrior_captive', 'scavenger_captive', 'warrior_tutorial', 'base'.
 ---@field name string The game's entity name: 'bug_spawner_' .. hole.
