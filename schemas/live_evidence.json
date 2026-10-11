@@ -1290,6 +1290,16 @@
         {"mod": "BugHoleEventTest", "operation": "close bug holes", "result": "PASS", "family": "event_bughole_destroyed", "writes": [],
          "observation": "The user closed some bug holes in a mission and reported that the event works. Host or client, which hole kinds, Bile Titan holes, positions and exactly-once were not reported (no log)."}
       ]
+    },
+    {
+      "id": "f10-performance-0-31-1-dev4-2026-10-11",
+      "date": "2026-10-11",
+      "runtime": "HD2Runtime 0.31.1 development dev4 (build/0.31.1-dev4/HD2Runtime-0.31.0-runtime.zip, F3A06AA0...EE78; commit 4184670). The user's verbal report; no log or screenshot.",
+      "logSignals": [],
+      "tests": [
+        {"mod": "HD2Runtime F10 panel", "operation": "PERFORMANCE tab", "result": "PASS", "family": "f10_performance_tab", "writes": [],
+         "observation": "The user opened the PERFORMANCE tab in game and reported that the metric works. Which mods and parts were listed, the numbers, the Interface size and the panel's own cost were not reported."}
+      ]
     }
   ],
   "families": {
@@ -1509,6 +1519,12 @@
       "tests": ["BugHoleEventTest"], "acknowledgementRemoved": null,
       "notPromoted": ["clients (the network-applied destruction)", "Bile Titan holes and their level-unit position", "the payload's kind, level and position against the closed hole (no log reviewed)", "exactly once per hole"],
       "nextTests": ["the same probe with the HD2Runtime.log sent: one line per closed hole, its kind and position matching; a Bile Titan hole; then as a client"]
+    },
+    "f10_performance_tab": {
+      "status": "live_proven", "domain": "ui", "fields": [],
+      "scope": "The F10 panel's PERFORMANCE tab draws the live per-frame time of HD2Runtime and its mods in game (the user's report, 2026-10-11, without a log or screenshot).",
+      "tests": ["HD2Runtime F10 panel"], "acknowledgementRemoved": null,
+      "notPromoted": ["the accuracy of the numbers against an external profiler", "the Interface size row", "the tab's own cost in play"]
     },
     "weapon_fire_rate_modes_native": {
       "status": "live_proven", "domain": "support_weapon", "fields": ["fire_rate.modes"],

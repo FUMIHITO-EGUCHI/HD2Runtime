@@ -38,6 +38,7 @@ Composition tests record four separate facts: the donor output works, the refere
 | `event_weapon_in_hand` | live-proven | `player:equipped_weapon`, `weapon_equipped`, `weapon_unequipped`, `weapon_changed` | The local player's weapon in hand: primary and secondary switches detected correctly, the three events matched the actual switches, and uncatalogued held items were reported as uncatalogued (no name). | unchanged |
 | `event_explosion` | pending | `explosion` | The explosion event (runtime/event_sources.lua explosions): this machine's explosion queue read once per tick, each request queued after the frame's kick reported once with its catalogued name, position, source, owner and credited player, and Runtime's own requests reported from the request with their cause. Code-proven offline (research/event-explosions-F5FEE03DCFDB.json: kick min(count, 8) and gather pinned; the seven snapshots hold a drained queue; tests/test_event_sources.py, tests/test_event_scripting.py). | unchanged |
 | `event_bughole_destroyed` | live-proven | `bughole_destroyed` | bughole_destroyed fires when the player closes bug holes in a mission (the user's report, 2026-10-11, without a log): the destruction stage the source polls does leave 0 when a hole is closed in play. | unchanged |
+| `f10_performance_tab` | live-proven |  | The F10 panel's PERFORMANCE tab draws the live per-frame time of HD2Runtime and its mods in game (the user's report, 2026-10-11, without a log or screenshot). | unchanged |
 | `weapon_fire_rate_modes_native` | live-proven | `fire_rate.modes` | Editing the three native rate-of-fire slots of the MG-206 Heavy Machine Gun (its own ProjectileWeapon record), each on its own: the edited rates are used in play. | removed `allow_unverified_effect (MG-206 fire_rate.modes only)` |
 | `weapon_fire_rate_selector_added` | live-proven | `fire_rate.modes`, `weapon_function.left`, `weapon_function.right` | Filling the empty rate-of-fire slots of the AR-23 Liberator and binding the ROF weapon function to its free left input: the new selector works in play and switches between the three rates. | removed `allow_unverified_effect (AR-23 Liberator: fire_rate.modes, and weapon_function.left = rate_of_fire)` |
 | `weapon_rounds_feed_capacity` | live-proven | `rounds.feed_capacity_1`, `rounds.feed_capacity_2` | The SG-20 Halt magazine capacities per feed (WeaponRounds +72 / +76): 4 flechette rounds and 12 stun rounds, each feed independent. | unchanged |
@@ -189,6 +190,9 @@ Composition tests record four separate facts: the donor output works, the refere
 **`event_bughole_destroyed`**
 - Not promoted (still need `allow_unverified_effect`): clients (the network-applied destruction), Bile Titan holes and their level-unit position, the payload's kind, level and position against the closed hole (no log reviewed), exactly once per hole.
 - Next tests: `the same probe with the HD2Runtime.log sent: one line per closed hole, its kind and position matching; a Bile Titan hole; then as a client`.
+
+**`f10_performance_tab`**
+- Not promoted (still need `allow_unverified_effect`): the accuracy of the numbers against an external profiler, the Interface size row, the tab's own cost in play.
 
 **`weapon_fire_rate_modes_native`**
 - Observation: The weapon menu lists the rates in storage order X, Y, Z (inferred: a list in selector order Y, Z, X did not match it). fire_rate.modes now uses that order; the slots written are unchanged.
@@ -1006,3 +1010,11 @@ Runtime: HD2Runtime 0.31.1 development dev3 (build/0.31.1-dev3/HD2Runtime-0.31.0
 | Mod | Result | Writes | Donor / write / host reads / output changed | Observation |
 | --- | --- | --- | --- | --- |
 | BugHoleEventTest | pass |  |  | The user closed some bug holes in a mission and reported that the event works. Host or client, which hole kinds, Bile Titan holes, positions and exactly-once were not reported (no log). |
+
+## Session f10-performance-0-31-1-dev4-2026-10-11
+
+Runtime: HD2Runtime 0.31.1 development dev4 (build/0.31.1-dev4/HD2Runtime-0.31.0-runtime.zip, F3A06AA0...EE78; commit 4184670). The user's verbal report; no log or screenshot..
+
+| Mod | Result | Writes | Donor / write / host reads / output changed | Observation |
+| --- | --- | --- | --- | --- |
+| HD2Runtime F10 panel | pass |  |  | The user opened the PERFORMANCE tab in game and reported that the metric works. Which mods and parts were listed, the numbers, the Interface size and the panel's own cost were not reported. |

@@ -28,7 +28,7 @@ Before distributing your mod, edit these exact values:
 resource ID, so it changes when you rename the resource and remains stable after
 that. You may replace `auto` with your own non-zero UUID, then keep it forever.
 
-`requires.hd2runtime.min_version` is `0.25.0`. This starter ships with 0.31.0. Raise it:
+`requires.hd2runtime.min_version` is `0.25.0`. This starter ships with 0.31.1. Raise it:
 - to `0.25.1` for in-game options (see below);
 - to `0.26.0` for anything new in 0.26.0: magazine reload and ergonomics, reticles, fire modes, vehicle weapons,
   stratagem mission uses, backpack ammo and pod payloads;
@@ -50,7 +50,10 @@ that. You may replace `auto` with your own non-zero UUID, then keep it forever.
   (`hd2.status_effect`), `hd2.ui.unsupported`, beam swaps and beam conversion, the wind-up and beam pulse fields,
   missile fields, team-reload ammunition, mounted spread and the EXO-55 Breakthrough shield arm, the Breaching Hammer
   blast, stratagem charges (`stratagem.rearm_pool`), orbital targeting and the fire-mode selector on single-mode
-  weapons.
+  weapons;
+- to `0.31.1` for anything new in 0.31.1 (`docs/releases/0.31.1.md`): the `bughole_destroyed` event,
+  `hd2.ui.open_settings` / `close_settings` / `settings_open` / `language`, the P-2 Peacemaker and P-19 Redeemer
+  rounds, missile direct-hit damage (Spear, Commando, W.A.S.P.) and the AC-8 flak, GR-8 HE and RL-77 cluster rows.
 
 `min_version` is also the SDK version your mod declares. HD2Runtime 0.28.1 and later accept a field that gained an
 acknowledgement in a later SDK without it, as a logged legacy operation, when your mod declares an older version
@@ -136,7 +139,7 @@ HD2Runtime implementation.
 Players install and enable three packages:
 
 1. Bingus Shared Loader v15 or newer / API 1.
-2. HD2Runtime 0.25.0 or newer / API 1 (0.31.0 recommended), installed once.
+2. HD2Runtime 0.25.0 or newer / API 1 (0.31.1 recommended), installed once.
 3. Your built gameplay mod ZIP.
 
 The generated manifest description and `hd2runtime.json` state both dependencies.

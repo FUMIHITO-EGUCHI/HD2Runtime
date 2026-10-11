@@ -819,14 +819,15 @@
     "BugHoleEventTest": {
       "baselineChanges": null,
       "calls": [],
-      "minVersion": "0.31.0",
+      "minVersion": "0.31.1",
       "operations": {},
       "problems": [],
-      "requiredMinVersion": "0.28.0",
+      "requiredMinVersion": "0.31.1",
       "status": "VALIDATED",
       "usesOptions": false,
       "versionReasons": [
-        "gameplay scripting (hd2.events, hd2.mod, timers, keybinds) -> 0.28.0"
+        "gameplay scripting (hd2.events, hd2.mod, timers, keybinds) -> 0.28.0",
+        "the bughole_destroyed event -> 0.31.1"
       ]
     },
     "C4Proof": {
@@ -5485,7 +5486,7 @@
       "calls": [
         "ensure"
       ],
-      "minVersion": "0.31.0",
+      "minVersion": "0.31.1",
       "operations": [
         {
           "acknowledgements": {},
@@ -5510,7 +5511,7 @@
       "calls": [
         "ensure"
       ],
-      "minVersion": "0.31.0",
+      "minVersion": "0.31.1",
       "operations": [
         {
           "acknowledgements": [

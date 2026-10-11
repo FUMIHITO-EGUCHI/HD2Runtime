@@ -85,6 +85,9 @@ UNRELEASED = '0.30.0'
 # 0.30.3 adds none. 0.31.0 adds fields and APIs that no example uses yet (only the dev proofs), so it has no floor yet;
 # an example that starts using one gets a 0.31.0 floor here the same way.
 NEXT_RELEASE = '0.30.2'
+# Features new in 0.31.1 (pinned at its release): the bughole_destroyed event and hd2.ui.open_settings / language. Its
+# new weapon rows (Peacemaker / Redeemer rounds, missile direct hit, the programmable rows) are not used by an example.
+RELEASE_0_31_1 = '0.31.1'
 WEAPON_ROOTS_0_30_2 = {'GP-31 Grenade Pistol', 'P-72 Crisper', 'LAS-5 Scythe', 'LAS-7 Dagger', 'CQC-42 Machete',
     'CQC-73 Entrenchment Tool', 'SMG-37 Defender'}
 PLAYER_EXPLOSION_STATUS = re.compile(r'^explosion\.[^.]+\.(impact|expiry)\.damage\.status_\d+_(type|strength)$')
@@ -192,6 +195,8 @@ local function run_example(body,name)
  local report={operations={},usesOptions=false,calls={}}
  report.usesOperationList=body:find('diagnostics%.operations')~=nil
  report.usesHoming=body:find('projectiles%.homing')~=nil
+ report.usesBugHoleEvent=body:find('bughole_destroyed',1,true)~=nil
+ report.usesRuntimeSettings=body:find('ui%.open_settings')~=nil or body:find('ui%.language%(')~=nil
  report.usesSpawnWeights=body:find('enemies%.spawn_')~=nil
  report.usesMoreDonors=body:find('%(projectile %d+%)')~=nil
  report.usesExplosionCatalogue=body:find('hd2%.explosion%(')~=nil or body:find('explosions%.list%(')~=nil
@@ -319,6 +324,10 @@ def required_version(report):
         bump(RELEASE_0_28_1, 'hd2.diagnostics.operations()')
     if report.get('usesHoming'):
         bump(UNRELEASED, 'hd2.projectiles.homing')
+    if report.get('usesBugHoleEvent'):
+        bump(RELEASE_0_31_1, 'the bughole_destroyed event')
+    if report.get('usesRuntimeSettings'):
+        bump(RELEASE_0_31_1, 'hd2.ui.open_settings / hd2.ui.language')
     if report.get('usesSpawnWeights'):
         bump(UNRELEASED, 'hd2.enemies spawn weights')
     if report.get('usesExplosionCatalogue'):

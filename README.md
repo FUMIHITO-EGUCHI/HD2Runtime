@@ -92,6 +92,10 @@ HD2Runtime is designed to fail safely when a game structure or ownership relatio
 
 Unsupported or ambiguous values remain read-only rather than being modified speculatively.
 
+Version 0.31.1 adds a live performance graph and an interface size to the F10 panel, shows HD2Runtime's own text in
+every game language, adds the `bughole_destroyed` event, and gives the stats editor the Peacemaker, Redeemer, missile
+direct-hit and AC-8 flak damage rows. See `docs/releases/0.31.1.md`.
+
 Version 0.31.0 lets stats editors see and leave alone values other mods changed (`hd2.inspect`), draws mod windows
 in every game language's font (issue #8), and adds status effect stats, wind-up and beam pulse fields, beam swaps,
 experimental beam conversion, missile fields, team-reload ammunition, mounted spread, the Breakthrough shield arm,
