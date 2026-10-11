@@ -1374,6 +1374,24 @@ function HD2AttackOutput:impact_explosion() end
 ---The explosion this output releases when its projectile expires (a stuck spear, a timed shell).
 ---@return HD2AttackOutputSlot
 function HD2AttackOutput:expiry_explosion() end
+---0.31.2: the vanilla stats of the projectile this output fires, read-only, from the game data (hd2.inspect
+---reads live values): {output, owner, compatibilityClass, consumers, values="vanilla", flight={velocity,
+---mass, drag, gravity, lifetime, lifetime_variance, diameter, penetration_slowdown, pellet_count},
+---direct_damage={standard_damage, durable_damage, ap_direct, ap_slight, ap_large, ap_extreme, demolition,
+---stagger, push_force, statuses={{status, strength}}}|nil, impact|nil, expiry|nil (each {name, label,
+---inner_radius, outer_radius, shockwave_radius, shrapnel_count, arc, damage})}. Non-projectile outputs:
+---nil, "NOT_A_PROJECTILE", reason.
+---@return table|nil
+---@return string|nil code
+---@return string|nil reason
+function HD2AttackOutput:stats() end
+---0.31.2: the owner weapon own editable projectile handle (weapon:attack("primary"):projectile()) for an
+---output that is the primary attack; an edit there changes the owner and every consumer of the row
+---(allow_shared). Otherwise nil, "NO_OWNER_PROJECTILE" | "NOT_PRIMARY" | "NOT_EDITABLE", reason.
+---@return table|nil
+---@return string|nil code
+---@return string|nil reason
+function HD2AttackOutput:owner_projectile() end
 
 ---@class HD2AttackOutputSlot
 ---@field resource "attack_output_slot"

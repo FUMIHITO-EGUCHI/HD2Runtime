@@ -756,6 +756,20 @@ def outputs():
         '---@return HD2AttackOutputSlot','function HD2AttackOutput:impact_explosion() end',
         '---The explosion this output releases when its projectile expires (a stuck spear, a timed shell).',
         '---@return HD2AttackOutputSlot','function HD2AttackOutput:expiry_explosion() end',
+        '---0.31.2: the vanilla stats of the projectile this output fires, read-only, from the game data (hd2.inspect',
+        '---reads live values): {output, owner, compatibilityClass, consumers, values="vanilla", flight={velocity,',
+        '---mass, drag, gravity, lifetime, lifetime_variance, diameter, penetration_slowdown, pellet_count},',
+        '---direct_damage={standard_damage, durable_damage, ap_direct, ap_slight, ap_large, ap_extreme, demolition,',
+        '---stagger, push_force, statuses={{status, strength}}}|nil, impact|nil, expiry|nil (each {name, label,',
+        '---inner_radius, outer_radius, shockwave_radius, shrapnel_count, arc, damage})}. Non-projectile outputs:',
+        '---nil, "NOT_A_PROJECTILE", reason.',
+        '---@return table|nil','---@return string|nil code','---@return string|nil reason',
+        'function HD2AttackOutput:stats() end',
+        '---0.31.2: the owner weapon own editable projectile handle (weapon:attack("primary"):projectile()) for an',
+        '---output that is the primary attack; an edit there changes the owner and every consumer of the row',
+        '---(allow_shared). Otherwise nil, "NO_OWNER_PROJECTILE" | "NOT_PRIMARY" | "NOT_EDITABLE", reason.',
+        '---@return table|nil','---@return string|nil code','---@return string|nil reason',
+        'function HD2AttackOutput:owner_projectile() end',
         '','---@class HD2AttackOutputSlot','---@field resource "attack_output_slot"','---@field output string',
         '---@field slot "directDamage"|"impactExplosion"|"expiryExplosion"','local HD2AttackOutputSlot = {}',
         '---{output, slot, field, present, allowNone, shared}.','---@return table',
@@ -974,6 +988,21 @@ def outputs():
         '- `hd2.text.game(id[, language | {language, plain}])` -> `text, language`, or `nil, code, reason`.',
         '- Codes: UNAVAILABLE, UNSUPPORTED_BUILD, LANGUAGE_NOT_LOADED, UNSUPPORTED_LANGUAGE, NO_TEXT, INVALID_TEXT, '
             'UNKNOWN_OBJECT, NO_NAME.']
+    # 0.31.2: read-only stats of an output's projectile (domains/projectile_stats.lua).
+    doc+=['','## Attack output stats (HD2Runtime 0.31.2+)','',
+        'Read-only vanilla values from the game data (no live read; `hd2.inspect` reads live values). See '
+            '`attack-outputs.md` ("Stats of an output projectile").','',
+        '- `hd2.attack_output(id):stats()` -> `{output, owner, compatibilityClass, consumers, values, flight, '
+            'direct_damage, impact, expiry}`, or `nil, code, reason` (NOT_A_PROJECTILE, NO_STATS).',
+        '- `flight`: velocity, mass, drag, gravity, lifetime, lifetime_variance, diameter, penetration_slowdown, '
+            'pellet_count.',
+        '- `direct_damage`: standard_damage, durable_damage, ap_direct, ap_slight, ap_large, ap_extreme, demolition, '
+            'stagger, push_force, statuses = {{status, strength}}; `nil` when the row has none.',
+        '- `impact` / `expiry`: name (`hd2.explosion` catalogue id, nil when unnamed), label, inner_radius, outer_radius, '
+            'shockwave_radius, shrapnel_count, arc, damage; `nil` when the projectile has none.',
+        '- `hd2.attack_output(id):owner_projectile()` -> the owner weapon editable primary projectile handle (edits '
+            'are shared with the owner: allow_shared), or `nil, code, reason` (NO_OWNER_PROJECTILE, NOT_PRIMARY, '
+            'NOT_EDITABLE).']
     for domain,t in types.items():
         doc+=['','## '+t['class'],'']
         for method,to in t['methods'].items():doc+=['- `:'+method+'()` → `'+types[to]['class']+'` (only where mapped).']

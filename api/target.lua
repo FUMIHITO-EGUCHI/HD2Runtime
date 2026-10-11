@@ -128,6 +128,46 @@ function M.new(describe)
             end
             return setmetatable({resource='attack_output_slot',output=output.id,slot=slot},{__index=slot_methods})
         end
+        -- 0.31.2 (domains/projectile_stats.lua, research/projectile-stats): the vanilla stats of the projectile this
+        -- output fires, read-only and from the game data (nothing is read live; hd2.inspect reads live values): flight,
+        -- the direct-hit damage row's values and the impact / expiry explosions. Projectile outputs only; others
+        -- return nil, code, reason.
+        function methods.stats()
+            if output.family~='projectile'then
+                return nil,'NOT_A_PROJECTILE',output.id..' is a '..tostring(output.family)..' output: it fires no projectile'
+            end
+            local row=type(output.currentDefault)=='number'
+                and require('hd2runtime/domains/projectile_stats').types[output.currentDefault]
+            if not row then
+                return nil,'NO_STATS',output.id..' has no established projectile'..(output.reason and(': '..output.reason)or'')
+            end
+            local consumers
+            local field=output.slotFields and output.slotFields['projectile.direct_damage']
+            if field then consumers=#(field.sharedConsumers or{})end
+            return {output=output.id,owner=copy(output.owner),compatibilityClass=output.compatibilityClass,
+                flight=copy(row.flight),direct_damage=copy(row.direct_damage),impact=copy(row.impact),
+                expiry=copy(row.expiry),consumers=consumers,values='vanilla'}
+        end
+        -- The owner weapon's own editable projectile handle (hd2.weapon(owner):attack('primary'):projectile(), or the
+        -- support weapon's): editing it changes the owner weapon and every other consumer of the row (allow_shared
+        -- where the row has more than one; projectile edits need it). Only for an output that is its owner's primary
+        -- attack; otherwise nil, code, reason.
+        function methods.owner_projectile()
+            local owner=output.owner or{}
+            if output.family~='projectile'or(owner.kind~='player_weapon'and owner.kind~='support_weapon')then
+                return nil,'NO_OWNER_PROJECTILE',output.id..' is not a player or support weapon projectile output'
+            end
+            if catalog.aliases[owner.name]~=output.id and catalog.aliases[tostring(owner.name)..'/primary']~=output.id then
+                return nil,'NOT_PRIMARY',output.id..' is not the primary attack output of '..tostring(owner.name)
+            end
+            local hd2=require('hd2runtime/api/hd2')
+            local ok,handle=pcall(function()
+                local weapon=owner.kind=='player_weapon'and hd2.weapon(owner.name)or hd2.support_weapon(owner.name)
+                return weapon:attack('primary'):projectile()
+            end)
+            if not ok then return nil,'NOT_EDITABLE',tostring(owner.name)..' has no editable primary projectile' end
+            return handle
+        end
         function methods.direct_damage()return slot_handle('directDamage')end
         function methods.impact_explosion()return slot_handle('impactExplosion')end
         function methods.expiry_explosion()return slot_handle('expiryExplosion')end

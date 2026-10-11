@@ -342,6 +342,37 @@ charge levels) are unchanged.
 - Live test pending, solo: the Quasar <- EAT-17 rocket and the Railgun <- APW-1 round fire the donor after a fresh
   call-in. The multiplayer behaviour is that of every other support host swap.
 
+## Stats of an output projectile (0.31.2)
+
+After a swap, the weapon fires the donor's projectile, and its own projectile and damage rows refuse with
+`COMPOSITION_TARGET_CHANGED`. A tool can show what the weapon fires instead, read-only:
+
+```lua
+local s = hd2.attack_output('EAT-17 Expendable Anti-Tank'):stats()
+-- s.flight.velocity, s.flight.lifetime, s.direct_damage.standard_damage, s.impact.name, s.impact.outer_radius, ...
+local handle = hd2.attack_output('EAT-17 Expendable Anti-Tank'):owner_projectile()  -- the EAT-17's own row (shared)
+```
+
+- `stats()` returns `{output, owner, compatibilityClass, consumers, values = 'vanilla', flight, direct_damage, impact,
+  expiry}`. The keys are the suffixes of the fields that edit them on the owner:
+  - `flight`: `velocity`, `mass`, `drag`, `gravity`, `lifetime`, `pellet_count` (the `projectile.*` fields), and
+    `diameter`, `lifetime_variance`, `penetration_slowdown`;
+  - `direct_damage`: `standard_damage`, `durable_damage`, `ap_direct`, `ap_slight`, `ap_large`, `ap_extreme`,
+    `demolition`, `stagger`, `push_force`, `statuses` (`{status, strength}`), or `nil`;
+  - `impact`, `expiry`: `name` (the `hd2.explosion` catalogue id; `nil` for an unnamed explosion), `label`,
+    `inner_radius`, `outer_radius`, `shockwave_radius`, `shrapnel_count`, `arc`, `damage` (the same keys), or `nil`.
+- The values are the game data's (vanilla), generated offline (`scripts/research_projectile_stats.py` ->
+  `research/projectile-stats-F5FEE03DCFDB.json`, checked against `research/projectile-components` and the explosion
+  catalogue research; `scripts/generate_projectile_stats.py` -> `domains/projectile_stats.lua`). Nothing is read from
+  the game and nothing is written. An edit made by a mod is not reflected: `hd2.inspect` reads live values.
+- A beam, arc, spray or melee output returns `nil, 'NOT_A_PROJECTILE', reason`. A projectile output that is not
+  established as its owner's attack output (for example the SG-8 Punisher's, fired through its rounds feed) returns
+  `nil, 'NO_STATS', reason`.
+- `owner_projectile()` returns the owner weapon's own editable projectile handle (`hd2.weapon(owner):attack('primary')
+  :projectile()`, or the support weapon's) when the output is its owner's primary attack. Editing it changes the owner
+  weapon and every consumer of the row (`consumers`; `allow_shared`). Otherwise `nil, code, reason`
+  (`NO_OWNER_PROJECTILE`, `NOT_PRIMARY`, `NOT_EDITABLE`).
+
 ## Beam swaps (0.31.0; not live-tested)
 
 A beam weapon can fire another weapon's beam. Research: `scripts/research_beam_outputs.py` →

@@ -37,6 +37,16 @@ Read-only, in the language the game is set to; not live-tested. See `game-text.m
 - `hd2.text.game(id[, language | {language, plain}])` -> `text, language`, or `nil, code, reason`.
 - Codes: UNAVAILABLE, UNSUPPORTED_BUILD, LANGUAGE_NOT_LOADED, UNSUPPORTED_LANGUAGE, NO_TEXT, INVALID_TEXT, UNKNOWN_OBJECT, NO_NAME.
 
+## Attack output stats (HD2Runtime 0.31.2+)
+
+Read-only vanilla values from the game data (no live read; `hd2.inspect` reads live values). See `attack-outputs.md` ("Stats of an output projectile").
+
+- `hd2.attack_output(id):stats()` -> `{output, owner, compatibilityClass, consumers, values, flight, direct_damage, impact, expiry}`, or `nil, code, reason` (NOT_A_PROJECTILE, NO_STATS).
+- `flight`: velocity, mass, drag, gravity, lifetime, lifetime_variance, diameter, penetration_slowdown, pellet_count.
+- `direct_damage`: standard_damage, durable_damage, ap_direct, ap_slight, ap_large, ap_extreme, demolition, stagger, push_force, statuses = {{status, strength}}; `nil` when the row has none.
+- `impact` / `expiry`: name (`hd2.explosion` catalogue id, nil when unnamed), label, inner_radius, outer_radius, shockwave_radius, shrapnel_count, arc, damage; `nil` when the projectile has none.
+- `hd2.attack_output(id):owner_projectile()` -> the owner weapon editable primary projectile handle (edits are shared with the owner: allow_shared), or `nil, code, reason` (NO_OWNER_PROJECTILE, NOT_PRIMARY, NOT_EDITABLE).
+
 ## HD2Weapon
 
 - `:projectile()` → `HD2Projectile` (only where mapped).
