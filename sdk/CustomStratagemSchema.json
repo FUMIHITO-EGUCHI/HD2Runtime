@@ -4776,6 +4776,23 @@
     "reason": "TX-41 Sterilizer's rack has no authored active slot (its pod is not a reviewed pickup rack: an item with no resolvable pickup name, or a deployable; domains/pod_payload_authoring.lua)"
    }
   ],
+  "textLanguages": [
+   "us",
+   "gb",
+   "bp",
+   "de",
+   "es",
+   "fr",
+   "it",
+   "jp",
+   "ko",
+   "ms",
+   "pl",
+   "pt",
+   "ru",
+   "cn",
+   "tc"
+  ],
   "variantDonors": [
    {
     "deliverable": true,
@@ -6780,7 +6797,9 @@
       },
       "name": {
        "default": "the custom stratagem's name",
-       "doc": "the name its pickup prompt, map label and weapon panel show; 'donor': the donor's own",
+       "doc": "the name its pickup prompt, map label and weapon panel show; 'donor': the donor's own; 1 to 64 bytes of UTF-8 (about 21 CJK characters), or a table {default = text, <language> = text} of the game's languages (textLanguages), each 1 to 64 bytes",
+       "languageTable": true,
+       "lengthUnit": "bytes",
        "maxLength": 64,
        "minLength": 1,
        "optional": true,
@@ -7832,6 +7851,9 @@
    "unit": "seconds from the call-in's arrival"
   },
   "description": {
+   "doc": "the description; 1 to 400 bytes of UTF-8 (about 133 CJK characters), or a table {default = text, <language> = text} of the game's languages (textLanguages), each 1 to 400 bytes",
+   "languageTable": true,
+   "lengthUnit": "bytes",
    "maxLength": 400,
    "minLength": 1,
    "required": true,
@@ -7859,7 +7881,9 @@
    "unit": "loadout slots per player"
   },
   "name": {
-   "doc": "the HUD name",
+   "doc": "the HUD name; 1 to 64 bytes of UTF-8 (about 21 CJK characters), or a table {default = text, <language> = text} of the game's languages (textLanguages), each 1 to 64 bytes",
+   "languageTable": true,
+   "lengthUnit": "bytes",
    "maxLength": 64,
    "minLength": 1,
    "required": true,
@@ -7867,7 +7891,9 @@
   },
   "name_cased": {
    "default": "name",
-   "doc": "the panel's and loadout's name",
+   "doc": "the panel's and loadout's name; 1 to 64 bytes of UTF-8 (about 21 CJK characters), or a table {default = text, <language> = text} of the game's languages (textLanguages), each 1 to 64 bytes",
+   "languageTable": true,
+   "lengthUnit": "bytes",
    "maxLength": 64,
    "minLength": 1,
    "optional": true,
@@ -7875,8 +7901,9 @@
   },
   "traits": {
    "default": "the payload family's",
-   "doc": "the ITEM TRAITS the custom panel shows after the automatic CUSTOM STRATAGEM (upper case)",
+   "doc": "the ITEM TRAITS the custom panel shows after the automatic CUSTOM STRATAGEM (upper case); each 1 to 32 bytes of UTF-8 without control characters (about 10 CJK characters)",
    "item": {
+    "lengthUnit": "bytes",
     "maxLength": 32,
     "minLength": 1,
     "type": "string"
@@ -8124,6 +8151,9 @@
      },
      "name": {
       "default": "the custom stratagem's name",
+      "doc": "what the weapon shows; 1 to 64 bytes of UTF-8 (about 21 CJK characters), or a table {default = text, <language> = text} of the game's languages (textLanguages), each 1 to 64 bytes",
+      "languageTable": true,
+      "lengthUnit": "bytes",
       "maxLength": 64,
       "minLength": 1,
       "optional": true,

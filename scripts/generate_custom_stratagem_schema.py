@@ -269,6 +269,8 @@ out.variantDonors=json.array(variant_list)
 out.uses={min=-1,max=custom.MAX_USES}   -- 0 / -1: unlimited (0.30.3)
 out.maxPerPlayer=custom.MAX_PER_PLAYER
 out.traits={max=custom.MAX_TRAITS,length=custom.TRAIT_LENGTH}
+-- 0.31.2: a name or description may be a table of the game's languages (runtime/text_resources.lua codes).
+out.textLanguages=json.array(require('hd2runtime/runtime/text_resources').LANGUAGES)
 return json.encode(out)
 '''
 
@@ -286,6 +288,15 @@ def rng(lo, hi, integer=False, unit=None, exclusive_min=False):
     if unit:
         out['unit'] = unit
     return out
+
+
+# A name or description (0.31.2): a string, or a table of the game's languages {default, <code>: text}. Every text is
+# 1 to maxLength BYTES of UTF-8 (lengthUnit; about a third as many CJK characters) without control characters.
+def text_field(most, doc, **extra):
+    return dict({'type': 'string', 'minLength': 1, 'maxLength': most, 'lengthUnit': 'bytes',
+        'languageTable': True, 'doc': doc + '; 1 to %d bytes of UTF-8 (about %d CJK characters), or a table '
+        '{default = text, <language> = text} of the game\'s languages (textLanguages), each 1 to %d bytes'
+        % (most, most // 3, most)}, **extra)
 
 
 def build(facts: dict | None = None) -> dict:
@@ -389,9 +400,8 @@ def build(facts: dict | None = None) -> dict:
              'weapon': {'type': 'clone_donor', 'catalog': 'cloneDonors', 'reviewedDonor': True, 'required': True,
                  'doc': 'the donor weapon (a support weapon with a reviewed expendable clone class)'},
              'presentation': {'type': 'object', 'optional': True, 'fields': {
-                 'name': {'type': 'string', 'minLength': 1, 'maxLength': L['text'], 'optional': True,
-                     'default': 'the custom stratagem\'s name', 'doc': 'the name its pickup prompt, map label and '
-                     'weapon panel show; \'donor\': the donor\'s own'},
+                 'name': text_field(L['text'], 'the name its pickup prompt, map label and weapon panel show; '
+                     '\'donor\': the donor\'s own', optional=True, default='the custom stratagem\'s name'),
                  'icon': {'type': 'string', 'optional': True, 'default': 'the custom stratagem\'s icon',
                      'doc': 'an image id (images/<id>.png) for its marker and prompt icon; \'donor\': the donor\'s '
                      'own'}},
@@ -534,8 +544,8 @@ def build(facts: dict | None = None) -> dict:
                 'doc': 'a variantDonors[].rounds[].output of that host (compiled to hd2.attack_output(output)); its '
                        'package loads first; without it the host\'s own round'},
             'presentation': {'type': 'object', 'optional': True, 'fields': {
-                'name': {'type': 'string', 'minLength': 1, 'maxLength': L['text'], 'optional': True,
-                    'default': 'the custom stratagem\'s name'},
+                'name': text_field(L['text'], 'what the weapon shows', optional=True,
+                    default='the custom stratagem\'s name'),
                 'icon': {'type': 'string', 'optional': True, 'default': 'the custom stratagem\'s icon',
                     'doc': 'an image id (images/<id>.png)'}},
                 'doc': 'what the weapon shows for the mission (pickup prompt, map label, weapon panel)'},
@@ -603,10 +613,9 @@ def build(facts: dict | None = None) -> dict:
         'metadata': {
             'id': {'type': 'string', 'pattern': L['id']['pattern'], 'maxLength': L['id']['max'], 'required': True,
                 'doc': 'unique across every mod'},
-            'name': {'type': 'string', 'minLength': 1, 'maxLength': L['text'], 'required': True, 'doc': 'the HUD name'},
-            'name_cased': {'type': 'string', 'minLength': 1, 'maxLength': L['text'], 'optional': True,
-                'default': 'name', 'doc': 'the panel\'s and loadout\'s name'},
-            'description': {'type': 'string', 'minLength': 1, 'maxLength': L['description'], 'required': True},
+            'name': text_field(L['text'], 'the HUD name', required=True),
+            'name_cased': text_field(L['text'], 'the panel\'s and loadout\'s name', optional=True, default='name'),
+            'description': text_field(L['description'], 'the description', required=True),
             'icon': {'type': 'image', 'required': True,
                 'doc': 'the id of the mod\'s images/<id>.png (256 x 256): the build compiles it into the mod\'s own '
                        'archive (docs/custom-images.md)'},
@@ -626,9 +635,12 @@ def build(facts: dict | None = None) -> dict:
                 optional=True, default='no limit',
                 doc='at most this many of each player\'s loadout slots hold it: a further pick is refused (its tile '
                     'unavailable); a loadout holding more aboard the ship loses the extra slots'),
-            'traits': {'type': 'list', 'item': {'type': 'string', 'minLength': 1, 'maxLength': facts['traits']['length']},
-                'max': facts['traits']['max'], 'optional': True, 'default': 'the payload family\'s',
-                'doc': 'the ITEM TRAITS the custom panel shows after the automatic CUSTOM STRATAGEM (upper case)'},
+            'traits': {'type': 'list', 'item': {'type': 'string', 'minLength': 1, 'maxLength': facts['traits']['length'],
+                'lengthUnit': 'bytes'}, 'max': facts['traits']['max'], 'optional': True,
+                'default': 'the payload family\'s',
+                'doc': 'the ITEM TRAITS the custom panel shows after the automatic CUSTOM STRATAGEM (upper case); each '
+                    '1 to %d bytes of UTF-8 without control characters (about %d CJK characters)'
+                    % (facts['traits']['length'], facts['traits']['length'] // 3)},
         },
         'carrier': {
             'beacon': {'type': 'enum', 'values': facts['beacons'], 'required': 'unless group is given',
@@ -687,7 +699,7 @@ def build(facts: dict | None = None) -> dict:
             'eagleDonors',
             'orbitals', 'explosionDonors', 'carrierFamilies', 'carrierGroups', 'podItems', 'podCarriers', 'beacons',
             'directions', 'stratagems', 'pelicanSounds', 'pelicanExplosionDonors', 'nativeCodes', 'siloDonors',
-            'blastExplosions', 'variantDonors')},
+            'blastExplosions', 'variantDonors', 'textLanguages')},
     }
     return schema
 
@@ -705,10 +717,19 @@ def project_schema(schema: dict) -> dict:
             out['maximum'] = field['max']
         return out
 
+    def text(most):
+        one = {'type': 'string', 'minLength': 1, 'maxLength': most}
+        return {'description': '1 to %d bytes of UTF-8 (JSON Schema maxLength counts characters: the compiler checks '
+            'bytes), or a table {default, <language>: text} of the game\'s languages' % most,
+            'oneOf': [one, {'type': 'object', 'additionalProperties': False, 'required': ['default'],
+                'properties': {code: one for code in ['default'] + schema['catalogs']['textLanguages']}}]}
+
     def fields_object(fields):
         props, required = {}, []
         for key, f in fields.items():
-            if f['type'] in ('integer', 'number'):
+            if f.get('languageTable'):
+                props[key] = text(f['maxLength'])
+            elif f['type'] in ('integer', 'number'):
                 props[key] = number(f)
             elif f['type'] == 'enum':
                 props[key] = {'enum': f['values']}
@@ -744,9 +765,9 @@ def project_schema(schema: dict) -> dict:
     stratagem = {'type': 'object', 'additionalProperties': False, 'required': ['id', 'name', 'description', 'icon',
         'code', 'carrier', 'payload'], 'properties': {
         'id': {'type': 'string', 'pattern': M['id']['pattern'], 'maxLength': M['id']['maxLength']},
-        'name': {'type': 'string', 'minLength': 1, 'maxLength': M['name']['maxLength']},
-        'name_cased': {'type': 'string', 'minLength': 1, 'maxLength': M['name_cased']['maxLength']},
-        'description': {'type': 'string', 'minLength': 1, 'maxLength': M['description']['maxLength']},
+        'name': text(M['name']['maxLength']),
+        'name_cased': text(M['name_cased']['maxLength']),
+        'description': text(M['description']['maxLength']),
         'icon': {'type': 'object', 'additionalProperties': False, 'required': ['image'], 'properties': {
             'image': {'type': 'string', 'pattern': '^[a-z0-9_]{1,64}$'},
             'source': {'type': 'string', 'pattern': r'^images/[a-z0-9_]{1,64}\.png$',
@@ -757,7 +778,8 @@ def project_schema(schema: dict) -> dict:
         'uses': number(M['uses']),
         'max_per_player': number(M['max_per_player']),
         'traits': {'type': 'array', 'maxItems': M['traits']['max'], 'items': {'type': 'string', 'minLength': 1,
-            'maxLength': M['traits']['item']['maxLength']}},
+            'maxLength': M['traits']['item']['maxLength'], 'description': '1 to %d bytes of UTF-8 (JSON Schema '
+            'maxLength counts characters: the compiler checks bytes)' % M['traits']['item']['maxLength']}},
         'assets': {'type': 'array', 'items': {'type': 'string'}},
         'carrier': {'type': 'object', 'additionalProperties': False,
             'anyOf': [{'required': ['beacon']}, {'required': ['group']}], 'properties': {

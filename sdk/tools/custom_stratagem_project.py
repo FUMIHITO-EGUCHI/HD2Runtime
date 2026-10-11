@@ -70,6 +70,34 @@ class Problems(list):
         self.append('%s: %s' % (where, text))
 
 
+def _text(problems, where, value, most, schema, alternative=''):
+    """A name or description: a string, or (0.31.2) a table {default, <language>: text} of the game's languages
+    (catalogs.textLanguages). Each text is 1 to `most` BYTES of UTF-8 without control characters, as the Runtime checks
+    (64 bytes is about 21 CJK characters)."""
+    def ok(text):
+        return isinstance(text, str) and 1 <= len(text.encode('utf-8')) <= most and not re.search(r'[\x00-\x1f\x7f]', text)
+    rule = '1 to %d bytes of UTF-8 without control characters (about %d CJK characters)' % (most, most // 3)
+    if isinstance(value, dict):
+        languages = set(schema.get('catalogs', {}).get('textLanguages') or [])
+        unknown = sorted(key for key in value if key != 'default' and key not in languages)
+        if 'default' not in value:
+            problems.add(where, 'a language table needs "default": the text of every language it does not give')
+        if unknown:
+            problems.add(where, 'unsupported language %s (the game\'s languages: %s)' % (', '.join(map(str, unknown)),
+                ', '.join(sorted(languages))))
+        for key, text in value.items():
+            if not ok(text):
+                problems.add('%s.%s' % (where, key), 'must be ' + rule)
+    elif not ok(value):
+        problems.add(where, 'must be a string of ' + rule + alternative + ', or a table {"default": text, '
+            '"<language>": text}')
+
+
+def _text_lua(value):
+    """A text as compiled: a string, or a language table with default first."""
+    return _ordered(value, ('default',)) if isinstance(value, dict) else value
+
+
 def _number(problems, where, value, field, required=False):
     if value is None:
         if required:
@@ -336,8 +364,7 @@ def validate(project: dict, schema: dict) -> list[str]:
             v = s.get(key)
             if v is None and key == 'name_cased':
                 continue
-            if not (isinstance(v, str) and 1 <= len(v) <= M[key]['maxLength'] and not re.search(r'[\x00-\x1f\x7f]', v)):
-                problems.add(where + '.' + key, 'must be a string of 1 to %d characters' % M[key]['maxLength'])
+            _text(problems, where + '.' + key, v, M[key]['maxLength'], schema)
         icon = s.get('icon')
         if not (isinstance(icon, dict) and set(icon) <= {'image', 'source'} and isinstance(icon.get('image'), str)
                 and re.fullmatch(r'[a-z0-9_]{1,64}', icon['image'])
@@ -373,10 +400,11 @@ def validate(project: dict, schema: dict) -> list[str]:
         if 'traits' in s:
             traits = s['traits']
             if not (isinstance(traits, list) and len(traits) <= M['traits']['max'] and all(isinstance(t, str)
-                    and 1 <= len(t) <= M['traits']['item']['maxLength'] and re.fullmatch(r'[\x20-\x7e]+', t)
-                    for t in traits)):
-                problems.add(where + '.traits', 'must list at most %d labels of 1 to %d printable characters (CUSTOM '
-                    'STRATAGEM comes first by itself)' % (M['traits']['max'], M['traits']['item']['maxLength']))
+                    and 1 <= len(t.encode('utf-8')) <= M['traits']['item']['maxLength']
+                    and not re.search(r'[\x00-\x1f\x7f]', t) for t in traits)):
+                problems.add(where + '.traits', 'must list at most %d labels of 1 to %d bytes of UTF-8 without '
+                    'control characters (CUSTOM STRATAGEM comes first by itself)' % (M['traits']['max'],
+                    M['traits']['item']['maxLength']))
         for k, asset in enumerate(s.get('assets') or []):
             if asset not in stratagems:
                 problems.add(where + '.assets[%d]' % k, 'must name a catalogued stratagem')
@@ -441,10 +469,8 @@ def validate(project: dict, schema: dict) -> list[str]:
             pres = payload.get('presentation')
             if pres is not None and _only_keys(problems, pw + '.presentation', pres, set(fields['presentation']['fields'])):
                 name = pres.get('name')
-                if name is not None and not (isinstance(name, str) and 1 <= len(name) <= M['name']['maxLength']
-                        and not re.search(r'[\x00-\x1f\x7f]', name)):
-                    problems.add(pw + '.presentation.name', 'must be a string of 1 to %d characters, or "donor"'
-                        % M['name']['maxLength'])
+                if name is not None and name != 'donor':
+                    _text(problems, pw + '.presentation.name', name, M['name']['maxLength'], schema, ', or "donor"')
                 icon_id = pres.get('icon')
                 if icon_id is not None and not (isinstance(icon_id, str) and re.fullmatch(r'[a-z0-9_]{1,64}', icon_id)):
                     problems.add(pw + '.presentation.icon', 'must be an image id (images/<id>.png) or "donor"')
@@ -488,10 +514,8 @@ def validate(project: dict, schema: dict) -> list[str]:
             pres = payload.get('presentation')
             if pres is not None and _only_keys(problems, pw + '.presentation', pres, set(fields['presentation']['fields'])):
                 name = pres.get('name')
-                if name is not None and not (isinstance(name, str) and 1 <= len(name) <= M['name']['maxLength']
-                        and not re.search(r'[\x00-\x1f\x7f]', name)):
-                    problems.add(pw + '.presentation.name', 'must be a string of 1 to %d characters'
-                        % M['name']['maxLength'])
+                if name is not None:
+                    _text(problems, pw + '.presentation.name', name, M['name']['maxLength'], schema)
                 icon_id = pres.get('icon')
                 if icon_id is not None and not (isinstance(icon_id, str) and re.fullmatch(r'[a-z0-9_]{1,64}', icon_id)):
                     problems.add(pw + '.presentation.icon', 'must be an image id (images/<id>.png)')
@@ -644,14 +668,16 @@ def _payload_lua(payload: dict) -> tuple[str, str]:
         if isinstance(body.get('modify'), dict):
             body['modify'] = _ordered(body['modify'], WEAPON_ORDER)
         if isinstance(body.get('presentation'), dict):
-            body['presentation'] = _ordered(body['presentation'], ('name', 'icon'))
+            body['presentation'] = _ordered(dict(body['presentation'], **({'name': _text_lua(
+                body['presentation']['name'])} if 'name' in body['presentation'] else {})), ('name', 'icon'))
         if isinstance(body.get('pod'), list):
             body['pod'] = _pod_lua(body['pod'])
         return 'delivery', _lua_value((('family', 'expendable'),) + _ordered(body, ('weapon', 'presentation', 'modify',
             'round', 'level', 'pod')))
     if family == 'weapon':
         if isinstance(body.get('presentation'), dict):
-            body['presentation'] = _ordered(body['presentation'], ('name', 'icon'))
+            body['presentation'] = _ordered(dict(body['presentation'], **({'name': _text_lua(
+                body['presentation']['name'])} if 'name' in body['presentation'] else {})), ('name', 'icon'))
         if 'round' in body:
             body['round'] = _Expr('hd2.attack_output(%s)' % _lua_string(body['round']))
         return 'delivery', _lua_value((('family', 'weapon'),) + _ordered(body, ('weapon', 'presentation', 'round',
@@ -687,10 +713,10 @@ def compile_lua(project: dict, source_sha256: str = '') -> str:
     if project.get('log'):
         lines += ['local mod=hd2.mod()', 'mod:log(' + _lua_string(project['log']) + ')']
     for s in project['stratagems']:
-        body = [('id', s['id']), ('name', s['name'])]
+        body = [('id', s['id']), ('name', _text_lua(s['name']))]
         if 'name_cased' in s:
-            body.append(('name_cased', s['name_cased']))
-        body.append(('description', s['description']))
+            body.append(('name_cased', _text_lua(s['name_cased'])))
+        body.append(('description', _text_lua(s['description'])))
         lines.append('hd2.custom_stratagem.register({')
         for k, v in body:
             lines.append('    %s=%s,' % (k, _lua_value(v)))

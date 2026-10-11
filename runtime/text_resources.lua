@@ -36,6 +36,7 @@ local function log(text)log_module.emit('[HD2Runtime] text '..text)end
 local LANGUAGE,CODE,CODES={},{},{}
 for _,item in ipairs(D.languages)do LANGUAGE[item.code]=item.hash;CODE[item.hash]=item.code;CODES[#CODES+1]=item.code end
 M.LANGUAGES=CODES
+function M.is_language(code)return LANGUAGE[code]~=nil end
 local TWO32=4294967296
 local function u32(n)return string.char(n%256,math.floor(n/256)%256,math.floor(n/65536)%256,math.floor(n/16777216)%256)end
 local function u64(n)return u32(n%TWO32)..u32(math.floor(n/TWO32))end
@@ -67,6 +68,7 @@ local function valid_utf8(s)
     end
     return true
 end
+M.valid_utf8=valid_utf8
 -- {default = text, [code] = text}: a string is the text of every language.
 local function values_of(value)
     if type(value)=='string'then value={default=value}end

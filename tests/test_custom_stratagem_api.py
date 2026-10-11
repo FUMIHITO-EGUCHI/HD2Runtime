@@ -87,6 +87,45 @@ class RegistrationTests(unittest.TestCase):
     def lua(self, body):
         self.assertEqual(run(REGISTRATION + body), b'ok')
 
+    def test_names_and_descriptions_take_every_game_language(self):
+        # 0.31.2: name, name_cased, description (and delivery.presentation.name) take a table of the game's languages
+        # (runtime/text_resources.lua), as hd2.resources.text does. The limits are BYTES of UTF-8: 64 is about 21 CJK
+        # characters.
+        self.lua(r'''
+local d=custom.register(spec({name={default='GAS BARRAGE',cn='毒气弹幕',tc='毒氣彈幕'},
+    name_cased={default='Gas Barrage',cn='毒气弹幕',ru='Газовый обстрел'},
+    description={default='Calls down gas shells.',cn='呼叫毒气炮弹。'}}),'mods/test/one')
+assert(d.label=='Gas Barrage','the plain label is the default')
+assert(texts.text(d.texts.nameCased,'cn')=='毒气弹幕' and texts.text(d.texts.nameCased,'ru')=='Газовый обстрел')
+assert(texts.text(d.texts.nameCased,'de')=='Gas Barrage','a language not given shows default')
+assert(texts.text(d.texts.name,'tc')=='毒氣彈幕' and texts.text(d.texts.description,'cn')=='呼叫毒气炮弹。')
+custom.reset_for_tests();texts.reset_for_tests();images.reset_for_tests()
+require('hd2runtime/runtime/virtual_stratagems').reset_for_tests()
+-- 21 CJK characters are 63 bytes: accepted; 22 are 66: refused.
+custom.register(spec({id='cjk_ok',code={'up','up','down','down','left'},name=('毒'):rep(21)}),'mods/test/two')
+refused({name=('毒'):rep(22)},'name must be a string of 1 to 64 bytes of UTF-8')
+refused({name={default='Gas',xx='?'}},'name: unsupported language xx')
+refused({name={cn='毒气'}},'name needs default')
+refused({name={default='Gas',cn=('毒'):rep(22)}},'name.cn must be a string of 1 to 64 bytes')
+refused({name='\255\254'},'name must be a string of 1 to 64 bytes of UTF-8')
+refused({name='two\nlines'},'name must be a string')
+refused({description={default=('x'):rep(401)}},'description.default must be a string of 1 to 400 bytes')
+return 'ok'
+''')
+
+    def test_traits_take_utf8(self):
+        # 0.31.2: a trait is any UTF-8 text without control characters, 1 to 32 bytes (about 10 CJK characters),
+        # upper-cased by runtime/i18n.lua (UTF-8 aware).
+        self.lua(r'''
+local d=custom.register(spec({id='traits_ok',code={'up','up','down','down','left'},traits={'毒气','газ','Stun'}}),
+    'mods/test/one')
+assert(table.concat(d.traits,'|')=='CUSTOM STRATAGEM|毒气|ГАЗ|STUN',table.concat(d.traits,'|'))
+refused({traits={('毒'):rep(11)}},'traits[1] must be 1 to 32 bytes of UTF-8 without control characters')
+refused({traits={'a\tb'}},'traits[1] must be 1 to 32 bytes')
+refused({traits={'\255'}},'traits[1] must be 1 to 32 bytes')
+return 'ok'
+''')
+
     def test_the_spec_rules_refuse_at_load_time(self):
         self.lua(r'''
 refused({id='Bad Id'},'id must be')

@@ -124,9 +124,103 @@
       "type": "number"
      },
      "description": {
-      "maxLength": 400,
-      "minLength": 1,
-      "type": "string"
+      "description": "1 to 400 bytes of UTF-8 (JSON Schema maxLength counts characters: the compiler checks bytes), or a table {default, <language>: text} of the game's languages",
+      "oneOf": [
+       {
+        "maxLength": 400,
+        "minLength": 1,
+        "type": "string"
+       },
+       {
+        "additionalProperties": false,
+        "properties": {
+         "bp": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "cn": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "de": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "default": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "es": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "fr": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "gb": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "it": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "jp": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "ko": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "ms": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "pl": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "pt": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "ru": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "tc": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         },
+         "us": {
+          "maxLength": 400,
+          "minLength": 1,
+          "type": "string"
+         }
+        },
+        "required": [
+         "default"
+        ],
+        "type": "object"
+       }
+      ]
      },
      "icon": {
       "additionalProperties": false,
@@ -157,14 +251,202 @@
       "type": "integer"
      },
      "name": {
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
+      "description": "1 to 64 bytes of UTF-8 (JSON Schema maxLength counts characters: the compiler checks bytes), or a table {default, <language>: text} of the game's languages",
+      "oneOf": [
+       {
+        "maxLength": 64,
+        "minLength": 1,
+        "type": "string"
+       },
+       {
+        "additionalProperties": false,
+        "properties": {
+         "bp": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "cn": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "de": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "default": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "es": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "fr": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "gb": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "it": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "jp": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "ko": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "ms": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "pl": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "pt": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "ru": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "tc": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "us": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         }
+        },
+        "required": [
+         "default"
+        ],
+        "type": "object"
+       }
+      ]
      },
      "name_cased": {
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
+      "description": "1 to 64 bytes of UTF-8 (JSON Schema maxLength counts characters: the compiler checks bytes), or a table {default, <language>: text} of the game's languages",
+      "oneOf": [
+       {
+        "maxLength": 64,
+        "minLength": 1,
+        "type": "string"
+       },
+       {
+        "additionalProperties": false,
+        "properties": {
+         "bp": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "cn": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "de": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "default": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "es": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "fr": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "gb": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "it": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "jp": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "ko": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "ms": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "pl": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "pt": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "ru": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "tc": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         },
+         "us": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+         }
+        },
+        "required": [
+         "default"
+        ],
+        "type": "object"
+       }
+      ]
      },
      "payload": {
       "oneOf": [
@@ -359,7 +641,103 @@
             "type": "string"
            },
            "name": {
-            "type": "string"
+            "description": "1 to 64 bytes of UTF-8 (JSON Schema maxLength counts characters: the compiler checks bytes), or a table {default, <language>: text} of the game's languages",
+            "oneOf": [
+             {
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+             },
+             {
+              "additionalProperties": false,
+              "properties": {
+               "bp": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "cn": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "de": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "default": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "es": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "fr": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "gb": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "it": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "jp": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "ko": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "ms": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "pl": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "pt": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "ru": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "tc": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "us": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               }
+              },
+              "required": [
+               "default"
+              ],
+              "type": "object"
+             }
+            ]
            }
           },
           "type": "object"
@@ -1115,7 +1493,103 @@
             "type": "string"
            },
            "name": {
-            "type": "string"
+            "description": "1 to 64 bytes of UTF-8 (JSON Schema maxLength counts characters: the compiler checks bytes), or a table {default, <language>: text} of the game's languages",
+            "oneOf": [
+             {
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+             },
+             {
+              "additionalProperties": false,
+              "properties": {
+               "bp": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "cn": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "de": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "default": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "es": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "fr": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "gb": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "it": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "jp": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "ko": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "ms": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "pl": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "pt": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "ru": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "tc": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               },
+               "us": {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+               }
+              },
+              "required": [
+               "default"
+              ],
+              "type": "object"
+             }
+            ]
            }
           },
           "type": "object"
@@ -1137,6 +1611,7 @@
      },
      "traits": {
       "items": {
+       "description": "1 to 32 bytes of UTF-8 (JSON Schema maxLength counts characters: the compiler checks bytes)",
        "maxLength": 32,
        "minLength": 1,
        "type": "string"

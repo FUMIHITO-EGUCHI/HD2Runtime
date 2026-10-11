@@ -276,6 +276,17 @@ CASES = [
     ('HmgSentryExample', 'name 65', _set('name', 'N' * 65), False),
     ('HmgSentryExample', 'description 400', _set('description', 'd' * 400), True),
     ('HmgSentryExample', 'description 401', _set('description', 'd' * 401), False),
+    # 0.31.2: the limits are BYTES of UTF-8 (21 CJK characters are 63 bytes); a name or description may be a table
+    # of the game's languages, and a trait any UTF-8 text.
+    ('HmgSentryExample', 'name 21 CJK', _set('name', '毒' * 21), True),
+    ('HmgSentryExample', 'name 22 CJK', _set('name', '毒' * 22), False),
+    ('HmgSentryExample', 'name languages', _set('name', {'default': 'HMG SENTRY', 'cn': '重机枪哨塔',
+        'ru': 'ПУЛЕМЕТ'}), True),
+    ('HmgSentryExample', 'name no default', _set('name', {'cn': '哨塔'}), False),
+    ('HmgSentryExample', 'name unknown language', _set('name', {'default': 'HMG', 'xx': 'HMG'}), False),
+    ('HmgSentryExample', 'description languages', _set('description', {'default': 'd', 'tc': '哨塔'}), True),
+    ('HmgSentryExample', 'trait CJK', _set('traits', ['哨塔', 'Anti-Tank']), True),
+    ('HmgSentryExample', 'trait 11 CJK', _set('traits', ['毒' * 11]), False),
     ('HmgSentryExample', 'asset unknown', _set('assets', ['No Such Stratagem']), False),
     ('EagleStunRocketPodsExample', 'uses 20', _set('payload.uses', 20), True),
     ('EagleStunRocketPodsExample', 'uses 21', _set('payload.uses', 21), False),
@@ -423,7 +434,7 @@ return 'ok'
             verdicts.append(valid)
             resource, text = wrapped(name, P.compile_lua(project))
             chunks.append('{label=%s,resource=%s,text=%s}' % (lua_literal(name + ' ' + label), lua_literal(resource),
-                lua_literal(text)))
+                lua_literal(text.encode('utf-8'))))   # bytes: a UTF-8 name (0.31.2) as Lua byte escapes
         out = run(WORLD + 'local CASES={' + ','.join(chunks) + '}\n' + r'''
 local custom=require('hd2runtime/runtime/custom_stratagems')
 local out={}

@@ -97,7 +97,10 @@ hd2.custom_stratagem.register({
 A spec error raises at load time; the mod's mistake is never guessed around. The rules:
 
 - the id is unique;
-- the texts are 1–64 characters (descriptions up to 400);
+- the texts are 1 to 64 **bytes** of UTF-8 without control characters (descriptions up to 400 bytes): 64 Latin
+  letters, but only about 21 Chinese, Japanese or Korean characters (3 bytes each);
+- a name, `name_cased`, `description` or `delivery.presentation.name` may be a table of the game's languages instead of
+  a string (0.31.2, see "Texts in every language");
 - the icon is one of the mod's images;
 - the code is never equal to, the start of, or started by another registered custom stratagem's code;
 - one payload family per custom stratagem (`delivery`, `sentry`, `eagle` or `orbital`; none: the mod delivers);
@@ -106,6 +109,24 @@ A spec error raises at load time; the mod's mistake is never guessed around. The
 
 Every field is plain data (names, numbers, tables), so a tool can write a custom stratagem without code. The callbacks
 stay available as an escape hatch.
+
+### Texts in every language (0.31.2, offline only)
+
+`name`, `name_cased`, `description` and `delivery.presentation.name` take either a string (every language) or a table
+of the game's languages, the same form as `hd2.resources.text` (docs/custom-text.md):
+
+```lua
+name={default='ORBITAL GAS BARRAGE',cn='轨道毒气弹幕',tc='軌道毒氣彈幕',ru='ОРБИТАЛЬНЫЙ ГАЗОВЫЙ ОБСТРЕЛ'},
+name_cased={default='Orbital Gas Barrage',cn='轨道毒气弹幕',tc='軌道毒氣彈幕'},
+description={default='Calls down a barrage of gas shells.',cn='呼叫一轮毒气炮弹轰炸。'},
+```
+
+- The keys are `default` (required: the text of every language the table does not give) and the game's language codes
+  `us`, `gb`, `bp`, `de`, `es`, `fr`, `it`, `jp`, `ko`, `ms`, `pl`, `pt`, `ru`, `cn` (Simplified Chinese), `tc`
+  (Traditional Chinese). Any other key is refused.
+- Each text has the limit of the field, in bytes: 64 for a name (about 21 CJK characters), 400 for a description
+  (about 133).
+- The game shows the text of its current language. Logs and `describe()` use `default`.
 
 ### `uses`: calls per mission
 
@@ -154,8 +175,9 @@ Silo 0.2.0 uses 1, with `uses = 1`: one silo per player, one call per mission.
 
 ### `traits`: the panel's ITEM TRAITS
 
-Up to four labels of 1 to 32 characters, shown in upper case after the automatic `CUSTOM STRATAGEM` (a repeat of it, or
-of another label, is dropped). Without `traits`, the panel shows the payload family's (`SUPPORT WEAPON`, `ORBITAL`, the
+Up to four labels of 1 to 32 bytes of UTF-8 without control characters (about 10 CJK characters; any script since
+0.31.2, before only printable ASCII), shown in upper case after the automatic `CUSTOM STRATAGEM` (a repeat of it, or of
+another label, is dropped). Upper case is Unicode-aware for Latin, Greek and Cyrillic letters; CJK characters are kept. Without `traits`, the panel shows the payload family's (`SUPPORT WEAPON`, `ORBITAL`, the
 custom model, the round, ...). Presentation only: not part of the registry hash.
 
 ### The loadout slot holds the carrier itself (`selection`; the default since r44)

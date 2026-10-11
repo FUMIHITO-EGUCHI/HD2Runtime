@@ -60,21 +60,27 @@ donors are accepted) and `doc`.
 | Field | Type | Range / values | Default |
 |---|---|---|---|
 | `id` | string | `^[a-z][a-z0-9_]*$`, at most 48 characters; unique across every mod | required |
-| `name` | string | 1 to 64 characters (the HUD name) | required |
-| `name_cased` | string | 1 to 64 characters (the panel's and loadout's name) | `name` |
-| `description` | string | 1 to 400 characters | required |
+| `name` | text | 1 to 64 bytes of UTF-8 (the HUD name; about 21 CJK characters) | required |
+| `name_cased` | text | 1 to 64 bytes of UTF-8 (the panel's and loadout's name) | `name` |
+| `description` | text | 1 to 400 bytes of UTF-8 (about 133 CJK characters) | required |
 | `icon` | image | `{"image": "<id>", "source": "images/<id>.png"}` | required |
 | `code` | list of directions | 1 to 8 of `up`, `down`, `left`, `right`; never equal to, the start of, or started by another custom stratagem's code; never equal to any native code (`nativeCodes`), nor the start of, or started by, a catalogued one | required |
 | `cooldown` | number, seconds from the call-in's arrival | above 0, at most 600 (refused for an Eagle) | the carrier's own |
 | `uses` | integer, calls per mission | 1 to 100, each player's own: the game's own per-slot use counter (refused for an Eagle, whose uses are per rearm) | unlimited |
 | `max_per_player` | integer, loadout slots per player | 1 to 4: a further pick is refused (its tile unavailable); a loadout holding more aboard the ship loses the extra slots (r45) | no limit |
-| `traits` | list of strings | at most 4 labels of 1 to 32 printable characters, after the automatic CUSTOM STRATAGEM | the family's |
+| `traits` | list of strings | at most 4 labels of 1 to 32 bytes of UTF-8 without control characters (about 10 CJK characters), after the automatic CUSTOM STRATAGEM | the family's |
 | `assets` | list of stratagem names | the `stratagems` catalogue | none (a payload's own donors are added) |
 | `carrier.group` | enum | a `carrierGroups` name: `orbital`, `any_red`, `any`, `support`, `support_pod`, `expendable`, `sentry`, `emplacement`, `eagle`; refused when it cannot carry the payload | the payload family's default group |
 | `carrier.slots` | integer | 1..8: a pod capacity to ask for (`support_pod` and `expendable` only; at least the pod's items) | the pod's items |
 | `carrier.beacon` | enum | `offensive` (red), `support` (blue), `any` | required unless `carrier.group` is given |
 | `carrier.prefer_families`, `carrier.allow_families` | list of families | the `carrierFamilies` catalogue | any family |
 | `carrier.exclude` | list of stratagem names | the `stratagems` catalogue | none |
+
+A **text** (0.31.2) is a string, or an object of the game's languages: `{"default": "...", "cn": "...", "tc": "..."}`.
+`default` is required and is the text of every language not given. The other keys are the `textLanguages` catalogue
+(the game's 15 language codes). The limits are bytes of UTF-8 (`lengthUnit: "bytes"` in the schema), checked on each
+text. The project JSON Schema's `maxLength` counts characters, which is a looser bound; the compiler checks bytes.
+`payload.presentation.name` is a text too (or `"donor"`).
 
 ### Payload families
 

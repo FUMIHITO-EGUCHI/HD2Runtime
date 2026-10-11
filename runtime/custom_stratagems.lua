@@ -135,17 +135,21 @@ M.MP_WAIT=20             -- in a mission with several players: seconds custom mu
 M.BALL_WAIT=5            -- seconds a remote call's thrown ball may take to name its beacon
 M.MAX_COOLDOWN=600
 M.MAX_USES=100           -- calls per mission (spec.uses; runtime/slot_cooldown.lua M.MAX_USES)
--- The panel's ITEM TRAITS (spec.traits): up to MAX_TRAITS labels of 1 to TRAIT_LENGTH characters after the automatic
--- CUSTOM STRATAGEM. Returns the list (CUSTOM STRATAGEM first, no repeats, upper case) or nil without any.
+-- The panel's ITEM TRAITS (spec.traits): up to MAX_TRAITS labels of 1 to TRAIT_LENGTH bytes after the automatic
+-- CUSTOM STRATAGEM. Returns the list (CUSTOM STRATAGEM first, no repeats, upper case) or nil without any. 0.31.2: any
+-- UTF-8 text without control characters (Chinese, Japanese, Cyrillic, accented letters); 32 bytes is about 10 CJK
+-- characters. Upper case is runtime/i18n.lua's (UTF-8 aware); the upper-cased label must fit too.
 M.MAX_TRAITS,M.TRAIT_LENGTH=4,32
 function M.traits_of(list)
     if list==nil then return nil end
     assert(type(list)=='table','traits must be a list of short labels')
     local out,seen={'CUSTOM STRATAGEM'},{['CUSTOM STRATAGEM']=true}
     for k,t in ipairs(list)do
-        assert(type(t)=='string'and#t>=1 and#t<=M.TRAIT_LENGTH and t:find('^[%w%p ]+$'),
-            ('traits[%d] must be 1 to %d printable characters'):format(k,M.TRAIT_LENGTH))
-        local u=string.upper(t)
+        local message=('traits[%d] must be 1 to %d bytes of UTF-8 without control characters (about %d CJK '
+            ..'characters)'):format(k,M.TRAIT_LENGTH,math.floor(M.TRAIT_LENGTH/3))
+        assert(type(t)=='string'and#t>=1 and#t<=M.TRAIT_LENGTH and not t:find('[%c]')and texts.valid_utf8(t),message)
+        local u=require('hd2runtime/runtime/i18n').upper(t)
+        assert(#u<=M.TRAIT_LENGTH,message..' in upper case')
         if not seen[u]then seen[u]=true;out[#out+1]=u end
     end
     assert(#out-1<=M.MAX_TRAITS,('traits: at most %d after CUSTOM STRATAGEM'):format(M.MAX_TRAITS))
@@ -1010,12 +1014,30 @@ local function pelican_spec(value)
 end
 for _,name in ipairs(CALLBACKS)do SPEC_KEYS[name]=true end
 
+-- A name or description: a string, or (0.31.2) a table of the game's languages {default = text, cn = text, ...}
+-- (runtime/text_resources.lua: a language not given shows default). Each text is 1 to `most` BYTES of UTF-8 without
+-- control characters: 64 bytes is 64 Latin letters but about 21 CJK characters (3 bytes each).
 local function text_of(value,what)
     local most=what=='description'and M.LIMITS.description or M.LIMITS.text
-    if type(value)~='string'or#value<1 or#value>most or value:find('[%c]')then
-        error(what..' must be a string of 1 to '..most..' characters',0)
+    local function check(text,label)
+        if type(text)~='string'or#text<1 or#text>most or text:find('[%c]')or not texts.valid_utf8(text)then
+            error(label..' must be a string of 1 to '..most..' bytes of UTF-8 without control characters (about '
+                ..math.floor(most/3)..' CJK characters)',0)
+        end
+        return text
     end
-    return value
+    if type(value)~='table'then return check(value,what)end
+    if getmetatable(value)~=nil then error(what..' must be a string or a table {default = text, <language> = text}',0)end
+    local out={}
+    for key,text in pairs(value)do
+        if key~='default'and not texts.is_language(key)then
+            error(what..': unsupported language '..tostring(key)..' (the game\'s languages: '
+                ..table.concat(texts.LANGUAGES,', ')..'; default is the text of every language not given)',0)
+        end
+        out[key]=check(text,what..'.'..key)
+    end
+    if not out.default then error(what..' needs default: the text of every language it does not give',0)end
+    return out
 end
 
 -- Registers a custom stratagem for `owner` (the mod id). Returns the definition; errors on an invalid spec (a mod's
@@ -1160,7 +1182,9 @@ function M.register(spec,owner)
     local exclude={}
     for _,asset in ipairs(assets)do exclude[#exclude+1]=asset end
     if delivery~='runtime'then exclude[#exclude+1]=delivery.stratagem end
-    local definition={id=id,owner=owner,label=name_cased,texts=t,icon=icon,code=spec.code,code_values=values,
+    -- label: the plain name for logs and summaries (a language table's default).
+    local label=type(name_cased)=='table'and name_cased.default or name_cased
+    local definition={id=id,owner=owner,label=label,texts=t,icon=icon,code=spec.code,code_values=values,
         code_text=calldown.text(values),cooldown=cooldown,uses=M.uses_value(spec.uses),traits=M.traits_of(spec.traits),
         -- The loadout slot holds the carrier itself (the default since r44); 'token' (development, Lua only): the
         -- Orbital Precision Strike token, converted at mission start.
@@ -1288,7 +1312,7 @@ function M.register(spec,owner)
     pcall(function()require('hd2runtime/runtime/init_progress').custom_registered()end)
     log(('REGISTERED %s (%s) by %s: code %s, cooldown %s, carrier policy: %s beacon%s%s; delivery %s; assets %s%s; '
         ..'carrier group %s (%s%s)')
-        :format(id,name_cased,owner,definition.code_text,cooldown and(cooldown..' s')or'the carrier\'s own',
+        :format(id,label,owner,definition.code_text,cooldown and(cooldown..' s')or'the carrier\'s own',
         policy.beacon,policy.prefer_families and(', prefer '..table.concat(policy.prefer_families,'/'))
         or'',policy.allow_families and(', allow '..table.concat(policy.allow_families,'/'))or'',
         payload_text,#assets>0 and table.concat(assets,', ')or'none',definition.colours and('; ship icon colours: '

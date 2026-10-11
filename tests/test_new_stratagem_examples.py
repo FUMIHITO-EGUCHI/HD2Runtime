@@ -187,7 +187,7 @@ refused({uses=-2},'uses must be a whole number of calls per mission from 1 to 10
 refused({uses=2.5},'uses must be a whole number')
 refused({uses=101},'from 1 to 100')
 refused({traits={'A','B','C','D','E'}},'traits: at most 4 after CUSTOM STRATAGEM')
-refused({traits={''}},'traits[1] must be 1 to 32 printable characters')
+refused({traits={''}},'traits[1] must be 1 to 32 bytes of UTF-8 without control characters')
 refused({traits={string.rep('x',33)}},'traits[1] must be 1 to 32')
 refused({traits='Orbital'},'traits must be a list')
 local d=custom.register(spec({uses=5,traits={'Orbital','custom stratagem','Stun','Orbital'}}),'mods/test/t')
