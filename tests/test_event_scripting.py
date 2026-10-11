@@ -529,6 +529,25 @@ assert(count('explosion blocked: HOST_ONLY: ')==1 and #W.runtime.explosions==0)
 return 'ok'
 ''')
 
+    def test_bug_hole_event_test_logs_each_closed_hole_once(self):
+        self.example('BugHoleEventTest', r'''
+assert(loadstring(ADDON,'@mods/hd2runtime_examples/bug_hole_event_test'))()
+local id='mods/hd2runtime_examples/bug_hole_event_test'
+assert(count('['..id..'] loaded')==1)
+mission({host=true})
+assert(count('mission started (host true): bughole_destroyed active')==1)
+W.unit(0x400201,12,-3,4)
+W.destructible({type='8C31B749759CBD61',entity=801,unit=0x400201,index=0x17100})
+W.destructible({type='3A2CEF12ED32A088',entity=802,unit=0x400202,index=0x17104,owned=false})
+tick(4)
+W.destruction_stage(0x17100,1);tick(4)
+assert(count('bug hole closed #1: warrior (level 1, entity 801, at 12.0, -3.0, 4.0, owned here: host)')==1)
+W.destruction_stage(0x17104,2);tick(4)
+assert(count('bug hole closed #2: bile_titan (level 2, entity 802, position unreadable, not owned here: client)')==1)
+tick(8);assert(count('bug hole closed')==2,'one line per hole')
+return 'ok'
+''')
+
     def test_kill_heal_logs_the_observation_and_heals(self):
         self.example('KillHealTest', r'''
 assert(loadstring(ADDON,'@mods/hd2runtime_examples/kill_heal_test'))()
