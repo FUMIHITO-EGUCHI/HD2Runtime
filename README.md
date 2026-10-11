@@ -94,6 +94,12 @@ HD2Runtime is designed to fail safely when a game structure or ownership relatio
 
 Unsupported or ambiguous values remain read-only rather than being modified speculatively.
 
+Version 0.31.2 is a hotfix release from player reports: custom stratagems no longer stutter every 5 seconds, beam
+conversion values can be changed again and reverted, every damage row takes up to four statuses, ammunition maxima
+follow the game's network limits, and it adds the game's own names in the game's language (`hd2.text`), support weapon
+payloads and the payload options, the Quasar's overheat cooldown, the TX-41 Sterilizer's hellpod and Acid Storm as an
+attachable status. Most new fields are not live-tested yet. See `docs/releases/0.31.2.md`.
+
 Version 0.31.1 adds a live performance graph and an interface size to the F10 panel, shows HD2Runtime's own text in
 every game language, adds the `bughole_destroyed` event, and gives the stats editor the Peacemaker, Redeemer, missile
 direct-hit and AC-8 flak damage rows. See `docs/releases/0.31.1.md`.
