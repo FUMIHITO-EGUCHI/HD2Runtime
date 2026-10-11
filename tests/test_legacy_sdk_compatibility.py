@@ -231,8 +231,8 @@ class LegacyLimitTests(unittest.TestCase):
             self.assertIn('the network field rounds (11 bits)', line)
 
     def test_an_unreadable_declaration_is_refused(self):
-        # (A project bound to SDK 0.31.2 is refused the same way: test_the_clamped_value_is_what_is_written. The
-        # wrappers refuse to start a 0.31.2 project on this 0.31.1-versioned runtime, so it is checked directly.)
+        # (A project bound to SDK 0.31.2 is refused the same way: test_the_clamped_value_is_what_is_written checks it
+        # directly. It was written when the runtime was still versioned 0.31.1 and its wrappers refused 0.31.2 projects.)
         for name, needle in (('mg-bare', 'Runtime could not read the SDK version'),):
             op = only(self.results[name])
             self.assertEqual(op['status'], 'rejected')
