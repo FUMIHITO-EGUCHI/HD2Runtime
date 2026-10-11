@@ -33,18 +33,18 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
         # 0.31.0: +2 beam references (attack.beam on the LAS-98 and the 40-K Meltagun, research/beam-outputs); +34
         # missile fields (research/wasp-rocket: W.A.S.P. 9 missile + 9 function_missile, Spear 8, Commando 8); +14 the
         # Breaching Hammer's ability explosion (3 radii, 9 damage, 2 status slots).
-        self.assertEqual(self.capabilities['summary']['internalSupportAuthoringInstances'],1541)   # 0.31.0: +1 the MG-43's left input (fire_mode)
-        self.assertEqual(self.capabilities['summary']['publishedSupportFieldInstances'],1541)
-        self.assertEqual(self.capabilities['summary']['legacyFlattenedFieldEntries'],1428)   # +12 hammer explosion, +1 the MG-43's left input (0.31.0)
-        self.assertEqual(self.capabilities['summary']['deduplicationLossPrevented'],113)
+        self.assertEqual(self.capabilities['summary']['internalSupportAuthoringInstances'],1574)   # 0.31.0: +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits (Spear, Commando, W.A.S.P.)
+        self.assertEqual(self.capabilities['summary']['publishedSupportFieldInstances'],1574)
+        self.assertEqual(self.capabilities['summary']['legacyFlattenedFieldEntries'],1455)   # +12 hammer explosion, +1 the MG-43's left input (0.31.0); +27 missile direct-hit damage members (0.31.1)
+        self.assertEqual(self.capabilities['summary']['deduplicationLossPrevented'],119)   # 0.31.1: + the missile direct hits' status slots
         self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldGroups'],50)
         self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldInstances'],114)
         self.assertEqual(self.capabilities['summary']['intentionallyOmittedInstances'],0)
         # + the two overcharge explosion references (RS-422 Railgun, PLAS-45 Epoch) and the status slots of the four
         # charge-level DamageInfo rows (the Epoch full-charge shot and explosion, the two overcharge explosions).
         # 0.31.0: + the beam references of the LAS-98 and the 40-K Meltagun (attack.beam); + the hammer explosion's
-        # status slot.
-        self.assertEqual(self.capabilities['referenceContract']['currentReferenceFieldInstances'],98)
+        # status slot. 0.31.1: + the status slot of the three missile direct-hit rows.
+        self.assertEqual(self.capabilities['referenceContract']['currentReferenceFieldInstances'],101)
         self.assertTrue(self.capabilities['referenceContract']['typedIdentityOnly'])
         required={'identityStatus','family','attackBranches','writableFieldsByDomain',
             'sharedScopes','blockedFields','backpackDependency','linkedStratagem'}
@@ -62,11 +62,11 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
     def test_canonical_instances_exactly_cover_internal_descriptors(self):
         runtime,generated=generate_support_weapon_authoring.build()
         audit=generate_support_weapon_authoring.audit_instance_coverage(runtime,generated)
-        self.assertEqual(audit,{'internalInstances':1541,'publishedInstances':1541,   # 0.31.0: +34 missile fields, +1 the MG-43's left input (fire_mode)
+        self.assertEqual(audit,{'internalInstances':1574,'publishedInstances':1574,   # 0.31.0: +34 missile fields, +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits
             'missingInstances':0,'unexpectedInstances':0,'identityCoverage':'exact'})
         instances=self.capabilities['fieldInstances']
-        self.assertEqual(len(instances),1541)
-        self.assertEqual(len({item['instanceKey'] for item in instances}),1541)
+        self.assertEqual(len(instances),1574)
+        self.assertEqual(len({item['instanceKey'] for item in instances}),1574)
         objects={item['objectKey']:item for item in self.capabilities['backingObjects']}
         operations={item['operationGroupingKey']:item
             for item in self.capabilities['operationGroups']}
@@ -75,8 +75,8 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
         # and its damage row).
         # 0.31.0: + the 40-K Meltagun BeamWeapon record (beam fire mode and pulse); + 4 missile SeekingMissile records
         # (the W.A.S.P.'s two, the Spear's, the Commando's: research/wasp-rocket), one operation group each.
-        self.assertEqual(len(objects),241)   # 0.31.0: + the Breaching Hammer's ability explosion row and its damage row
-        self.assertEqual(len(operations),280)   # 0.31.0: + one operation group per hammer explosion row
+        self.assertEqual(len(objects),244)   # 0.31.0: + the Breaching Hammer's ability explosion row and its damage row; 0.31.1: + the three missile direct-hit DamageInfo rows
+        self.assertEqual(len(operations),283)   # 0.31.0: + one operation group per hammer explosion row; 0.31.1: + one per missile direct-hit row
         required={'instanceKey','supportWeapon','supportWeaponIdentity','target','semanticFieldId',
             'qualifiedSemanticFieldId','apiFieldConstant','display','value','writable',
             'readOnly','blockedReason','backing','sharedScope','operation','resolution',
@@ -91,7 +91,7 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
             self.assertEqual(instance['operation']['phase'],1)
             self.assertEqual(instance['target']['accessor'][0],'support_weapon')
         self.assertEqual(sum(len(weapon['fieldInstanceKeys'])
-            for weapon in self.capabilities['weapons']),1541)
+            for weapon in self.capabilities['weapons']),1574)
 
     def test_gui_can_group_recoilless_instances_without_native_layout_knowledge(self):
         instances=[item for item in self.capabilities['fieldInstances']

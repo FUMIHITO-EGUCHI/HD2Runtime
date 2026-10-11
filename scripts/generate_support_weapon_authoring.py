@@ -22,6 +22,7 @@ import status_fields
 import equipment_fields
 import beam_fields
 import missile_fields
+import missile_hit_fields
 import charge_fields
 import support_callin_linkage
 import ability_explosion_fields
@@ -654,9 +655,21 @@ def build(catalog_path=CATALOG):
             # WeaponCharge record) and the new ones (full-charge shot, its explosion, the overcharge explosion).
             levels_by_role=charge_fields.level_attacks(weapon['name'],charge_levels,candidate)
             ability_attack=ability_explosion_fields.attack(weapon['name'],ability_data,candidate)
+            # 0.31.1: the direct hit of the missile a weapon spawns per shot (scripts/missile_hit_fields.py).
+            hit=missile_hit_fields.hit_attack(weapon,candidate)
             for attack in candidate['attacks']+[item for item in levels_by_role.values()if not item['existing']]+(
                     [ability_attack]if ability_attack else[]):
                 role=attack['role'];kind=attack['kind']
+                if hit and attack is hit[0]:
+                    # Only its damage: the missile flies by its own record, not by this row's flight members.
+                    attack_target={'resource':'support_weapon','path':'projectile_reference','weapon':weapon['name'],
+                        'attack':role}
+                    attacks[role]={'role':role,'kind':kind,'parentRole':None,'targetPath':'projectile_reference',
+                        'missileHit':True}
+                    start=len(fields)
+                    damage_fields(fields,candidate,attack,attack_target,role,'projectile_damage')
+                    missile_hit_fields.annotate(fields[start:],hit)
+                    continue
                 if role not in resolved_roles:continue
                 level=levels_by_role.get(role)
                 level_extra=dict(level['backingExtra'])if level else{}
@@ -1139,6 +1152,13 @@ def build(catalog_path=CATALOG):
             if field.get('windUp')and field_id.startswith('windup.'):
                 # The spin-up members (research/windup-controls): meaning and reviewed range.
                 instance['windUp']=dict(field['windUp'],**{key:field[key] for key in('min','max','rangeReason')})
+            if field.get('missileHit'):
+                # 0.31.1: the direct hit of the missile the weapon spawns (scripts/missile_hit_fields.py).
+                # (No native ids: the catalogue branch, the carrying member and the members the missile ignores.)
+                instance['missileHit']={key:field['missileHit'][key] for key in('catalogBranch','unusedByMissile',
+                    'research')}
+                instance['missileHit']['carriedRow']='the weapon\'s own projectile row (its ProjectileWeapon reference)'
+                instance['missileHit']['multiplayer']=field.get('multiplayer')
             if field.get('abilityExplosion'):
                 # The explosion an ability requests (scripts/ability_explosion_fields.py): its catalogue name.
                 instance['abilityExplosion']=field['abilityExplosion']

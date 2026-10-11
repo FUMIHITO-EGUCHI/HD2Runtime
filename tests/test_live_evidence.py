@@ -198,8 +198,9 @@ class LiveEvidenceTests(unittest.TestCase):
             if re.search(r'status_\d_(type|strength)$', f['semanticFieldId'])]
         for field in support:
             # A charge-level row only one charge level fires (the PLAS-45 Epoch's shots) does not inherit it either.
+            # 0.31.1: nor the direct hit of a spawned missile (scripts/missile_hit_fields.py: not live-tested).
             projectile = field['target']['path'] == 'projectile_reference' and field['semanticFieldId'].startswith(
-                'damage.') and not field.get('chargeLevel')
+                'damage.') and not field.get('chargeLevel') and not field.get('missileHit')
             self.assertEqual(bool(field.get('liveEvidence')), projectile, field['instanceKey'])
             self.assertEqual(field['operation']['acknowledgement'] is None, projectile, field['instanceKey'])
         vehicle = [f for f in load('VehicleWeaponCapabilities.json')['fieldInstances'] if 'status_' in f['semanticFieldId']]

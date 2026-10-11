@@ -293,6 +293,16 @@ own record.
 The W.A.S.P.'s ProgrammableAmmo function (state 1) spawns a second missile instead (ProjectileWeapon +584), carrying
 projectile 330 (+576), whose impact explosion releases seven projectile-43 submunitions.
 
+**Direct hit (0.31.1).** The damage the missile deals when it hits is the carried row's own DamageInfo (+60), which is
+most of the damage: the Spear's missile 4000 standard / 4000 durable (AP 7), the Commando's 1100 / 1100 (AP 6), the
+W.A.S.P.'s 200 / 200 (AP 6); their impact explosions add 200, 150 and the W.A.S.P.'s own. It is now published as
+`damage.primary.*` on `hd2.support_weapon(name):attack('primary'):projectile()` (the editor's "Damage" section): the
+nine damage members and the free status slot, written to the same row the write path already resolves for the impact
+explosion (the weapon's own ProjectileWeapon +0). Only the damage: the row's flight members are not offered, because the
+missile ignores them (`missile.*` is its flight). Every field needs `allow_shared` and `allow_unverified_effect`: no
+live test has shown a direct-hit edit in play yet. The shooter decides the missile's impact, so the direct hit follows the
+shooter's row. A write is refused when the weapon's ProjectileWeapon +0 no longer names the reviewed row.
+
 **Fields** on `hd2.support_weapon(name)` (the weapon itself; the editor's "Missile" section). `missile.*` is the
 missile the weapon fires by default. `function_missile.*` is the W.A.S.P.'s ProgrammableAmmo missile.
 

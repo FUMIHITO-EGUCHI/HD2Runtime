@@ -20,13 +20,13 @@
       "CQC-72 Entrenchment Tool"
     ],
     "writableSupportWeapons": 34,
-    "writableFieldInstances": 1541,
+    "writableFieldInstances": 1574,
     "fieldInstancesByDomain": {
       "arc": 6,
       "attack": 10,
       "beam": 12,
       "charge": 53,
-      "damage": 347,
+      "damage": 380,
       "explosion": 312,
       "fire_mode": 26,
       "fire_rate": 12,
@@ -111,19 +111,19 @@
         "MS-11 Solo Silo"
       ]
     },
-    "sharedFieldInstances": 821,
-    "internalSupportAuthoringInstances": 1541,
-    "publishedSupportFieldInstances": 1541,
-    "legacyFlattenedFieldEntries": 1428,
-    "branchSpecificFieldInstances": 829,
-    "backingObjectCount": 241,
-    "operationGroupingCount": 280,
-    "sharedBackingObjectCount": 104,
-    "sharedConsumerScopeCount": 104,
+    "sharedFieldInstances": 854,
+    "internalSupportAuthoringInstances": 1574,
+    "publishedSupportFieldInstances": 1574,
+    "legacyFlattenedFieldEntries": 1455,
+    "branchSpecificFieldInstances": 862,
+    "backingObjectCount": 244,
+    "operationGroupingCount": 283,
+    "sharedBackingObjectCount": 107,
+    "sharedConsumerScopeCount": 107,
     "duplicateSemanticFieldGroups": 50,
     "duplicateSemanticFieldInstances": 114,
-    "deduplicationLossPrevented": 113,
-    "referenceFieldInstances": 98,
+    "deduplicationLossPrevented": 119,
+    "referenceFieldInstances": 101,
     "readOnlyFieldInstances": 0,
     "blockedFieldDeclarations": 206,
     "intentionallyOmittedInstances": 0,
@@ -2725,6 +2725,15 @@
       ],
       "writableFieldsByDomain": {
         "damage": [
+          "damage.ap_direct",
+          "damage.ap_extreme",
+          "damage.ap_large",
+          "damage.ap_slight",
+          "damage.demolition",
+          "damage.durable_damage",
+          "damage.push_force",
+          "damage.stagger",
+          "damage.standard_damage",
           "damage.status_strength",
           "damage.status_type"
         ],
@@ -2792,6 +2801,7 @@
         ]
       },
       "sharedScopes": [
+        "shared_damage",
         "shared_explosion",
         "shared_explosion_damage"
       ],
@@ -2854,7 +2864,7 @@
         "blocker": null
       },
       "writable": true,
-      "writableFieldCount": 46,
+      "writableFieldCount": 57,
       "fieldInstanceKeys": [
         "support-field/v1/faf-14-spear/weapon/root/weapon-ergonomics/8937dce52fbef345",
         "support-field/v1/faf-14-spear/weapon/root/weapon-sway/4cabd17310c7bd7a",
@@ -2888,6 +2898,17 @@
         "support-field/v1/faf-14-spear/weapon/root/missile-max-angle-to-target/152afca5b30ed2f3",
         "support-field/v1/faf-14-spear/weapon/root/missile-turn-rate-at-max-angle/1a8f7772dc73119c",
         "support-field/v1/faf-14-spear/weapon/root/missile-turn-rate-aligned/719b258af7878a8d",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-standard-damage/02b9f7fe3471e182",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-durable-damage/2a57c08f679dda9e",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-direct/adc351ad23c5e72c",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-slight/bc831f72ba8b4fa5",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-large/89a53eda3b86b942",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-extreme/630f1bfa68660804",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-demolition/ce0a3a9886aebe5b",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-stagger/2c68c84fc36a62aa",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-push-force/5e39e0b1ec788ded",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-status-1-type/f71f691ee1eb002b",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-status-1-strength/a6226d73d4c74ea2",
         "support-field/v1/faf-14-spear/explosion/primary-impact/explosion-inner-radius/ded05d1e9bd7f4f2",
         "support-field/v1/faf-14-spear/explosion/primary-impact/explosion-outer-radius/5ec780a1a17b6284",
         "support-field/v1/faf-14-spear/explosion/primary-impact/explosion-shockwave-radius/785e179a4585cc37",
@@ -5556,6 +5577,15 @@
       ],
       "writableFieldsByDomain": {
         "damage": [
+          "damage.ap_direct",
+          "damage.ap_extreme",
+          "damage.ap_large",
+          "damage.ap_slight",
+          "damage.demolition",
+          "damage.durable_damage",
+          "damage.push_force",
+          "damage.stagger",
+          "damage.standard_damage",
           "damage.status_strength",
           "damage.status_type"
         ],
@@ -5608,6 +5638,7 @@
         ]
       },
       "sharedScopes": [
+        "shared_damage",
         "shared_explosion",
         "shared_explosion_damage"
       ],
@@ -5680,7 +5711,7 @@
         "blocker": null
       },
       "writable": true,
-      "writableFieldCount": 39,
+      "writableFieldCount": 50,
       "fieldInstanceKeys": [
         "support-field/v1/mls-4x-commando/weapon/root/weapon-ergonomics/f39d3124145433fe",
         "support-field/v1/mls-4x-commando/weapon/root/weapon-sway/b5a6d775e0710bb9",
@@ -5707,6 +5738,17 @@
         "support-field/v1/mls-4x-commando/weapon/root/missile-max-angle-to-target/cedc48e8214d50f1",
         "support-field/v1/mls-4x-commando/weapon/root/missile-turn-rate-at-max-angle/31de2847d7488d2e",
         "support-field/v1/mls-4x-commando/weapon/root/missile-turn-rate-aligned/4f7fd4aba77a6d45",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-standard-damage/d662e4a668587482",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-durable-damage/75ad2f6351e6e517",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-direct/377f2c9cec84cb83",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-slight/ba3738b95a21ca33",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-large/8f6b0e812fd241a5",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-extreme/fb9d9aaec078bd70",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-demolition/17487cd16d4fbd52",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-stagger/7dfa334e1405d748",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-push-force/9c22e28e14354c83",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-status-1-type/49f37db7066341df",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-status-1-strength/430fb2de7261c1c2",
         "support-field/v1/mls-4x-commando/explosion/primary-impact/explosion-inner-radius/80b545154710827b",
         "support-field/v1/mls-4x-commando/explosion/primary-impact/explosion-outer-radius/61bf505e3fabfa09",
         "support-field/v1/mls-4x-commando/explosion/primary-impact/explosion-shockwave-radius/76a9975b94d5a775",
@@ -7284,6 +7326,15 @@
       ],
       "writableFieldsByDomain": {
         "damage": [
+          "damage.ap_direct",
+          "damage.ap_extreme",
+          "damage.ap_large",
+          "damage.ap_slight",
+          "damage.demolition",
+          "damage.durable_damage",
+          "damage.push_force",
+          "damage.stagger",
+          "damage.standard_damage",
           "damage.status_strength",
           "damage.status_type"
         ],
@@ -7349,6 +7400,7 @@
         ]
       },
       "sharedScopes": [
+        "shared_damage",
         "shared_explosion",
         "shared_explosion_damage"
       ],
@@ -7439,7 +7491,7 @@
         "blocker": null
       },
       "writable": true,
-      "writableFieldCount": 50,
+      "writableFieldCount": 61,
       "fieldInstanceKeys": [
         "support-field/v1/sta-x3-w-a-s-p-launcher/weapon/root/weapon-ergonomics/daf068f76c50b86c",
         "support-field/v1/sta-x3-w-a-s-p-launcher/weapon/root/weapon-sway/e892cb6e72869aa2",
@@ -7477,6 +7529,17 @@
         "support-field/v1/sta-x3-w-a-s-p-launcher/weapon/root/function-missile-turn-rate-at-max-angle/bd8244a327937bb6",
         "support-field/v1/sta-x3-w-a-s-p-launcher/weapon/root/function-missile-turn-rate-aligned/ac80d7558afc491f",
         "support-field/v1/sta-x3-w-a-s-p-launcher/weapon/root/function-missile-guidance-delay/4e710c631af84d34",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-standard-damage/463bf2041a1898fa",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-durable-damage/0b71f31cdb4b8f71",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-direct/cffee63e06a2280d",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-slight/e73679c9b9a1babe",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-large/eaa898e58a49a707",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-extreme/52f76d873233b498",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-demolition/7d1b1eb45c0d03ef",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-stagger/858f45c537603c2b",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-push-force/24bf887d054d43bc",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-status-1-type/8f84bba8ff4a8074",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-status-1-strength/d16a5dd52758fa85",
         "support-field/v1/sta-x3-w-a-s-p-launcher/explosion/primary-impact/explosion-inner-radius/71d5cb5c659ebb07",
         "support-field/v1/sta-x3-w-a-s-p-launcher/explosion/primary-impact/explosion-outer-radius/ed296cf650420e24",
         "support-field/v1/sta-x3-w-a-s-p-launcher/explosion/primary-impact/explosion-shockwave-radius/b92b91ca90bbd881",
@@ -73745,6 +73808,1418 @@
         "max": 1000.0,
         "rangeReason": "reviewed range for a missile",
         "multiplayer": "A type record: every machine moves its own copy of the missile from its own record, so a player without the same edit sees the vanilla flight; damage and the explosion follow the carried projectile, whose impact the shooter decides."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-standard-damage/02b9f7fe3471e182",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.standard_damage",
+      "qualifiedSemanticFieldId": "damage.primary.standard_damage",
+      "apiFieldConstant": "hd2.fields.damage.player_standard_damage",
+      "display": {
+        "name": "Standard damage",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 4000,
+        "expected": 4000,
+        "unit": "damage",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-durable-damage/2a57c08f679dda9e",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.durable_damage",
+      "qualifiedSemanticFieldId": "damage.primary.durable_damage",
+      "apiFieldConstant": "hd2.fields.damage.player_durable_damage",
+      "display": {
+        "name": "Durable damage",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 4000,
+        "expected": 4000,
+        "unit": "damage",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-direct/adc351ad23c5e72c",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_direct",
+      "qualifiedSemanticFieldId": "damage.primary.ap_direct",
+      "apiFieldConstant": "hd2.fields.damage.ap_direct",
+      "display": {
+        "name": "Armor penetration: direct",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 7,
+        "expected": 7,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-slight/bc831f72ba8b4fa5",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_slight",
+      "qualifiedSemanticFieldId": "damage.primary.ap_slight",
+      "apiFieldConstant": "hd2.fields.damage.ap_slight",
+      "display": {
+        "name": "Armor penetration: slight angle",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 7,
+        "expected": 7,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-large/89a53eda3b86b942",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_large",
+      "qualifiedSemanticFieldId": "damage.primary.ap_large",
+      "apiFieldConstant": "hd2.fields.damage.ap_large",
+      "display": {
+        "name": "Armor penetration: large angle",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 7,
+        "expected": 7,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-extreme/630f1bfa68660804",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_extreme",
+      "qualifiedSemanticFieldId": "damage.primary.ap_extreme",
+      "apiFieldConstant": "hd2.fields.damage.ap_extreme",
+      "display": {
+        "name": "Armor penetration: extreme angle",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 7,
+        "expected": 7,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-demolition/ce0a3a9886aebe5b",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.demolition",
+      "qualifiedSemanticFieldId": "damage.primary.demolition",
+      "apiFieldConstant": "hd2.fields.damage.demolition",
+      "display": {
+        "name": "Demolition",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 40,
+        "expected": 40,
+        "unit": "force",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-stagger/2c68c84fc36a62aa",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.stagger",
+      "qualifiedSemanticFieldId": "damage.primary.stagger",
+      "apiFieldConstant": "hd2.fields.damage.stagger",
+      "display": {
+        "name": "Stagger",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 50,
+        "expected": 50,
+        "unit": "force",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-push-force/5e39e0b1ec788ded",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.push_force",
+      "qualifiedSemanticFieldId": "damage.primary.push_force",
+      "apiFieldConstant": "hd2.fields.damage.push_force",
+      "display": {
+        "name": "Push force",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 25,
+        "expected": 25,
+        "unit": "force",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-status-1-type/f71f691ee1eb002b",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.status_1_type",
+      "qualifiedSemanticFieldId": "damage.primary.status_1_type",
+      "apiFieldConstant": "hd2.fields.damage.status_1_type",
+      "display": {
+        "name": "Status applied",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "reference",
+        "type": "status_reference",
+        "baseline": "none",
+        "expected": "none",
+        "unit": null,
+        "reference": {
+          "expectedSemanticReference": "none",
+          "sourceClass": "status_reference",
+          "typedIdentityOnly": true
+        }
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/faf-14-spear/projectile-reference/primary/damage-status-1-strength/a6226d73d4c74ea2",
+      "supportWeapon": "FAF-14 Spear",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/faf-14-spear/0b5ea028958b920a",
+        "name": "FAF-14 Spear",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.status_1_strength",
+      "qualifiedSemanticFieldId": "damage.primary.status_1_strength",
+      "apiFieldConstant": "hd2.fields.damage.status_1_strength",
+      "display": {
+        "name": "Status strength",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "number",
+        "baseline": 0.0,
+        "expected": 0.0,
+        "unit": "factor",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "FAF-14 Spear",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "FAF-14 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "FAF-14 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
       }
     },
     {
@@ -146339,6 +147814,1418 @@
       }
     },
     {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-standard-damage/d662e4a668587482",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.standard_damage",
+      "qualifiedSemanticFieldId": "damage.primary.standard_damage",
+      "apiFieldConstant": "hd2.fields.damage.player_standard_damage",
+      "display": {
+        "name": "Standard damage",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 1100,
+        "expected": 1100,
+        "unit": "damage",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-durable-damage/75ad2f6351e6e517",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.durable_damage",
+      "qualifiedSemanticFieldId": "damage.primary.durable_damage",
+      "apiFieldConstant": "hd2.fields.damage.player_durable_damage",
+      "display": {
+        "name": "Durable damage",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 1100,
+        "expected": 1100,
+        "unit": "damage",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-direct/377f2c9cec84cb83",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_direct",
+      "qualifiedSemanticFieldId": "damage.primary.ap_direct",
+      "apiFieldConstant": "hd2.fields.damage.ap_direct",
+      "display": {
+        "name": "Armor penetration: direct",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 6,
+        "expected": 6,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-slight/ba3738b95a21ca33",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_slight",
+      "qualifiedSemanticFieldId": "damage.primary.ap_slight",
+      "apiFieldConstant": "hd2.fields.damage.ap_slight",
+      "display": {
+        "name": "Armor penetration: slight angle",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 6,
+        "expected": 6,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-large/8f6b0e812fd241a5",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_large",
+      "qualifiedSemanticFieldId": "damage.primary.ap_large",
+      "apiFieldConstant": "hd2.fields.damage.ap_large",
+      "display": {
+        "name": "Armor penetration: large angle",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 6,
+        "expected": 6,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-extreme/fb9d9aaec078bd70",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_extreme",
+      "qualifiedSemanticFieldId": "damage.primary.ap_extreme",
+      "apiFieldConstant": "hd2.fields.damage.ap_extreme",
+      "display": {
+        "name": "Armor penetration: extreme angle",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 3,
+        "expected": 3,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-demolition/17487cd16d4fbd52",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.demolition",
+      "qualifiedSemanticFieldId": "damage.primary.demolition",
+      "apiFieldConstant": "hd2.fields.damage.demolition",
+      "display": {
+        "name": "Demolition",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 30,
+        "expected": 30,
+        "unit": "force",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-stagger/7dfa334e1405d748",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.stagger",
+      "qualifiedSemanticFieldId": "damage.primary.stagger",
+      "apiFieldConstant": "hd2.fields.damage.stagger",
+      "display": {
+        "name": "Stagger",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 40,
+        "expected": 40,
+        "unit": "force",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-push-force/9c22e28e14354c83",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.push_force",
+      "qualifiedSemanticFieldId": "damage.primary.push_force",
+      "apiFieldConstant": "hd2.fields.damage.push_force",
+      "display": {
+        "name": "Push force",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 25,
+        "expected": 25,
+        "unit": "force",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-status-1-type/49f37db7066341df",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.status_1_type",
+      "qualifiedSemanticFieldId": "damage.primary.status_1_type",
+      "apiFieldConstant": "hd2.fields.damage.status_1_type",
+      "display": {
+        "name": "Status applied",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "reference",
+        "type": "status_reference",
+        "baseline": "none",
+        "expected": "none",
+        "unit": null,
+        "reference": {
+          "expectedSemanticReference": "none",
+          "sourceClass": "status_reference",
+          "typedIdentityOnly": true
+        }
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-status-1-strength/430fb2de7261c1c2",
+      "supportWeapon": "MLS-4X Commando",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/mls-4x-commando/fbd50e50e043315f",
+        "name": "MLS-4X Commando",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.status_1_strength",
+      "qualifiedSemanticFieldId": "damage.primary.status_1_strength",
+      "apiFieldConstant": "hd2.fields.damage.status_1_strength",
+      "display": {
+        "name": "Status strength",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "number",
+        "baseline": 0.0,
+        "expected": 0.0,
+        "unit": "factor",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "MLS-4X Commando",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "MLS-4X P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/282218258cd2be501543",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "MLS-4X P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
       "instanceKey": "support-field/v1/mls-4x-commando/explosion/primary-impact/explosion-inner-radius/80b545154710827b",
       "supportWeapon": "MLS-4X Commando",
       "supportWeaponIdentity": {
@@ -202296,6 +205183,1528 @@
       }
     },
     {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-standard-damage/463bf2041a1898fa",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.standard_damage",
+      "qualifiedSemanticFieldId": "damage.primary.standard_damage",
+      "apiFieldConstant": "hd2.fields.damage.player_standard_damage",
+      "display": {
+        "name": "Standard damage",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 200,
+        "expected": 200,
+        "unit": "damage",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-durable-damage/0b71f31cdb4b8f71",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.durable_damage",
+      "qualifiedSemanticFieldId": "damage.primary.durable_damage",
+      "apiFieldConstant": "hd2.fields.damage.player_durable_damage",
+      "display": {
+        "name": "Durable damage",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 200,
+        "expected": 200,
+        "unit": "damage",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-direct/cffee63e06a2280d",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_direct",
+      "qualifiedSemanticFieldId": "damage.primary.ap_direct",
+      "apiFieldConstant": "hd2.fields.damage.ap_direct",
+      "display": {
+        "name": "Armor penetration: direct",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 6,
+        "expected": 6,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-slight/e73679c9b9a1babe",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_slight",
+      "qualifiedSemanticFieldId": "damage.primary.ap_slight",
+      "apiFieldConstant": "hd2.fields.damage.ap_slight",
+      "display": {
+        "name": "Armor penetration: slight angle",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 6,
+        "expected": 6,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-large/eaa898e58a49a707",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_large",
+      "qualifiedSemanticFieldId": "damage.primary.ap_large",
+      "apiFieldConstant": "hd2.fields.damage.ap_large",
+      "display": {
+        "name": "Armor penetration: large angle",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 6,
+        "expected": 6,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-extreme/52f76d873233b498",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.ap_extreme",
+      "qualifiedSemanticFieldId": "damage.primary.ap_extreme",
+      "apiFieldConstant": "hd2.fields.damage.ap_extreme",
+      "display": {
+        "name": "Armor penetration: extreme angle",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 6,
+        "expected": 6,
+        "unit": "armor_class",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-demolition/7d1b1eb45c0d03ef",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.demolition",
+      "qualifiedSemanticFieldId": "damage.primary.demolition",
+      "apiFieldConstant": "hd2.fields.damage.demolition",
+      "display": {
+        "name": "Demolition",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 30,
+        "expected": 30,
+        "unit": "force",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-stagger/858f45c537603c2b",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.stagger",
+      "qualifiedSemanticFieldId": "damage.primary.stagger",
+      "apiFieldConstant": "hd2.fields.damage.stagger",
+      "display": {
+        "name": "Stagger",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 35,
+        "expected": 35,
+        "unit": "force",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-push-force/24bf887d054d43bc",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.push_force",
+      "qualifiedSemanticFieldId": "damage.primary.push_force",
+      "apiFieldConstant": "hd2.fields.damage.push_force",
+      "display": {
+        "name": "Push force",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "integer",
+        "baseline": 25,
+        "expected": 25,
+        "unit": "force",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-status-1-type/8f84bba8ff4a8074",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.status_1_type",
+      "qualifiedSemanticFieldId": "damage.primary.status_1_type",
+      "apiFieldConstant": "hd2.fields.damage.status_1_type",
+      "display": {
+        "name": "Status applied",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "reference",
+        "type": "status_reference",
+        "baseline": "none",
+        "expected": "none",
+        "unit": null,
+        "reference": {
+          "expectedSemanticReference": "none",
+          "sourceClass": "status_reference",
+          "typedIdentityOnly": true
+        }
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
+      "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-status-1-strength/d16a5dd52758fa85",
+      "supportWeapon": "StA-X3 W.A.S.P. Launcher",
+      "supportWeaponIdentity": {
+        "weaponKey": "support-weapon/v1/sta-x3-w-a-s-p-launcher/ea60c8ba13527fff",
+        "name": "StA-X3 W.A.S.P. Launcher",
+        "identityStatus": "UNIQUE"
+      },
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "semanticFieldId": "damage.status_1_strength",
+      "qualifiedSemanticFieldId": "damage.primary.status_1_strength",
+      "apiFieldConstant": "hd2.fields.damage.status_1_strength",
+      "display": {
+        "name": "Status strength",
+        "domain": "damage",
+        "group": "DamageInfo"
+      },
+      "value": {
+        "kind": "scalar",
+        "type": "number",
+        "baseline": 0.0,
+        "expected": 0.0,
+        "unit": "factor",
+        "reference": null
+      },
+      "writable": true,
+      "readOnly": false,
+      "blockedReason": null,
+      "backing": {
+        "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+        "kind": "settings",
+        "semanticType": "DamageInfo",
+        "domain": "damage",
+        "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "runtimeBackingScope": "settings:damage"
+      },
+      "sharedScope": {
+        "scopeKey": "support-scope/v1/354e8a499a9ce723240a",
+        "shared": true,
+        "requiresAcknowledgement": true,
+        "reviewedConsumerCount": 1,
+        "affectedSemanticConsumers": [
+          {
+            "weapon": "StA-X3 W.A.S.P. Launcher",
+            "targetPath": "projectile_reference",
+            "attackRole": "primary",
+            "attackKind": "Projectile",
+            "parentAttackRole": null,
+            "catalogBranches": [
+              {
+                "name": "StA-X3 P",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              },
+              {
+                "name": "StA-X3 P1",
+                "kind": "Projectile",
+                "state": "PARTIAL"
+              }
+            ],
+            "writableCatalogBranches": [],
+            "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+          }
+        ],
+        "reviewedScopeComplete": true,
+        "dynamicConsumersPossible": true
+      },
+      "operation": {
+        "minimumApi": "hd2.patch",
+        "patchSupported": true,
+        "transactionSupported": true,
+        "transactionRequired": false,
+        "transactionGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+        "planSupported": true,
+        "planRequired": false,
+        "planRequiredForMultipleBackingObjects": true,
+        "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
+        "phase": 1,
+        "dependencies": [],
+        "allowSharedRequired": true,
+        "acknowledgement": "allow_unverified_effect",
+        "acknowledgementReason": "The direct hit of the missile this weapon spawns per shot: the missile carries this projectile row (ProjectileWeapon +0) and deals its damage when it hits (research/wasp-rocket-F5FEE03DCFDB.json); no live test has yet shown an edit of it in play."
+      },
+      "resolution": {
+        "rootChain": [
+          "weapon_entity"
+        ],
+        "linkage": "projectile_damage",
+        "parentObjectKey": null,
+        "terminalPhase": null,
+        "planPhase": 1,
+        "planDependencies": [],
+        "requiresLaterPlanPhase": false,
+        "targetFrom": null
+      },
+      "provenance": {
+        "identity": "unique reviewed support-weapon runtime identity",
+        "semantics": "shared player/support field schema",
+        "ownership": "typed retained-snapshot ownership chain",
+        "baseline": "exact retained-snapshot value",
+        "validation": "production resolver guarded ALREADY_DESIRED no-op",
+        "evidenceArtifact": "support-weapon-authoring-validation-F5FEE03DCFDB.json"
+      },
+      "missileHit": {
+        "catalogBranch": "StA-X3 P",
+        "unusedByMissile": [
+          "drag",
+          "gravity"
+        ],
+        "research": "research/wasp-rocket-F5FEE03DCFDB.json",
+        "carriedRow": "the weapon's own projectile row (its ProjectileWeapon reference)",
+        "multiplayer": "The shooter decides the missile's impact (research/projectile-homing), so the direct hit follows the shooter's row."
+      }
+    },
+    {
       "instanceKey": "support-field/v1/sta-x3-w-a-s-p-launcher/explosion/primary-impact/explosion-inner-radius/71d5cb5c659ebb07",
       "supportWeapon": "StA-X3 W.A.S.P. Launcher",
       "supportWeaponIdentity": {
@@ -209994,6 +214403,51 @@
       ]
     },
     {
+      "objectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+      "kind": "settings",
+      "semanticType": "DamageInfo",
+      "domains": [
+        "damage"
+      ],
+      "shared": true,
+      "requiresSharedAcknowledgement": true,
+      "sharedScopeKey": "support-scope/v1/40b59f97f0feaa55dd90",
+      "reviewedConsumerCount": 1,
+      "affectedSemanticConsumers": [
+        {
+          "weapon": "MLS-4X Commando",
+          "targetPath": "projectile_reference",
+          "attackRole": "primary",
+          "attackKind": "Projectile",
+          "parentAttackRole": null,
+          "catalogBranches": [
+            {
+              "name": "MLS-4X P",
+              "kind": "Projectile",
+              "state": "PARTIAL"
+            }
+          ],
+          "writableCatalogBranches": [],
+          "consumerKey": "support-consumer/v1/mls-4x-commando/projectile-reference/primary/4d43a19a9bca6e73"
+        }
+      ],
+      "reviewedScopeComplete": true,
+      "dynamicConsumersPossible": true,
+      "fieldInstanceKeys": [
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-standard-damage/d662e4a668587482",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-durable-damage/75ad2f6351e6e517",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-direct/377f2c9cec84cb83",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-slight/ba3738b95a21ca33",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-large/8f6b0e812fd241a5",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-extreme/fb9d9aaec078bd70",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-demolition/17487cd16d4fbd52",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-stagger/7dfa334e1405d748",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-push-force/9c22e28e14354c83",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-status-1-type/49f37db7066341df",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-status-1-strength/430fb2de7261c1c2"
+      ]
+    },
+    {
       "objectKey": "support-object/v1/damageinfo/71ff65a72dadc6ed9eab",
       "kind": "settings",
       "semanticType": "DamageInfo",
@@ -210323,6 +214777,56 @@
         "support-field/v1/las-98-laser-cannon/attack/primary/damage-status-2-type/3c5cc4b62da71537",
         "support-field/v1/las-98-laser-cannon/attack/primary/damage-status-2-strength/14d441a7ce55aa75",
         "support-field/v1/las-98-laser-cannon/attack/primary-status-5/status-strength/2d9b0ce30e4e82ab"
+      ]
+    },
+    {
+      "objectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+      "kind": "settings",
+      "semanticType": "DamageInfo",
+      "domains": [
+        "damage"
+      ],
+      "shared": true,
+      "requiresSharedAcknowledgement": true,
+      "sharedScopeKey": "support-scope/v1/354e8a499a9ce723240a",
+      "reviewedConsumerCount": 1,
+      "affectedSemanticConsumers": [
+        {
+          "weapon": "StA-X3 W.A.S.P. Launcher",
+          "targetPath": "projectile_reference",
+          "attackRole": "primary",
+          "attackKind": "Projectile",
+          "parentAttackRole": null,
+          "catalogBranches": [
+            {
+              "name": "StA-X3 P",
+              "kind": "Projectile",
+              "state": "PARTIAL"
+            },
+            {
+              "name": "StA-X3 P1",
+              "kind": "Projectile",
+              "state": "PARTIAL"
+            }
+          ],
+          "writableCatalogBranches": [],
+          "consumerKey": "support-consumer/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/23b6d55222bfce50"
+        }
+      ],
+      "reviewedScopeComplete": true,
+      "dynamicConsumersPossible": true,
+      "fieldInstanceKeys": [
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-standard-damage/463bf2041a1898fa",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-durable-damage/0b71f31cdb4b8f71",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-direct/cffee63e06a2280d",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-slight/e73679c9b9a1babe",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-large/eaa898e58a49a707",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-extreme/52f76d873233b498",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-demolition/7d1b1eb45c0d03ef",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-stagger/858f45c537603c2b",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-push-force/24bf887d054d43bc",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-status-1-type/8f84bba8ff4a8074",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-status-1-strength/d16a5dd52758fa85"
       ]
     },
     {
@@ -211947,6 +216451,51 @@
         "support-field/v1/eat-411-leveller/explosion/primary-impact/explosion-damage-push-force/dd7a7866f10dc0cc",
         "support-field/v1/eat-411-leveller/explosion/primary-impact/explosion-damage-status-1-type/371db8def448058d",
         "support-field/v1/eat-411-leveller/explosion/primary-impact/explosion-damage-status-1-strength/323e197d17a213f9"
+      ]
+    },
+    {
+      "objectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+      "kind": "settings",
+      "semanticType": "DamageInfo",
+      "domains": [
+        "damage"
+      ],
+      "shared": true,
+      "requiresSharedAcknowledgement": true,
+      "sharedScopeKey": "support-scope/v1/53cd3373d7635cb092c0",
+      "reviewedConsumerCount": 1,
+      "affectedSemanticConsumers": [
+        {
+          "weapon": "FAF-14 Spear",
+          "targetPath": "projectile_reference",
+          "attackRole": "primary",
+          "attackKind": "Projectile",
+          "parentAttackRole": null,
+          "catalogBranches": [
+            {
+              "name": "FAF-14 P",
+              "kind": "Projectile",
+              "state": "PARTIAL"
+            }
+          ],
+          "writableCatalogBranches": [],
+          "consumerKey": "support-consumer/v1/faf-14-spear/projectile-reference/primary/4b717af2b526cda6"
+        }
+      ],
+      "reviewedScopeComplete": true,
+      "dynamicConsumersPossible": true,
+      "fieldInstanceKeys": [
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-standard-damage/02b9f7fe3471e182",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-durable-damage/2a57c08f679dda9e",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-direct/adc351ad23c5e72c",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-slight/bc831f72ba8b4fa5",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-large/89a53eda3b86b942",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-extreme/630f1bfa68660804",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-demolition/ce0a3a9886aebe5b",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-stagger/2c68c84fc36a62aa",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-push-force/5e39e0b1ec788ded",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-status-1-type/f71f691ee1eb002b",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-status-1-strength/a6226d73d4c74ea2"
       ]
     },
     {
@@ -219789,6 +224338,49 @@
       "dependencies": []
     },
     {
+      "operationGroupingKey": "support-operation/v1/1087ec60aeee15109ba1",
+      "backingObjectKey": "support-object/v1/damageinfo/fe68adceca373dadc4bf",
+      "runtimeBackingScope": "settings:damage",
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "FAF-14 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "fieldInstanceKeys": [
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-standard-damage/02b9f7fe3471e182",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-durable-damage/2a57c08f679dda9e",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-direct/adc351ad23c5e72c",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-slight/bc831f72ba8b4fa5",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-large/89a53eda3b86b942",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-ap-extreme/630f1bfa68660804",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-demolition/ce0a3a9886aebe5b",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-stagger/2c68c84fc36a62aa",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-push-force/5e39e0b1ec788ded",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-status-1-type/f71f691ee1eb002b",
+        "support-field/v1/faf-14-spear/projectile-reference/primary/damage-status-1-strength/a6226d73d4c74ea2"
+      ],
+      "recommendedApi": "hd2.transaction",
+      "allowSharedRequired": true,
+      "planGroupingKey": "support-plan/v1/faf-14-spear/0b5ea028958b",
+      "phase": 1,
+      "dependencies": []
+    },
+    {
       "operationGroupingKey": "support-operation/v1/109eb44346e6de255c5e",
       "backingObjectKey": "support-object/v1/explosionsettings/d7727ad59d1a702b259d",
       "runtimeBackingScope": "settings:explosion",
@@ -220777,6 +225369,49 @@
       "recommendedApi": "hd2.transaction",
       "allowSharedRequired": false,
       "planGroupingKey": "support-plan/v1/ac-8-autocannon/902ed559c079",
+      "phase": 1,
+      "dependencies": []
+    },
+    {
+      "operationGroupingKey": "support-operation/v1/282218258cd2be501543",
+      "backingObjectKey": "support-object/v1/damageinfo/6e2079f6056eeab6ad9c",
+      "runtimeBackingScope": "settings:damage",
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "MLS-4X P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "fieldInstanceKeys": [
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-standard-damage/d662e4a668587482",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-durable-damage/75ad2f6351e6e517",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-direct/377f2c9cec84cb83",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-slight/ba3738b95a21ca33",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-large/8f6b0e812fd241a5",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-ap-extreme/fb9d9aaec078bd70",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-demolition/17487cd16d4fbd52",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-stagger/7dfa334e1405d748",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-push-force/9c22e28e14354c83",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-status-1-type/49f37db7066341df",
+        "support-field/v1/mls-4x-commando/projectile-reference/primary/damage-status-1-strength/430fb2de7261c1c2"
+      ],
+      "recommendedApi": "hd2.transaction",
+      "allowSharedRequired": true,
+      "planGroupingKey": "support-plan/v1/mls-4x-commando/fbd50e50e043",
       "phase": 1,
       "dependencies": []
     },
@@ -223526,6 +228161,54 @@
       "recommendedApi": "hd2.transaction",
       "allowSharedRequired": true,
       "planGroupingKey": "support-plan/v1/mgx-42-bullet-storm/4c6df7047f63",
+      "phase": 1,
+      "dependencies": []
+    },
+    {
+      "operationGroupingKey": "support-operation/v1/7634b8659103cffa7f6b",
+      "backingObjectKey": "support-object/v1/damageinfo/8e030a867cb3909b8e79",
+      "runtimeBackingScope": "settings:damage",
+      "target": {
+        "resource": "support_weapon",
+        "path": "projectile_reference",
+        "attackRole": "primary",
+        "attackKind": "Projectile",
+        "parentAttackRole": null,
+        "accessor": [
+          "support_weapon",
+          "attack",
+          "projectile"
+        ],
+        "catalogBranches": [
+          {
+            "name": "StA-X3 P",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          },
+          {
+            "name": "StA-X3 P1",
+            "kind": "Projectile",
+            "state": "PARTIAL"
+          }
+        ],
+        "writableCatalogBranches": []
+      },
+      "fieldInstanceKeys": [
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-standard-damage/463bf2041a1898fa",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-durable-damage/0b71f31cdb4b8f71",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-direct/cffee63e06a2280d",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-slight/e73679c9b9a1babe",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-large/eaa898e58a49a707",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-ap-extreme/52f76d873233b498",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-demolition/7d1b1eb45c0d03ef",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-stagger/858f45c537603c2b",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-push-force/24bf887d054d43bc",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-status-1-type/8f84bba8ff4a8074",
+        "support-field/v1/sta-x3-w-a-s-p-launcher/projectile-reference/primary/damage-status-1-strength/d16a5dd52758fa85"
+      ],
+      "recommendedApi": "hd2.transaction",
+      "allowSharedRequired": true,
+      "planGroupingKey": "support-plan/v1/sta-x3-w-a-s-p-launcher/ea60c8ba1352",
       "phase": 1,
       "dependencies": []
     },
@@ -230351,7 +235034,7 @@
     "expectedValueProperty": "value.reference.expectedSemanticReference",
     "sourceClassProperty": "value.reference.sourceClass",
     "rawNativeIdentifiersPublished": false,
-    "currentReferenceFieldInstances": 98
+    "currentReferenceFieldInstances": 101
   },
   "supportCallInLinks": {
     "contract": "hd2runtime.support_callin_linkage.v1",
@@ -233600,8 +238283,8 @@
     "fixtureFallback": "disabled"
   },
   "instanceAudit": {
-    "internalInstances": 1541,
-    "publishedInstances": 1541,
+    "internalInstances": 1574,
+    "publishedInstances": 1574,
     "missingInstances": 0,
     "unexpectedInstances": 0,
     "identityCoverage": "exact"
