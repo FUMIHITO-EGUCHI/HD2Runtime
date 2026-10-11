@@ -718,7 +718,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -754,7 +754,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -824,7 +824,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -860,7 +860,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -930,7 +930,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -966,7 +966,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -1036,7 +1036,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -1072,7 +1072,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -1848,7 +1848,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -1884,7 +1884,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -1954,7 +1954,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -1990,7 +1990,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -2060,7 +2060,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -2096,7 +2096,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -2166,7 +2166,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -2202,7 +2202,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -3421,7 +3421,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -3491,7 +3491,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -3527,7 +3527,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -3597,7 +3597,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -3633,7 +3633,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -3703,7 +3703,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -3739,7 +3739,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -4583,7 +4583,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -4619,7 +4619,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -4689,7 +4689,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -4725,7 +4725,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -4795,7 +4795,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -4831,7 +4831,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -4901,7 +4901,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -4937,7 +4937,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -5732,7 +5732,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -5768,7 +5768,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -5838,7 +5838,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -5874,7 +5874,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -5944,7 +5944,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -5980,7 +5980,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -6050,7 +6050,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -6086,7 +6086,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -7433,7 +7433,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -7469,7 +7469,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -7539,7 +7539,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -7575,7 +7575,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -7645,7 +7645,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -7681,7 +7681,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -7751,7 +7751,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -7787,7 +7787,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -8874,7 +8874,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -8944,7 +8944,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -8980,7 +8980,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -9050,7 +9050,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -9086,7 +9086,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -9156,7 +9156,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -9192,7 +9192,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -10035,7 +10035,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -10071,7 +10071,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -10141,7 +10141,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -10177,7 +10177,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -10247,7 +10247,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -10283,7 +10283,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -10353,7 +10353,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -10389,7 +10389,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -11134,7 +11134,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -11204,7 +11204,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -11240,7 +11240,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -11310,7 +11310,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -11346,7 +11346,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -11416,7 +11416,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -11452,7 +11452,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -12794,7 +12794,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -12864,7 +12864,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -12934,7 +12934,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -12970,7 +12970,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -13040,7 +13040,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -13076,7 +13076,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -14028,7 +14028,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -14064,7 +14064,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -14134,7 +14134,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -14170,7 +14170,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -14240,7 +14240,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -14276,7 +14276,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -14346,7 +14346,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -14382,7 +14382,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -15125,7 +15125,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -15195,7 +15195,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -15231,7 +15231,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -15301,7 +15301,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -15337,7 +15337,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -15407,7 +15407,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -15443,7 +15443,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -16295,7 +16295,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -16365,7 +16365,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -16401,7 +16401,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -16471,7 +16471,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -16507,7 +16507,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -16577,7 +16577,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -16613,7 +16613,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -17458,7 +17458,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -17494,7 +17494,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -17564,7 +17564,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -17600,7 +17600,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -17670,7 +17670,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -17706,7 +17706,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -17776,7 +17776,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -17812,7 +17812,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -18590,7 +18590,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -18626,7 +18626,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -18696,7 +18696,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -18732,7 +18732,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -18802,7 +18802,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -18838,7 +18838,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -18908,7 +18908,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -18944,7 +18944,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -20520,7 +20520,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -20555,7 +20555,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -20624,7 +20624,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -20659,7 +20659,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -20728,7 +20728,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -20763,7 +20763,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -20832,7 +20832,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -20867,7 +20867,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -21687,7 +21687,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -21723,7 +21723,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -21793,7 +21793,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -21829,7 +21829,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -21899,7 +21899,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -21935,7 +21935,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -22005,7 +22005,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -22041,7 +22041,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -22776,7 +22776,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -22812,7 +22812,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -22882,7 +22882,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -22918,7 +22918,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -22988,7 +22988,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -23024,7 +23024,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -23094,7 +23094,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -23130,7 +23130,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -23918,7 +23918,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -23988,7 +23988,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -24024,7 +24024,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -24094,7 +24094,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -24130,7 +24130,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -24200,7 +24200,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -24236,7 +24236,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -25077,7 +25077,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -25113,7 +25113,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -25183,7 +25183,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -25219,7 +25219,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -25289,7 +25289,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -25325,7 +25325,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -25395,7 +25395,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+                "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -25431,7 +25431,7 @@
               },
               "evidence": {
                 "tier": "native_member",
-                "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+                "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
                 "wikiFingerprint": {
                   "status": "not_published"
                 },
@@ -25802,7 +25802,7 @@
       "type": "status_reference",
       "unit": null,
       "range": null,
-      "native": "DamageInfo status slot 1: the status type (0.31.1: a used slot, or the first empty slot)",
+      "native": "DamageInfo status slot 1: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
       "apiFieldConstant": "hd2.fields.explosion.damage_status_1_type"
     },
     {
@@ -25814,7 +25814,7 @@
         0,
         1000
       ],
-      "native": "DamageInfo status slot 1: its strength (0.31.1: on the first empty slot, set with its status)",
+      "native": "DamageInfo status slot 1: its strength (on an empty slot, set with its status)",
       "apiFieldConstant": "hd2.fields.explosion.damage_status_1_strength"
     },
     {
@@ -25823,7 +25823,7 @@
       "type": "status_reference",
       "unit": null,
       "range": null,
-      "native": "DamageInfo status slot 2: the status type (0.31.1: a used slot, or the first empty slot)",
+      "native": "DamageInfo status slot 2: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
       "apiFieldConstant": "hd2.fields.explosion.damage_status_2_type"
     },
     {
@@ -25835,7 +25835,7 @@
         0,
         1000
       ],
-      "native": "DamageInfo status slot 2: its strength (0.31.1: on the first empty slot, set with its status)",
+      "native": "DamageInfo status slot 2: its strength (on an empty slot, set with its status)",
       "apiFieldConstant": "hd2.fields.explosion.damage_status_2_strength"
     },
     {
@@ -25844,7 +25844,7 @@
       "type": "status_reference",
       "unit": null,
       "range": null,
-      "native": "DamageInfo status slot 3: the status type (0.31.1: a used slot, or the first empty slot)",
+      "native": "DamageInfo status slot 3: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
       "apiFieldConstant": "hd2.fields.explosion.damage_status_3_type"
     },
     {
@@ -25856,7 +25856,7 @@
         0,
         1000
       ],
-      "native": "DamageInfo status slot 3: its strength (0.31.1: on the first empty slot, set with its status)",
+      "native": "DamageInfo status slot 3: its strength (on an empty slot, set with its status)",
       "apiFieldConstant": "hd2.fields.explosion.damage_status_3_strength"
     },
     {
@@ -25865,7 +25865,7 @@
       "type": "status_reference",
       "unit": null,
       "range": null,
-      "native": "DamageInfo status slot 4: the status type (0.31.1: a used slot, or the first empty slot)",
+      "native": "DamageInfo status slot 4: the status type (a used slot, or since 0.31.2 any empty slot up to 4, packed from slot 1)",
       "apiFieldConstant": "hd2.fields.explosion.damage_status_4_type"
     },
     {
@@ -25877,7 +25877,7 @@
         0,
         1000
       ],
-      "native": "DamageInfo status slot 4: its strength (0.31.1: on the first empty slot, set with its status)",
+      "native": "DamageInfo status slot 4: its strength (on an empty slot, set with its status)",
       "apiFieldConstant": "hd2.fields.explosion.damage_status_4_strength"
     },
     {
