@@ -55,6 +55,17 @@ ProjectileWeaponComponentData (a per-weapon resolved copy when one exists, else 
 weapon's `ProgrammableAmmo` function state is on replaces the projectile with +576 if it is non-zero (and the spawned
 entity with +584 if that is non-zero). That is how the AC-8, GR-8 and RL-77 switch between two projectiles.
 
+**The function projectile's own row (0.31.1).** The +576 projectile of the AC-8 (the flak round: 150 direct damage,
+820 m/s, 0.9 s lifetime; its 190-damage burst is `hd2.explosion('support_weapon/ac8_autocannon/function_impact')`), the
+GR-8 and the RL-77 has its own `projectile.programmable.*` and `damage.programmable.*` fields on
+`hd2.support_weapon(name):attack('programmable'):projectile()`: velocity, mass, drag, gravity, pellets, penetration
+slowdown, lifetime where it is non-zero, the nine damage members and the free status slot. Every write reads +576 again:
+a weapon whose function projectile was swapped or emptied (`function_ammo.projectile`), or that now spawns an entity
+through the function, is refused (`FUNCTION_PROJECTILE_CHANGED`, `FUNCTION_HOST_CHANGED`, or a row identity change), never
+written through. They need `allow_shared` and `allow_unverified_effect` (no live test yet). Shared rows: the GR-8's
+function projectile is also fired by the TD-110 Maelstrom and TD-220 Bastion tank guns, and the RL-77's function rocket
+links the DamageInfo row of its normal rocket, so a damage edit there changes both rockets.
+
 A weapon can **gain** this second feed when it has the member (every ProjectileWeapon does), a free weapon-function
 input, an ordinary projectile trigger (the fire-mode research's constraints), no rounds feed, no spawned entity and no
 magazine pattern: 39 player and 10 support weapons (`programmableAddable` in the catalog). The same feed and field

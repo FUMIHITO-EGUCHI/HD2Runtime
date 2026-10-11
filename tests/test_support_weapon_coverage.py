@@ -37,11 +37,15 @@ class SupportWeaponCoverageTests(unittest.TestCase):
 
     def test_unverified_fields_require_acknowledgement(self):
         acknowledged = {}
-        charge_level = set()
+        charge_level, programmable = set(), set()
         for item in self.capabilities['fieldInstances']:
             if item.get('chargeLevel'):
                 # A charge-level row (research/charge-explosions): only one charge level fires it (AMBIGUOUS).
                 charge_level.add(item['operation']['acknowledgement'])
+                continue
+            if item.get('programmableFeed'):
+                # 0.31.1: the ProgrammableAmmo projectile's row (scripts/programmable_feed_fields.py), not live-tested.
+                programmable.add(item['operation']['acknowledgement'])
                 continue
             acknowledged.setdefault(item['semanticFieldId'], set()).add(item['operation']['acknowledgement'])
         self.assertEqual(acknowledged['reload.duration'], {'allow_unverified_effect'})
@@ -49,6 +53,7 @@ class SupportWeaponCoverageTests(unittest.TestCase):
         self.assertEqual(acknowledged['windup.wind_up_seconds'], {None})
         self.assertEqual(acknowledged['projectile.lifetime'], {None})
         self.assertEqual(charge_level, {'allow_unverified_effect'})
+        self.assertEqual(programmable, {'allow_unverified_effect'})
         self.assertEqual(len([i for i in self.capabilities['fieldInstances']
             if i['semanticFieldId'] == 'reload.duration']), 15)
 

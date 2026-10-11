@@ -1499,7 +1499,25 @@ local function support_explosion(resolved,backing)
         'linked support projectile ExplosionSettings absent')
 end
 
+-- 0.31.1 (scripts/programmable_feed_fields.py): the projectile the weapon fires while its ProgrammableAmmo function is
+-- on, ProjectileWeapon +576 (game.dll 0x615940 fires it instead of the normal projectile when it is non-zero, and the
+-- +584 entity instead when that is non-zero). Re-read on every write: a weapon that now spawns an entity through the
+-- function, or whose function projectile is gone, is refused; a swapped one fails the row identity check.
+local function function_projectile(resolved)
+    local record=resolved.catalog.record(resolved.candidate,'ProjectileWeaponComponentData')
+    assert(record.bytes:sub(585,592)==string.rep(string.char(0),8),
+        'FUNCTION_HOST_CHANGED: the weapon now spawns an entity with its ProgrammableAmmo function')
+    local projectile_type=b.u32(record.bytes,576)
+    assert(projectile_type~=0,'FUNCTION_PROJECTILE_CHANGED: the weapon has no ProgrammableAmmo projectile any more '
+        ..'(function_ammo.projectile is none)')
+    return assert(resolved.roots.projectile.records[projectile_type],'linked ProgrammableAmmo ProjectileSettings absent')
+end
+
 local function support_damage(resolved,backing,linkage)
+    if linkage=='function_projectile_damage'then
+        return assert(resolved.roots.damage.records[b.u32(function_projectile(resolved).bytes,60)],
+            'linked ProgrammableAmmo DamageInfo absent')
+    end
     if linkage=='charge_projectile_damage'then
         local projectile=charge_projectile(resolved,backing)
         return assert(resolved.roots.damage.records[b.u32(projectile.bytes,60)],
@@ -1544,6 +1562,9 @@ local function support_linked(resolved,backing)
     end
     if linkage=='charge_projectile'then
         return charge_projectile(resolved,backing),resolved.roots.projectile.owner
+    end
+    if linkage=='function_projectile'then
+        return function_projectile(resolved),resolved.roots.projectile.owner
     end
     if linkage=='arc'then
         local component=resolved.catalog.record(resolved.candidate,'ArcWeaponComponentData')

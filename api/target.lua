@@ -1032,6 +1032,25 @@ function M.new(describe)
             for index,item in ipairs(weapon.attackGraph)do
                 if item.name==identity or support_role(name,item)==identity then return support_attack(name,index)end
             end
+            -- 0.31.1: the projectile of the native ProgrammableAmmo function (ProjectileWeapon +576; the AC-8's flak)
+            -- has no catalogue branch: attack('programmable') is its own projectile row and damage.
+            local authoring=support_authoring.weapons[name]
+            local feed=authoring and authoring.attacks[identity]
+            if feed and feed.programmableFeed then
+                local attack_methods={}
+                function attack_methods.describe()return copy(feed)end
+                function attack_methods.projectile()
+                    local projectile_methods={}
+                    function projectile_methods.describe()return copy(feed)end
+                    function projectile_methods.damage(self)return self end
+                    return setmetatable({resource='support_weapon',path='projectile_reference',weapon=name,
+                        attack=feed.role},{__index=projectile_methods})
+                end
+                function attack_methods.damage(self)return self end
+                function attack_methods.projectile_source()return methods.feed(nil,'programmable'):source()end
+                return setmetatable({resource='support_weapon',path='attack',weapon=name,attack=feed.role},
+                    {__index=attack_methods})
+            end
             error('unknown reviewed support attack: '..tostring(identity))
         end
         function methods.projectile(_,identity)return methods.attack(nil,identity):projectile()end

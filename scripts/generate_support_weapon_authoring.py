@@ -23,6 +23,7 @@ import equipment_fields
 import beam_fields
 import missile_fields
 import missile_hit_fields
+import programmable_feed_fields
 import charge_fields
 import support_callin_linkage
 import ability_explosion_fields
@@ -769,6 +770,22 @@ def build(catalog_path=CATALOG):
                             statusType=attack['statusType'],
                             parentLinkage=parent_linkage if parent and parent.get('damageInfo')else None,
                             **(status_extra if parent and parent.get('damageInfo')else{})),attack_target))
+            # 0.31.1: the projectile of the native ProgrammableAmmo function (ProjectileWeapon +576; the AC-8's flak),
+            # its own row and damage through the role 'programmable' (scripts/programmable_feed_fields.py).
+            feed=programmable_feed_fields.entry(weapon['name'])
+            if feed and'ProjectileWeaponComponentData'in ownership:
+                role=programmable_feed_fields.ROLE;attack=programmable_feed_fields.attack(feed)
+                attack_target={'resource':'support_weapon','path':'projectile_reference','weapon':weapon['name'],
+                    'attack':role}
+                attacks[role]={'role':role,'kind':'Projectile','parentRole':None,'targetPath':'projectile_reference',
+                    'programmableFeed':True}
+                start=len(fields)
+                for suffix,value,offset,storage in programmable_feed_fields.members(feed):
+                    fields.append(make_field('projectile.'+role+'.'+suffix,value,
+                        settings('projectile',attack['projectileSettings'],offset,storage,role,'function_projectile'),
+                        attack_target))
+                damage_fields(fields,candidate,attack,attack_target,role,'function_projectile_damage')
+                programmable_feed_fields.annotate(fields[start:],feed)
             # Which charge level fires each row, when the game reads it, who shares it, and the acknowledgement.
             charge_fields.annotate_levels(weapon['name'],fields,charge_levels)
             if ability_attack:ability_explosion_fields.annotate(fields,ability_attack)
@@ -1152,6 +1169,11 @@ def build(catalog_path=CATALOG):
             if field.get('windUp')and field_id.startswith('windup.'):
                 # The spin-up members (research/windup-controls): meaning and reviewed range.
                 instance['windUp']=dict(field['windUp'],**{key:field[key] for key in('min','max','rangeReason')})
+            if field.get('programmableFeed'):
+                # 0.31.1: the ProgrammableAmmo projectile's own row (scripts/programmable_feed_fields.py), no native ids.
+                instance['programmableFeed']={key:field['programmableFeed'][key] for key in('feed','selectorInput',
+                    'sharedRow','research')}
+                instance['programmableFeed']['firedWhen']='the weapon\'s ProgrammableAmmo function is on'
             if field.get('missileHit'):
                 # 0.31.1: the direct hit of the missile the weapon spawns (scripts/missile_hit_fields.py).
                 # (No native ids: the catalogue branch, the carrying member and the members the missile ignores.)
