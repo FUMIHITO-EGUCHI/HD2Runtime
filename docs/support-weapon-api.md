@@ -401,6 +401,16 @@ hd2.ensure({transaction={id='quick-quasar',target=quasar,allow_unverified_effect
 If a heat write is refused with "the game reads its WeaponHeatComponentData table from another place", another mod
 has moved the game's heat table ([diagnostics](diagnostics.md) "Component tables another mod moved").
 
+## Ammunition maxima (0.31.2, offline only)
+
+`weapon.capacity` takes at most 2047 and `magazine.starting_magazines`, `magazines_from_supply` and `spare_magazines`
+at most 31, on every support weapon with a magazine. These are the network fields of the live round and
+spare-magazine counts, and the game clamps larger values at the next shot (see
+[vehicle weapons, Ammunition limits](vehicle-weapons.md#ammunition-limits-0312-offline-only)). Each field instance
+has a `networkLimit` block with the maximum and the reason. The team-reload weapons' own magazine rows already had
+this maximum in 0.31.0. A mod that declares an older SDK gets its larger value applied as the maximum, logged as a
+legacy operation ([legacy SDK compatibility](legacy-sdk-compatibility.md)).
+
 ## Team-reload weapons (0.31.0, offline only)
 
 The GR-8 Recoilless Rifle, RL-77 Airburst Rocket Launcher, FAF-14 Spear, StA-X3 W.A.S.P. Launcher and AC-8 Autocannon

@@ -19,6 +19,7 @@ import weapon_mode_fields
 import weapon_sound_fields
 import presentation_fields
 import status_fields
+import ammo_limits
 import equipment_fields
 import beam_fields
 import missile_fields
@@ -562,7 +563,10 @@ def build(catalog_path=CATALOG):
                     ('magazine.spare_magazines','spare_magazines',148)):
                     field=make_field(field_id,ammo.get(key),
                         component(candidate,'WeaponMagazineComponentData',offset,'u32'),target)
-                    fields.append(stock(field,ammo.get(key))if field_id!='weapon.capacity'else field)
+                    # 0.31.2: bounded by the network ceilings of the live counts (scripts/ammo_limits.py); the
+                    # team-reload maximum (31) is the same ceiling.
+                    field=stock(field,ammo.get(key))if field_id!='weapon.capacity'else field
+                    fields.append(ammo_limits.apply(field))
             elif kind=='rounds'and'WeaponRoundsComponentData'in ownership:
                 for field_id,key,offset,storage in (
                     ('rounds.feed_capacity_1','feed_capacity_1',72,'f32'),
@@ -1121,6 +1125,9 @@ def build(catalog_path=CATALOG):
                 **({'noEffect':{'reason':field['noEffect']}}if field.get('noEffect')else{}),
                 **({'teamReload':dict(field['teamReload'],**{key:field[key] for key in('min','max','rangeReason')
                     if field.get(key)is not None})}if field.get('teamReload')else{}),
+                # 0.31.2: the network ceiling of the live round / spare-magazine count (scripts/ammo_limits.py).
+                **({'networkLimit':dict(field['networkLimit'],**{key:field[key] for key in('max','rangeReason')})}
+                    if field.get('networkLimit')else{}),
                 'resolution':resolution_metadata(weapon_name,field),
                 'provenance':{'identity':'unique reviewed support-weapon runtime identity',
                     'semantics':'shared player/support field schema',

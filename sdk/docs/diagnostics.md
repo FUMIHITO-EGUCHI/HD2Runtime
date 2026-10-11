@@ -264,8 +264,9 @@ end
 - **`sdk` and `sdk_source`.** The SDK version the registering mod declares, and where it came from: `wrapper` (read
   from the mod's addon wrapper), `mod` (remembered for that mod resource) or `unknown`.
 - **`legacy`.** `{target, field, acknowledgement, since}` for each field this operation wrote without an
-  acknowledgement that a later SDK added (docs/legacy-sdk-compatibility.md). Each one is also logged once when the
-  operation registers.
+  acknowledgement that a later SDK added (docs/legacy-sdk-compatibility.md). Since 0.31.2 it also lists
+  `{target, field, since, limit = {value, max}}` for each value above a maximum that a later SDK added, applied as
+  `max`. Each one is also logged once when the operation registers.
 
 The list is a copy; the entries are read when it is called. At most 4096 registrations are kept (the oldest are
 dropped first; the second return value is `{dropped = n}`).

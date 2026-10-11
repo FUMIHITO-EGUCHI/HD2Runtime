@@ -55,6 +55,31 @@ class VehicleWeaponTests(unittest.TestCase):
         unproven = self.fields[('TD-220 Bastion MK XVI / attach_tank_gun_mg', 'weapon.capacity')]
         self.assertEqual(unproven['acknowledgement'], 'allow_unverified_effect')
 
+    def test_ammunition_is_bounded_by_the_network_fields(self):
+        # 0.31.2 (scripts/ammo_limits.py): the live round count is an 11-bit network field (2047), the spare magazines
+        # a 5-bit one (31). A player report: a Bastion coax capacity of 2500 showed about 2100 for its owner and 500
+        # for a friend.
+        bounded = [f for f in self.catalog['fieldInstances'] if f['writable'] and (f['semanticFieldId'] == 'weapon.capacity'
+            or f['semanticFieldId'].startswith('magazine.'))]
+        self.assertEqual(len(bounded), 21 + 3 * 17)
+        for field in bounded:
+            capacity = field['semanticFieldId'] == 'weapon.capacity'
+            self.assertEqual(field['max'], 2047 if capacity else 31, field['instanceKey'])
+            self.assertEqual(field['networkLimit']['networkField'], 'rounds' if capacity else 'magazines_remaining')
+            self.assertIn('network field', field['rangeReason'])
+            self.assertLessEqual(field['baseline'], field['max'])
+        coax = self.fields[('TD-220 Bastion MK XVI / attach_tank_gun_mg', 'weapon.capacity')]
+        self.assertEqual((coax['baseline'], coax['max']), (2000, 2047))
+        # The coax owns no WeaponReload component (the research checks every mount for one): its spare-magazine fields
+        # are flagged as expected to have no effect (not proven from game code), never blocked.
+        for field_id in ('magazine.starting_magazines', 'magazine.magazines_from_supply', 'magazine.spare_magazines'):
+            item = self.fields[('TD-220 Bastion MK XVI / attach_tank_gun_mg', field_id)]
+            self.assertTrue(item['writable'])
+            self.assertFalse(item['reloadComponent']['present'])
+            self.assertIn('expected to have no effect', item['reloadComponent']['note'])
+        cannon = self.fields[('TD-220 Bastion MK XVI / attach_tank_gun', 'magazine.spare_magazines')]
+        self.assertNotIn('reloadComponent', cannon)   # the main cannon reloads
+
     def test_spread_and_breakthrough_shield(self):
         # 0.31.0 (research/mounted-spread-shield): every projectile mount exposes its WeaponData spread pair (the
         # member the shot reads for every shot and pellet); spray, beam and arc mounts list it as blocked.
@@ -165,10 +190,19 @@ rejects({id='radius',allow_shared=true,target=missiles:explosion(),field=hd2.fie
 local mael=hd2.vehicle('TD-110 Maelstrom')
 assert(mael:weapon(0).weapon~=mael:weapon(2).weapon)
 local bastion=hd2.vehicle('TD-220 Bastion MK XVI')
-rejects({id='mg',target=bastion:weapon('attach_tank_gun_mg'),field=hd2.fields.weapon.capacity,expect=2000,value=3000},
+rejects({id='mg',target=bastion:weapon('attach_tank_gun_mg'),field=hd2.fields.weapon.capacity,expect=2000,value=2047},
  'allow_unverified_effect')
 patches.validate{id='mg',allow_unverified_effect=true,target=bastion:weapon('attach_tank_gun_mg'),
- field=hd2.fields.weapon.capacity,expect=2000,value=3000}
+ field=hd2.fields.weapon.capacity,expect=2000,value=2047}
+-- 0.31.2: the live round count is an 11-bit network field and the spare magazines a 5-bit one (a player report: a
+-- coax capacity of 2500 showed about 2100 for its owner and 500 for a friend). Above the ceiling: refused.
+rejects({id='mg',allow_unverified_effect=true,target=bastion:weapon('attach_tank_gun_mg'),
+ field=hd2.fields.weapon.capacity,expect=2000,value=2048},'above the reviewed maximum 2047 for weapon.capacity: '
+ ..'the live round count is the network field rounds (11 bits)')
+rejects({id='reserve',allow_unverified_effect=true,target=bastion:weapon('attach_tank_gun'),
+ field=hd2.fields.magazine.spare_magazines,expect=30,value=32},'above the reviewed maximum 31')
+patches.validate{id='reserve',allow_unverified_effect=true,target=bastion:weapon('attach_tank_gun'),
+ field=hd2.fields.magazine.spare_magazines,expect=30,value=31}
 rejects({id='frv',allow_unverified_effect=true,target=hd2.vehicle('M-102 Gunner FRV'):weapon('gun'),
  field=hd2.fields.weapon.capacity,expect=100,value=200},'allow_shared')
 patches.validate{id='frv',allow_shared=true,allow_unverified_effect=true,

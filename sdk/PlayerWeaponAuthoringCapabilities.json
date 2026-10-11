@@ -3808,7 +3808,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -3826,6 +3826,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -3916,7 +3921,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -3934,6 +3939,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -3970,7 +3980,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -3988,6 +3998,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -4024,7 +4039,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -4042,6 +4057,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -4078,7 +4098,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -4096,6 +4116,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -7850,7 +7875,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -7868,6 +7893,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -7958,7 +7988,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -7976,6 +8006,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -8012,7 +8047,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -8030,6 +8065,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -8066,7 +8106,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -8084,6 +8124,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -8120,7 +8165,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -8138,6 +8183,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -35728,7 +35778,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -35746,6 +35796,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -35836,7 +35891,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -35854,6 +35909,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -35890,7 +35950,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -35908,6 +35968,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -35944,7 +36009,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -35962,6 +36027,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -35998,7 +36068,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -36016,6 +36086,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -39754,7 +39829,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -39772,6 +39847,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -39862,7 +39942,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -39880,6 +39960,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -39916,7 +40001,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -39934,6 +40019,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -39970,7 +40060,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -39988,6 +40078,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -40024,7 +40119,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -40042,6 +40137,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -46848,7 +46948,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -46866,6 +46966,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -46956,7 +47061,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -46974,6 +47079,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -47010,7 +47120,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -47028,6 +47138,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -47064,7 +47179,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -47082,6 +47197,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -47118,7 +47238,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -47136,6 +47256,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -50884,7 +51009,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -50902,6 +51027,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -50992,7 +51122,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -51010,6 +51140,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -51046,7 +51181,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -51064,6 +51199,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -51100,7 +51240,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -51118,6 +51258,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -51154,7 +51299,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -51172,6 +51317,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -75589,7 +75739,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -75607,6 +75757,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -75697,7 +75852,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -75715,6 +75870,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -75751,7 +75911,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -75769,6 +75929,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -75805,7 +75970,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -75823,6 +75988,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -75859,7 +76029,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -75877,6 +76047,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -84714,7 +84889,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -84732,6 +84907,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -84822,7 +85002,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -84840,6 +85020,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -84876,7 +85061,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -84894,6 +85079,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -84930,7 +85120,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -84948,6 +85138,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -84984,7 +85179,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -85002,6 +85197,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -96030,7 +96230,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -96048,6 +96248,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -96144,7 +96349,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -96162,6 +96367,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -96201,7 +96411,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -96219,6 +96429,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -96258,7 +96473,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -96276,6 +96491,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -96315,7 +96535,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -96333,6 +96553,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -130341,7 +130566,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -130359,6 +130584,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -130449,7 +130679,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -130467,6 +130697,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -130503,7 +130738,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -130521,6 +130756,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -130557,7 +130797,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -130575,6 +130815,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -130611,7 +130856,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -130629,6 +130874,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -134380,7 +134630,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -134398,6 +134648,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -134488,7 +134743,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -134506,6 +134761,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -134542,7 +134802,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -134560,6 +134820,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -134596,7 +134861,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -134614,6 +134879,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -134650,7 +134920,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -134668,6 +134938,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -142619,7 +142894,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -142637,6 +142912,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -142727,7 +143007,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -142745,6 +143025,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "liveEvidence": {
             "status": "live_proven",
@@ -142791,7 +143076,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -142809,6 +143094,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -142845,7 +143135,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -142863,6 +143153,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -142899,7 +143194,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -142917,6 +143212,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -153688,7 +153988,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -153706,6 +154006,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -153796,7 +154101,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -153814,6 +154119,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -153850,7 +154160,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -153868,6 +154178,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -153904,7 +154219,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -153922,6 +154237,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -153958,7 +154278,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -153976,6 +154296,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -165442,7 +165767,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -165460,6 +165785,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -165550,7 +165880,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -165568,6 +165898,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -165604,7 +165939,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -165622,6 +165957,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -165658,7 +165998,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -165676,6 +166016,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -165712,7 +166057,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -165730,6 +166075,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -172554,7 +172904,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -172572,6 +172922,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -172662,7 +173017,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -172680,6 +173035,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -172716,7 +173076,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -172734,6 +173094,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -172770,7 +173135,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -172788,6 +173153,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -172824,7 +173194,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -172842,6 +173212,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -178245,7 +178620,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -178263,6 +178638,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -178353,7 +178733,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -178371,6 +178751,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -178407,7 +178792,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -178425,6 +178810,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -178461,7 +178851,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -178479,6 +178869,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -178515,7 +178910,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -178533,6 +178928,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -190369,7 +190769,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -190387,6 +190787,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -190477,7 +190882,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -190495,6 +190900,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "liveEvidence": {
             "status": "live_proven",
@@ -190541,7 +190951,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -190559,6 +190969,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -190595,7 +191010,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -190613,6 +191028,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -190649,7 +191069,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -190667,6 +191087,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -193720,7 +194145,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -193738,6 +194163,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -193828,7 +194258,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -193846,6 +194276,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -193882,7 +194317,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -193900,6 +194335,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -193936,7 +194376,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -193954,6 +194394,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -193990,7 +194435,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -194008,6 +194453,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -198469,7 +198919,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -198487,6 +198937,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -198577,7 +199032,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -198595,6 +199050,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -198631,7 +199091,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -198649,6 +199109,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -198685,7 +199150,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -198703,6 +199168,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -198739,7 +199209,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -198757,6 +199227,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -204060,7 +204535,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -204078,6 +204553,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -204176,7 +204656,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -204194,6 +204674,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -204234,7 +204719,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -204252,6 +204737,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -204292,7 +204782,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -204310,6 +204800,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -204350,7 +204845,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -204368,6 +204863,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -209669,7 +210169,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -209687,6 +210187,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -209777,7 +210282,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -209795,6 +210300,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -209831,7 +210341,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -209849,6 +210359,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -209885,7 +210400,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -209903,6 +210418,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -209939,7 +210459,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -209957,6 +210477,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -220739,7 +221264,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -220757,6 +221282,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -220847,7 +221377,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -220865,6 +221395,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -220901,7 +221436,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -220919,6 +221454,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -220955,7 +221495,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -220973,6 +221513,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -221009,7 +221554,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -221027,6 +221572,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -226271,7 +226821,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -226289,6 +226839,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -226379,7 +226934,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -226397,6 +226952,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -226433,7 +226993,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -226451,6 +227011,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -226487,7 +227052,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -226505,6 +227070,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -226541,7 +227111,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -226559,6 +227129,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -234535,7 +235110,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -234553,6 +235128,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -234643,7 +235223,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -234661,6 +235241,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -234697,7 +235282,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -234715,6 +235300,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -234751,7 +235341,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -234769,6 +235359,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -234805,7 +235400,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -234823,6 +235418,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -248301,7 +248901,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -248319,6 +248919,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -248417,7 +249022,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -248435,6 +249040,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -248475,7 +249085,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -248493,6 +249103,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -248533,7 +249148,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -248551,6 +249166,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -248591,7 +249211,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -248609,6 +249229,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "AMBIGUOUS",
@@ -252359,7 +252984,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -252377,6 +253002,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -252467,7 +253097,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -252485,6 +253115,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -252521,7 +253156,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -252539,6 +253174,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -252575,7 +253215,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -252593,6 +253233,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -252629,7 +253274,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -252647,6 +253292,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -260338,7 +260988,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -260356,6 +261006,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -260446,7 +261101,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -260464,6 +261119,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -260500,7 +261160,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -260518,6 +261178,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -260554,7 +261219,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -260572,6 +261237,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -260608,7 +261278,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -260626,6 +261296,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -295127,7 +295802,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -295145,6 +295820,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -295235,7 +295915,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -295253,6 +295933,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -295289,7 +295974,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -295307,6 +295992,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -295343,7 +296033,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -295361,6 +296051,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -295397,7 +296092,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -295415,6 +296110,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -313014,7 +313714,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -313032,6 +313732,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -313122,7 +313827,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -313140,6 +313845,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -313176,7 +313886,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -313194,6 +313904,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -313230,7 +313945,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -313248,6 +313963,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -313284,7 +314004,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -313302,6 +314022,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -328873,7 +329598,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -328891,6 +329616,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -328981,7 +329711,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -328999,6 +329729,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -329035,7 +329770,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -329053,6 +329788,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -329089,7 +329829,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -329107,6 +329847,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -329143,7 +329888,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -329161,6 +329906,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -332961,7 +333711,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -332979,6 +333729,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -333069,7 +333824,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -333087,6 +333842,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -333123,7 +333883,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -333141,6 +333901,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -333177,7 +333942,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -333195,6 +333960,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -333231,7 +334001,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -333249,6 +334019,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -337075,7 +337850,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -337093,6 +337868,11 @@
           "affectsMultipleWeapons": false,
           "reason": "Deprecated compatibility alias; use magazine.capacity.",
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.weapon.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -337183,7 +337963,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 2047,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -337201,6 +337981,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+          "networkLimit": {
+            "max": 2047,
+            "networkField": "rounds"
+          },
           "apiFieldConstant": "hd2.fields.magazine.capacity",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -337237,7 +338022,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -337255,6 +338040,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -337291,7 +338081,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -337309,6 +338099,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.magazines_from_supply",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",
@@ -337345,7 +338140,7 @@
             "source": "schemas/player_weapon_fields.json + F5FEE03DCFDB snapshot"
           },
           "min": null,
-          "max": null,
+          "max": 31,
           "enumValues": null,
           "backing": {
             "kind": "component",
@@ -337363,6 +338158,11 @@
           "affectsMultipleWeapons": false,
           "reason": null,
           "acceptedForWrites": true,
+          "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+          "networkLimit": {
+            "max": 31,
+            "networkField": "magazines_remaining"
+          },
           "apiFieldConstant": "hd2.fields.magazine.spare_magazines",
           "effect": {
             "activeSource": "ACTIVE_AT_INSTANTIATION",

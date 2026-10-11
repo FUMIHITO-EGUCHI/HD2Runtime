@@ -243,9 +243,9 @@ local worker=coroutine.create(function()
  scenario('frv_gun_capacity','M-103 Supply FRV / gun','weapon.capacity',120,600)
  scenario('bastion_cannon_damage','TD-220 Bastion MK XVI / attach_tank_gun','damage.primary.standard_damage',3500,5000,
   {allow_shared=true,allow_unverified_effect=true})
- scenario('bastion_cannon_reserve','TD-220 Bastion MK XVI / attach_tank_gun','magazine.spare_magazines',30,45,
+ scenario('bastion_cannon_reserve','TD-220 Bastion MK XVI / attach_tank_gun','magazine.spare_magazines',30,31,
   {allow_unverified_effect=true})
- scenario('bastion_mg_capacity','TD-220 Bastion MK XVI / attach_tank_gun_mg','weapon.capacity',2000,3000,
+ scenario('bastion_mg_capacity','TD-220 Bastion MK XVI / attach_tank_gun_mg','weapon.capacity',2000,2047,
   {allow_unverified_effect=true})
  scenario('maelstrom_gun_fire_rate','TD-110 Maelstrom / attach_tank_gun','weapon.fire_rate',1200,900,
   {allow_unverified_effect=true})

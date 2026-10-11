@@ -285,20 +285,45 @@ operations[#operations+1]=hd2.ensure({patch={id='mg43-single',target=hd2.support
 return operations
 '''
 
-# Tank mounted weapons: Bastion main cannon (shared round and own reserve), Bastion coaxial MG, Maelstrom gun.
+# Tank mounted weapons: Bastion main cannon (shared round and own reserve), Bastion coaxial MG, Maelstrom gun. The
+# reserve and the MG capacity are at their network ceilings (0.31.2, scripts/ammo_limits.py: 31 spare magazines,
+# 2047 rounds); above them the operation is refused (TANK_LIMITS_LEGACY: clamped for an older SDK's project).
 TANK_WEAPONS = r'''local hd2=require('mods/skyeshade/hd2runtime')
 local bastion,maelstrom=hd2.vehicle('TD-220 Bastion MK XVI'),hd2.vehicle('TD-110 Maelstrom')
 local operations={}
 operations[#operations+1]=hd2.ensure({patch={id='bastion-cannon-reserve',target=bastion:weapon('attach_tank_gun'),
-    field=hd2.fields.magazine.spare_magazines,expect=30,value=45,allow_unverified_effect=true}})
+    field=hd2.fields.magazine.spare_magazines,expect=30,value=31,allow_unverified_effect=true}})
 operations[#operations+1]=hd2.ensure({patch={id='bastion-cannon-damage',target=bastion:weapon('attach_tank_gun'):projectile(),
     field=hd2.fields.damage.player_standard_damage,expect=3500,value=5000,allow_shared=true,allow_unverified_effect=true}})
 operations[#operations+1]=hd2.ensure({patch={id='bastion-mg-capacity',target=bastion:weapon('attach_tank_gun_mg'),
-    field=hd2.fields.weapon.capacity,expect=2000,value=3000,allow_unverified_effect=true}})
+    field=hd2.fields.weapon.capacity,expect=2000,value=2047,allow_unverified_effect=true}})
 operations[#operations+1]=hd2.ensure({patch={id='maelstrom-gun-rate',target=maelstrom:weapon(0),
     field=hd2.fields.weapon.fire_rate,expect=1200,value=900,allow_unverified_effect=true}})
 return operations
 '''
+
+# The network ceilings of 0.31.2 (scripts/ammo_limits.py) for a project bound to an older SDK, which had none: a Bastion
+# coax capacity of 3000 (the player report: 2500 showed about 2100 for its owner, 500 for a friend) and a cannon reserve
+# of 45 apply as 2047 and 31, logged as legacy operations (docs/legacy-sdk-compatibility.md). Without a readable SDK
+# declaration (the 0.31.2 rule, as for a project bound to 0.31.2) they are refused. A control within the ceiling applies
+# in both.
+TANK_LIMITS = r'''local operations={}
+local bastion=hd2.vehicle('TD-220 Bastion MK XVI')
+operations[#operations+1]=hd2.ensure({patch={id='%s-mg-capacity',target=bastion:weapon('attach_tank_gun_mg'),
+    field=hd2.fields.weapon.capacity,expect=2000,value=3000,allow_unverified_effect=true}})
+operations[#operations+1]=hd2.ensure({patch={id='%s-cannon-reserve',target=bastion:weapon('attach_tank_gun'),
+    field=hd2.fields.magazine.spare_magazines,expect=30,value=45,allow_unverified_effect=true}})
+operations[#operations+1]=hd2.ensure({patch={id='control-cannon-supply',target=bastion:weapon('attach_tank_gun'),
+    field=hd2.fields.magazine.magazines_from_supply,expect=30,value=31,allow_unverified_effect=true}})
+return operations
+'''
+
+
+def tank_limits_scenario(sdk_version, prefix):
+    body = TANK_LIMITS % (prefix, prefix)
+    if sdk_version is None:
+        return "local hd2=require('mods/skyeshade/hd2runtime')\n" + body
+    return modbuilder_wrap('mods/hd2runtime_validation/sdk_' + sdk_version.replace('.', '_'), sdk_version, body)
 
 # Mission uses: unlimited -> finite and finite -> different finite (not gameplay-proven: acknowledged).
 STRATAGEM_USES = r'''local hd2=require('mods/skyeshade/hd2runtime')
@@ -1472,6 +1497,13 @@ EXTRAS = {'options-live': {'menu': MENU_STUB, 'after': OPTIONS_LIVE},
         'control-coyote-burst': 'field requires allow_unverified_effect=true: fire_mode.burst_rounds'}},
     'sdk-028-purifier-with-ack': {'rejected': {
         'control-coyote-burst': 'field requires allow_unverified_effect=true: fire_mode.burst_rounds'}},
+    # 0.31.2 network ceilings: an SDK 0.31.1 project's larger values apply clamped as legacy operations; without a
+    # readable declaration they are refused. The control within the ceiling applies in both.
+    'legacy-sdk-0311-tank-limits': {'legacy': {'legacy-mg-capacity': ['weapon.capacity'],
+        'legacy-cannon-reserve': ['magazine.spare_magazines']}},
+    'unknown-sdk-tank-limits': {'rejected': {
+        'current-mg-capacity': 'value is above the reviewed maximum 2047 for weapon.capacity',
+        'current-cannon-reserve': 'maximum since SDK 0.31.2; Runtime could not read the SDK version'}},
     # The exact 133-operation user project (ModBuilder 1.3.1, SDK 0.27.0): every operation registers and applies. The
     # PLAS-101 Purifier row its charge levels only partly fire needs allow_unverified_effect since SDK 0.28.0; the
     # project declares 0.27.0, so it applies as a legacy operation (0.28.0 refused it).
@@ -5231,6 +5263,8 @@ SCENARIOS = {
     'legacy-sdk-027-purifier': lambda: legacy_scenario('0.27.0', 'legacy-purifier-drag'),
     'sdk-028-purifier-without-ack': lambda: legacy_scenario('0.28.0', 'current-purifier-drag'),
     'sdk-028-purifier-with-ack': lambda: legacy_scenario('0.28.0', 'current-purifier-drag-ack', acknowledged=True),
+    'legacy-sdk-0311-tank-limits': lambda: tank_limits_scenario('0.31.1', 'legacy'),
+    'unknown-sdk-tank-limits': lambda: tank_limits_scenario(None, 'current'),
     'user-report-full-project': lambda: user_report('A-original'),
     'user-report-ma5c-capacity-only': lambda: user_report('D2-ma5c-capacity-only'),
     'user-report-ma5c-plus-stratagem': lambda: user_report('D3-ma5c-plus-stratagem'),

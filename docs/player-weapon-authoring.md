@@ -94,6 +94,12 @@ hd2.transaction({
 })
 ```
 
+Since 0.31.2, `magazine.capacity` takes at most 2047 and the three magazine counts take at most 31. These are the
+network fields of the live round and spare-magazine counts; the game clamps larger values at the next shot (see
+[vehicle weapons, Ammunition limits](vehicle-weapons.md#ammunition-limits-0312-offline-only)). A mod that declares an
+older SDK keeps working: its larger value is applied as the maximum and logged
+([legacy SDK compatibility](legacy-sdk-compatibility.md)).
+
 `hd2.fields.weapon.capacity` remains accepted for projects written against 0.13, but it is a
 deprecated compatibility alias when it resolves to the same reviewed magazine record as
 `hd2.fields.magazine.capacity`. New projects should use the magazine field. A transaction that

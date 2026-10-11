@@ -8,11 +8,18 @@ partial-charge projectile, damage and explosion fields, a row only its partial c
 field without the acknowledgement from a mod that declares an older SDK, and logs it as a legacy operation
 (docs/legacy-sdk-compatibility.md). Mods that declare the newer SDK keep the rule.
 
+A later SDK can also bound a field an earlier one let mods write without a maximum (0.31.2: a magazine's capacity and
+magazine counts, by the network fields of the live counts; scripts/ammo_limits.py). A mod that declares an older SDK
+keeps working: its larger value is clamped to the maximum and logged as a legacy operation.
+
   py scripts/generate_legacy_acknowledgements.py --research v0.28.1 0.30.0
       Compare the SDK catalogs published at tag v0.28.1 with the current ones and record, in
       schemas/legacy_acknowledgements.json, every field that 0.28.1 accepted without allow_unverified_effect and
       that now needs it, as introduced in 0.30.0. Entries of other releases are kept (0.28.0 was recorded with
       --research v0.27.0 0.28.0).
+  py scripts/generate_legacy_acknowledgements.py --limits v0.31.1 0.31.2
+      Compare the same way and record, in its "limits" list, every field the SDK at the tag let mods write with no
+      maximum (or a larger one) that now carries a network ceiling (a field's networkLimit), as introduced in 0.31.2.
   py scripts/generate_legacy_acknowledgements.py [--check]
       Write (or check) domains/legacy_acknowledgements.lua, the runtime lookup, from that reviewed file. Every entry
       must still name an existing field.
@@ -30,6 +37,8 @@ LUA_OUTPUT = ROOT / 'domains/legacy_acknowledgements.lua'
 ACKNOWLEDGEMENT = 'allow_unverified_effect'
 PLAYER = 'sdk/PlayerWeaponAuthoringCapabilities.json'
 SUPPORT = 'sdk/SupportWeaponAuthoringCapabilities.json'
+VEHICLE = 'sdk/VehicleWeaponCapabilities.json'
+ATTACHMENT = 'sdk/MagazineAttachmentCapabilities.json'
 # Catalogs whose field instances carry an instanceKey and a semantic target; only the resources the runtime lookup
 # supports (domains/entity_writes.lua) may carry legacy entries.
 INSTANCE_RESOURCES = {'backpack', 'vehicle'}
@@ -99,6 +108,75 @@ def current_catalogs():
         for path in sorted((ROOT / 'sdk').glob('*.json'))}
 
 
+def published_max(field):
+    """The maximum a published field instance states: its own max, or that of its support-weapon block."""
+    if field.get('max') is not None:
+        return field['max']
+    for block in ('networkLimit', 'teamReload'):
+        if isinstance(field.get(block), dict) and field[block].get('max') is not None:
+            return field[block]['max']
+    return None
+
+
+def limit_fields(catalogs):
+    """Every published field instance a network ceiling can apply to (scripts/ammo_limits.py): key ->
+    {'editable', 'max', 'networkLimit', 'reason', 'apiFieldConstant'}. Keys are what the write domains pass:
+    (resource, target, field id); a support weapon's id is attack-qualified, an attachment's target its semantic id."""
+    found = {}
+
+    def add(key, field, editable):
+        limit = field.get('networkLimit')
+        found[key] = {'editable': bool(editable), 'max': published_max(field), 'networkLimit': limit,
+            'reason': field.get('rangeReason') or (limit or {}).get('rangeReason'),
+            'apiFieldConstant': field.get('apiFieldConstant')}
+    for weapon in (catalogs.get(PLAYER) or {}).get('weapons', []):
+        for field in weapon['fields']:
+            add(('player_weapon', weapon['name'], field['semanticFieldId']), field, field.get('editable'))
+    for field in (catalogs.get(SUPPORT) or {}).get('fieldInstances', []):
+        if field.get('qualifiedSemanticFieldId'):
+            add(('support_weapon', field['supportWeapon'], field['qualifiedSemanticFieldId']), field,
+                field.get('writable'))
+    for field in (catalogs.get(VEHICLE) or {}).get('fieldInstances', []):
+        add(('vehicle_weapon', field['weapon'], field['semanticFieldId']), field, field.get('writable'))
+    for field in (catalogs.get(ATTACHMENT) or {}).get('fieldInstances', []):
+        target = field.get('target') or {}
+        if target.get('attachment'):
+            add(('weapon_attachment', target['attachment'], field['semanticFieldId']), field, field.get('editable'))
+    return found
+
+
+def research_limits(tag, since):
+    """Record the fields `since` bounded by a network ceiling that the SDK at `tag` let mods write above it."""
+    previous = limit_fields(git_catalogs(tag))
+    entries = []
+    for key, field in sorted(limit_fields(current_catalogs()).items()):
+        old = previous.get(key)
+        limit = field['networkLimit']
+        if not limit or not field['editable'] or old is None or not old['editable']:
+            continue
+        if old['max'] is not None and old['max'] <= limit['max']:
+            continue
+        resource, target, field_key = key
+        entries.append({'since': since, 'resource': resource, 'target': target, 'field': field_key,
+            'max': limit['max'], 'previousMax': old['max'], 'networkField': limit['networkField'],
+            'apiFieldConstant': field['apiFieldConstant'], 'reason': field['reason']})
+    history = json.loads(HISTORY.read_text(encoding='utf-8'))
+    commit = subprocess.run(['git', 'rev-list', '-n', '1', tag], cwd=ROOT, capture_output=True, text=True,
+        check=True).stdout.strip()
+    history['limitsDescription'] = ("Maxima a field gained in a later SDK (the network ceilings of a magazine's live "
+        'counts, scripts/ammo_limits.py). A mod that declares an SDK older than `since` wrote the field with no '
+        'maximum and was valid then; Runtime clamps its larger value to `max` and logs it as a legacy operation '
+        '(docs/legacy-sdk-compatibility.md). Generated by scripts/generate_legacy_acknowledgements.py --limits; '
+        'reviewed.')
+    history['limitReleases'] = sorted([item for item in history.get('limitReleases', []) if item['since'] != since]
+        + [{'since': since, 'comparedWith': tag, 'comparedWithCommit': commit,
+            'rule': 'editable with no maximum or a larger one in the SDK published at ' + tag + ', bounded by a '
+            'network ceiling in ' + since}], key=lambda item: [int(part) for part in item['since'].split('.')])
+    history['limits'] = [item for item in history.get('limits', []) if item['since'] != since] + entries
+    HISTORY.write_text(json.dumps(history, indent=1, ensure_ascii=False) + '\n', encoding='utf-8', newline='\n')
+    return entries
+
+
 def needs(field):
     return bool(field.get('editable')) and field.get('acknowledgement') == ACKNOWLEDGEMENT
 
@@ -146,11 +224,23 @@ def build():
             continue
         by_target = table.setdefault(entry['acknowledgement'], {}).setdefault(entry['resource'], {})
         by_target.setdefault(entry['target'], {})[entry['field']] = entry['since']
+    # Maxima (0.31.2): network_limit -> resource -> target -> field -> {since, max}. Each entry still names a field
+    # with that network ceiling.
+    bounded = limit_fields(current_catalogs())
+    for entry in history.get('limits', []):
+        key = (entry['resource'], entry['target'], entry['field'])
+        field = bounded.get(key)
+        if field is None or not field['networkLimit'] or field['networkLimit']['max'] != entry['max']:
+            missing.append(' '.join(key) + ' (max ' + str(entry['max']) + ')')
+            continue
+        by_target = table.setdefault('network_limit', {}).setdefault(entry['resource'], {})
+        by_target.setdefault(entry['target'], {})[entry['field']] = {'since': entry['since'], 'max': entry['max']}
     if missing:
         raise RuntimeError('schemas/legacy_acknowledgements.json names fields that no longer exist: '
             + ', '.join(missing))
     return ('-- Generated by scripts/generate_legacy_acknowledgements.py from schemas/legacy_acknowledgements.json;\n'
-        '-- do not edit. acknowledgement -> resource -> target -> field -> the SDK version that introduced it.\n'
+        '-- do not edit. acknowledgement -> resource -> target -> field -> the SDK version that introduced it;\n'
+        '-- network_limit -> resource -> target -> field -> {since, max}: a maximum introduced by that SDK.\n'
         'return ' + lua(table) + '\n')
 
 
@@ -169,7 +259,11 @@ if __name__ == '__main__':
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--research', nargs=2, metavar=('TAG', 'SINCE'),
         help='compare the SDK catalogs at TAG with the current ones and record them as introduced in SINCE')
+    parser.add_argument('--limits', nargs=2, metavar=('TAG', 'SINCE'),
+        help='compare the SDK catalogs at TAG with the current ones and record the maxima introduced in SINCE')
     args = parser.parse_args()
     if args.research:
         print(len(research(*args.research)), 'fields gained', ACKNOWLEDGEMENT, 'in', args.research[1])
+    if args.limits:
+        print(len(research_limits(*args.limits)), 'fields gained a maximum in', args.limits[1])
     print(', '.join(str(p) for p in generate(args.check)) or 'up to date')

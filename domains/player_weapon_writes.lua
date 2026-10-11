@@ -904,8 +904,16 @@ local function validate_change(weapon,item,allow_shared,role,path,phase,allow_un
     local expected=scalar(field,item.expect,'expect');local desired=scalar(field,item.value,'value')
     if contract.min~=nil then assert(desired>=contract.min,'value is below the reviewed minimum '..contract.min..' for '
         ..item.field..(contract.rangeReason and(': '..contract.rangeReason)or''))end
-    if contract.max~=nil then assert(desired<=contract.max,'value is above the reviewed maximum '..contract.max..' for '
-        ..item.field..(contract.rangeReason and(': '..contract.rangeReason)or''))end
+    local value=item.value
+    if contract.max~=nil and desired>contract.max then
+        -- A maximum newer than the SDK the registering mod declares (0.31.2: the network ceilings of a magazine's
+        -- live counts) clamps the value as a logged legacy operation (core/sdk_compatibility.lua); otherwise refused.
+        local clamped,detail=sdk_compatibility.legacy_limit(host_resource(weapon),weapon.name,field.semanticFieldId,
+            desired,contract.max,contract.rangeReason)
+        assert(clamped,'value is above the reviewed maximum '..contract.max..' for '..item.field
+            ..(contract.rangeReason and(': '..contract.rangeReason)or'')..(detail and' ['..detail..']'or''))
+        desired=clamped;value=clamped
+    end
     if field.writeKind=='reorder_native_mode_vector'then
         assert((expected==1 or expected==2)and(expected==field.currentDefault),
             'expect differs from reviewed default fire mode')
@@ -920,7 +928,7 @@ local function validate_change(weapon,item,allow_shared,role,path,phase,allow_un
         ..item.field..': declared='..tostring(expected)..' reviewed='..tostring(canonical)
         ..' resolved='..tostring(field.semanticFieldId))
     return {field=item.field,canonical_field=field.semanticFieldId,descriptor=field,requested_descriptor=requested,
-        semantic_aliases={item.field},expect=item.expect,value=item.value,
+        semantic_aliases={item.field},expect=item.expect,value=value,
         expected=b.encode(expected,storage),desired=b.encode(desired,storage)}
 end
 -- Charge times (WeaponChargeComponent +0/+24/+48) are meant to stay minimum < full < overcharge. The ids are older than

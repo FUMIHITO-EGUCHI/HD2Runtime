@@ -31,13 +31,17 @@ never shared between definitions.
 
 | Field | Unit | Instances | Range |
 | --- | --- | ---: | --- |
-| `attachment.magazine_capacity` | rounds | 43 | non-negative integer |
-| `attachment.starting_magazines` | magazines | 43 | non-negative integer |
-| `attachment.magazines_from_supply` | magazines | 43 | non-negative integer |
-| `attachment.spare_magazines` | magazines | 43 | non-negative integer |
+| `attachment.magazine_capacity` | rounds | 43 | non-negative integer, at most 2047 (0.31.2) |
+| `attachment.starting_magazines` | magazines | 43 | non-negative integer, at most 31 (0.31.2) |
+| `attachment.magazines_from_supply` | magazines | 43 | non-negative integer, at most 31 (0.31.2) |
+| `attachment.spare_magazines` | magazines | 43 | non-negative integer, at most 31 (0.31.2) |
 | `attachment.reload_duration` | seconds | 37 | 0.1 to 20 |
 | `attachment.ergonomics_modifier` | ergonomics | 24 | -100 to 100 |
 
+- **Ammunition maxima (0.31.2).** The live round count is an 11-bit network field and the spare magazines a 5-bit
+  one; the game clamps larger values at the next shot (see
+  [vehicle weapons, Ammunition limits](vehicle-weapons.md#ammunition-limits-0312-offline-only)). A mod that declares
+  an older SDK gets its larger value applied as the maximum, logged as a legacy operation.
 - **Reload duration** exists only where the definition patches it; 6 definitions keep the weapon's
   own reload.
 - **Ergonomics modifier** is the definition's `Add_Ergonomics` stat modifier. Each write also

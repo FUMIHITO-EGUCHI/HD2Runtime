@@ -15,6 +15,7 @@ import generate_entity_authoring
 import live_evidence  # noqa: E402
 import vehicle_tuning_fields  # noqa: E402
 import status_fields  # noqa: E402
+import ammo_limits  # noqa: E402
 import beam_fields  # noqa: E402
 import equipment_fields  # noqa: E402
 
@@ -91,6 +92,9 @@ HEAT = (('heat.capacity', 'capacity', 96, 'Overheat threshold', 'heat_units'),
     ('heat.heat_per_shot', 'heatPerShot', 116, 'Heat per shot', 'heat_units_per_shot'),
     ('heat.heat_per_second', 'heatPerSecond', 120, 'Heat per second', 'heat_units_per_second'),
     ('heat.cool_per_second', 'coolPerSecond', 128, 'Cooling rate', 'heat_units_per_second'))
+NO_RELOAD = ('This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks '
+    'every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no '
+    'effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game.')
 DRONE_MAGAZINES = ('The drone reloads from its backpack: the drone magazines are the backpack DepositComponent (exact '
     'published Max Rounds / Starting Rounds / Mags from Supply), authored through hd2.backpack(name). The drone '
     "weapon's own spare-magazine counts are not what the game publishes and are not exposed.")
@@ -227,6 +231,11 @@ def build(research_path=RESEARCH):
                 'otherConsumers': item['sharedWithWeapons'], 'acknowledgement': item['acknowledgement'],
                 'gameplayEvidence': item['gameplayEvidence'],
                 'backingComponent': item['backing'].get('component') or item['backing']['settings']}
+            if item.get('networkLimit'):
+                # 0.31.2: the network ceiling of the live round / spare-magazine count (scripts/ammo_limits.py).
+                instance.update({key_: item.get(key_) for key_ in ('min', 'max', 'rangeReason', 'networkLimit')})
+            if item.get('reloadComponent'):
+                instance['reloadComponent'] = item['reloadComponent']
             if item.get('lifecycle'):
                 # Turret motion, spread and the shield arm: range, sibling order and when the game reads the member.
                 instance.update({key_: item[key_] for key_ in ('min', 'max', 'rangeReason', 'order', 'lifecycle',
@@ -385,9 +394,12 @@ def build(research_path=RESEARCH):
             else:
                 blocked.append({'field': 'weapon.horizontal_spread / weapon.vertical_spread', 'reason': spread['reason']})
             blocked.append({'field': 'weapon.recoil_* / weapon.sway / weapon.ergonomics', 'reason': RECOIL_BLOCKER})
+            # 0.31.2: capacity and magazine counts are bounded by the network ceilings of the live counts
+            # (scripts/ammo_limits.py: 2047 rounds, 31 spare magazines).
             if 'magazine' in values and vehicle.get('carrier'):
-                field('weapon.capacity', 'Magazine capacity', 'rounds', 'integer', values['magazine']['capacity'],
-                    component('WeaponMagazineComponentData', 136, 'u32'), weapon_target, 'weapon_local')
+                ammo_limits.apply(field('weapon.capacity', 'Magazine capacity', 'rounds', 'integer',
+                    values['magazine']['capacity'], component('WeaponMagazineComponentData', 136, 'u32'),
+                    weapon_target, 'weapon_local'))
                 blocked.append({'field': 'magazine.*', 'reason': DRONE_MAGAZINES})
             elif 'magazine' in values:
                 magazine = values['magazine']
@@ -396,8 +408,12 @@ def build(research_path=RESEARCH):
                         ('magazine.starting_magazines', 'Starting magazines', 'magazines', 140, magazine['magazines']),
                         ('magazine.magazines_from_supply', 'Magazines from supply', 'magazines', 144, magazine['refill']),
                         ('magazine.spare_magazines', 'Maximum spare magazines', 'magazines', 148, magazine['max'])):
-                    field(field_id, name, unit, 'integer', value, component('WeaponMagazineComponentData', offset, 'u32'),
-                        weapon_target, 'weapon_local')
+                    item = ammo_limits.apply(field(field_id, name, unit, 'integer', value,
+                        component('WeaponMagazineComponentData', offset, 'u32'), weapon_target, 'weapon_local'))
+                    if field_id != 'weapon.capacity' and 'WeaponReloadComponentData' not in own:
+                        # The research checks every mount for a WeaponReload record (research/vehicle-weapons
+                        # COMPONENTS); this one owns none, so nothing is known to reload it from its spares.
+                        item['reloadComponent'] = {'present': False, 'note': NO_RELOAD}
             if values.get('reloadDuration'):
                 field('reload.duration', 'Reload duration', 'seconds', 'number', values['reloadDuration'],
                     component('WeaponReloadComponentData', 56, 'f32'), weapon_target, 'weapon_local',

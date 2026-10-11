@@ -193,6 +193,101 @@ class LegacyOperationTests(unittest.TestCase):
         self.assertEqual(len(legacy_lines(self.results['transaction-027'])), 2)
 
 
+BASTION_MG = "hd2.vehicle('TD-220 Bastion MK XVI'):weapon('attach_tank_gun_mg')"
+BASTION_CANNON = "hd2.vehicle('TD-220 Bastion MK XVI'):weapon('attach_tank_gun')"
+# The player report (0.31.2): a Bastion coax capacity of 2500 showed about 2100 for its owner and 500 for a friend.
+MG_CAPACITY = ("hd2.ensure({patch={id='mg-capacity',target=" + BASTION_MG + ",allow_unverified_effect=true,"
+    "field=hd2.fields.weapon.capacity,expect=2000,value=2500}})")
+LIMITS_TRANSACTION = ("hd2.ensure({transaction={id='cannon-ammo',target=" + BASTION_CANNON + ",allow_unverified_effect=true,"
+    "changes={{field=hd2.fields.magazine.spare_magazines,expect=30,value=45},"
+    "{field=hd2.fields.magazine.magazines_from_supply,expect=30,value=31}}}})")
+
+
+class LegacyLimitTests(unittest.TestCase):
+    """0.31.2 bounds a magazine's capacity (2047) and magazine counts (31) by the network fields of the live counts
+    (scripts/ammo_limits.py). A mod that declares an older SDK had no maximum: its larger value is clamped to the
+    ceiling as a logged legacy operation. A mod that declares 0.31.2, or whose declaration cannot be read, is refused."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.results = run_mods([
+            ('mg-0311', modbuilder_wrap('mods/test/limits_0311', '0.31.1', MG_CAPACITY)),
+            ('mg-sdk-0300', sdk.wrap_addon('mods/test/limits_sdk_0300', '0.30.0', MG_CAPACITY)),
+            ('mg-bare', REQUIRE + MG_CAPACITY.replace("'mg-capacity'", "'bare-mg-capacity'")),
+            ('cannon-0311', modbuilder_wrap('mods/test/limits_cannon_0311', '0.31.1', LIMITS_TRANSACTION)),
+        ])
+
+    def test_an_older_sdk_value_above_the_ceiling_applies_clamped_as_legacy(self):
+        for name, sdk_version in (('mg-0311', '0.31.1'), ('mg-sdk-0300', '0.30.0')):
+            op = only(self.results[name])
+            self.assertNotEqual(op['status'], 'rejected', op.get('error'))
+            self.assertEqual(op['sdk'], sdk_version)
+            self.assertEqual([(item['target'], item['field'], item['since'], item['limit']) for item in op['legacy']],
+                [('TD-220 Bastion MK XVI / attach_tank_gun_mg', 'weapon.capacity', '0.31.2', {'value': 2500, 'max': 2047})])
+            line, = legacy_lines(self.results[name])
+            self.assertIn(': legacy SDK ' + sdk_version + ' operation from ', line)
+            self.assertIn('TD-220 Bastion MK XVI / attach_tank_gun_mg weapon.capacity = 2500 is above its maximum 2047 '
+                'since SDK 0.31.2 and is applied as 2047', line)
+            self.assertIn('the network field rounds (11 bits)', line)
+
+    def test_an_unreadable_declaration_is_refused(self):
+        # (A project bound to SDK 0.31.2 is refused the same way: test_the_clamped_value_is_what_is_written. The
+        # wrappers refuse to start a 0.31.2 project on this 0.31.1-versioned runtime, so it is checked directly.)
+        for name, needle in (('mg-bare', 'Runtime could not read the SDK version'),):
+            op = only(self.results[name])
+            self.assertEqual(op['status'], 'rejected')
+            self.assertIn('value is above the reviewed maximum 2047 for weapon.capacity', op['error'])
+            self.assertIn(needle, op['error'])
+            self.assertFalse(op['legacy'])
+            self.assertEqual(legacy_lines(self.results[name]), [])
+
+    def test_only_the_value_above_the_ceiling_is_a_legacy_use(self):
+        op = only(self.results['cannon-0311'])
+        self.assertNotEqual(op['status'], 'rejected', op.get('error'))
+        self.assertEqual([(item['field'], item['limit']) for item in op['legacy']],
+            [('magazine.spare_magazines', {'value': 45, 'max': 31})])
+
+    def test_the_clamped_value_is_what_is_written(self):
+        # The write domain encodes the ceiling, not the declared value; a value within it is untouched.
+        out = run(r'''
+local hd2=require('hd2runtime/api/hd2')
+local compat=require('hd2runtime/core/sdk_compatibility')
+local weapons=require('hd2runtime/domains/player_weapon_writes')
+local attachments=require('hd2runtime/domains/attachment_writes')
+local b=require('hd2runtime/core/bytes')
+local function origin(sdk)return {mod='mods/test/written',sdk=sdk,source='wrapper',pending={},logged={}}end
+local old=origin('0.31.1')
+local spec=compat.with_origin(old,weapons.validate_transaction,{id='x',allow_unverified_effect=true,
+ target=hd2.vehicle('TD-220 Bastion MK XVI'):weapon('attach_tank_gun'),changes={
+ {field=hd2.fields.magazine.spare_magazines,expect=30,value=45},
+ {field=hd2.fields.magazine.magazines_from_supply,expect=30,value=31}}})
+assert(spec.changes[1].desired==b.encode(31,'u32')and spec.changes[1].value==31,'clamped to 31')
+assert(spec.changes[2].desired==b.encode(31,'u32'))
+assert(#old.pending==1 and old.pending[1].limit.value==45 and old.pending[1].limit.max==31)
+-- A magazine attachment definition (the same ceiling on its own delta row).
+local catalog=require('hd2runtime/domains/attachment_authoring')
+local id
+for key,entry in pairs(catalog.attachments)do if entry.fields and entry.fields['attachment.magazine_capacity']then id=key;break end end
+local field=catalog.attachments[id].fields['attachment.magazine_capacity']
+assert(field.max==2047,'attachment capacity bounded')
+local spec2=compat.with_origin(origin('0.31.1'),attachments.validate_patch,{id='y',allow_shared=true,
+ allow_unverified_effect=true,target={resource='weapon_attachment',path='magazine',attachment=id},
+ field='attachment.magazine_capacity',expect=field.currentDefault,value=5000})
+assert(spec2.changes[1].desired==b.encode(2047,'u32'))
+local ok,why=pcall(compat.with_origin,origin('0.31.2'),attachments.validate_patch,{id='y',allow_shared=true,
+ allow_unverified_effect=true,target={resource='weapon_attachment',path='magazine',attachment=id},
+ field='attachment.magazine_capacity',expect=field.currentDefault,value=5000})
+assert(not ok and tostring(why):find('above the reviewed maximum 2047',1,true),tostring(why))
+assert(tostring(why):find('maximum since SDK 0.31.2; mods/test/written declares SDK 0.31.2',1,true),tostring(why))
+ok,why=pcall(compat.with_origin,origin('0.31.2'),weapons.validate_patch,{id='z',allow_unverified_effect=true,
+ target=hd2.vehicle('TD-220 Bastion MK XVI'):weapon('attach_tank_gun_mg'),field=hd2.fields.weapon.capacity,
+ expect=2000,value=2500})
+assert(not ok and tostring(why):find('declares SDK 0.31.2',1,true),tostring(why))
+return 'ok'
+''')
+        self.assertEqual(out, b'ok')
+
+
 class DeclarationTests(unittest.TestCase):
     def test_callback_registrations_use_the_declaration_remembered_for_their_mod(self):
         # The SDK wrapper runs the startup as the mod (run_as). A later registration from that mod's callback (here a
@@ -295,6 +390,28 @@ class LegacyTableTests(unittest.TestCase):
             {'magazine.spare_magazines', 'magazine.starting_magazines', 'magazine.magazines_from_supply',
              'rounds.spare_rounds', 'rounds.starting_rounds', 'rounds.rounds_from_supply'})
         self.assertEqual([item['since'] for item in history['releases']], ['0.28.0', '0.30.0', '0.31.0'])
+        # 0.31.2: the network ceilings of a magazine's live counts (scripts/ammo_limits.py), on every field the SDK at
+        # v0.31.1 let mods write above them: player, support and mounted weapons and magazine attachments.
+        self.assertEqual([item['since'] for item in history['limitReleases']], ['0.31.2'])
+        limits = {}
+        for entry in history['limits']:
+            self.assertEqual(entry['since'], '0.31.2')
+            self.assertEqual(entry['max'], 2047 if entry['field'].endswith('capacity') else 31)
+            self.assertIsNone(entry['previousMax'])
+            limits.setdefault(entry['resource'], set()).add(entry['field'])
+        self.assertEqual(limits, {'player_weapon': {'magazine.capacity', 'magazine.starting_magazines',
+                'magazine.magazines_from_supply', 'magazine.spare_magazines'},
+            'support_weapon': {'weapon.capacity', 'magazine.starting_magazines', 'magazine.magazines_from_supply',
+                'magazine.spare_magazines'},
+            'vehicle_weapon': {'weapon.capacity', 'magazine.starting_magazines', 'magazine.magazines_from_supply',
+                'magazine.spare_magazines'},
+            'weapon_attachment': {'attachment.magazine_capacity', 'attachment.starting_magazines',
+                'attachment.magazines_from_supply', 'attachment.spare_magazines'}})
+        # The team-reload weapons' own magazine rows were bounded to 31 in 0.31.0: no 0.31.2 entry.
+        self.assertFalse([e for e in history['limits'] if e['target'] == 'GR-8 Recoilless Rifle'
+            and e['field'].startswith('magazine.')])
+        self.assertIn(('vehicle_weapon', 'TD-220 Bastion MK XVI / attach_tank_gun_mg', 'weapon.capacity'),
+            {(e['resource'], e['target'], e['field']) for e in history['limits']})
         # Every entry still names a field that needs the acknowledgement now.
         current = legacy_table.fields(legacy_table.current_catalogs())
         for entry in history['entries']:

@@ -2754,7 +2754,14 @@
       "otherConsumers": [],
       "acknowledgement": null,
       "gameplayEvidence": "Better M-103 FRV Turret 1.31",
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-103-supply-frv-gun/magazine-starting-magazines/754a1bbcbbfe8285",
@@ -2777,7 +2784,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-103-supply-frv-gun/magazine-magazines-from-supply/d952d443f10d1bcb",
@@ -2800,7 +2814,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-103-supply-frv-gun/magazine-spare-magazines/eb7365f8f46f9c8b",
@@ -2823,7 +2844,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-103-supply-frv-gun/turret-yaw-speed/8c5335d7baabab5c",
@@ -3826,7 +3854,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-attach-tank-gun/magazine-starting-magazines/e430394a1c727669",
@@ -3849,7 +3884,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-attach-tank-gun/magazine-magazines-from-supply/0c86cd4cfe59941b",
@@ -3872,7 +3914,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-attach-tank-gun/magazine-spare-magazines/9e7c4d81efa312e7",
@@ -3895,7 +3944,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-attach-tank-gun/reload-duration/b0452652244b77e6",
@@ -4874,7 +4930,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-2/magazine-starting-magazines/04ba3133307e4af5",
@@ -4897,7 +4960,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-2/magazine-magazines-from-supply/ea31198320b9cc3c",
@@ -4920,7 +4990,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-2/magazine-spare-magazines/253bcefe3420bc63",
@@ -4943,7 +5020,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-2/reload-duration/38b422f4e9f31d02",
@@ -5270,7 +5354,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-3/magazine-starting-magazines/593762734892635c",
@@ -5295,7 +5386,18 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-3/magazine-magazines-from-supply/22de5b39770f66ba",
@@ -5320,7 +5422,18 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-3/magazine-spare-magazines/aa79290b8a430e87",
@@ -5345,7 +5458,18 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-3/entity-health/a583005b0420e3c3",
@@ -6697,7 +6821,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-4/magazine-starting-magazines/bae76afdd3986801",
@@ -6722,7 +6853,18 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-4/magazine-magazines-from-supply/cd4d7154d3b7ac2f",
@@ -6747,7 +6889,18 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-4/magazine-spare-magazines/c21290971eae92da",
@@ -6772,7 +6925,18 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-110-maelstrom-slot-4/entity-health/867701ab7e7c8a8a",
@@ -7989,7 +8153,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-104-incinerator-frv-gun/magazine-starting-magazines/4b31e7a32e201f1f",
@@ -8012,7 +8183,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-104-incinerator-frv-gun/magazine-magazines-from-supply/4d740d1d1b0e1dbd",
@@ -8035,7 +8213,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-104-incinerator-frv-gun/magazine-spare-magazines/ec1c7d008601e3fa",
@@ -8058,7 +8243,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-104-incinerator-frv-gun/reload-duration/1715dad61eadee85",
@@ -8579,7 +8771,14 @@
       "otherConsumers": [],
       "acknowledgement": null,
       "gameplayEvidence": "Emancipator Ammo v1",
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-49-emancipator-exosuit-left-gun/magazine-starting-magazines/41aabca78670b9f2",
@@ -8602,7 +8801,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-49-emancipator-exosuit-left-gun/magazine-magazines-from-supply/6f09082592ee1a04",
@@ -8625,7 +8835,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-49-emancipator-exosuit-left-gun/magazine-spare-magazines/20b61aa19b170fde",
@@ -8648,7 +8869,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-49-emancipator-exosuit-left-gun/entity-health/16d56cc91cd0b8ff",
@@ -10217,7 +10449,14 @@
       "otherConsumers": [],
       "acknowledgement": null,
       "gameplayEvidence": "Emancipator Ammo v1",
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-49-emancipator-exosuit-right-gun/magazine-starting-magazines/90dc3c90406169e0",
@@ -10240,7 +10479,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-49-emancipator-exosuit-right-gun/magazine-magazines-from-supply/8f8d76d0c8e34ec5",
@@ -10263,7 +10513,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-49-emancipator-exosuit-right-gun/magazine-spare-magazines/371c19b36b37dc99",
@@ -10286,7 +10547,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-49-emancipator-exosuit-right-gun/entity-health/41ca2b3d2f2cde6f",
@@ -11855,7 +12127,14 @@
       "otherConsumers": [],
       "acknowledgement": null,
       "gameplayEvidence": "EXO-45 Patriot Buff 1.12.0",
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-45-patriot-exosuit-left-gun/magazine-starting-magazines/eebc71adda6d8f18",
@@ -11878,7 +12157,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-45-patriot-exosuit-left-gun/magazine-magazines-from-supply/22ac5499ff8507da",
@@ -11901,7 +12191,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-45-patriot-exosuit-left-gun/magazine-spare-magazines/c466109401fce6aa",
@@ -11924,7 +12225,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-45-patriot-exosuit-left-gun/entity-health/dcde91ac8a6f2784",
@@ -13178,7 +13490,14 @@
       "otherConsumers": [],
       "acknowledgement": null,
       "gameplayEvidence": "EXO-45 Patriot Buff 1.12.0",
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-45-patriot-exosuit-right-gun/magazine-starting-magazines/11ad99e011bd6265",
@@ -13201,7 +13520,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-45-patriot-exosuit-right-gun/magazine-magazines-from-supply/dcb7c896e92021ed",
@@ -13224,7 +13554,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-45-patriot-exosuit-right-gun/magazine-spare-magazines/77f1281b66e5d0d6",
@@ -13247,7 +13588,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-45-patriot-exosuit-right-gun/entity-health/a0dc424dc4ecfcf6",
@@ -14353,7 +14705,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-102-gunner-frv-gun/magazine-starting-magazines/5c362780dcc0c6d7",
@@ -14378,7 +14737,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-102-gunner-frv-gun/magazine-magazines-from-supply/71ae78cfe85db82e",
@@ -14403,7 +14769,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-102-gunner-frv-gun/magazine-spare-magazines/d611d66cb302a6e4",
@@ -14428,7 +14801,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/m-102-gunner-frv-gun/reload-duration/dd22a4c6f8327196",
@@ -15289,7 +15669,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-220-bastion-mk-xvi-attach-tank-gun/magazine-starting-magazines/e46f3fe7192c8aa3",
@@ -15312,7 +15699,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-220-bastion-mk-xvi-attach-tank-gun/magazine-magazines-from-supply/941ccbdd5968fe33",
@@ -15335,7 +15729,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-220-bastion-mk-xvi-attach-tank-gun/magazine-spare-magazines/860a7cd024a33c14",
@@ -15358,7 +15759,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-220-bastion-mk-xvi-attach-tank-gun/reload-duration/de840ca0feb842eb",
@@ -16757,7 +17165,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-220-bastion-mk-xvi-attach-tank-gun-mg/magazine-starting-magazines/88f5c6c8870ce2ee",
@@ -16780,7 +17195,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-220-bastion-mk-xvi-attach-tank-gun-mg/magazine-magazines-from-supply/5223d083cf0d23c3",
@@ -16803,7 +17229,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-220-bastion-mk-xvi-attach-tank-gun-mg/magazine-spare-magazines/0674344df83f486b",
@@ -16826,7 +17263,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/td-220-bastion-mk-xvi-attach-tank-gun-mg/turret-yaw-speed/6f3752abb19aa6db",
@@ -18548,7 +18996,14 @@
       "otherConsumers": [],
       "acknowledgement": null,
       "gameplayEvidence": "Lumberer Ammo v1.1",
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-51-lumberer-exosuit-left-gun/magazine-starting-magazines/d4906f81e1b967b6",
@@ -18571,7 +19026,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-51-lumberer-exosuit-left-gun/magazine-magazines-from-supply/7fa07354d9f36ba4",
@@ -18594,7 +19060,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-51-lumberer-exosuit-left-gun/magazine-spare-magazines/2a7058f12cfb57c9",
@@ -18617,7 +19094,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-51-lumberer-exosuit-left-gun/entity-health/1793402dfe00b347",
@@ -19207,7 +19695,14 @@
       "otherConsumers": [],
       "acknowledgement": null,
       "gameplayEvidence": "Lumberer Ammo v1.1",
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-51-lumberer-exosuit-right-gun/magazine-starting-magazines/3b2334ca19775298",
@@ -19230,7 +19725,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-51-lumberer-exosuit-right-gun/magazine-magazines-from-supply/c3169056a0ba375b",
@@ -19253,7 +19759,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-51-lumberer-exosuit-right-gun/magazine-spare-magazines/ae5e466176252080",
@@ -19276,7 +19793,18 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      },
+      "reloadComponent": {
+        "present": false,
+        "note": "This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game."
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/exo-51-lumberer-exosuit-right-gun/entity-health/faead0c8d384bcb4",
@@ -20638,7 +21166,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/frv-super-earth-variant-gun/magazine-starting-magazines/634fda9bb0156bff",
@@ -20663,7 +21198,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/frv-super-earth-variant-gun/magazine-magazines-from-supply/5dcb2abe45bb656f",
@@ -20688,7 +21230,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/frv-super-earth-variant-gun/magazine-spare-magazines/81c0346fea31348b",
@@ -20713,7 +21262,14 @@
       ],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/frv-super-earth-variant-gun/reload-duration/820b143198861bb4",
@@ -21551,7 +22107,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/gater-oil-rig-turret/magazine-starting-magazines/74252c7dc8a1c4ac",
@@ -21574,7 +22137,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/gater-oil-rig-turret/magazine-magazines-from-supply/9cc09f924cc0151e",
@@ -21597,7 +22167,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/gater-oil-rig-turret/magazine-spare-magazines/672afcb3412550ee",
@@ -21620,7 +22197,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 31,
+      "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write",
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/gater-oil-rig-turret/reload-duration/bbf7c67edec14040",
@@ -23272,7 +23856,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/ax-ar-23-guard-dog-gun/reload-duration/2ce5f62ae4be3c6f",
@@ -24755,7 +25346,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/ax-flam-75-hot-dog-gun/damage-primary-standard-damage/0e42f068aa71b150",
@@ -25142,7 +25740,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/ax-arc-3-k-9-gun/arc-primary-velocity/5ad6657020784f51",
@@ -25693,7 +26298,14 @@
       "otherConsumers": [],
       "acknowledgement": "allow_unverified_effect",
       "gameplayEvidence": null,
-      "backingComponent": "WeaponMagazineComponentData"
+      "backingComponent": "WeaponMagazineComponentData",
+      "min": null,
+      "max": 2047,
+      "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count",
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds"
+      }
     },
     {
       "instanceKey": "vehicle-field/v1/ax-tx-13-dog-breath-gun/damage-primary-standard-damage/d941cb0b08ce7e80",

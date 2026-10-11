@@ -189,10 +189,14 @@ local worker=coroutine.create(function()
   rejects(function()domain.validate_patch(request(id,name,field.currentDefault,value,{allow_shared=false}))end,
    'allow_shared','missing shared acknowledgement')
   result.acknowledgementRejections=result.acknowledgementRejections+2
+  -- (0.31.2: a magazine's capacity and counts have a maximum, the network ceiling, and no minimum.)
   if field.max then
    rejects(function()domain.validate_patch(request(id,name,field.currentDefault,field.max+1))end,'maximum','range')
+   result.rangeRejections=result.rangeRejections+1
+  end
+  if field.min then
    rejects(function()domain.validate_patch(request(id,name,field.currentDefault,field.min-1))end,'minimum','range')
-   result.rangeRejections=result.rangeRejections+2
+   result.rangeRejections=result.rangeRejections+1
   end
  end
  -- One weapon, several magazine definitions: distinct records, independent edits.

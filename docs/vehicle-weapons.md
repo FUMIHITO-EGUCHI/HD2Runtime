@@ -49,8 +49,8 @@ weapon-local records.
 | --- | --- | --- |
 | `hd2.fields.weapon.fire_rate` | weapon | `ProjectileWeaponComponentData` +8 (rpm) |
 | `hd2.fields.weapon.horizontal_spread`, `vertical_spread` | weapon (projectile mounts) | `WeaponDataComponentData` +84 / +88 (mrad, full width; see Spread) |
-| `hd2.fields.weapon.capacity` | weapon | `WeaponMagazineComponentData` +136 |
-| `hd2.fields.magazine.starting_magazines`, `magazines_from_supply`, `spare_magazines` | weapon | `WeaponMagazineComponentData` +140 / +144 / +148 |
+| `hd2.fields.weapon.capacity` | weapon | `WeaponMagazineComponentData` +136 (at most 2047, see Ammunition limits) |
+| `hd2.fields.magazine.starting_magazines`, `magazines_from_supply`, `spare_magazines` | weapon | `WeaponMagazineComponentData` +140 / +144 / +148 (at most 31) |
 | `hd2.fields.reload.duration` | weapon | `WeaponReloadComponentData` +56 (only where the value is non-zero) |
 | `hd2.fields.entity.health`, `hd2.fields.entity.armor` | weapon | The mount's own `HealthComponentData` +0 / +280 |
 | `hd2.fields.beam.fire_rate` | weapon | `BeamWeaponComponentData` +104 (rpm: how often the beam applies damage) |
@@ -64,6 +64,33 @@ weapon-local records.
 | `hd2.fields.damage.player_standard_damage`, `player_durable_damage`, `ap_*`, `demolition`, `stagger`, `push_force` | `weapon:projectile()`, or the spray attack | Shared `DamageInfo` |
 | `hd2.fields.explosion.*_radius`, `hd2.fields.explosion.damage_*` | `weapon:explosion()` | Shared `ExplosionSettings` and its `DamageInfo` |
 | `hd2.fields.turret.yaw_speed`, `pitch_speed`, `yaw_min`, `yaw_max`, `pitch_min`, `pitch_max` | weapon (turret mounts only) | The mount's own `TurretComponentData` +12 / +8 / +28 / +32 / +20 / +24 (see Turret motion) |
+
+## Ammunition limits (0.31.2, offline only)
+
+The game sends a weapon's live ammunition to the other players as network fields of fixed size
+(`research/docs/pelican-cas-F5FEE03DCFDB.md`, section 20a):
+
+| Live count | Network field | Range |
+| --- | --- | --- |
+| rounds in the magazine | `rounds`, 11 bits | 0 to 2047 |
+| spare magazines | `magazines_remaining`, 5 bits | 0 to 31 |
+
+The engine clamps a larger value at the next shot. A capacity above 2047 therefore shows only until the first shot,
+and teammates see a different count. A player reported a TD-220 Bastion coax capacity of 2500: about 2100 rounds for
+its owner and 500 for a friend.
+
+So since 0.31.2 `weapon.capacity` takes at most **2047**, and `magazine.starting_magazines`, `magazines_from_supply`
+and `spare_magazines` at most **31**. The same maxima apply to support and player weapons and to magazine
+attachments. A larger value is refused, with a message naming the network field.
+
+A mod that declares an SDK older than 0.31.2 had no maximum. Its larger value is applied as the maximum (2047 or 31)
+and logged as a legacy operation; see [legacy SDK compatibility](legacy-sdk-compatibility.md).
+
+**Mounts without a reload.** The TD-220 Bastion coax (`attach_tank_gun_mg`), the Exosuit arms and the TD-110
+Maelstrom's twin launchers own no `WeaponReload` component. The research checks every mount for one
+(`research/vehicle-weapons-F5FEE03DCFDB.json`). Their spare-magazine fields stay writable, but no reload is known to use
+them, so they are expected to have no effect. The catalog flags them with `reloadComponent.present = false`. This is
+not proven from game code.
 
 ## Turret motion
 

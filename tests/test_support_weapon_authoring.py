@@ -94,6 +94,24 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
         self.assertEqual(sum(len(weapon['fieldInstanceKeys'])
             for weapon in self.capabilities['weapons']),1933)
 
+    def test_ammunition_is_bounded_by_the_network_fields(self):
+        # 0.31.2 (scripts/ammo_limits.py): a magazine's capacity is bounded by the 11-bit live round count (2047) and
+        # its magazine counts by the 5-bit spare-magazine count (31); a team-reload weapon's own magazine rows keep
+        # their 0.31.0 maximum, which is the same ceiling.
+        found={}
+        for field in self.capabilities['fieldInstances']:
+            if field['semanticFieldId']in('weapon.capacity','magazine.starting_magazines',
+                    'magazine.magazines_from_supply','magazine.spare_magazines'):
+                found[(field['supportWeapon'],field['semanticFieldId'])]=field
+        self.assertTrue(found)
+        for (weapon,field_id),field in found.items():
+            limit=field['networkLimit']
+            self.assertEqual(limit['max'],2047 if field_id=='weapon.capacity'else 31,(weapon,field_id))
+            self.assertIn('network field',limit['rangeReason'])
+            self.assertLessEqual(field['value']['baseline'],limit['max'])
+        team=found[('GR-8 Recoilless Rifle','magazine.spare_magazines')]
+        self.assertEqual((team['teamReload']['max'],team['networkLimit']['max']),(31,31))
+
     def test_gui_can_group_recoilless_instances_without_native_layout_knowledge(self):
         instances=[item for item in self.capabilities['fieldInstances']
             if item['supportWeapon']=='GR-8 Recoilless Rifle']

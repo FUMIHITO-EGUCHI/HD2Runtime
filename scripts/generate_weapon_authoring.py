@@ -19,6 +19,7 @@ import weapon_mode_fields
 import weapon_sound_fields
 import presentation_fields
 import status_fields
+import ammo_limits
 import equipment_fields
 import beam_fields
 import missile_fields
@@ -455,7 +456,9 @@ def build(catalog_path=CATALOG):
         elif 'WeaponMagazineComponentData' in ownership:
             magazine_backend=component_backend(candidate,'WeaponMagazineComponentData',136,'u32')
             if capacity.get('status')=='RESOLVED':
-                fields.append(make_field('weapon.capacity',capacity.get('value'),magazine_backend,unique,blocked))
+                # 0.31.2: bounded by the network ceilings of the live counts (scripts/ammo_limits.py).
+                fields.append(ammo_limits.apply(make_field('weapon.capacity',capacity.get('value'),magazine_backend,
+                    unique,blocked)))
             else:
                 fields.append(make_field('weapon.capacity',None,editable=False,
                     reason=blocked or capacity.get('reason') or 'Effective capacity is unresolved.'))
@@ -473,9 +476,9 @@ def build(catalog_path=CATALOG):
                     fields.append(make_field(field_id,value,editable=False,
                         reason='Default customization option owns the effective value; its override record is not approved for writes.'))
                 else:
-                    fields.append(make_field(field_id,value,
+                    fields.append(ammo_limits.apply(make_field(field_id,value,
                         component_backend(candidate,'WeaponMagazineComponentData',offset,'u32'),
-                        unique,blocked))
+                        unique,blocked)))
             ammo_box=magazine_values.get('magazinesFromAmmoBox',{}).get('value')
             fields.append(make_field('magazine.magazines_from_ammo_box',ammo_box,editable=False,
                 reason=definitions['magazine.magazines_from_ammo_box']['reason'],derived=True))

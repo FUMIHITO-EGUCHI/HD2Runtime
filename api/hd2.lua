@@ -250,8 +250,9 @@ local function operations()
         local result=type(h.result)=='table'and h.result or{}
         local legacy={}
         for _,use in ipairs(origin.legacy or{})do
+            -- limit (0.31.2): {value, max} of a value above a maximum newer than the mod's SDK, applied as max.
             legacy[#legacy+1]={target=use.target,field=use.field:match('([^|]*)$'),acknowledgement=use.acknowledgement,
-                since=use.since}
+                since=use.since,limit=use.limit and{value=use.limit.value,max=use.limit.max}or nil}
         end
         out[index]={kind=item.kind,id=item.id,mod=origin.mod,sdk=origin.sdk,sdk_source=origin.source,
             status=h.status,result=result.status,code=result.code,error=h.error or result.reason,runs=h.runs,

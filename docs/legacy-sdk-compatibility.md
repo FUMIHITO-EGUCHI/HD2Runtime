@@ -75,6 +75,44 @@ The AyakaMods weaponry rebalance (SDK 0.27.0, `tests/fixtures/user-reports/ayaka
 mod: its Epoch plan (partial-charge explosion radii and damage, partial-charge projectile velocity) applies as a legacy
 operation and logs one line per field.
 
+## Maxima added in 0.31.2: clamped, not refused
+
+0.31.2 bounds a magazine's capacity by 2047 and its magazine counts (starting, from supply, maximum spare) by 31. Those
+are the network fields of the live round and spare-magazine counts, and the game clamps a larger value at the next
+shot ([vehicle weapons, Ammunition limits](vehicle-weapons.md#ammunition-limits-0312-offline-only)). Up to 0.31.1 these
+fields had no maximum. The 444 fields involved are listed in the `limits` list of
+`schemas/legacy_acknowledgements.json` (`scripts/generate_legacy_acknowledgements.py --limits v0.31.1 0.31.2`). They
+cover player weapons, support weapons, mounted weapons and magazine attachments; the runtime lookup is
+`network_limit` in `domains/legacy_acknowledgements.lua`.
+
+| Mod declares | Value above the maximum |
+| --- | --- |
+| SDK older than 0.31.2 | applied **as the maximum** (2047 or 31), logged as a legacy operation |
+| SDK 0.31.2 or later | refused |
+| unknown (not readable) | refused |
+
+Why the value is clamped rather than refused or written as it is:
+- Refusing would break published mods: a refused field refuses its whole patch, transaction or plan.
+- Writing the larger value would keep the bug the maximum fixes: a count the game cuts at the next shot, which
+  teammates read differently.
+- Clamping applies the most the game carries. For the mod's own player this is nearly the same result, and every
+  player sees the same count.
+
+0.31.0 had no such path when it bounded the team-reload weapons' own magazine rows by 31: those rows also gained
+`allow_unverified_effect` then, and an older mod's larger value was refused. Those rows keep that rule and have no
+0.31.2 entry.
+
+The log line names the declared and applied values:
+
+```
+[HD2Runtime] ensure mg-capacity: legacy SDK 0.31.1 operation from mods/example: TD-220 Bastion MK XVI / attach_tank_gun_mg
+weapon.capacity = 2500 is above its maximum 2047 since SDK 0.31.2 and is applied as 2047, the most the game carries
+(SDK 0.31.1 had no maximum). Set it to 2047 or less, or rebind the project to SDK 0.31.2 or later and re-export it.
+Why: the live round count is the network field rounds (11 bits): ...
+```
+
+`hd2.diagnostics.operations()` lists such a use with `limit = {value, max}` in its `legacy` entry.
+
 ## How Runtime reads the declared SDK version
 
 Mods do not pass their SDK version to Runtime. Every published addon wrapper keeps the version its mod was built

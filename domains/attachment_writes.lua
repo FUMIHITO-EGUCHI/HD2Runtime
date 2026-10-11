@@ -11,6 +11,7 @@ local b=require('hd2runtime/core/bytes')
 local discover=require('hd2runtime/runtime/discover')
 local profile=require('hd2runtime/schemas/current')
 local database=require('hd2runtime/domains/attachment_authoring')
+local sdk_compatibility=require('hd2runtime/core/sdk_compatibility')
 local M={}
 local MAX_CHANGES=6
 -- Target paths: the definition's customization slot (WeaponCustomizationSlot Magazine, Muzzle, Optics, Underbarrel).
@@ -42,7 +43,8 @@ local function validate_value(field,value,label)
         assert(value%1==0 and value>=0 and value<=4294967295,'magazine attachment ammo values must be non-negative integers')
     end
     if field.min then assert(value>=field.min,label..' is below the reviewed minimum '..field.min)end
-    if field.max then assert(value<=field.max,label..' is above the reviewed maximum '..field.max)end
+    if field.max then assert(value<=field.max,label..' is above the reviewed maximum '..field.max
+        ..(field.rangeReason and(': '..field.rangeReason)or''))end
 end
 local function validate_change(entry,item,request)
     assert(type(item)=='table','change must be a descriptor')
@@ -67,11 +69,21 @@ local function validate_change(entry,item,request)
         entry.slot..' attachments apply to every weapon that equips them; allow_shared=true is required')
     assert(request.allow_unverified_effect==true,
         entry.slot..' attachment writes require allow_unverified_effect=true (re-application is not gameplay-proven)')
-    validate_value(field,item.expect,'expect');validate_value(field,item.value,'value')
+    local value=item.value
+    if field.max and type(value)=='number'and value>field.max then
+        -- A maximum newer than the SDK the registering mod declares (0.31.2: the network ceilings of a magazine's live
+        -- counts) clamps the value as a logged legacy operation (core/sdk_compatibility.lua); otherwise refused.
+        local clamped,detail=sdk_compatibility.legacy_limit('weapon_attachment',entry.semanticId,item.field,value,
+            field.max,field.rangeReason)
+        assert(clamped,'value is above the reviewed maximum '..field.max..' for '..item.field
+            ..(field.rangeReason and(': '..field.rangeReason)or'')..(detail and' ['..detail..']'or''))
+        value=clamped
+    end
+    validate_value(field,item.expect,'expect');validate_value(field,value,'value')
     assert(same(item.expect,field.currentDefault,field.storage),'expect differs from reviewed current value for '..item.field)
     return {field=item.field,canonical_field=item.field,descriptor=field,
-        expected=b.encode(field.currentDefault,field.storage),desired=b.encode(item.value,field.storage),
-        expect=item.expect,value=item.value}
+        expected=b.encode(field.currentDefault,field.storage),desired=b.encode(value,field.storage),
+        expect=item.expect,value=value}
 end
 local function validate(request,multiple)
     assert(type(request)=='table',(multiple and'transaction'or'patch')..' requires a descriptor')

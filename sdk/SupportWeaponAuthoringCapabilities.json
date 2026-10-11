@@ -9371,6 +9371,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -9474,6 +9479,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -9579,6 +9589,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -9682,6 +9697,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -27538,6 +27558,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -27641,6 +27666,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -27746,6 +27776,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -27849,6 +27884,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -49020,6 +49060,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -49125,6 +49170,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -49232,6 +49282,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -49337,6 +49392,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -60390,6 +60450,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -60495,6 +60560,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -60602,6 +60672,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -60707,6 +60782,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -68963,6 +69043,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -69066,6 +69151,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -69171,6 +69261,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -69274,6 +69369,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -77447,6 +77547,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -77550,6 +77655,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -77655,6 +77765,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -77758,6 +77873,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -86715,6 +86835,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -86825,6 +86950,11 @@
         "research": "research/team-reload-ammo-F5FEE03DCFDB.json",
         "min": 0,
         "max": 31,
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
@@ -86939,6 +87069,11 @@
         "max": 31,
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -87049,6 +87184,11 @@
         "research": "research/team-reload-ammo-F5FEE03DCFDB.json",
         "min": 0,
         "max": 31,
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
@@ -94229,6 +94369,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -94332,6 +94477,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -94437,6 +94587,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -94540,6 +94695,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -99450,6 +99610,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -99553,6 +99718,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -99658,6 +99828,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -99761,6 +99936,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -123944,6 +124124,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -124054,6 +124239,11 @@
         "research": "research/team-reload-ammo-F5FEE03DCFDB.json",
         "min": 0,
         "max": 31,
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
@@ -124168,6 +124358,11 @@
         "max": 31,
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -124278,6 +124473,11 @@
         "research": "research/team-reload-ammo-F5FEE03DCFDB.json",
         "min": 0,
         "max": 31,
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
@@ -156338,6 +156538,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -156443,6 +156648,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -156550,6 +156760,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -156655,6 +156870,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -162380,6 +162600,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -162485,6 +162710,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -162592,6 +162822,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -162697,6 +162932,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -168257,6 +168497,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -168362,6 +168607,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -168469,6 +168719,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "stratagem_payload",
@@ -168574,6 +168829,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -173155,6 +173415,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -173258,6 +173523,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -173363,6 +173633,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -173466,6 +173741,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -178013,6 +178293,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -178116,6 +178401,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -178221,6 +178511,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -178324,6 +178619,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -191028,6 +191328,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -191131,6 +191436,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -191236,6 +191546,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -191339,6 +191654,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -212974,6 +213294,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -213084,6 +213409,11 @@
         "research": "research/team-reload-ammo-F5FEE03DCFDB.json",
         "min": 0,
         "max": 31,
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
@@ -213198,6 +213528,11 @@
         "max": 31,
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -213308,6 +213643,11 @@
         "research": "research/team-reload-ammo-F5FEE03DCFDB.json",
         "min": 0,
         "max": 31,
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
@@ -226087,6 +226427,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -226190,6 +226535,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -226295,6 +226645,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -226398,6 +226753,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -237667,6 +238027,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -237770,6 +238135,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -237875,6 +238245,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -237978,6 +238353,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -251522,6 +251902,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -251632,6 +252017,11 @@
         "research": "research/team-reload-ammo-F5FEE03DCFDB.json",
         "min": 0,
         "max": 31,
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
@@ -251746,6 +252136,11 @@
         "max": 31,
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -251856,6 +252251,11 @@
         "research": "research/team-reload-ammo-F5FEE03DCFDB.json",
         "min": 0,
         "max": 31,
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
         "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
@@ -260506,6 +260906,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 2047,
+        "networkField": "rounds",
+        "rangeReason": "the live round count is the network field rounds (11 bits): the game clamps it to 2047 at the next shot, so a larger capacity shows only until the first shot and teammates see a different count"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -260609,6 +261014,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [
@@ -260714,6 +261124,11 @@
         "acknowledgement": null,
         "acknowledgementReason": null
       },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+      },
       "resolution": {
         "rootChain": [
           "weapon_entity"
@@ -260817,6 +261232,11 @@
         "allowSharedRequired": false,
         "acknowledgement": null,
         "acknowledgementReason": null
+      },
+      "networkLimit": {
+        "max": 31,
+        "networkField": "magazines_remaining",
+        "rangeReason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
       },
       "resolution": {
         "rootChain": [

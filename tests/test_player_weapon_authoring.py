@@ -46,6 +46,10 @@ class PlayerWeaponAuthoringTests(unittest.TestCase):
                     self.assertEqual((field['min'],field['max']),RANGED_0_30_4[field['semanticFieldId']])
                 elif field.get('spawnedEntity'):   # 0.31.0 missile fields (research/wasp-rocket)
                     self.assertIsNotNone(field['min']);self.assertGreater(field['max'],field['min'])
+                elif field.get('networkLimit'):   # 0.31.2: the network ceilings of the live ammunition counts
+                    self.assertEqual((field['min'],field['max']),
+                        (None,2047 if field['semanticFieldId'].endswith('capacity') else 31))
+                    self.assertIn('network field',field['rangeReason'])
                 else:
                     self.assertIsNone(field['min']);self.assertIsNone(field['max'])
                 if field['semanticFieldId']=='weapon.default_fire_mode':

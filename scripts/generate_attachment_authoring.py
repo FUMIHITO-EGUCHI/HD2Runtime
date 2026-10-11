@@ -17,6 +17,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from migration import overlay as migration_overlay  # noqa: E402  build-migration hook
 import generate_entity_authoring
+import ammo_limits  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / 'research/magazine-attachments-F5FEE03DCFDB.json'
@@ -220,6 +221,10 @@ def build(research_path=RESEARCH):
                 'backing': {'kind': 'entity_delta', 'component': component}}
             if 'guard' in native:
                 runtime['guard'] = {k: native['guard'][k] for k in ('componentOffset', 'dataOffset', 'u32')}
+            # 0.31.2: a magazine's capacity and magazine counts are bounded by the network ceilings of the live
+            # counts (scripts/ammo_limits.py), like the weapon's own fields.
+            ammo_limits.apply(fields[-1], field_id)
+            ammo_limits.apply(runtime, field_id)
             runtime_fields[field_id] = runtime
         public_attachments.append({'semanticId': item['semanticId'], 'name': item['debugName'],
             'nameUnique': names[item['debugName']] == 1, 'slot': 'magazine',

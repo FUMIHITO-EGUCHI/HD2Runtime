@@ -136,6 +136,34 @@ function M.legacy(acknowledgement,resource,target,field,reason)
         ..(origin and origin.mod or'this mod')..', so the '..since..' rule applies'
 end
 
+-- A later SDK can also bound a field an earlier one let mods write without a maximum (0.31.2: a weapon's magazine
+-- capacity and magazine counts, by the network fields of the live counts: scripts/ammo_limits.py). A write domain asks
+-- this when `value` is above the field's maximum. When the maximum came in an SDK newer than the one the registering
+-- mod declares (the "network_limit" table, from schemas/legacy_acknowledgements.json "limits"), the value is clamped
+-- to `maximum` (the most the game carries) and the use is recorded as a legacy operation: returns the clamped value.
+-- Otherwise nil and, for a field whose maximum is new, a clause for the refusal. Mods that declare that SDK or a later
+-- one, and mods whose declaration cannot be read, keep the refusal.
+function M.legacy_limit(resource,target,field,value,maximum,reason)
+    local entry=(((table_.network_limit or{})[resource]or{})[target]or{})[field]
+    if not entry or type(value)~='number'or value<=maximum then return nil end
+    local origin=M.current()
+    if origin and origin.sdk and M.older(origin.sdk,entry.since)then
+        local key='limit\0'..resource..'\0'..target..'\0'..field
+        if not origin.logged[key]then
+            origin.logged[key]=true
+            origin.pending[#origin.pending+1]={limit={value=value,max=maximum},resource=resource,target=target,
+                field=field,since=entry.since,reason=reason,key=key}
+        end
+        require('hd2runtime/runtime/metrics').count('compatibility.legacy_checks')
+        return maximum
+    end
+    if origin and origin.sdk then
+        return nil,'maximum since SDK '..entry.since..'; '..origin.mod..' declares SDK '..origin.sdk
+    end
+    return nil,'maximum since SDK '..entry.since..'; Runtime could not read the SDK version of '
+        ..(origin and origin.mod or'this mod')..', so the '..entry.since..' rule applies'
+end
+
 -- Log the legacy uses a successful validation recorded on `origin`, once each, and move them to origin.legacy.
 local function display(field)return(field:match('([^|]*)$'))end
 function M.flush(origin,kind,id)
@@ -144,18 +172,29 @@ function M.flush(origin,kind,id)
     for _,use in ipairs(origin.pending)do
         origin.legacy[#origin.legacy+1]=use
         require('hd2runtime/runtime/metrics').count('compatibility.legacy_operations')
-        log.emit('[HD2Runtime] '..kind..' '..tostring(id)..': legacy SDK '..origin.sdk..' operation from '..origin.mod
-            ..': '..use.target..' '..display(use.field)..' needs '..use.acknowledgement..'=true since SDK '..use.since
-            ..' and is applied without it, as SDK '..origin.sdk..' allowed. Rebind the project to SDK '..use.since
-            ..' or later and re-export it, or add '..use.acknowledgement..'=true to the operation. Why it is needed: '
-            ..tostring(use.reason))
+        if use.limit then
+            log.emit('[HD2Runtime] '..kind..' '..tostring(id)..': legacy SDK '..origin.sdk..' operation from '
+                ..origin.mod..': '..use.target..' '..display(use.field)..' = '..tostring(use.limit.value)
+                ..' is above its maximum '..use.limit.max..' since SDK '..use.since..' and is applied as '
+                ..use.limit.max..', the most the game carries (SDK '..origin.sdk..' had no maximum). Set it to '
+                ..use.limit.max..' or less, or rebind the project to SDK '..use.since..' or later and re-export it. '
+                ..'Why: '..tostring(use.reason))
+        else
+            log.emit('[HD2Runtime] '..kind..' '..tostring(id)..': legacy SDK '..origin.sdk..' operation from '
+                ..origin.mod..': '..use.target..' '..display(use.field)..' needs '..use.acknowledgement
+                ..'=true since SDK '..use.since..' and is applied without it, as SDK '..origin.sdk..' allowed. Rebind '
+                ..'the project to SDK '..use.since..' or later and re-export it, or add '..use.acknowledgement
+                ..'=true to the operation. Why it is needed: '..tostring(use.reason))
+        end
     end
     origin.pending={}
 end
 -- Discard what a failed validation recorded, so a later successful one logs it.
 function M.discard(origin)
     if not origin then return end
-    for _,use in ipairs(origin.pending)do origin.logged[use.resource..'\0'..use.target..'\0'..use.field]=nil end
+    for _,use in ipairs(origin.pending)do
+        origin.logged[use.key or use.resource..'\0'..use.target..'\0'..use.field]=nil
+    end
     origin.pending={}
 end
 -- Tests only.
