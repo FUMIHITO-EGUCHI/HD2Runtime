@@ -44,7 +44,7 @@ and the LuaLS stubs). Subscribing to a name that is not in it, or to a `blocked`
 | `player_hit` | stats | post | local player only: projectile `hits` since the last check (the projectile system adds one per projectile that hits), `total`, `sources` (hits per weapon), `unattributed` |
 | `player_damage_dealt` | stats | post | local player only: `damage` the game recorded since the last check, `total`, `sources` (damage per weapon, throwable or stratagem), `unattributed` |
 | `explosion` | explosions | post | `name`, `position`, `observed` (`queue` or `request`), `source_id` / `source_type` / `source_name`, `owner_id` / `owner_type` / `owner_name`, `creditor_peer`, `player`, `local_player`; see [Explosions](#explosions). Not live-tested |
-| `bughole_destroyed` | bug_holes | post | `hole` (`warrior`, `bile_titan`, ...), `name`, `bile_titan`, `entity_id`, `type`, `unit_id`, `level`, `position`, `owned`; see [Bug holes](#bug-holes). Experimental, not live-tested |
+| `bughole_destroyed` | bug_holes | post | `hole` (`warrior`, `bile_titan`, ...), `name`, `bile_titan`, `entity_id`, `type`, `unit_id`, `level`, `position`, `owned`; see [Bug holes](#bug-holes). Live-tested in a mission (user report, no log); clients and Bile Titan holes not yet |
 | `key_down` / `key_up` | input | post | `binding`, `key`, `owner` |
 | `entity_damage_pre` | — | blocked | see [Damage](#damage) |
 
@@ -204,8 +204,9 @@ entries once and resolves each new entry's two entity types once per mission. Va
 ## Bug holes
 
 `bughole_destroyed` reports a bug hole the game closed (a grenade, an explosive stratagem, a Hellbomb for a Bile Titan
-hole). It reads the game's own destruction state, 4 times per second; nothing is hooked. **Experimental: not
-live-tested** (no retained snapshot holds a closed hole).
+hole). It reads the game's own destruction state, 4 times per second; nothing is hooked. **Live-tested** in a
+mission by the user's report (2026-10-11, BugHoleEventTest, no log): closing bug holes reported the event. Not yet
+shown: clients, Bile Titan holes, and the payload's kind and position against the closed hole.
 
 **What the game keeps** (`research/event-destruction-F5FEE03DCFDB.json`, `scripts/research_event_destruction.py`):
 

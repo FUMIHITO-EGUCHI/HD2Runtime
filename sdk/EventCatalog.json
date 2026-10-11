@@ -1105,7 +1105,7 @@
    "source": "bug_holes",
    "phase": "post",
    "hot": false,
-   "summary": "A bug hole was closed: its destruction stage left 0 (a grenade, a stratagem, a Hellbomb for a Bile Titan hole). Reported once per hole, on the host and on clients (each machine applies the same destruction). A hole already closed when Runtime starts watching is not reported. Who closed it is not known. Experimental: not live-tested; see docs/events.md#bug-holes.",
+   "summary": "A bug hole was closed: its destruction stage left 0 (a grenade, a stratagem, a Hellbomb for a Bile Titan hole). Reported once per hole, on the host and on clients (each machine applies the same destruction). A hole already closed when Runtime starts watching is not reported. Who closed it is not known. Live-tested in a mission by the user's report (2026-10-11, no log); clients and Bile Titan holes not yet: see docs/events.md#bug-holes.",
    "payload": [
     {
      "name": "hole",

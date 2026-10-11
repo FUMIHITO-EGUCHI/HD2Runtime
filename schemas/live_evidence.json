@@ -1280,6 +1280,16 @@
         {"mod": "GameFontTextProof", "operation": "game-font-runs", "result": "PASS", "family": "overlay_game_font_text_0_30_4", "writes": [],
          "observation": "In every language the line of that language drew in the game's font on one baseline with its Latin part (Russian included, and Polish in Spanish); the Simplified Chinese paragraph wrapped between characters; every character the loaded font lacks showed '?' and no box or blank remained (the c5ec4fa fix); can_draw in the log matched what drew for every line. No crash on any language switch."}
       ]
+    },
+    {
+      "id": "bughole-event-0-31-1-dev3-2026-10-11",
+      "date": "2026-10-11",
+      "runtime": "HD2Runtime 0.31.1 development dev3 (build/0.31.1-dev3/HD2Runtime-0.31.0-runtime.zip, 860AD99C...ACE5; commit 7bed20a), BugHoleEventTest 0.1.0 (694E3176...EFC3). The user's verbal report; no log or screenshot.",
+      "logSignals": [],
+      "tests": [
+        {"mod": "BugHoleEventTest", "operation": "close bug holes", "result": "PASS", "family": "event_bughole_destroyed", "writes": [],
+         "observation": "The user closed some bug holes in a mission and reported that the event works. Host or client, which hole kinds, Bile Titan holes, positions and exactly-once were not reported (no log)."}
+      ]
     }
   ],
   "families": {
@@ -1492,6 +1502,13 @@
       "tests": [], "acknowledgementRemoved": null,
       "notPromoted": ["explosions the game requests and detonates before the frame's kick (engine callbacks; when the network impact handlers run is not traced)", "other players' explosions on a client, and what each machine's queue holds in multiplayer"],
       "nextTests": ["an explosion event test, solo: a mod logging every explosion event (name, observed, source_name, local_player, position) while the player fires the R-36 Eruptor, throws a grenade, calls an Eagle 500kg and dies near a Hellbomb; each shot logs one explosion named R-36 Eruptor with local_player true at the impact, the grenade and the 500kg log once each (name nil until catalogued), and hd2.explosions.spawn('Hellbomb') logs once with observed = request and the mod's cause", "the same test with two players: what the client's log shows for the host's Eruptor shots and the host's for the client's"]
+    },
+    "event_bughole_destroyed": {
+      "status": "live_proven", "domain": "events", "fields": ["bughole_destroyed"],
+      "scope": "bughole_destroyed fires when the player closes bug holes in a mission (the user's report, 2026-10-11, without a log): the destruction stage the source polls does leave 0 when a hole is closed in play.",
+      "tests": ["BugHoleEventTest"], "acknowledgementRemoved": null,
+      "notPromoted": ["clients (the network-applied destruction)", "Bile Titan holes and their level-unit position", "the payload's kind, level and position against the closed hole (no log reviewed)", "exactly once per hole"],
+      "nextTests": ["the same probe with the HD2Runtime.log sent: one line per closed hole, its kind and position matching; a Bile Titan hole; then as a client"]
     },
     "weapon_fire_rate_modes_native": {
       "status": "live_proven", "domain": "support_weapon", "fields": ["fire_rate.modes"],

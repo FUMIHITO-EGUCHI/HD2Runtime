@@ -37,6 +37,7 @@ Composition tests record four separate facts: the donor output works, the refere
 | `event_action_status` | live-proven | `hd2.status.apply` | hd2.status.apply(enemy, 'fire', {buildup = 100}) by the mission host: the fire status visibly applied to a live enemy through the game's status request queue. | unchanged |
 | `event_weapon_in_hand` | live-proven | `player:equipped_weapon`, `weapon_equipped`, `weapon_unequipped`, `weapon_changed` | The local player's weapon in hand: primary and secondary switches detected correctly, the three events matched the actual switches, and uncatalogued held items were reported as uncatalogued (no name). | unchanged |
 | `event_explosion` | pending | `explosion` | The explosion event (runtime/event_sources.lua explosions): this machine's explosion queue read once per tick, each request queued after the frame's kick reported once with its catalogued name, position, source, owner and credited player, and Runtime's own requests reported from the request with their cause. Code-proven offline (research/event-explosions-F5FEE03DCFDB.json: kick min(count, 8) and gather pinned; the seven snapshots hold a drained queue; tests/test_event_sources.py, tests/test_event_scripting.py). | unchanged |
+| `event_bughole_destroyed` | live-proven | `bughole_destroyed` | bughole_destroyed fires when the player closes bug holes in a mission (the user's report, 2026-10-11, without a log): the destruction stage the source polls does leave 0 when a hole is closed in play. | unchanged |
 | `weapon_fire_rate_modes_native` | live-proven | `fire_rate.modes` | Editing the three native rate-of-fire slots of the MG-206 Heavy Machine Gun (its own ProjectileWeapon record), each on its own: the edited rates are used in play. | removed `allow_unverified_effect (MG-206 fire_rate.modes only)` |
 | `weapon_fire_rate_selector_added` | live-proven | `fire_rate.modes`, `weapon_function.left`, `weapon_function.right` | Filling the empty rate-of-fire slots of the AR-23 Liberator and binding the ROF weapon function to its free left input: the new selector works in play and switches between the three rates. | removed `allow_unverified_effect (AR-23 Liberator: fire_rate.modes, and weapon_function.left = rate_of_fire)` |
 | `weapon_rounds_feed_capacity` | live-proven | `rounds.feed_capacity_1`, `rounds.feed_capacity_2` | The SG-20 Halt magazine capacities per feed (WeaponRounds +72 / +76): 4 flechette rounds and 12 stun rounds, each feed independent. | unchanged |
@@ -184,6 +185,10 @@ Composition tests record four separate facts: the donor output works, the refere
 **`event_explosion`**
 - Not promoted (still need `allow_unverified_effect`): explosions the game requests and detonates before the frame's kick (engine callbacks; when the network impact handlers run is not traced), other players' explosions on a client, and what each machine's queue holds in multiplayer.
 - Next tests: `an explosion event test, solo: a mod logging every explosion event (name, observed, source_name, local_player, position) while the player fires the R-36 Eruptor, throws a grenade, calls an Eagle 500kg and dies near a Hellbomb; each shot logs one explosion named R-36 Eruptor with local_player true at the impact, the grenade and the 500kg log once each (name nil until catalogued), and hd2.explosions.spawn('Hellbomb') logs once with observed = request and the mod's cause`, `the same test with two players: what the client's log shows for the host's Eruptor shots and the host's for the client's`.
+
+**`event_bughole_destroyed`**
+- Not promoted (still need `allow_unverified_effect`): clients (the network-applied destruction), Bile Titan holes and their level-unit position, the payload's kind, level and position against the closed hole (no log reviewed), exactly once per hole.
+- Next tests: `the same probe with the HD2Runtime.log sent: one line per closed hole, its kind and position matching; a Bile Titan hole; then as a client`.
 
 **`weapon_fire_rate_modes_native`**
 - Observation: The weapon menu lists the rates in storage order X, Y, Z (inferred: a list in selector order Y, Z, X did not match it). fire_rate.modes now uses that order; the slots written are unchanged.
@@ -993,3 +998,11 @@ Every operation logged: `state (the window drew; can_draw per line ...): game fo
 | Mod | Result | Writes | Donor / write / host reads / output changed | Observation |
 | --- | --- | --- | --- | --- |
 | GameFontTextProof | pass |  |  | In every language the line of that language drew in the game's font on one baseline with its Latin part (Russian included, and Polish in Spanish); the Simplified Chinese paragraph wrapped between characters; every character the loaded font lacks showed '?' and no box or blank remained (the c5ec4fa fix); can_draw in the log matched what drew for every line. No crash on any language switch. |
+
+## Session bughole-event-0-31-1-dev3-2026-10-11
+
+Runtime: HD2Runtime 0.31.1 development dev3 (build/0.31.1-dev3/HD2Runtime-0.31.0-runtime.zip, 860AD99C...ACE5; commit 7bed20a), BugHoleEventTest 0.1.0 (694E3176...EFC3). The user's verbal report; no log or screenshot..
+
+| Mod | Result | Writes | Donor / write / host reads / output changed | Observation |
+| --- | --- | --- | --- | --- |
+| BugHoleEventTest | pass |  |  | The user closed some bug holes in a mission and reported that the event works. Host or client, which hole kinds, Bile Titan holes, positions and exactly-once were not reported (no log). |
