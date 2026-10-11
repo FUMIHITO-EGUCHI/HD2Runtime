@@ -31,10 +31,12 @@ PROJECTILE = {'projectile.velocity', 'projectile.mass', 'projectile.drag', 'proj
     'projectile.lifetime', 'projectile.penetration_slowdown'}
 DAMAGE = {'standard_damage', 'durable_damage', 'ap_direct', 'ap_slight', 'ap_large', 'ap_extreme', 'demolition', 'stagger',
     'push_force'}
-PROJECTILE_ROLE = PROJECTILE | {'damage.' + name for name in DAMAGE} | {'damage.status_1_type', 'damage.status_1_strength'}
+# 0.31.2: every empty status slot (1 to 4) is offered, not only the first.
+STATUS = {f'status_{slot}_{part}' for slot in range(1, 5) for part in ('type', 'strength')}
+PROJECTILE_ROLE = PROJECTILE | {'damage.' + name for name in DAMAGE} | {'damage.' + name for name in STATUS}
 EXPLOSION_ROLE = ({'explosion.inner_radius', 'explosion.outer_radius', 'explosion.shockwave_radius'}
     | {'explosion.damage.' + name for name in DAMAGE}
-    | {'explosion.damage.status_1_type', 'explosion.damage.status_1_strength'})
+    | {'explosion.damage.' + name for name in STATUS})
 ROLES = {EPOCH: {'primary': ('partial', PROJECTILE_ROLE), 'primary_impact': ('partial', EXPLOSION_ROLE),
         'full_charge': ('full', PROJECTILE_ROLE), 'full_charge_impact': ('full', EXPLOSION_ROLE),
         'overcharge_explosion': ('overcharge', EXPLOSION_ROLE)},
@@ -225,10 +227,13 @@ class CatalogTests(unittest.TestCase):
 class LegacyTableTests(unittest.TestCase):
     def test_the_partial_charge_fields_gained_the_acknowledgement_in_0_30_0(self):
         entries = [entry for entry in LEGACY['entries'] if entry['since'] == '0.30.0']
-        # Every partial-charge field except the explosion's status slot, which already needed the acknowledgement.
+        # Every partial-charge field except the explosion's status slot, which already needed the acknowledgement, and
+        # the status slots 2 to 4 offered since 0.31.2 (new fields: no older SDK could name them).
         partial = {item['qualifiedSemanticFieldId'] for role in ('primary', 'primary_impact')
             for item in instances(EPOCH, role)} - {'explosion.primary_impact.damage.status_1_type',
-            'explosion.primary_impact.damage.status_1_strength'}
+            'explosion.primary_impact.damage.status_1_strength'} - {f'{prefix}.status_{slot}_{part}'
+            for prefix in ('damage.primary', 'explosion.primary_impact.damage') for slot in range(2, 5)
+            for part in ('type', 'strength')}
         self.assertEqual({entry['field'] for entry in entries}, partial)
         self.assertEqual(len(entries), 30)
         self.assertEqual({(entry['resource'], entry['target']) for entry in entries}, {('support_weapon', EPOCH)})
@@ -408,7 +413,11 @@ class SnapshotTests(unittest.TestCase):
             (317, 103))
         self.assertEqual(rows['PLAS-45 Epoch/full_charge_impact/explosion_damage'],
             rows['PLAS-45 Epoch/overcharge_explosion/explosion_damage'])
-        self.assertEqual(report['writes'], 2 * report['fields'] + report['sharedRowProofs'] + report['liveTestWrites'])
+        # 0.31.2: + the earlier operations that fill the slots before a later status slot (STATUS_SLOT_GAP without).
+        self.assertEqual(report['writes'], 2 * report['fields'] + report['sharedRowProofs'] + report['liveTestWrites']
+            + report['statusPrefillWrites'])
+        self.assertEqual(report['statusPrefills'], 2 * report['statusGapRejections'])
+        self.assertTrue(report['statusGapRejections'])
 
 
 class ExampleTests(unittest.TestCase):

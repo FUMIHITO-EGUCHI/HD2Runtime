@@ -11,6 +11,9 @@ overcharge_explosion; RS-422 Railgun: overcharge_explosion):
 4. a missing allow_unverified_effect (an operation outside any declared SDK), a missing allow_shared and a stale
    expect are rejected.
 
+A status slot after its row's first empty one (offered since 0.31.2) is exercised after an earlier operation fills the
+slots before it; without them, setting its status is rejected as STATUS_SLOT_GAP (core/status_slots.lua).
+
 Plus the linkage through the weapon's own WeaponCharge record: each role resolves the row its charge level names
 (the existing partial-charge rows are the same rows as before); a charge-level selector that no longer names the
 reviewed row, or a swapped overcharge explosion (what charge.overcharge_explosion writes), refuses the write instead of
@@ -77,7 +80,8 @@ end
 local result={status='VALIDATED',mode='snapshot-overlay',snapshot=SNAPSHOT_NAME,fixtureFallback='disabled',
  fields=0,baselineMatches=0,noOps=0,changedWrites=0,isolatedWrites=0,protectionRestored=0,rollbacks=0,
  conflictRejections=0,acknowledgementRejections=0,sharedRejections=0,staleExpectRejections=0,
- selectorRefusals=0,overchargeSwapRefusals=0,sharedRowProofs=0,liveTestWrites=0,byRole={},rows={},checked={}}
+ selectorRefusals=0,overchargeSwapRefusals=0,sharedRowProofs=0,liveTestWrites=0,byRole={},rows={},checked={},
+ statusPrefills=0,statusPrefillWrites=0,statusGapRejections=0}
 -- The public id of a role-qualified field (explosion.overcharge_explosion.inner_radius -> explosion.inner_radius).
 local function public(id)return(id:gsub('^(%a+)%.[^.]+%.','%1.',1))end
 local function target_of(name,field)
@@ -100,9 +104,31 @@ local function request(name,field,expect,value,opts)
  for k,v in pairs(opts or{})do if v==false then r[k]=nil else r[k]=v end end
  return r
 end
+-- 0.31.2: a status slot after its row's first empty one is set only when the slots before it hold a status
+-- (core/status_slots.lua). An earlier operation fills them ('fire'), as a mod would, before the slot is exercised.
+local function prefill(name,field)
+ local slot=field.backing.statusSlot
+ if not slot then return 0 end
+ local changes={}
+ for _,other in ipairs(support_db.weapons[name].fields)do
+  local o=other.backing
+  if other.type=='status_reference'and o.statusSlot<slot and other.currentDefault=='none'
+   and o.settings==field.backing.settings and o.recordType==field.backing.recordType and o.row==field.backing.row
+   and other.target.path==field.target.path and other.target.attack==field.target.attack then
+   changes[#changes+1]={field=public(other.semanticFieldId),expect='none',value='fire'}
+  end
+ end
+ if #changes==0 then return 0 end
+ local applied=guarded.apply(runtime,(resolve(weapons.validate_transaction({id='status-prefill',
+  target=target_of(name,field),changes=changes,allow_shared=true,allow_unverified_effect=true}))))
+ assert(applied.status=='APPLIED'and applied.writes==#changes,'status prefill failed: '..field.semanticFieldId)
+ return #changes
+end
 local function exercise(name,field)
  local label=name..' '..field.semanticFieldId
  reset()
+ local filled=prefill(name,field)
+ if filled>0 then result.statusPrefills=result.statusPrefills+1;result.statusPrefillWrites=result.statusPrefillWrites+filled end
  local plan=resolve(weapons.validate_patch(request(name,field,field.currentDefault,field.currentDefault)))
  local part=plan.changes[1];local width=field.backing.width
  assert(#part.before==width,label..' width')
@@ -135,6 +161,11 @@ local function exercise(name,field)
  rejects(function()resolve(spec)end,'CONFLICT',label..' conflict')
  result.conflictRejections=result.conflictRejections+1
  reset()
+ if filled>0 and field.type=='status_reference'then
+  -- without the earlier slots filled (the overlay is reset) the same write would leave a gap and is refused
+  rejects(function()resolve(spec)end,'STATUS_SLOT_GAP',label..' status slot gap')
+  result.statusGapRejections=result.statusGapRejections+1
+ end
  rejects(function()weapons.validate_patch(request(name,field,field.currentDefault,value,
   {allow_unverified_effect=false}))end,'allow_unverified_effect',label..' without acknowledgement')
  result.acknowledgementRejections=result.acknowledgementRejections+1

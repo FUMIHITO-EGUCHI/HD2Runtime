@@ -2,6 +2,7 @@
 -- semantic identities and dependencies; core/guarded_transaction still owns every
 -- byte, protection, verification, and rollback decision.
 local domains=require('hd2runtime/domains/write_domains')
+local status_slots=require('hd2runtime/core/status_slots')
 local M={}
 
 local function valid_id(value,label)
@@ -139,8 +140,11 @@ function M.prepare_phase(resolved,reader,phase)
     local plan={changes={},snapshots=reader.snapshots,phase=phase.index,
         phase_id=phase.id,operation_fields={}}
     local physical={}
+    -- DamageInfo status slots stay packed across the whole phase: an operation may fill slot 2 of a row another
+    -- operation of this phase fills slot 1 of (core/status_slots.lua; verified once every operation is prepared).
+    local packing=status_slots.new()
     for spec_index,spec in ipairs(phase.capture_specs)do
-        local prepared=domains.for_kind(spec.kind).prepare(resolved[spec_index],reader,spec)
+        local prepared=domains.for_kind(spec.kind).prepare(resolved[spec_index],reader,spec,packing)
         local operation_id=assert(phase.capture_operation_ids[spec_index])
         for _,note in ipairs(prepared.notes or{})do plan.notes=plan.notes or{};plan.notes[#plan.notes+1]=note end
         plan.operation_fields[operation_id]={}
@@ -166,6 +170,7 @@ function M.prepare_phase(resolved,reader,phase)
             end
         end
     end
+    status_slots.verify(packing)
     assert(#plan.changes>=1 and#plan.changes<=128,'plan phase write-set size unsupported')
     return plan
 end

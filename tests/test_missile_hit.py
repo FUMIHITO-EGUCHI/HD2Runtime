@@ -23,7 +23,7 @@ class CatalogueTests(unittest.TestCase):
         for name, damage in WEAPONS.items():
             found = fields(name)
             hit = {key: field for key, field in found.items() if key.startswith('damage.primary.')}
-            self.assertEqual(len(hit), 11, name)    # nine damage members and the free status slot
+            self.assertEqual(len(hit), 17, name)    # nine damage members and the four free status slots (0.31.2)
             self.assertEqual(hit['damage.primary.standard_damage']['value']['baseline'], damage, name)
             for key, field in hit.items():
                 self.assertTrue(field['writable'], (name, key))

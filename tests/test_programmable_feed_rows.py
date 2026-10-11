@@ -42,7 +42,8 @@ class CatalogueTests(unittest.TestCase):
         self.assertNotIn('projectile.programmable.lifetime', fields('GR-8 Recoilless Rifle'))   # native 0: no limit
         for name in ('AC-8 Autocannon', 'GR-8 Recoilless Rifle', 'RL-77 Airburst Rocket Launcher'):
             found = fields(name)
-            self.assertEqual(len([key for key in found if key.startswith('damage.')]), 11, name)
+            # nine damage members and the four free status slots (0.31.2: every empty slot is offered)
+            self.assertEqual(len([key for key in found if key.startswith('damage.')]), 17, name)
             for key, field in found.items():
                 self.assertTrue(field['writable'], (name, key))
                 self.assertEqual(field['operation']['acknowledgement'], 'allow_unverified_effect', (name, key))

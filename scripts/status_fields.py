@@ -4,11 +4,14 @@ A DamageInfo row has four inline status slots ({StatusEffectType +44+8n, strengt
 Every weapon DamageInfo field group gets, per row:
 
 - `status_<k>_type` for each used slot k: a status_reference whose value is a catalog semantic ID;
-- `status_<k>_type` and `status_<k>_strength` for the first empty slot (the attachment slot), whose current
-  value is 'none' / 0.
+- `status_<k>_type` and `status_<k>_strength` for every empty slot (an attachment slot), whose current value is
+  'none' / 0. Since 0.31.2 every empty slot up to slot 4 is offered (before, only the first one), so a row with no
+  status can take two or more in one write.
 
-Only the first empty slot is offered, so a write can never leave a gap in the packing. Values are limited to the
-catalog's attachable statuses (ones a mapped player-side attack already applies through a DamageInfo slot).
+The writers keep the slots packed at write time (core/status_slots.lua): slot k is written only when slots 1 to k-1
+hold a status afterwards (live, or set by the same write set), and a slot is cleared only when every later slot is
+empty afterwards. Values are limited to the catalog's attachable statuses (ones a mapped player-side attack already
+applies through a DamageInfo slot, plus the reviewed extension tiers).
 """
 from __future__ import annotations
 
@@ -20,6 +23,10 @@ RESEARCH = ROOT / 'research/status-effects-F5FEE03DCFDB.json'
 POLICY = ROOT / 'schemas/status_attachment_policy.json'
 UNVERIFIED = ('The slot mechanism is native and the status is one a player-side attack already applies, but a '
     'status on an attack that does not use it is not gameplay-proven; allow_unverified_effect is required.')
+# 0.31.2: the empty slots after the first one. A row's second or later attached status is not live-tested on any
+# row, so these slots never inherit a promoted family's live evidence.
+UNVERIFIED_EXTRA = ('A second or later attached status on one DamageInfo row (a slot after its first empty one) is '
+    'not live-tested on any attack; allow_unverified_effect is required.')
 SLOTS = 4
 _CACHE = {}
 
@@ -80,12 +87,12 @@ def slot_specs(damage_type: int) -> list[dict]:
             raise ValueError(f'DamageInfo {damage_type} slot {slot} names unknown status type {kind}')
         specs.append({'suffix': f'status_{slot}_type', 'slot': slot, 'offset': 44 + 8 * (slot - 1), 'storage': 'u32',
             'current': status['semanticId'], 'role': 'type', 'attach': False, 'lastUsed': slot == used[-1]})
-    free = len(used) + 1
-    if free <= SLOTS:
+    for free in range(len(used) + 1, SLOTS + 1):
         specs.append({'suffix': f'status_{free}_type', 'slot': free, 'offset': 44 + 8 * (free - 1), 'storage': 'u32',
-            'current': 'none', 'role': 'type', 'attach': True, 'lastUsed': False})
+            'current': 'none', 'role': 'type', 'attach': True, 'lastUsed': False, 'extra': free > len(used) + 1})
         specs.append({'suffix': f'status_{free}_strength', 'slot': free, 'offset': 48 + 8 * (free - 1),
-            'storage': 'f32', 'current': 0.0, 'role': 'strength', 'attach': True, 'lastUsed': False})
+            'storage': 'f32', 'current': 0.0, 'role': 'strength', 'attach': True, 'lastUsed': False,
+            'extra': free > len(used) + 1})
     return specs
 
 
@@ -104,10 +111,11 @@ def type_extra(spec: dict, live: dict | None = None) -> dict:
     if spec['role'] == 'type' and spec['current'] not in allowed and spec['current'] != 'none':
         allowed.append(spec['current'])
     extra = {'statusSlot': spec['slot'], 'statusAttach': spec['attach']}
-    if live:
+    if live and not spec.get('extra'):
         extra['liveEvidence'] = live
     else:
-        extra.update(acknowledgement='allow_unverified_effect', acknowledgementReason=UNVERIFIED)
+        extra.update(acknowledgement='allow_unverified_effect',
+            acknowledgementReason=UNVERIFIED_EXTRA if spec.get('extra') else UNVERIFIED)
     if spec['role'] == 'type':
         extra['allowedValues'] = allowed
         # 'none' clears a slot only where that keeps the slots packed.

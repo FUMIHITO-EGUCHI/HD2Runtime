@@ -118,12 +118,38 @@
         "slot": 3
       }
     },
+    "evictor": {
+      "afterEarlierOperation": 2,
+      "fourSlots": 4,
+      "oneTransaction": 4,
+      "planPhaseWrites": 4,
+      "slots": [
+        {
+          "after": "2a000000",
+          "field": "explosion.damage.status_1_type"
+        },
+        {
+          "after": "0000c842",
+          "field": "explosion.damage.status_1_strength"
+        },
+        {
+          "after": "2c000000",
+          "field": "explosion.damage.status_2_type"
+        },
+        {
+          "after": "0000c842",
+          "field": "explosion.damage.status_2_strength"
+        }
+      ]
+    },
     "liveProvenWithoutAcknowledgement": 2,
     "rejections": {
       "acknowledgement": 1,
+      "clearBeforeUsed": 1,
       "middleSlotClear": 1,
       "notAttachable": 1,
       "packingHole": 1,
+      "slotGap": 1,
       "staleCatalog": 1
     },
     "swapped": {
@@ -134,5 +160,5 @@
       }
     }
   },
-  "writes": 34
+  "writes": 59
 }

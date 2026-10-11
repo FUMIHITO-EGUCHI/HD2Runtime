@@ -300,8 +300,8 @@ class EffectModelTests(unittest.TestCase):
 
     def test_published_effects(self):
         self.assertEqual(self.summary['editableFieldInstances'], {'ACTIVE_AT_INSTANTIATION': 1545,
-            'ACTIVE_DIRECT': 1654, 'AMBIGUOUS': 185, 'DORMANT_OR_METADATA': 53,
-            'SPAWNED_ENTITY_RECORD': 27})   # 0.30.2: the seven DUPLICATE weapons; 0.31.0: 40 firing charge and beam pulse fields, +2 beam references (Trident, Dagger), 27 missile fields (P-33 18, P-92 9; research/wasp-rocket); 0.31.1: +34 Peacemaker and Redeemer ammunition-row fields
+            'ACTIVE_DIRECT': 2112, 'AMBIGUOUS': 227, 'DORMANT_OR_METADATA': 71,
+            'SPAWNED_ENTITY_RECORD': 27})   # 0.30.2: the seven DUPLICATE weapons; 0.31.0: 40 firing charge and beam pulse fields, +2 beam references (Trident, Dagger), 27 missile fields (P-33 18, P-92 9; research/wasp-rocket); 0.31.1: +34 Peacemaker and Redeemer ammunition-row fields; 0.31.2: +518 status slots (every empty slot of a row, not only the first)
         self.assertNotIn('OVERRIDDEN', self.summary['editableFieldInstances'])
         magazine = self.fields[('MA5C Assault Rifle', 'magazine.capacity')]['effect']
         self.assertEqual((magazine['activeSource'], magazine['appliesWhen'], magazine['instantiationOnly']),

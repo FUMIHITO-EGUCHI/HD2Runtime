@@ -6,6 +6,7 @@ local entities=require('hd2runtime/core/entity_catalog')
 local profile=require('hd2runtime/schemas/current')
 local database=require('hd2runtime/domains/player_weapon_authoring')
 local status_catalog=require('hd2runtime/domains/status_catalog')
+local status_slots=require('hd2runtime/core/status_slots')
 local support_database=require('hd2runtime/domains/support_weapon_authoring')
 -- Mounted weapons (vehicles, Exosuits, GATER) share the support-weapon entry shape.
 local vehicle_database=require('hd2runtime/domains/vehicle_weapon_authoring')
@@ -1589,8 +1590,11 @@ local function support_linked(resolved,backing)
     return support_damage(resolved,backing,linkage),resolved.roots.damage.owner
 end
 
-function M.prepare(resolved,reader,spec)
+-- packing: the status slot packing state of a plan phase (domains/composition_plans.lua verifies it once every
+-- operation is prepared); without one, this write set is its own and is verified here.
+function M.prepare(resolved,reader,spec,packing)
     local plan={changes={},snapshots=reader.snapshots};local physical={}
+    local own_packing=packing==nil;packing=packing or status_slots.new()
     -- EXPERIMENTAL (exp/liberator-beam; core/reviewed_edits.lua): a weapon whose ProjectileWeapon component HD2Runtime
     -- itself made dormant (the Liberator beam swap) refuses every field reached through it: its ProjectileWeapon record
     -- (catalog.record), its ammunition delta, and the projectile, explosion and damage rows it links to.
@@ -1640,17 +1644,11 @@ function M.prepare(resolved,reader,spec)
             current=current..record.bytes:sub(at+1,at+1)
         end
         if backing.statusSlot then
-            -- Status slots stay packed from slot 1: the slots before this one are still used, and a slot is
-            -- cleared only when every later slot is empty.
-            local slot=backing.statusSlot
-            for index=1,slot-1 do
-                assert(b.u32(record.bytes,44+(index-1)*8)~=0,'CONFLICT: status slot '..index..' is now empty')
-            end
-            if change.status_type==0 then
-                for index=slot+1,4 do
-                    assert(b.u32(record.bytes,44+(index-1)*8)==0,'CONFLICT: a later status slot is used')
-                end
-            end
+            -- Status slots stay packed from slot 1, judged on the row as this write set leaves it (core/status_slots:
+            -- the live slots overlaid with the statuses this write set sets), once every change is prepared.
+            status_slots.note(packing,tostring(owner.base)..':'..tostring(record.offset),record.bytes,
+                backing.statusSlot,change.descriptor.type=='status_reference'and change.status_type or nil,change.field,
+                current==change.desired)
             -- Every status row stores its own name; the reviewed and desired statuses must still carry the
             -- names the catalog was built from, so a renumbered status table can never be written through.
             local function verify_status(semantic)
@@ -1956,6 +1954,7 @@ function M.prepare(resolved,reader,spec)
             end
         end
     end
+    if own_packing then status_slots.verify(packing)end
     return plan
 end
 return M

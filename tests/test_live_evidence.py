@@ -186,25 +186,45 @@ class LiveEvidenceTests(unittest.TestCase):
         self.assertEqual({k: len(v) for k, v in by_field.items() if k in promoted}, promoted)
 
     def test_status_promotion_covers_only_projectile_direct_hit_rows(self):
+        def extra_slots(fields, field_id, baseline, row):
+            # 0.31.2: the empty slots after a row's first empty one (a second attached status) are not live-tested
+            # and never inherit the promotion. A slot is such a slot when the slot before it is empty.
+            found, values = set(), {}
+            for field in fields:
+                match = re.search(r'^(.*)status_(\d)_type$', field_id(field))
+                if match:
+                    values[(row(field), match.group(1), int(match.group(2)))] = baseline(field)
+            for field in fields:
+                match = re.search(r'^(.*)status_(\d)_(type|strength)$', field_id(field))
+                if match and values.get((row(field), match.group(1), int(match.group(2)) - 1)) == 'none':
+                    found.add(id(field))
+            return found
         player = [f for w in self.player['weapons'] for f in w['fields'] if f.get('statusSlot')]
+        weapon_of = {id(f): w['name'] for w in self.player['weapons'] for f in w['fields']}
+        player_extra = extra_slots(player, lambda f: f['semanticFieldId'], lambda f: f['currentDefault'],
+            lambda f: weapon_of[id(f)])
+        self.assertTrue(player_extra)
         for field in player:
             # Rows a weapon may not fire (charge / heat levels, spawned entities) do not inherit the promotion.
             # 0.31.1: nor do the ammunition rows of a weapon whose base member is 0 (Peacemaker, Redeemer): no live test
             # has shown an edit of those rows in play (scripts/ammunition_attacks.py).
             projectile = field['backing'].get('settings') == 'damage' and field.get('writeScope') == \
                 'shared_projectile_damage_definition' and field['effect']['activeSource'] == 'ACTIVE_DIRECT' \
-                and not field.get('ammunitionSource')
+                and not field.get('ammunitionSource') and id(field) not in player_extra
             self.assertEqual(bool(field.get('liveEvidence')), projectile, field['semanticFieldId'])
             self.assertEqual(field.get('acknowledgement') is None, projectile)
         support = [f for f in self.support['fieldInstances']
             if re.search(r'status_\d_(type|strength)$', f['semanticFieldId'])]
+        support_extra = extra_slots(support, lambda f: f['qualifiedSemanticFieldId'],
+            lambda f: f['value']['baseline'], lambda f: (f['supportWeapon'], f['target']['path']))
+        self.assertTrue(support_extra)
         for field in support:
             # A charge-level row only one charge level fires (the PLAS-45 Epoch's shots) does not inherit it either.
             # 0.31.1: nor the direct hit of a spawned missile (scripts/missile_hit_fields.py) or the ProgrammableAmmo
             # projectile's row (scripts/programmable_feed_fields.py): not live-tested.
             projectile = field['target']['path'] == 'projectile_reference' and field['semanticFieldId'].startswith(
                 'damage.') and not field.get('chargeLevel') and not field.get('missileHit') \
-                and not field.get('programmableFeed')
+                and not field.get('programmableFeed') and id(field) not in support_extra
             self.assertEqual(bool(field.get('liveEvidence')), projectile, field['instanceKey'])
             self.assertEqual(field['operation']['acknowledgement'] is None, projectile, field['instanceKey'])
         vehicle = [f for f in load('VehicleWeaponCapabilities.json')['fieldInstances'] if 'status_' in f['semanticFieldId']]

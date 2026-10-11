@@ -84,7 +84,9 @@ def build():
             'slots': model['slots'],
             'packing': model['packing'],
             'fields': ['damage.status_<k>_type (status_reference)', 'damage.status_<k>_strength (number)'],
-            'attachmentSlot': 'the first empty slot of each DamageInfo row; only it is offered, so slots stay packed',
+            'attachmentSlot': 'every empty slot of each DamageInfo row (0.31.2; before, only the first). Slot k is '
+                'set only when slots 1 to k-1 hold a status afterwards (live, or set by the same transaction or plan '
+                'phase), so the slots stay packed',
             'directHitVsExplosion': 'separate DamageInfo rows: a projectile\'s direct-hit damage and its explosion '
                 'damage each have their own four slots',
             'multipleStatuses': 'yes, up to four per DamageInfo row (flamethrowers apply fire, fire_panic and '

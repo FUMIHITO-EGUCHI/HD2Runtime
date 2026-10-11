@@ -303,7 +303,7 @@ def build(catalog_path=CATALOG):
             fields.append(make_field(field_id,values.get(key),
                 settings('explosion_damage'if prefix=='explosion'else'damage',record,
                     offset,storage,role,linkage,**extra),target))
-        # Status slots (see scripts/status_fields.py): typed references for used slots plus the attachment slot.
+        # Status slots (see scripts/status_fields.py): typed references for used slots plus every empty slot.
         for spec in status_fields.slot_specs(record['recordType']):
             if spec['role']=='strength'and not spec['attach']:continue
             field_id=('explosion.'+role+'.damage.'if prefix=='explosion'else prefix+'.'+role+'.')+spec['suffix']

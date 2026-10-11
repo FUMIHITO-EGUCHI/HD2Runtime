@@ -351,7 +351,7 @@ def build(research_path=RESEARCH):
                     'settingsType': record['settingsType'], 'branch': role, 'linkage': linkage}, **extra)
 
             def status_slots(prefix, kind, record, role, linkage, target, others, **extra):
-                # Status slots (scripts/status_fields.py): typed references plus the attachment slot.
+                # Status slots (scripts/status_fields.py): typed references plus every empty slot.
                 for spec in status_fields.slot_specs(record['recordType']):
                     if spec['role'] == 'strength' and not spec['attach']:
                         continue

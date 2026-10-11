@@ -111,11 +111,13 @@ has been tested in game.
 - **Adding or swapping a status (0.31.1, not live-tested).** The explosion's DamageInfo status slots are fields of
   `:explosion()`, the same model as a weapon explosion's (`sdk/StatusEffectCatalog.json`, "attachmentModel"):
   - `explosion.damage.status_<k>_type` for each used slot: its status, a catalog ID (`'gas'`, `'fire'`, ...);
-  - the first empty slot's `status_<k>_type` and `status_<k>_strength`: a new status and its strength.
+  - every empty slot's `status_<k>_type` and `status_<k>_strength` (0.31.2; before, only the first empty slot's): a
+    new status and its strength.
 
   The values are the 34 attachable statuses. Weather, terrain, stim and system statuses (Acid Storm included) are
-  never attachable: their definitions carry no attack effect. The slots stay packed from slot 1, so only the last
-  used slot can be cleared (`'none'`). Each field needs `allow_shared` (the row is a settings definition) and
+  never attachable: their definitions carry no attack effect. The slots stay packed from slot 1: slot k takes a status
+  only when slots 1 to k-1 hold one (live, or set by the same transaction or plan phase), and only the last used slot
+  can be cleared (`'none'`). Each field needs `allow_shared` (the row is a settings definition) and
   `allow_unverified_effect`. Every write re-reads the live status table's names, like a weapon's slot.
 
   ```lua

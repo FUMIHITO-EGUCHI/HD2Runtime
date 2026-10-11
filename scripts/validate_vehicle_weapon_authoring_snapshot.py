@@ -7,7 +7,9 @@ Mounted weapons (vehicles, Exosuits, GATER): every writable field of every revie
 3. rejected as CONFLICT when a third party changed the bytes first,
 4. rejected without allow_shared (shared scopes) or allow_unverified_effect (not gameplay-proven).
 
-A moved mount (the vehicle's MountComponentData slot no longer names the weapon) is rejected.
+A moved mount (the vehicle's MountComponentData slot no longer names the weapon) is rejected. A status slot after its
+row's first empty one (offered since 0.31.2) is exercised after an earlier operation fills the slots before it; without
+them, setting its status is rejected as STATUS_SLOT_GAP (core/status_slots.lua).
 
 Stratagem mission uses (StratagemInfo +80): every writable stratagem is checked with a no-op, its
 transition (finite -> unlimited, unlimited -> finite, finite -> different finite) with read-back and
@@ -106,6 +108,27 @@ local function third_party(field)
  end
  return b.encode(field.currentDefault+7,field.backing.storage)
 end
+-- 0.31.2: a status slot after its row's first empty one is set only when the slots before it hold a status
+-- (core/status_slots.lua). An earlier operation fills them ('fire'), as a mod would, before the slot is exercised.
+local function prefill(fields,field)
+ local slot=field.backing.statusSlot
+ if not slot then return 0 end
+ local changes={}
+ for _,other in ipairs(fields)do
+  local o=other.backing
+  if other.type=='status_reference'and other.editable and o.statusSlot<slot and other.currentDefault=='none'
+   and o.settings==field.backing.settings and o.recordType==field.backing.recordType and o.row==field.backing.row
+   and other.target.path==field.target.path and other.target.attack==field.target.attack then
+   changes[#changes+1]={field=public_id(other),expect='none',value='fire'}
+  end
+ end
+ if #changes==0 then return 0 end
+ local plan=resolve(weapons,weapons.validate_transaction({id='status-prefill',target=field.target,changes=changes,
+  allow_shared=true,allow_unverified_effect=true}))
+ local applied=guarded.apply(runtime,plan)
+ assert(applied.status=='APPLIED'and applied.writes==#changes,'status prefill failed: '..field.semanticFieldId)
+ return #changes
+end
 local function round_trip(domain,spec,label)
  local plan=resolve(domain,spec)
  local changed=0
@@ -125,7 +148,7 @@ local function round_trip(domain,spec,label)
 end
 local result={status='VALIDATED',mode='snapshot-overlay',snapshot=SNAPSHOT_NAME,fixtureFallback='disabled',
  vehicleWeapons=0,vehicleFields=0,noOps=0,changedWrites=0,rollbacks=0,conflictRejections=0,
- sharedRejections=0,acknowledgementRejections=0,mountChainRejections=0,byScope={},
+ sharedRejections=0,acknowledgementRejections=0,mountChainRejections=0,byScope={},statusPrefills=0,statusGapRejections=0,
  stratagemUses={checked=0,transitions={},proven=0,acknowledgementRejections=0,conflictRejections=0},
  scenarios={}}
 local worker=coroutine.create(function()
@@ -144,6 +167,8 @@ local worker=coroutine.create(function()
      allow_unverified_reference=field.type=='beam_reference'or nil}
    end
    reset()
+   local filled=prefill(weapon.fields,field)
+   if filled>0 then result.statusPrefills=result.statusPrefills+1 end
    local baseline=field.type=='projectile_reference'and own_projectile(field)
     or field.type=='beam_reference'and own_beam(field)or field.currentDefault
    local plan=resolve(weapons,weapons.validate_patch(request(baseline,baseline,shared,ack)))
@@ -159,6 +184,11 @@ local worker=coroutine.create(function()
    rejects(function()resolve(weapons,spec)end,'CONFLICT',label..' conflict')
    result.conflictRejections=result.conflictRejections+1
    reset()
+   if filled>0 and field.type=='status_reference'then
+    -- without the earlier slots filled (the overlay is reset) the same write would leave a gap and is refused
+    rejects(function()resolve(weapons,spec)end,'STATUS_SLOT_GAP',label..' status slot gap')
+    result.statusGapRejections=result.statusGapRejections+1
+   end
    if shared then
     rejects(function()weapons.validate_patch(request(baseline,value,nil,ack))end,'allow_shared',
      label..' without allow_shared')

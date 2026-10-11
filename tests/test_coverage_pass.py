@@ -224,10 +224,19 @@ class StatusTests(unittest.TestCase):
         self.assertEqual(coyote['damage.status_1_type']['currentDefault'], 'fire')
         self.assertTrue(coyote['damage.status_1_type']['allowNone'])          # the last used slot
         self.assertEqual(coyote['damage.status_2_type']['currentDefault'], 'none')
-        # Projectile direct-hit rows are live-proven (LiberatorFireStatus, MaxigunStun); other rows stay gated.
-        for field in liberator.values():
-            self.assertIsNone(field.get('acknowledgement'))
-            self.assertEqual(field['liveEvidence']['family'], 'weapon_projectile_status_reference')
+        # 0.31.2: every empty slot is offered (an empty row: slots 1 to 4), each with its strength.
+        self.assertEqual(set(liberator), {f'damage.status_{slot}_{part}' for slot in range(1, 5)
+            for part in ('type', 'strength')})
+        self.assertTrue(all(liberator[f'damage.status_{slot}_type']['allowNone'] for slot in range(1, 5)))
+        # Projectile direct-hit rows are live-proven (LiberatorFireStatus, MaxigunStun) for the first empty slot; a
+        # second attached status (slots 2 to 4 of an empty row) is not live-tested and keeps the acknowledgement.
+        for field_id, field in liberator.items():
+            if field['statusSlot'] == 1:
+                self.assertIsNone(field.get('acknowledgement'))
+                self.assertEqual(field['liveEvidence']['family'], 'weapon_projectile_status_reference')
+            else:
+                self.assertEqual(field['acknowledgement'], 'allow_unverified_effect', field_id)
+                self.assertNotIn('liveEvidence', field)
         hatchet = slots('CQC-5 Combat Hatchet')          # melee row
         self.assertTrue(hatchet and all(f['acknowledgement'] == 'allow_unverified_effect' for f in hatchet.values()))
         promoted = [f for w in self.player.values() for f in w['fields'] if f.get('statusSlot')]
@@ -236,9 +245,10 @@ class StatusTests(unittest.TestCase):
         # explosion status slots (0.30.2) are gated too: a status on an explosion is not live-proven.
         self.assertEqual(sum(1 for f in promoted if f.get('liveEvidence')), 129)
         # 0.31.1: + the four status slots of the Peacemaker and Redeemer ammunition rows (gated until a live test).
-        self.assertEqual(sum(1 for f in promoted if f.get('acknowledgement')), 77)
+        # 0.31.2: + every empty slot after a row's first empty one (518 fields, all gated): 77 -> 595.
+        self.assertEqual(sum(1 for f in promoted if f.get('acknowledgement')), 595)
         explosion = [f for f in promoted if f['semanticFieldId'].startswith('explosion.')]
-        self.assertEqual(len(explosion), 26)
+        self.assertEqual(len(explosion), 104)
         self.assertTrue(all(f.get('acknowledgement') == 'allow_unverified_effect' for f in explosion))
         self.assertEqual(set(liberator['damage.status_1_type']['allowedValues']), ATTACHABLE | ENEMY_SLOT | OTHER_SYSTEM)
         observed = {s['semanticId']: s.get('liveObserved') for s in self.catalog['statuses']}
@@ -253,7 +263,14 @@ class StatusTests(unittest.TestCase):
         self.assertEqual(slots['attached']['maxigun_stun']['status'], 'stun_medium')
         self.assertEqual(slots['attached']['liberator_fire']['status'], 'fire')
         self.assertEqual(slots['rejections'], {'acknowledgement': 1, 'middleSlotClear': 1, 'notAttachable': 1,
-            'packingHole': 1, 'staleCatalog': 1})
+            'packingHole': 1, 'staleCatalog': 1, 'slotGap': 1, 'clearBeforeUsed': 1})
+        # 0.31.2: the GL-15 Evictor's blast (no status) takes gas and gas confusion in one transaction, in two
+        # operations of one plan phase, and slot 2 after an earlier operation set slot 1; all four slots in one write.
+        evictor = slots['evictor']
+        self.assertEqual((evictor['oneTransaction'], evictor['planPhaseWrites'], evictor['afterEarlierOperation'],
+            evictor['fourSlots']), (4, 4, 2, 4))
+        self.assertEqual([item['field'] for item in evictor['slots']], ['explosion.damage.status_1_type',
+            'explosion.damage.status_1_strength', 'explosion.damage.status_2_type', 'explosion.damage.status_2_strength'])
         self.assertEqual(slots['liveProvenWithoutAcknowledgement'], 2)
         self.assertEqual(slots['swapped']['coyote']['to'], 'stun_small')
         self.assertEqual(slots['cleared']['flamethrower']['slot'], 3)
@@ -297,6 +314,58 @@ ok,why=pcall(patches.validate,{id='x',target=flamer,allow_shared=true,allow_unve
 assert(not ok and tostring(why):find('cannot be cleared',1,true),why)
 patches.validate{id='x',target=flamer,allow_shared=true,allow_unverified_effect=true,
  field=hd2.fields.damage.status_3_type,expect='fire_panic',value='none'}
+-- 0.31.2: every empty slot is offered. The GL-15 Evictor's blast has no status: slots 1 and 2 in one write, and slot 4
+-- exists. Whether the row stays packed is decided at write time on the live row (core/status_slots.lua).
+local blast=hd2.weapon('GL-15 Evictor'):attack('primary'):projectile():terminal_action('impact'):explosion()
+local spec=transactions.validate{id='evictor-gas',target=blast,allow_shared=true,allow_unverified_effect=true,changes={
+ {field=hd2.fields.explosion.damage_status_1_type,expect='none',value='gas'},
+ {field=hd2.fields.explosion.damage_status_1_strength,expect=0,value=100},
+ {field=hd2.fields.explosion.damage_status_2_type,expect='none',value='gas_confusion'},
+ {field=hd2.fields.explosion.damage_status_2_strength,expect=0,value=100}}}
+assert(#spec.changes==4)
+patches.validate{id='x',target=blast,allow_shared=true,allow_unverified_effect=true,
+ field=hd2.fields.explosion.damage_status_4_type,expect='none',value='fire'}
+-- A second attached status is not live-tested: slot 2 of a live-proven direct-hit row keeps the acknowledgement.
+ok,why=pcall(patches.validate,{id='x',target=bullets,allow_shared=true,
+ field=hd2.fields.damage.status_2_type,expect='none',value='fire'})
+assert(not ok and tostring(why):find('allow_unverified_effect',1,true),tostring(why))
+return 'ok'
+''')
+
+    def test_status_slot_packing(self):
+        # core/status_slots.lua: a row as the whole write set leaves it (live bytes overlaid with the planned
+        # statuses) must stay packed from slot 1.
+        run('''
+local slots=require('hd2runtime/core/status_slots')
+local b=require('hd2runtime/core/bytes')
+local function row(...)
+ local types={...};local bytes=string.rep('\\0',44)
+ for index=1,4 do bytes=bytes..b.encode(types[index]or 0,'u32')..b.encode(0,'f32')end
+ return bytes
+end
+local function verify(live,changes)
+ local packing=slots.new()
+ for _,c in ipairs(changes)do
+  slots.note(packing,'row',live,c[1],c[2],'status_'..c[1]..'_'..(c[2]and'type'or'strength'),c[3])
+ end
+ return pcall(slots.verify,packing)
+end
+local empty=row()
+assert(verify(empty,{{1,42},{1,nil},{2,44},{2,nil}}))           -- slots 1 and 2 of an empty row together
+assert(verify(empty,{{2,44},{1,42}}))                          -- in any order
+local ok,why=verify(empty,{{2,44},{2,nil}})                    -- slot 2 alone
+assert(not ok and why:find('STATUS_SLOT_GAP: status slot 1 is empty',1,true),why)
+ok,why=verify(empty,{{3,nil}})                                 -- a strength needs the slots before it too
+assert(not ok and why:find('STATUS_SLOT_GAP',1,true),why)
+assert(verify(empty,{{3,nil,true}}))                           -- unless it leaves the bytes as they are (a no-op)
+assert(verify(row(42),{{2,44}}))                              -- slot 1 set live (an earlier operation)
+assert(verify(empty,{{4,0},{3,0}}))                            -- clearing an empty slot never opens a gap
+assert(verify(row(42,44),{{1,0},{2,0}}))                       -- clearing both
+ok,why=verify(row(42,44),{{1,0}})                              -- clearing slot 1 while slot 2 holds a status
+assert(not ok and why:find('clears slot 1 while slot 2',1,true),why)
+ok,why=verify(empty,{{1,42},{2,44},{1,0}})                     -- the last planned value of a slot counts
+assert(not ok and why:find('STATUS_SLOT_GAP',1,true),why)
+assert(verify(row(42,44,5,6),{{4,0}}))
 return 'ok'
 ''')
 

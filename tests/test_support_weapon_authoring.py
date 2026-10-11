@@ -33,18 +33,19 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
         # 0.31.0: +2 beam references (attack.beam on the LAS-98 and the 40-K Meltagun, research/beam-outputs); +34
         # missile fields (research/wasp-rocket: W.A.S.P. 9 missile + 9 function_missile, Spear 8, Commando 8); +14 the
         # Breaching Hammer's ability explosion (3 radii, 9 damage, 2 status slots).
-        self.assertEqual(self.capabilities['summary']['internalSupportAuthoringInstances'],1627)   # 0.31.0: +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits (Spear, Commando, W.A.S.P.), +53 ProgrammableAmmo rows (AC-8, GR-8, RL-77)
-        self.assertEqual(self.capabilities['summary']['publishedSupportFieldInstances'],1627)
+        self.assertEqual(self.capabilities['summary']['internalSupportAuthoringInstances'],1933)   # 0.31.0: +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits (Spear, Commando, W.A.S.P.), +53 ProgrammableAmmo rows (AC-8, GR-8, RL-77); 0.31.2: +306 status slots (every empty slot of a row, not only the first)
+        self.assertEqual(self.capabilities['summary']['publishedSupportFieldInstances'],1933)
         self.assertEqual(self.capabilities['summary']['legacyFlattenedFieldEntries'],1456)   # +12 hammer explosion, +1 the MG-43's left input (0.31.0); +27 missile direct-hit damage members, +1 the AC-8 projectile.lifetime (0.31.1: the other ProgrammableAmmo fields repeat a semantic id of the weapon's primary attack)
-        self.assertEqual(self.capabilities['summary']['deduplicationLossPrevented'],171)   # 0.31.1: + the missile direct hits' status slots, + the ProgrammableAmmo fields beside the primary attack's
-        self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldGroups'],102)   # 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77
-        self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldInstances'],218)   # 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77
+        self.assertEqual(self.capabilities['summary']['deduplicationLossPrevented'],477)   # 0.31.1: + the missile direct hits' status slots, + the ProgrammableAmmo fields beside the primary attack's; 0.31.2: + every later empty status slot (306)
+        self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldGroups'],138)   # 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77; 0.31.2: + the later empty status slots
+        self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldInstances'],296)   # 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77; 0.31.2: + the later empty status slots
         self.assertEqual(self.capabilities['summary']['intentionallyOmittedInstances'],0)
         # + the two overcharge explosion references (RS-422 Railgun, PLAS-45 Epoch) and the status slots of the four
         # charge-level DamageInfo rows (the Epoch full-charge shot and explosion, the two overcharge explosions).
         # 0.31.0: + the beam references of the LAS-98 and the 40-K Meltagun (attack.beam); + the hammer explosion's
         # status slot. 0.31.1: + the status slot of the three missile direct-hit rows and of the three ProgrammableAmmo rows.
-        self.assertEqual(self.capabilities['referenceContract']['currentReferenceFieldInstances'],104)
+        # 0.31.2: + every later empty status slot's status (153).
+        self.assertEqual(self.capabilities['referenceContract']['currentReferenceFieldInstances'],257)
         self.assertTrue(self.capabilities['referenceContract']['typedIdentityOnly'])
         required={'identityStatus','family','attackBranches','writableFieldsByDomain',
             'sharedScopes','blockedFields','backpackDependency','linkedStratagem'}
@@ -62,11 +63,11 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
     def test_canonical_instances_exactly_cover_internal_descriptors(self):
         runtime,generated=generate_support_weapon_authoring.build()
         audit=generate_support_weapon_authoring.audit_instance_coverage(runtime,generated)
-        self.assertEqual(audit,{'internalInstances':1627,'publishedInstances':1627,   # 0.31.0: +34 missile fields, +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits, +53 ProgrammableAmmo rows
+        self.assertEqual(audit,{'internalInstances':1933,'publishedInstances':1933,   # 0.31.0: +34 missile fields, +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits, +53 ProgrammableAmmo rows; 0.31.2: +306 status slots (every empty slot)
             'missingInstances':0,'unexpectedInstances':0,'identityCoverage':'exact'})
         instances=self.capabilities['fieldInstances']
-        self.assertEqual(len(instances),1627)
-        self.assertEqual(len({item['instanceKey'] for item in instances}),1627)
+        self.assertEqual(len(instances),1933)
+        self.assertEqual(len({item['instanceKey'] for item in instances}),1933)
         objects={item['objectKey']:item for item in self.capabilities['backingObjects']}
         operations={item['operationGroupingKey']:item
             for item in self.capabilities['operationGroups']}
@@ -91,7 +92,7 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
             self.assertEqual(instance['operation']['phase'],1)
             self.assertEqual(instance['target']['accessor'][0],'support_weapon')
         self.assertEqual(sum(len(weapon['fieldInstanceKeys'])
-            for weapon in self.capabilities['weapons']),1627)
+            for weapon in self.capabilities['weapons']),1933)
 
     def test_gui_can_group_recoilless_instances_without_native_layout_knowledge(self):
         instances=[item for item in self.capabilities['fieldInstances']

@@ -106,6 +106,12 @@ class VehicleWeaponTests(unittest.TestCase):
         self.assertEqual(result['vehicleWeapons'], mounts + hosts['hosts'] + len(beam_hosts))
         for key in ('noOps', 'changedWrites', 'rollbacks', 'conflictRejections'):
             self.assertEqual(result[key], result['vehicleFields'], key)
+        # 0.31.2: every status slot after its row's first empty one (type and strength) is exercised after an earlier
+        # operation fills the slots before it; setting its status without them is refused (STATUS_SLOT_GAP).
+        later = [f for f in self.catalog['fieldInstances'] if f['writable'] and re.search(r'status_[234]_type$',
+            f['semanticFieldId']) and f['baseline'] == 'none']
+        self.assertEqual(result['statusGapRejections'] * 2, result['statusPrefills'])
+        self.assertTrue(result['statusGapRejections'] and result['statusGapRejections'] <= len(later))
         self.assertEqual(result['sharedRejections'], self.catalog['summary']['sharedFields'])
         # Only writable fields are rejected without the acknowledgement: the Rover gun's beam reference is listed
         # read-only (its beam source is AMBIGUOUS) and still carries allow_unverified_effect.

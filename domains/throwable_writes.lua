@@ -10,6 +10,7 @@ local entities=require('hd2runtime/core/entity_catalog')
 local profile=require('hd2runtime/schemas/current')
 local database=require('hd2runtime/domains/throwable_authoring')
 local status_catalog=require('hd2runtime/domains/status_catalog')
+local status_slots=require('hd2runtime/core/status_slots')
 local M={}
 local component_names={'ThrowableComponentData','ExplosiveComponentData','StickyComponentData',
     'ShieldComponentData','HealthComponentData'}
@@ -182,8 +183,11 @@ function M.capture_many(runtime,reader,specs)
 end
 function M.capture(runtime,reader,spec)return M.capture_many(runtime,reader,{spec})[1]end
 
-function M.prepare(resolved,reader,spec)
+-- packing: a plan phase's status slot packing state (domains/composition_plans.lua verifies it); without one, this
+-- write set is its own and is verified here.
+function M.prepare(resolved,reader,spec,packing)
     local plan={changes={},snapshots=reader.snapshots};local physical={}
+    local own_packing=packing==nil;packing=packing or status_slots.new()
     for _,change in ipairs(spec.changes)do
         local backing=change.descriptor.backing
         local record,owner
@@ -197,17 +201,11 @@ function M.prepare(resolved,reader,spec)
         assert(backing.offset+backing.width<=#record.bytes,'field outside reviewed record')
         local current=record.bytes:sub(backing.offset+1,backing.offset+backing.width)
         if backing.statusSlot then
-            -- Status slots stay packed from slot 1: the slots before this one are still used, and a slot is cleared
-            -- only when every later slot is empty.
-            local slot=backing.statusSlot
-            for index=1,slot-1 do
-                assert(b.u32(record.bytes,44+(index-1)*8)~=0,'CONFLICT: status slot '..index..' is now empty')
-            end
-            if change.status_type==0 then
-                for index=slot+1,4 do
-                    assert(b.u32(record.bytes,44+(index-1)*8)==0,'CONFLICT: a later status slot is used')
-                end
-            end
+            -- Status slots stay packed from slot 1, judged on the row as this write set leaves it (core/status_slots),
+            -- once every change is prepared.
+            status_slots.note(packing,tostring(owner.base)..':'..tostring(record.offset),record.bytes,
+                backing.statusSlot,change.descriptor.type=='status_reference'and change.status_type or nil,change.field,
+                current==change.desired)
             -- The reviewed and desired statuses must still carry the names the catalog was built from, so a
             -- renumbered status table can never be written through.
             local function verify_status(semantic)
@@ -248,6 +246,7 @@ function M.prepare(resolved,reader,spec)
             physical[key]=item;plan.changes[#plan.changes+1]=item
         end
     end
+    if own_packing then status_slots.verify(packing)end
     return plan
 end
 return M

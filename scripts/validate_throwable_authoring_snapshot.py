@@ -7,6 +7,9 @@ For every reviewed writable field, on a copy-on-write memory overlay of the snap
 2. A changed in-range value applies through the guarded transaction core. It reads back at the resolved
    address, is recognised as desired, and its guarded inverse restores the original bytes and page protection.
 3. A third-party value at the target is rejected as CONFLICT.
+
+A status slot after its row's first empty one (offered since 0.31.2) is exercised after an earlier operation fills the
+slots before it; without them, setting its status is rejected as STATUS_SLOT_GAP (core/status_slots.lua).
 4. The following are rejected before any memory access:
    - a stale expect;
    - missing allow_unverified_effect;
@@ -147,6 +150,23 @@ local function changed(field)
  return candidate
 end
 local function f32(v)return b.value(b.encode(v,'f32'),0,'f32')end
+-- 0.31.2: a status slot after its row's first empty one is set only when the slots before it hold a status
+-- (core/status_slots.lua). An earlier operation fills them ('fire'), as a mod would, before the slot is exercised.
+local function prefill(name,owned,field)
+ if not field.backing.statusSlot then return 0 end
+ local changes={}
+ for id,other in pairs(owned.fields)do
+  if other.type=='status_reference'and other.backing.statusSlot<field.backing.statusSlot
+   and other.backing.settings==field.backing.settings and other.backing.recordType==field.backing.recordType
+   and other.currentDefault=='none'then changes[#changes+1]={field=id,expect='none',value='fire'}end
+ end
+ if #changes==0 then return 0 end
+ table.sort(changes,function(x,y)return x.field<y.field end)
+ local applied=guarded.apply(runtime,resolve(domain.validate_transaction({id='status-prefill',allow_shared=true,
+  allow_unverified_effect=true,target=target_of(name,owned),changes=changes})))
+ assert(applied.status=='APPLIED'and applied.writes==#changes,'status prefill failed: '..field.instanceKey)
+ return #changes
+end
 local function link_address(resolved,link)
  if link.from=='component'then
   local record=resolved.catalog.record(resolved.candidate,link.component)
@@ -159,6 +179,7 @@ end
 local result={status='VALIDATED',throwables=0,targets=0,fieldChecks=0,readOnlyRejections=0,alreadyDesired=0,
  changedWrites=0,rollbacks=0,conflictRejections=0,staleExpectRejections=0,acknowledgementRejections=0,
  rangeRejections=0,proofRejections={},targetsByPath={},writes=0,protectionChanges=0,fixtureFallback='disabled',
+ statusPrefills=0,statusGapRejections=0,
  mode='snapshot-overlay',snapshot=SNAPSHOT_NAME}
 local worker=coroutine.create(function()
  local names={};for name in pairs(database.throwables)do names[#names+1]=name end;table.sort(names)
@@ -179,6 +200,8 @@ local worker=coroutine.create(function()
      result.readOnlyRejections=result.readOnlyRejections+1
     else
      writable=writable or id
+     local filled=prefill(name,owned,field)
+     if filled>0 then result.statusPrefills=result.statusPrefills+1 end
      -- 1. reviewed baseline and guarded no-op
      local plan=resolve(domain.validate_patch(request(name,owned,id,field.currentDefault,field.currentDefault)))
      assert(plan.changes[1].before==encode(field,field.currentDefault),
@@ -214,6 +237,11 @@ local worker=coroutine.create(function()
      rejects(function()resolve(spec)end,'CONFLICT','conflict')
      result.conflictRejections=result.conflictRejections+1
      reset()
+     if filled>0 and field.type=='status_reference'then
+      -- without the earlier slots filled (the overlay is reset) the same write would leave a gap and is refused
+      rejects(function()resolve(spec)end,'STATUS_SLOT_GAP','status slot gap')
+      result.statusGapRejections=result.statusGapRejections+1
+     end
      -- 4. stale expect, acknowledgements and range, before any memory access
      rejects(function()domain.validate_patch(request(name,owned,id,value,value))end,
       'expect differs','stale expect')

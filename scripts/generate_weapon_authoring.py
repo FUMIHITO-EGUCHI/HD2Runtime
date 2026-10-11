@@ -595,7 +595,8 @@ def build(catalog_path=CATALOG):
                         attack['terminalActions'] if candidate['referenceType']==explosion['explosionType']]
                     fields.append(scalar)
                 # The explosion's DamageInfo status slots (0.30.2): every used slot's status as a typed reference, and
-                # the first empty slot, which can take one. Same native slots and writer as a direct-hit row's; the row
+                # every empty slot (0.31.2; before, the first), which can take one. Same native slots and writer as a
+                # direct-hit row's; the row
                 # is the explosion's own (its sharing travels with it). A status on an explosion is not live-proven.
                 record=explosion['damageSettings']
                 for spec in status_fields.slot_specs(record['recordType']):
@@ -685,7 +686,8 @@ def build(catalog_path=CATALOG):
                     scalar['affectsMultipleWeapons']=True
                     scalar['dynamicConsumersPossible']=True
                 fields.append(scalar)
-            # Status slots: every used slot's status is a typed reference, and the first empty slot can take one.
+            # Status slots: every used slot's status is a typed reference, and every empty slot can take one (0.31.2;
+            # the writer keeps them packed: core/status_slots.lua).
             for spec in status_fields.slot_specs(record['recordType']):
                 backend=settings_backend('damage',record,spec['offset'],spec['storage'],role)
                 backend.update(status_fields.backing_extra(spec))

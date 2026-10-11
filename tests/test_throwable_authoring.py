@@ -33,8 +33,9 @@ class ThrowableAuthoringTests(unittest.TestCase):
         summary = self.catalog['summary']
         self.assertEqual((summary['throwables'], summary['resolved'], summary['writableThrowables']), (23, 23, 23))
         # 0.31.1: + the explosion DamageInfo status slots (each used slot's status, the first empty slot's status and
-        # strength) on every throwable explosion row: 48 fields, 46 writable.
-        self.assertEqual((summary['fieldInstances'], summary['writableFieldInstances']), (459, 434))
+        # strength) on every throwable explosion row: 48 fields, 46 writable. 0.31.2: + every later empty slot's status
+        # and strength (104 fields, 98 writable).
+        self.assertEqual((summary['fieldInstances'], summary['writableFieldInstances']), (563, 532))
 
     def test_every_wiki_throwable_resolves_to_one_native_entity(self):
         self.assertEqual(tuple(item['name'] for item in self.research['catalog']), NAMES)
@@ -98,13 +99,16 @@ class ThrowableAuthoringTests(unittest.TestCase):
         self.assertEqual([t['key'] for t in gas], ['gas', 'gas-confusion'])
         self.assertTrue(all('unconfirmed' in t['labelConfidence'] for t in gas))
 
-    def test_explosion_status_slots_take_a_status_in_the_first_empty_slot(self):
+    def test_explosion_status_slots_take_a_status_in_every_empty_slot(self):
         # 0.31.1 (a player request: "the gas grenade has no space to add statuses"): the G-4 Gas explosion applies
         # Gas and Gas Confusion (slots 1 and 2); slot 3 takes a status and its strength, like a weapon explosion's.
+        # 0.31.2: so does slot 4 (every empty slot is offered; core/status_slots.lua keeps them packed at write time).
         gas = self.targets[('G-4 Gas', 'explosion', None)]
         self.assertEqual({k: v['baseline'] for k, v in gas.items() if '.status_' in k},
             {'explosion.damage.status_1_type': 'gas', 'explosion.damage.status_2_type': 'gas_confusion',
-             'explosion.damage.status_3_type': 'none', 'explosion.damage.status_3_strength': 0.0})
+             'explosion.damage.status_3_type': 'none', 'explosion.damage.status_3_strength': 0.0,
+             'explosion.damage.status_4_type': 'none', 'explosion.damage.status_4_strength': 0.0})
+        self.assertTrue(gas['explosion.damage.status_4_type']['editable'])
         attach = gas['explosion.damage.status_3_type']
         self.assertTrue(attach['editable'] and attach['statusAttach'] and attach['allowNone'])
         self.assertIn('fire', attach['allowedValues'])
@@ -119,6 +123,11 @@ local spec=writes.validate_transaction{id='gas-fire',target=gas,allow_shared=tru
  changes={{field='explosion.damage.status_3_type',expect='none',value='fire'},
   {field='explosion.damage.status_3_strength',expect=0,value=100}}}
 assert(#spec.changes==2 and spec.changes[1].status_type==require('hd2runtime/domains/status_catalog').statuses.fire.nativeType)
+-- slots 3 and 4 in one write (whether the row stays packed is decided at write time, on the live row)
+spec=writes.validate_transaction{id='gas-two',target=gas,allow_shared=true,allow_unverified_effect=true,
+ changes={{field='explosion.damage.status_3_type',expect='none',value='fire'},
+  {field='explosion.damage.status_4_type',expect='none',value='stun_small'}}}
+assert(#spec.changes==2)
 local function refused(request,needle)
  local ok,why=pcall(writes.validate_patch,request)
  assert(not ok and tostring(why):find(needle,1,true),tostring(why))
@@ -228,6 +237,9 @@ return 'ok'
             result['conflictRejections'], result['staleExpectRejections']), (23, writable, writable, writable,
             writable, writable))
         self.assertEqual(result['rangeRejections'], 2 * writable)
+        # 0.31.2: each status slot after its row's first empty one (type and strength) is exercised after an earlier
+        # operation fills the slots before it; setting its status without them is refused (STATUS_SLOT_GAP).
+        self.assertEqual((result['statusPrefills'], result['statusGapRejections']), (98, 49))
         self.assertEqual(result['readOnlyRejections'],
             self.catalog['summary']['fieldInstances'] - writable)
         # Every family the task names is exercised.

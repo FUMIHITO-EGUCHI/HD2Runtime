@@ -9,7 +9,10 @@ Status slots (DamageInfo status references):
 - swap a used slot's status (Coyote fire -> stun_small), clear the last used slot (FLAM-40 fire_panic -> none);
 - reject: a status no player-side attack applies, clearing a slot that is not the last used one, a missing
   allow_unverified_effect, a hole in the slot packing (slot 1 emptied by a third party) and a stale status catalog
-  (the live row no longer carries the catalogued name).
+  (the live row no longer carries the catalogued name);
+- 0.31.2, every empty slot offered: the GL-15 Evictor's blast takes gas and gas confusion (slots 1 and 2) in one
+  transaction, in two operations of one plan phase, and slot 2 after an earlier operation set slot 1; all four slots
+  in one write; slot 2 alone is refused (STATUS_SLOT_GAP), and so is clearing a slot while a later one holds a status.
 
 Enemies and structures: every writable enemy field resolves as a guarded no-op against the live table; Charger main
 health and head armor, the base fabricator's health and the Warrior's head health round-trip; a third-party value is a
@@ -128,8 +131,60 @@ local worker=coroutine.create(function()
  end
  local row=assert(resolved.roots.damage.records[slot_field.backing.recordType],'Coyote DamageInfo absent')
  poke(resolved.roots.damage.owner.base+row.offset+44,b.encode(0,'u32'))
- rejects(function()resolve(weapons,spec)end,'CONFLICT: status slot 1 is now empty','packing hole')
+ rejects(function()resolve(weapons,spec)end,'STATUS_SLOT_GAP: status slot 1 is empty','packing hole')
  s.rejections.packingHole=1
+ reset()
+ -- 0.31.2: every empty slot is offered. The GL-15 Evictor's blast applies no status: one write gives it gas and gas
+ -- confusion (slots 1 and 2), as the G-4 Gas grenade's blast does; slot 2 alone would leave a gap and is refused.
+ local evictor={resource='player_weapon',path='explosion',weapon='GL-15 Evictor',attack='primary',phase='impact'}
+ local gas_pair={{field='explosion.damage.status_1_type',expect='none',value='gas'},
+  {field='explosion.damage.status_1_strength',expect=0,value=100},
+  {field='explosion.damage.status_2_type',expect='none',value='gas_confusion'},
+  {field='explosion.damage.status_2_strength',expect=0,value=100}}
+ plan=round_trip(transaction(evictor,gas_pair),'evictor gas pair')
+ local m={slots={}}
+ for _,part in ipairs(plan.changes)do m.slots[#m.slots+1]={field=part.label,after=b.hex(part.desired)}end
+ m.oneTransaction=#plan.changes
+ rejects(function()resolve(weapons,transaction(evictor,{gas_pair[3],gas_pair[4]}))end,
+  'STATUS_SLOT_GAP: status slot 1 is empty','evictor slot 2 alone')
+ s.rejections.slotGap=1
+ -- The same pair as two operations of one plan phase (the phase is judged as a whole).
+ local plans=require('hd2runtime/domains/composition_plans')
+ local validated=plans.validate({id='evictor-gas',operations={
+  {id='gas',target=evictor,allow_shared=true,allow_unverified_effect=true,changes={gas_pair[1],gas_pair[2]}},
+  {id='confusion',target=evictor,allow_shared=true,allow_unverified_effect=true,changes={gas_pair[3],gas_pair[4]}}}})
+ local phase=validated.phases[1]
+ local reader=Reader.new(runtime)
+ local phase_plan=plans.prepare_phase(weapons.capture_many(runtime,reader,phase.capture_specs),reader,phase)
+ reader.verify()
+ local applied=guarded.apply(runtime,phase_plan)
+ assert(applied.status=='APPLIED'and applied.writes==4,'evictor plan phase failed: '..tostring(applied.reason))
+ m.planPhaseWrites=applied.writes
+ reset()
+ -- Slot 1 set by an earlier operation: slot 2 alone then goes ahead.
+ applied=guarded.apply(runtime,(resolve(weapons,transaction(evictor,{gas_pair[1],gas_pair[2]}))))
+ assert(applied.status=='APPLIED','evictor slot 1 failed')
+ applied=guarded.apply(runtime,(resolve(weapons,transaction(evictor,{gas_pair[3],gas_pair[4]}))))
+ assert(applied.status=='APPLIED'and applied.writes==2,'evictor slot 2 after slot 1 failed')
+ m.afterEarlierOperation=applied.writes
+ reset()
+ -- All four slots of the row in one write.
+ local four={}
+ for slot,status in ipairs({'gas','gas_confusion','fire','stun_small'})do
+  four[#four+1]={field='explosion.damage.status_'..slot..'_type',expect='none',value=status}
+ end
+ plan=round_trip(transaction(evictor,four),'evictor four slots')
+ m.fourSlots=#plan.changes
+ s.evictor=m
+ reset()
+ -- Clearing a slot while a later one holds a status is refused: the Coyote's fire (its last used slot) after an
+ -- earlier operation attached gas in slot 2.
+ applied=guarded.apply(runtime,(resolve(weapons,transaction(coyote,{{field='damage.status_2_type',expect='none',
+  value='gas'}}))))
+ assert(applied.status=='APPLIED','coyote slot 2 failed')
+ rejects(function()resolve(weapons,transaction(coyote,{{field='damage.status_1_type',expect='fire',value='none'}}))end,
+  'STATUS_SLOT_GAP: damage.status_1_type clears slot 1 while slot 2','clearing before a used slot')
+ s.rejections.clearBeforeUsed=1
  reset()
  -- A stale catalog: the live row must still carry the catalogued name.
  local name=status_catalog.statuses.fire.name

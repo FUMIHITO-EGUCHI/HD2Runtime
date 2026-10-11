@@ -55,9 +55,10 @@ Everything else is catalogued read-only:
 ## API
 
 Each damage object has `damage.status_<k>_type` for every used slot, plus `damage.status_<k>_type` and
-`damage.status_<k>_strength` for its first empty slot. Explosion damage objects have the same fields as
-`explosion.damage.status_<k>_*`. Player-weapon explosions have them since 0.30.2 (before, only support-weapon
-explosions did): for example the PLAS-101 Purifier's charged-shot blast, through its explosion handle.
+`damage.status_<k>_strength` for every empty slot, up to slot 4. Before 0.31.2 only the first empty slot was offered,
+so a row with no status (the GL-15 Evictor's blast, for one) could gain only one. Explosion damage objects have the
+same fields as `explosion.damage.status_<k>_*`. Player-weapon explosions have them since 0.30.2 (before, only
+support-weapon explosions did): for example the PLAS-101 Purifier's charged-shot blast, through its explosion handle.
 
 ```lua
 -- Charged Purifier shots set what their blast hits on fire (no bigger blast, nothing lingers on the ground).
@@ -66,6 +67,19 @@ hd2.ensure({plan={id='purifier-incendiary-charge',operations={
     {id='fire',target=blast,allow_unverified_effect=true,changes={
         {field=hd2.fields.explosion.damage_status_1_type,expect='none',value='fire'},
         {field=hd2.fields.explosion.damage_status_1_strength,expect=0,value=2}}},
+}}})
+```
+
+```lua
+-- 0.31.2: the GL-15 Evictor's blast applies no status; one write gives it gas and gas confusion (slots 1 and 2), the
+-- pair the G-4 Gas grenade applies (strength 100, the gas weapons' usual value).
+local evictor=hd2.weapon('GL-15 Evictor'):attack('primary'):projectile():terminal_action('impact'):explosion()
+hd2.ensure({plan={id='evictor-gas',operations={
+    {id='gas',target=evictor,allow_shared=true,allow_unverified_effect=true,changes={
+        {field=hd2.fields.explosion.damage_status_1_type,expect='none',value='gas'},
+        {field=hd2.fields.explosion.damage_status_1_strength,expect=0,value=100},
+        {field=hd2.fields.explosion.damage_status_2_type,expect='none',value='gas_confusion'},
+        {field=hd2.fields.explosion.damage_status_2_strength,expect=0,value=100}}},
 }}})
 ```
 
@@ -94,14 +108,23 @@ hd2.ensure({plan={id='maxigun-stun',operations={
   `acid_stream`.
 - **The extended statuses always need `allow_unverified_effect`**, on every row, live-proven direct-hit rows
   included: no attack has been live-tested with them.
-- **Clearing.** `'none'` clears only the last used slot, so the slots stay packed.
+- **Packing (0.31.2).** The slots stay packed from slot 1. Slot k takes a status (or a changed strength) only when
+  slots 1 to k-1 hold a status after the write: live (a vanilla status, or one an earlier operation set) or set by
+  the same transaction or by another operation of the same plan phase. Slot 2 alone on an empty row is refused
+  (`STATUS_SLOT_GAP`), whatever order the changes are listed in. A strength written at its current value (a no-op) is
+  never refused.
+- **Clearing.** `'none'` clears only the last used slot of the vanilla row (`allowNone`), and only when every later
+  slot is empty after the write: clearing slot 1 while an earlier operation's status sits in slot 2 is refused
+  (`STATUS_SLOT_GAP`). An attached slot can be cleared together with the attached slots after it.
 - **Strength.** Strengths range from 0 to 1000. Use the strength an existing user applies; the catalog lists the
   observed range for each status.
 - **Duration.** Editing a status's definition (`status.duration`) is a different operation from choosing which
   status an attack applies. Duration edits are shared by every attack that applies the status.
 - **Acknowledgements.**
-  - **Player and support weapon projectile (direct-hit) rows need no `allow_unverified_effect`.** Attaching,
-    swapping and clearing statuses there is live-proven (see below). These fields carry a `liveEvidence` reference.
+  - **Player and support weapon projectile (direct-hit) rows need no `allow_unverified_effect`** for their used slots
+    and their first empty slot. Attaching, swapping and clearing statuses there is live-proven (see below). These
+    fields carry a `liveEvidence` reference. The later empty slots (0.31.2) still need it: a second attached status
+    on one row has not been live-tested.
   - Every other row still needs `allow_unverified_effect`:
     - explosion, spray, beam, arc and melee DamageInfo rows;
     - vehicle mounted weapons.
@@ -156,7 +179,8 @@ Things to know:
 
 At write time the runtime re-proves:
 - the damage row's identity and ownership chain;
-- that the earlier slots are still used (and, when clearing, that the later slots are empty);
+- that the row stays packed as the whole write set leaves it (`core/status_slots.lua`, 0.31.2): the earlier slots
+  hold a status, live or set by the same transaction or plan phase, and, when clearing, the later slots are empty;
 - that the live status table still stores the catalogued name for both the current and the desired status.
 
 A renumbered or edited status table therefore can never be written through a stale catalog.

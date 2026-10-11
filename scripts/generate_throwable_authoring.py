@@ -272,7 +272,8 @@ def outputs(research_path=RESEARCH):
                         tier='wiki_exact' if fact and fact in matched else 'native_member')
                 # ---- the explosion DamageInfo's status slots as references (0.31.1) ------------------------
                 # The same model as a weapon explosion's (scripts/status_fields.py): each used slot's status, and
-                # the first empty slot, which takes a status and its strength. Slots stay packed from slot 1.
+                # every empty slot (0.31.2; before, the first), which takes a status and its strength. Slots stay
+                # packed from slot 1 (core/status_slots.lua, at write time).
                 for spec in status_fields.slot_specs(exp_damage['recordType']):
                     extra = status_fields.type_extra(spec)
                     backing = settings_backing(exp_damage, spec['offset'], spec['storage'])
