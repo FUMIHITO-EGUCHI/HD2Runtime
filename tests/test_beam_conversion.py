@@ -379,6 +379,35 @@ return json.encode({ok=ok,why=why,placed=#order,moves=moves,back=b.hex(rows)==C.
         self.assertGreater(result['moves'], 0)
         self.assertTrue(result['back'])
 
+    def test_a_rate_change_refits_only_an_automatic_pulse(self):
+        result = json.loads(run(r'''
+local json=require('hd2runtime/primary_mapper/json')
+local W=require('hd2runtime/domains/beam_conversion_writes')
+local hd2=require('hd2runtime/api/hd2')
+local F=hd2.fields
+local function intent(current,rate)
+ local spec=W.validate_patch({id='r',target=hd2.beam_conversion('LAS-16 Sickle'),field=F.beam.fire_rate,expect=300,
+  value=rate,allow_component_swap=true,allow_unverified_effect=true})
+ return W.intent(spec,current,nil)
+end
+local out={}
+-- The Trident's pulse, and the pulse fitted to the current rate, are automatic: refitted (600 rpm -> 0.0667 s).
+out.donor=intent({fire_rate=300,pulse_beams=2,pulse_seconds=0.15000000596046448},600).settings.pulse_seconds
+local fitted=require('hd2runtime/runtime/beam_conversion').fitted_pulse(600,nil)
+out.fitted=intent({fire_rate=600,pulse_beams=2,pulse_seconds=fitted},900).settings.pulse_seconds
+-- An explicit pulse (another field's ensure) is kept, with a note.
+local kept=intent({fire_rate=60,pulse_beams=1,pulse_seconds=1},120)
+out.kept=kept.settings.pulse_seconds
+out.kept_note=table.concat(kept.notes,'\n')
+-- Not converted yet: the donor's, fitted.
+out.fresh=intent(nil,600).settings.pulse_seconds
+return json.encode(out)'''))
+        self.assertAlmostEqual(result['donor'], 0.0666667, places=5)
+        self.assertLess(result['fitted'], 0.0666)
+        self.assertEqual(result['kept'], 1)
+        self.assertIn('kept at 1 s (set explicitly)', result['kept_note'])
+        self.assertAlmostEqual(result['fresh'], 0.0666667, places=5)
+
     def test_pulse_fit(self):
         result = json.loads(run(r'''
 local json=require('hd2runtime/primary_mapper/json')
@@ -629,6 +658,117 @@ end
 return json.encode(out)''')
         for key, value in result.items():
             self.assertTrue(value, (key, result))
+
+    def test_an_editor_moves_its_own_values_again_and_back_while_a_foreign_value_is_refused(self):
+        # 0.31.2 user report (APW-1, HD2R Editor): beam.fire_rate 300 -> 60 applied, then every later change (120, the
+        # reset to 300) was refused with "CONFLICT: ... is 60, neither the expected 300 nor the requested 300 (another
+        # operation set it)". The editor holds each field with an option-bound ensure; the beam conversion domain
+        # ignored the bytes that ensure verified live on its previous run (change.owned), so its own 60 read as
+        # another operation's value.
+        result = snapshot_run(PRELUDE + r'''
+local NAME='APW-1 Anti-Materiel Rifle'
+local w=weapon(NAME)
+check(w and w.supported,'the APW-1 converts')
+local EDITOR='mods/t/hd2editor'
+local mod=hd2.mod(EDITOR)
+local function setting(at,storage)return b.value(runtime.read(ptr(SLOT)+0x2E0+w.record*0x78+at,4),0,storage)end
+local function rate()return setting(104,'i32')end
+local function beams()return setting(108,'i32')end
+local function pulse()return setting(112,'f32')end
+local function near(a,x)return math.abs(a-x)<1e-5 end
+-- The editor's request: one ensure per field, the value a script handle (editor/layer.lua Layer:register).
+local function bound(id,field,expect,handle)
+ local request={startup_delay=0,interval=30,recover=true,patch={id=id,target=hd2.beam_conversion(NAME),field=field,
+  expect=expect,value=handle,allow_component_swap=true,allow_unverified_effect=true}}
+ return events.run_as(EDITOR,function()return hd2.ensure(request)end)
+end
+local function held(h)return h.status=='waiting'and(h.runs or 0)>=1 end
+local function steer(h,handle,value)
+ local runs=h.runs
+ handle:set(value)
+ local n=0
+ while n<600 and not(h.status=='blocked'or h.status=='rejected'or(held(h)and h.runs>runs))do frames(1);n=n+1 end
+ return h
+end
+local out={}
+local on=mod:choice({id='on',values={false,true},default=2})
+local enabled=bound('bc-on',F.beam_conversion.enabled,false,on)
+settle({enabled})
+out.converted=held(enabled)and hd2.beam_conversion(NAME):status().state=='converted'
+-- 300 -> 60: the first write (expect = the baseline).
+local rate_value=mod:value({id='rate',min=60,max=300,step=1,default=60})
+local r=bound('bc-rate',F.beam.fire_rate,300,rate_value)
+settle({r})
+out.first=held(r)and rate()==60
+local beams_value=mod:value({id='beams',min=1,max=8,step=1,default=1})
+local nb=bound('bc-beams',F.beam.pulse_beams,2,beams_value)
+local pulse_value=mod:value({id='pulse',min=0.05,max=1.5,step=0.05,default=1})
+local p=bound('bc-pulse',F.beam.pulse_seconds,0.15,pulse_value)
+settle({nb,p})
+out.beams_and_pulse=held(nb)and held(p)and beams()==1 and near(pulse(),1)
+-- 60 -> 120 -> 300: the same ensure moves its own value on and back (before the fix: CONFLICT, blocked).
+steer(r,rate_value,120)
+out.second=held(r)and rate()==120 or tostring(r.error)
+-- An explicit pulse is kept by a rate change: refitting it would undo the pulse ensure's value.
+out.pulse_kept=near(pulse(),1)and beams()==1
+steer(r,rate_value,300)
+out.reset=held(r)and rate()==300 or tostring(r.error)
+-- No ping-pong between the field ensures: several steady-state checks, no drift, nothing moves.
+frames(200)
+out.steady=r.drifts==0 and p.drifts==0 and nb.drifts==0 and rate()==300 and near(pulse(),1)
+ or ('drifts '..r.drifts..'/'..p.drifts..'/'..nb.drifts)
+steer(p,pulse_value,0.15)
+steer(nb,beams_value,2)
+out.settings_back=held(p)and held(nb)and near(pulse(),0.15)and beams()==2
+-- The editor's release (its ensure stops; the bytes stay), then a NEW ensure of the same mod adopting the live value
+-- (expect = the baseline, value = what the game holds) and steering it: the replacement case.
+steer(r,rate_value,60)
+r.cancel()
+local adopt=mod:value({id='rate2',min=60,max=300,step=1,default=60})
+local r2=bound('bc-rate-2',F.beam.fire_rate,300,adopt)
+settle({r2})
+out.adopted=held(r2)and r2.result.status=='ALREADY_DESIRED'and rate()==60
+steer(r2,adopt,150)
+out.replaced=held(r2)and rate()==150 or tostring(r2.error)
+-- Another mod's operation with the baseline expect: the editor's 150 is NOT its own (no owned bytes): CONFLICT.
+local other=events.run_as('mods/t/other',function()return hd2.transaction({id='other-rate',
+ target=hd2.beam_conversion(NAME),changes={{field=F.beam.fire_rate,expect=300,value=200}},
+ allow_component_swap=true,allow_unverified_effect=true})end)
+done(other)
+out.other_mod_refused=other.status=='rejected'and tostring(other.error):find('CONFLICT',1,true)~=nil
+ and rate()==150
+-- A foreign writer (not HD2Runtime) changes the bytes under the ensure: the drift re-resolves and is refused (the
+-- owned bytes are 150, the live value 77), never overwritten.
+writable(ptr(SLOT)+0x2E0+w.record*0x78+104,b.encode(77,'i32'))
+local n=0
+while n<1200 and r2.status~='blocked'do frames(1);n=n+1 end
+out.foreign_refused=r2.status=='blocked'and tostring(r2.error):find('CONFLICT',1,true)~=nil and rate()==77
+ or (r2.status..' '..tostring(r2.error)..' '..rate())
+writable(ptr(SLOT)+0x2E0+w.record*0x78+104,b.encode(300,'i32'))
+r2.cancel()
+-- A toggle-bound ensure's restore (the enabled option off) after an owned transition: back to the baseline.
+local page=events.run_as(EDITOR,function()return hd2.options({id='bc_page',title='bc'})end)
+local toggle=page:toggle({id='enabled',label='Enabled',default=true})
+local rv=mod:value({id='rate3',min=60,max=300,step=1,default=90})
+local r3=events.run_as(EDITOR,function()return hd2.ensure({startup_delay=0,enabled=toggle,patch={id='bc-rate-3',
+ target=hd2.beam_conversion(NAME),field=F.beam.fire_rate,expect=300,value=rv,allow_component_swap=true,
+ allow_unverified_effect=true}})end)
+settle({r3})
+steer(r3,rv,180)
+out.toggle_moved=rate()==180 or tostring(r3.error)
+menu.apply('bc_page.enabled',false)
+n=0
+while n<600 and r3.status~='disabled'and r3.status~='blocked'do frames(1);n=n+1 end
+out.restored=r3.status=='disabled'and rate()==300 or (r3.status..' '..tostring(r3.error))
+-- Off, and every byte vanilla again.
+on:set(false)
+n=0
+while n<600 and hd2.beam_conversion(NAME):status().state=='converted'do frames(1);n=n+1 end
+for _,h in ipairs({enabled,nb,p,r3})do h.cancel()end
+out.clean=vanilla_ok(w)and changed()==0 or ('changed '..changed())
+return json.encode(out)''')
+        for key, value in result.items():
+            self.assertIs(value, True, (key, result))
 
     def test_the_experiment_copy_is_never_mixed(self):
         result = snapshot_run(PRELUDE + r'''

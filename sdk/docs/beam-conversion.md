@@ -86,8 +86,12 @@ target, and `hd2.beam_conversions()` returns every catalogued weapon's target.
 ### Rules
 
 - **`expect` is always the baseline:** not converted, and the Trident's values.
-- **A change on a converted weapon** checks that each named field still holds its `expect` or its `value`. Anything
-  else is another operation's value: `CONFLICT`.
+- **A change on a converted weapon** checks that each named field still holds its `expect` or its `value`. An
+  option-bound ensure (a value bound to a script value or menu option, as the HD2R Editor holds every field) may also
+  find the value it applied itself on its previous run: moving its own value on (300 -> 60 -> 120, or back to 300, or
+  its restore) is a transition, the same rule as every other typed field (`core/ownership.lua`). Anything else is
+  another operation's value: `CONFLICT`, also when it is another mod's or a writer outside HD2Runtime. Before 0.31.2
+  this domain ignored the ensure's own value, so the second change of a field was refused.
 - **Settings alone** (no `beam_conversion.enabled` in the request) are accepted only on a converted weapon. On a
   weapon that is not converted they fail with `NOT_CONVERTED`, unless they are the baseline (an ensure's restore).
 - **Acknowledgements.** Every request needs `allow_component_swap=true`, because the weapon's component set changes in
@@ -107,7 +111,11 @@ The Trident's 0.15 s pulse caps any rate at about 330 to 360 rpm at 60 fps (`res
 - **When a request sets `beam.fire_rate` without `beam.pulse_seconds`, the pulse is fitted.** It keeps the Trident's
   0.15 s while that fits the rate. Otherwise it becomes `max(60 / (2 x rate), 60 / rate - 1/30)` s, which never caps
   the rate from 30 fps up, and never less than 0.0334 s. The note is logged.
-- **An explicit `beam.pulse_seconds` is kept.** If it caps the rate, a `WARNING` is logged.
+- **An explicit `beam.pulse_seconds` is kept**, also by a later request that names the rate alone (0.31.2). Only an
+  automatic pulse is refitted: the Trident's 0.15 s or the pulse fitted to the weapon's current rate. Any other pulse
+  was set by an earlier request and stays (a note says so); set it to 0.15 to have it fitted again. Before 0.31.2 a
+  rate change refitted it, so two ensures holding the rate and the pulse overwrote each other at every check. If the
+  kept pulse caps the rate, a `WARNING` is logged.
 - **A pulse no longer than one frame deals no damage.** That is why 0.0334 s is the minimum. At 30 fps a pulse that
   hits allows at most 600 rpm.
 - Rates round to whole frames, so expect a little less with a varying frame rate (about 550 for 600 rpm).

@@ -12,7 +12,8 @@
 -- damage.standard_damage / durable_damage / ap_* / demolition / stagger / push_force. `expect` is always the reviewed
 -- baseline (not converted; the Trident's 300 rpm, 2 beams, 0.15 s, row 6 / 508 values). A request that sets
 -- beam.fire_rate without beam.pulse_seconds gets the FITTED pulse (runtime/beam_conversion.lua M.fitted_pulse: the
--- Trident's 0.15 s when it fits the shot interval, else the longest pulse that never caps the rate), logged.
+-- Trident's 0.15 s when it fits the shot interval, else the longest pulse that never caps the rate), logged, unless
+-- the converted weapon's pulse was set explicitly (automatic_pulse below): that one is kept.
 -- Every request needs allow_component_swap (the weapon's component set changes: ProjectileWeapon out, BeamWeapon in)
 -- and allow_unverified_effect (the product path is not live-tested yet). Helpers never add either.
 local b=require('hd2runtime/core/bytes')
@@ -109,6 +110,18 @@ end
 function M.validate_patch(request)return validate(request,false)end
 function M.validate_transaction(request)return validate(request,true)end
 
+-- Whether a converted weapon's pulse is the automatic one: the Trident's, or the pulse fitted to its current rate (what
+-- a request naming the rate alone writes). Any other pulse was set explicitly (by beam.pulse_seconds) and is kept by a
+-- later rate change: refitting it would undo another operation's value (an editor holds every field with its own
+-- ensure; the two would overwrite each other at every steady-state check).
+local function automatic_pulse(current)
+    if not current then return true end
+    local E=engine()
+    return same(current.pulse_seconds,E.DONOR_SETTINGS.pulse_seconds,'f32')
+        or same(current.pulse_seconds,E.fitted_pulse(current.fire_rate,nil),'f32')
+end
+M.automatic_pulse=automatic_pulse
+
 -- What the request asks the weapon's record to hold, and whether it converts: {enabled (nil = not named), settings,
 -- requested = {[setting] = true}, fitted (the pulse was fitted), notes}.
 function M.intent(spec,current,current_rows)
@@ -131,7 +144,10 @@ function M.intent(spec,current,current_rows)
     for _,def in ipairs(C.settings)do
         if out.settings[def.id]==nil then out.settings[def.id]=base[def.id]end
     end
-    if out.requested.fire_rate and not out.requested.pulse_seconds then
+    if out.requested.fire_rate and not out.requested.pulse_seconds and not automatic_pulse(current)then
+        out.notes[#out.notes+1]=('note: %s: beam.pulse_seconds kept at %.4g s (set explicitly); set it to 0.15 to have '
+            ..'it fitted to the rate again'):format(w.name,out.settings.pulse_seconds)
+    elseif out.requested.fire_rate and not out.requested.pulse_seconds then
         local pulse,fitted=engine().fitted_pulse(out.settings.fire_rate,nil)
         out.settings.pulse_seconds=b.value(b.encode(pulse,'f32'),0,'f32')
         out.fitted=fitted
@@ -160,6 +176,14 @@ function M.capture(runtime,reader,spec)
     return {world=world,s=s,weapon=E.weapon(spec.weapon)}
 end
 
+-- The value an option-bound ensure verified live last time for this change (its encoded `owned` bytes), or nil.
+local function owned_value(change)
+    local f=change.descriptor
+    if type(change.owned)~='string'or not f.storage or#change.owned~=4 then return nil end
+    return b.value(change.owned,0,f.storage)
+end
+local function metrics()return require('hd2runtime/runtime/metrics')end
+
 function M.prepare(resolved,reader,spec)
     local E=engine()
     local w,s,world=resolved.weapon,resolved.s,resolved.world
@@ -182,13 +206,21 @@ function M.prepare(resolved,reader,spec)
         end
         enabled=converted
     end
-    -- Settings conflict: on a converted weapon each named setting must hold its expect or its value now.
+    -- Settings conflict: on a converted weapon each named setting must hold its expect, its value, or the value this
+    -- same option-bound ensure verified live on its previous run (`change.owned`, api/ensure.lua): moving its own value
+    -- on (300 -> 60 -> 120, or back to 300) is a transition, not another operation's value (core/ownership.lua, the
+    -- rule of every typed domain). Anything else is still a CONFLICT.
     if converted and enabled then
         for _,change in ipairs(spec.changes)do
             local f=change.descriptor
+            local mine=owned_value(change)
+            local function own(now)
+                if mine~=nil and same(now,mine,f.storage)then metrics().count('options.owned_transitions');return true end
+                return false
+            end
             if f.row then
                 local now=current_rows[f.id]
-                if not(same(now,change.expect,f.storage)or same(now,change.value,f.storage))then
+                if not(same(now,change.expect,f.storage)or same(now,change.value,f.storage)or own(now))then
                     error(('CONFLICT: the %s: %s is %s, neither the expected %s nor the requested %s (another '
                         ..'operation set it)'):format(w.name,f.id,tostring(now),tostring(change.expect),
                         tostring(change.value)),0)
@@ -198,7 +230,7 @@ function M.prepare(resolved,reader,spec)
                 -- A pulse fitted to the current rate (by the request that set the rate) counts as the baseline.
                 local fitted=f.setting=='pulse_seconds'and E.fitted_pulse(current.fire_rate,nil)
                 if not(same(now,change.expect,f.storage)or same(now,change.value,f.storage)
-                    or fitted and same(now,fitted,f.storage))then
+                    or fitted and same(now,fitted,f.storage)or own(now))then
                     error(('CONFLICT: the %s\'s %s is %s, neither the expected %s nor the requested %s (another '
                         ..'operation set it)'):format(w.name,f.id,tostring(now),tostring(change.expect),
                         tostring(change.value)),0)
