@@ -283,22 +283,26 @@ weapon's records; each follows from fields you can edit.
   Cannon 100 / 33 = about 3 s; Sai, Trident and Talon 0. To shorten the Quasar's charge to 1.5 s, set
   `heat.charge_gain_per_second` 33 -> 66, or `heat.firing_charge` 100 -> 50. Both fields need
   `allow_unverified_effect` (their names are leads, see above).
-- **Cooldown after overheat** has no proven member of its own. `heat.overheat_lock` is only the flag that locks the
-  weapon at maximum heat. An overheated weapon cools from `heat.capacity` at `heat.cool_per_second`, scaled by the
-  game's cold and hot multipliers (`heat.cool_per_second_cold` / `_hot`). `heat.overheat_cooldown` stays read-only,
-  and its reason names those two fields. Example: the Quasar's one 100-heat shot fills its 100 capacity, and
-  100 / 6.66 per second = about 15 s before the multipliers. To halve it, double `heat.cool_per_second`
-  (6.66 -> 13.32), or lower `heat.capacity` together with `heat.heat_per_shot`.
-- **Open lead, not exposed:** WeaponHeat +140 (FP32, unnamed) is 400 on every other player heat weapon. On the
-  Quasar it is 6.66, the same as its cooling rate, and the Quasar is the only player heat weapon with +144 (lead
-  name `needs_reload_after_overheat`) 0. It may be the cooling rate while overheated. If a live test shows that the Quasar's cooldown does not follow
-  `heat.cool_per_second`, this member is the next thing to prove (`research/docs/entity-component-table-pointers.md`).
+- **Cooldown after overheat** has no member of its own; two members of the heat record decide it (0.31.2,
+  `research/overheat-cooling-F5FEE03DCFDB.json`, traced offline in the game's heat step):
+  - WeaponHeat +144 set (every player heat weapon): an overheated weapon does not cool and is not released by
+    cooling. It needs a heatsink change (a reload). `heat.cool_per_second` applies only while it is not overheated.
+    The LAS-17 Double-Edge Sickle never overheats (`heat.overheat_lock` off).
+  - +144 clear (the LAS-99 Quasar Cannon alone): an overheated weapon cools at `heat.cool_per_second_overheated`
+    (WeaponHeat +140) instead of `heat.cool_per_second`, until the heat is back at the release threshold (WeaponHeat
+    +100, 0 on the Quasar). The Quasar's one 100-heat shot fills its 100 capacity, so the lockout is 100 / 6.66 =
+    15 s, about 17.5 s hot and 12.5 s cold. `heat.cool_per_second` does not change it.
+  - `heat.overheat_cooldown` stays read-only; its reason is the weapon's own case. `heat.cool_per_second_overheated`
+    is a support-weapon field (the Quasar's); see [support weapons](support-weapon-api.md) "Warm-up and cooldown after
+    overheat". It needs `allow_unverified_effect`: it is not yet shown in game.
+  - Correction: before 0.31.2 this section said the Quasar cools from `heat.capacity` at `heat.cool_per_second`. That
+    is wrong for the lockout, and so was the advice to double `heat.cool_per_second` to halve it.
 
 ```lua
 local quasar=hd2.support_weapon('LAS-99 Quasar Cannon')
 hd2.ensure({transaction={id='quick-quasar',target=quasar,allow_unverified_effect=true,changes={
     {field=hd2.fields.heat.charge_gain_per_second,expect=33,value=66},          -- warm-up about 1.5 s
-    {field=hd2.fields.heat.cool_per_second,expect=6.659999847412109,value=13.32}, -- cooldown about 7.5 s
+    {field=hd2.fields.heat.cool_per_second_overheated,expect=6.659999847412109,value=13.32}, -- lockout about 7.5 s
 }}})
 ```
 

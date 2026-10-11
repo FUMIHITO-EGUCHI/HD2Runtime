@@ -254,9 +254,14 @@ def _i32(data, offset):
 
 WARMUP_REASON = ('Derived: heat.firing_charge / heat.charge_gain_per_second (the charge built before the first shot, '
     'at the charge gained per second); edit heat.firing_charge or heat.charge_gain_per_second.')
-OVERHEAT_COOLDOWN_REASON = ('No proven member of its own: after an overheat the weapon cools from heat.capacity at '
-    'heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit '
-    'heat.capacity or heat.cool_per_second.')
+# 0.31.2 (research/overheat-cooling-F5FEE03DCFDB.json): the lockout after an overheat is not heat.cool_per_second's.
+# Each weapon's reason is its own record's (scripts/equipment_fields.py overheat_cooldown_reason): every player heat
+# weapon's record has +144 set, so it does not cool while overheated and needs the heatsink change.
+def overheat_cooldown_reason(body):
+    import equipment_fields
+    return equipment_fields.overheat_cooldown_reason({'overheats': body[80], 'capacity': _f32(body, 96),
+        'releaseThreshold': _f32(body, 100),
+        'coolPerSecondOverheated': _f32(body, 140), 'noPassiveCoolingWhileOverheated': body[144]})
 
 
 def warmup_seconds(charge, gain):
@@ -520,11 +525,10 @@ def analyze(raw):
             {'id': 'heat.warmup', 'value': warmup_seconds(_f32(body, 148), _f32(body, 152)),
                 'wikiValue': (wiki_heat.get('Warmup') or [None])[0], 'derived': True,
                 'writable': False, 'reason': WARMUP_REASON},
-            # No dedicated overheat-lockout member: an overheated weapon cools from heat.capacity at
-            # heat.cool_per_second (x the native cold / hot multipliers).
+            # No dedicated overheat-lockout member: the record's +144 / +140 / +100 decide it (research/overheat-cooling).
             {'id': 'heat.overheat_cooldown', 'value': None,
                 'wikiValue': 'reload_needed' if 'Cooldown After Overheat' in wiki_heat else None,
-                'derived': False, 'writable': False, 'reason': OVERHEAT_COOLDOWN_REASON},
+                'derived': False, 'writable': False, 'reason': overheat_cooldown_reason(body)},
         ])
         heat_weapons.append({'weapon': name, 'resources': identity['resources'],
             'heatMechanismPresent': True, 'heatsinkMechanismPresent': True,

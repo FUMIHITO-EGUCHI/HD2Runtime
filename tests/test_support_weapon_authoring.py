@@ -33,9 +33,9 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
         # 0.31.0: +2 beam references (attack.beam on the LAS-98 and the 40-K Meltagun, research/beam-outputs); +34
         # missile fields (research/wasp-rocket: W.A.S.P. 9 missile + 9 function_missile, Spear 8, Commando 8); +14 the
         # Breaching Hammer's ability explosion (3 radii, 9 damage, 2 status slots).
-        self.assertEqual(self.capabilities['summary']['internalSupportAuthoringInstances'],1933)   # 0.31.0: +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits (Spear, Commando, W.A.S.P.), +53 ProgrammableAmmo rows (AC-8, GR-8, RL-77); 0.31.2: +306 status slots (every empty slot of a row, not only the first)
-        self.assertEqual(self.capabilities['summary']['publishedSupportFieldInstances'],1933)
-        self.assertEqual(self.capabilities['summary']['legacyFlattenedFieldEntries'],1456)   # +12 hammer explosion, +1 the MG-43's left input (0.31.0); +27 missile direct-hit damage members, +1 the AC-8 projectile.lifetime (0.31.1: the other ProgrammableAmmo fields repeat a semantic id of the weapon's primary attack)
+        self.assertEqual(self.capabilities['summary']['internalSupportAuthoringInstances'],1934)   # 0.31.0: +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits (Spear, Commando, W.A.S.P.), +53 ProgrammableAmmo rows (AC-8, GR-8, RL-77); 0.31.2: +306 status slots (every empty slot of a row, not only the first), +1 heat.cool_per_second_overheated (Quasar)
+        self.assertEqual(self.capabilities['summary']['publishedSupportFieldInstances'],1934)
+        self.assertEqual(self.capabilities['summary']['legacyFlattenedFieldEntries'],1457)   # +1 heat.cool_per_second_overheated (0.31.2); +12 hammer explosion, +1 the MG-43's left input (0.31.0); +27 missile direct-hit damage members, +1 the AC-8 projectile.lifetime (0.31.1: the other ProgrammableAmmo fields repeat a semantic id of the weapon's primary attack)
         self.assertEqual(self.capabilities['summary']['deduplicationLossPrevented'],477)   # 0.31.1: + the missile direct hits' status slots, + the ProgrammableAmmo fields beside the primary attack's; 0.31.2: + every later empty status slot (306)
         self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldGroups'],138)   # 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77; 0.31.2: + the later empty status slots
         self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldInstances'],296)   # 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77; 0.31.2: + the later empty status slots
@@ -63,11 +63,11 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
     def test_canonical_instances_exactly_cover_internal_descriptors(self):
         runtime,generated=generate_support_weapon_authoring.build()
         audit=generate_support_weapon_authoring.audit_instance_coverage(runtime,generated)
-        self.assertEqual(audit,{'internalInstances':1933,'publishedInstances':1933,   # 0.31.0: +34 missile fields, +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits, +53 ProgrammableAmmo rows; 0.31.2: +306 status slots (every empty slot)
+        self.assertEqual(audit,{'internalInstances':1934,'publishedInstances':1934,   # 0.31.0: +34 missile fields, +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits, +53 ProgrammableAmmo rows; 0.31.2: +306 status slots (every empty slot), +1 the Quasar's overheated cooling
             'missingInstances':0,'unexpectedInstances':0,'identityCoverage':'exact'})
         instances=self.capabilities['fieldInstances']
-        self.assertEqual(len(instances),1933)
-        self.assertEqual(len({item['instanceKey'] for item in instances}),1933)
+        self.assertEqual(len(instances),1934)
+        self.assertEqual(len({item['instanceKey'] for item in instances}),1934)
         objects={item['objectKey']:item for item in self.capabilities['backingObjects']}
         operations={item['operationGroupingKey']:item
             for item in self.capabilities['operationGroups']}
@@ -92,7 +92,7 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
             self.assertEqual(instance['operation']['phase'],1)
             self.assertEqual(instance['target']['accessor'][0],'support_weapon')
         self.assertEqual(sum(len(weapon['fieldInstanceKeys'])
-            for weapon in self.capabilities['weapons']),1933)
+            for weapon in self.capabilities['weapons']),1934)
 
     def test_ammunition_is_bounded_by_the_network_fields(self):
         # 0.31.2 (scripts/ammo_limits.py): a magazine's capacity is bounded by the 11-bit live round count (2047) and

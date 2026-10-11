@@ -1763,6 +1763,7 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@field cool_per_second "heat.cool_per_second"
 ---@field cool_per_second_cold "heat.cool_per_second_cold"
 ---@field cool_per_second_hot "heat.cool_per_second_hot"
+---@field cool_per_second_overheated "heat.cool_per_second_overheated"
 ---@field firing_charge "heat.firing_charge"
 ---@field heat_per_second "heat.heat_per_second"
 ---@field heat_per_shot "heat.heat_per_shot"

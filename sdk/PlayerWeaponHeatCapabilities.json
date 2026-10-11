@@ -500,7 +500,7 @@
           "wikiValue": "reload_needed",
           "derived": false,
           "writable": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second."
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated."
         }
       ],
       "reason": null
@@ -716,7 +716,7 @@
           "wikiValue": "reload_needed",
           "derived": false,
           "writable": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second."
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated."
         }
       ],
       "reason": null
@@ -923,7 +923,7 @@
           "wikiValue": "reload_needed",
           "derived": false,
           "writable": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second."
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated."
         }
       ],
       "reason": null
@@ -1130,7 +1130,7 @@
           "wikiValue": "reload_needed",
           "derived": false,
           "writable": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second."
+          "reason": "Never overheats: this weapon's record (heat.overheat_lock off) never sets the overheated state, so there is no lockout."
         }
       ],
       "reason": null
@@ -1340,7 +1340,7 @@
           "wikiValue": "reload_needed",
           "derived": false,
           "writable": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second."
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated."
         }
       ],
       "reason": null
@@ -1547,7 +1547,7 @@
           "wikiValue": "reload_needed",
           "derived": false,
           "writable": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second."
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated."
         }
       ],
       "reason": null
@@ -1757,7 +1757,7 @@
           "wikiValue": "reload_needed",
           "derived": false,
           "writable": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second."
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated."
         }
       ],
       "reason": null

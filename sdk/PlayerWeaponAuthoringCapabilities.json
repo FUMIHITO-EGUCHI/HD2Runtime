@@ -10,8 +10,8 @@
     "weapons": 80,
     "uniqueWeapons": 80,
     "duplicateWeapons": 0,
-    "semanticFieldDefinitions": 164,
-    "writableSemanticFieldDefinitions": 145,
+    "semanticFieldDefinitions": 165,
+    "writableSemanticFieldDefinitions": 146,
     "readOnlySemanticFieldDefinitions": 19,
     "derivedSemanticFieldDefinitions": 10,
     "fieldInstances": 5300,
@@ -711,6 +711,18 @@
       "reason": "Derived from heat.cool_per_second and the native hot multiplier."
     },
     {
+      "id": "heat.cool_per_second_overheated",
+      "display_name": "Cooling rate while overheated",
+      "type": "number",
+      "unit": "heat_units_per_second",
+      "derived": false,
+      "writable": true,
+      "component": "WeaponHeatComponentData",
+      "offset": 140,
+      "storage": "f32",
+      "reason": "Heat lost per second while the weapon is overheated (or charging), instead of heat.cool_per_second; read only on weapons whose record lets an overheated weapon cool (the LAS-99 Quasar). The lockout is (heat.capacity - the release threshold) / this rate (the Quasar: 100 / 6.66 = 15 s)."
+    },
+    {
       "id": "heat.warmup",
       "display_name": "Heat warmup",
       "type": "number",
@@ -726,7 +738,7 @@
       "unit": null,
       "derived": false,
       "writable": false,
-      "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second."
+      "reason": "No member of its own. Where the weapon record lets an overheated weapon cool (the LAS-99 Quasar), the lockout is (heat.capacity - the release threshold) / heat.cool_per_second_overheated; edit heat.cool_per_second_overheated. Every other heat weapon does not cool while overheated and needs a heatsink change (a reload). heat.cool_per_second never governs it."
     },
     {
       "id": "heatsink.starting",
@@ -101025,7 +101037,7 @@
           "writeScope": "unknown",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second.",
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated.",
           "acceptedForWrites": false,
           "apiFieldConstant": "hd2.fields.heat.overheat_cooldown"
         },
@@ -105131,7 +105143,7 @@
           "writeScope": "unknown",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second.",
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated.",
           "acceptedForWrites": false,
           "apiFieldConstant": "hd2.fields.heat.overheat_cooldown"
         },
@@ -109407,7 +109419,7 @@
           "writeScope": "unknown",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second.",
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated.",
           "acceptedForWrites": false,
           "apiFieldConstant": "hd2.fields.heat.overheat_cooldown"
         },
@@ -114013,7 +114025,7 @@
           "writeScope": "unknown",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second.",
+          "reason": "Never overheats: this weapon's record (heat.overheat_lock off) never sets the overheated state, so there is no lockout.",
           "acceptedForWrites": false,
           "apiFieldConstant": "hd2.fields.heat.overheat_cooldown"
         },
@@ -118686,7 +118698,7 @@
           "writeScope": "unknown",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second.",
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated.",
           "acceptedForWrites": false,
           "apiFieldConstant": "hd2.fields.heat.overheat_cooldown"
         },
@@ -122920,7 +122932,7 @@
           "writeScope": "unknown",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second.",
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated.",
           "acceptedForWrites": false,
           "apiFieldConstant": "hd2.fields.heat.overheat_cooldown"
         },
@@ -127032,7 +127044,7 @@
           "writeScope": "unknown",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": "No proven member of its own: after an overheat the weapon cools from heat.capacity at heat.cool_per_second (before the native cold / hot multipliers, heat.cool_per_second_cold / _hot); edit heat.capacity or heat.cool_per_second.",
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated.",
           "acceptedForWrites": false,
           "apiFieldConstant": "hd2.fields.heat.overheat_cooldown"
         },

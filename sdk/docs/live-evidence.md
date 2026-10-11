@@ -104,6 +104,7 @@ Composition tests record four separate facts: the donor output works, the refere
 | `weapon_roots_0_30_2` | live-proven | `heat.capacity`, `heat.heat_per_second`, `rounds.starting_rounds`, `rounds.spare_rounds`, `magazine.capacity`, `weapon.fire_rate` | The weapons 0.30.2 resolved to their proven roots (research/weapon-roots-F5FEE03DCFDB.json), one weapon-local component member each, copied into the weapon when it is built (ACTIVE_AT_INSTANTIATION). | unchanged |
 | `overlay_game_font_text_0_30_4` | live-proven |  | Mod window text in the game's own language fonts (FONT by hash, a Runtime material pointed at the game atlas): the characters FS Sinclair lacks, drawn while the game's font for them is loaded (only the selected game language's). | unchanged |
 | `status_effect_definition_0_30_4` | not-tested | `status.duration`, `damage.standard_damage`, `damage.durable_damage` | hd2.status_effect(id): a status definition's duration and the DamageInfo row it deals while active. | unchanged |
+| `quasar_overheated_cooling_0_31_2` | pending | `heat.cool_per_second_overheated` | The LAS-99 Quasar Cannon's own WeaponHeat +140 (sole owner): the heat lost per second while overheated, read every frame by the heat step only when +144 is 0; the lockout is (100 - 0) / 6.66 = 15 s. Code-proven offline in research/overheat-cooling-F5FEE03DCFDB.json. | unchanged |
 
 ## Notes
 

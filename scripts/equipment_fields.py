@@ -211,10 +211,11 @@ def firing_charge_fields(make, weapon, backend, skip=()):
     return fields
 
 
-def warmup_cooldown_declarations(weapon, capacity, cool):
+def warmup_cooldown_declarations(weapon, capacity, cool=None):
     """Blocked declarations for the wiki's Warmup and Cooldown After Overheat of a heat weapon the research names: no
     member of their own; each names the fields to edit and this weapon's values (the Quasar: 100 / 33 = 3.03 s warm-up;
-    100 heat at 6.66 per second = about 15 s of cooling)."""
+    100 heat at heat.cool_per_second_overheated 6.66 per second = about 15 s of cooling). `cool` (heat.cool_per_second)
+    is not used: it never governs the lockout (research/overheat-cooling-F5FEE03DCFDB.json)."""
     record = _named(charge_research()['heat148']['records'], weapon)
     if not record:
         return []
@@ -224,12 +225,73 @@ def warmup_cooldown_declarations(weapon, capacity, cool):
         'reason': ('Derived: heat.firing_charge / heat.charge_gain_per_second = %g / %g = %s; edit heat.firing_charge '
             'or heat.charge_gain_per_second.') % (charge, gain,
             'never (no charge gain)' if warmup is None else '%.2f s' % warmup)}]
-    if capacity and cool:
-        out.append({'field': 'heat.overheat_cooldown',
-            'reason': ('No proven member of its own: after an overheat the weapon cools from heat.capacity (%g) at '
-                'heat.cool_per_second (%g per second), about %.1f s before the native cold / hot multipliers; edit '
-                'heat.capacity or heat.cool_per_second.') % (capacity, cool, capacity / cool)})
+    overheat = overheat_record(record['record'])
+    if capacity and overheat:
+        out.append({'field': 'heat.overheat_cooldown', 'reason': overheat_cooldown_reason(overheat, capacity)})
     return out
+
+
+# 0.31.2 (research/overheat-cooling-F5FEE03DCFDB.json, research/docs/projectile-swap-and-payloads-F5FEE03DCFDB.md
+# section 3): WeaponHeat +140 is the heat lost per second while the weapon is overheated (or charging), read by the
+# heat step only when +144 is 0. +144 set (every heat record but the Quasar's and one camera's): an overheated weapon
+# never cools passively and is released only by the heatsink change. The release threshold is +100 (0 on the Quasar).
+OVERHEAT_RESEARCH = ROOT / 'research/overheat-cooling-F5FEE03DCFDB.json'
+OVERHEATED_COOL_REASON = ('Cooling while overheated (WeaponHeat +140, FP32): after an overheat the heat step cools the '
+    'weapon at this rate instead of heat.cool_per_second until the heat is back at the release threshold (WeaponHeat '
+    '+100, 0 on the Quasar), so the lockout is (heat.capacity - release threshold) / this rate before the hot / cold '
+    'climate multipliers (the Quasar: 100 / 6.66 = 15 s). It also applies while the weapon charges. The game reads it '
+    'every frame from the weapon type record, and only on weapons whose record lets an overheated weapon cool (+144 = '
+    '0, the Quasar alone among the player weapons). Traced offline in the game code; not yet shown in game.')
+OVERHEATED_COOL_RANGE = (0.1, 1000, 'at 0 an overheated weapon would never cool back to its release threshold and '
+    'stay locked; 0.1 per second is a 1000 s lockout from 100 heat, 1000 per second ends it in the next frame')
+
+
+def overheat_research():
+    return json.loads(OVERHEAT_RESEARCH.read_text(encoding='utf-8'))
+
+
+def overheat_record(record_index):
+    """The WeaponHeat record's overheat members (+96/+100/+128/+140/+144) by record index, or None."""
+    for record in overheat_research()['records']:
+        if record['record'] == record_index:
+            return record
+    return None
+
+
+def overheat_cooldown_reason(record, capacity=None):
+    """The derived `heat.overheat_cooldown` text of one WeaponHeat record (research/overheat-cooling)."""
+    capacity = record['capacity'] if capacity is None else capacity
+    if not record.get('overheats', 1):
+        return ('Never overheats: this weapon\'s record (heat.overheat_lock off) never sets the overheated state, so '
+            'there is no lockout.')
+    if record['noPassiveCoolingWhileOverheated']:
+        return ('No passive cooling after an overheat: this weapon\'s record (WeaponHeat +144 set) neither cools nor '
+            'releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). '
+            'heat.cool_per_second applies only while the weapon is not overheated.')
+    rate, release = record['coolPerSecondOverheated'], record['releaseThreshold']
+    return ('Derived: (heat.capacity - release threshold) / heat.cool_per_second_overheated = (%g - %g) / %g = %.1f s '
+        'before the hot / cold climate multipliers; edit heat.cool_per_second_overheated (or heat.capacity). '
+        'heat.cool_per_second does not change it.') % (capacity, release, rate, (capacity - release) / rate)
+
+
+def overheated_cooling_fields(make, record_index, backend):
+    """`heat.cool_per_second_overheated` of a heat weapon whose own record lets an overheated weapon cool (+144 = 0),
+    else []. `make(field_id, value, backend)` builds a field; `backend(offset, storage)` its WeaponHeat backing."""
+    record = overheat_record(record_index)
+    if not record or record['noPassiveCoolingWhileOverheated']:
+        return []
+    field = make('heat.cool_per_second_overheated', record['coolPerSecondOverheated'], backend(140, 'f32'))
+    field.update({'acknowledgement': 'allow_unverified_effect', 'acknowledgementReason': OVERHEATED_COOL_REASON,
+        'min': OVERHEATED_COOL_RANGE[0], 'max': OVERHEATED_COOL_RANGE[1], 'rangeReason': OVERHEATED_COOL_RANGE[2],
+        'effect': {'activeSource': 'LIVE_TYPE_RECORD', 'activeSourceProven': True, 'appliesWhen': 'next_frame',
+            'instantiationOnly': False, 'gameplayEffectProven': False,
+            'reason': ("Read every frame from the weapon's own WeaponHeat record (one owner) by the heat step: "
+                'a write takes effect on the next frame, including a weapon already in hand.')},
+        'overheat': {'releaseThreshold': record['releaseThreshold'],
+            'lockoutSeconds': record.get('lockoutSeconds'),
+            'research': 'research/overheat-cooling-F5FEE03DCFDB.json',
+            'docs': 'docs/support-weapon-api.md ("Warm-up and cooldown after overheat")'}})
+    return [field]
 
 
 def beam_pulse_fields(make, weapon, backend, skip=()):

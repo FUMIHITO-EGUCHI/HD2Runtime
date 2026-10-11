@@ -121,6 +121,7 @@
     "orbital_pattern_fields",
     "projectile_homing",
     "projectile_more_donors",
+    "quasar_overheated_cooling_0_31_2",
     "sentry_component_fields",
     "stratagem_call_in_time",
     "support_charge_level_rows",
@@ -2322,6 +2323,19 @@
    ],
    "notPromoted": [
     "every field: the gameplay effect is not reported yet"
+   ]
+  },
+  "quasar_overheated_cooling_0_31_2": {
+   "status": "pending",
+   "domain": "support_weapon",
+   "fields": [
+    "heat.cool_per_second_overheated"
+   ],
+   "scope": "The LAS-99 Quasar Cannon's own WeaponHeat +140 (sole owner): the heat lost per second while overheated, read every frame by the heat step only when +144 is 0; the lockout is (100 - 0) / 6.66 = 15 s. Code-proven offline in research/overheat-cooling-F5FEE03DCFDB.json.",
+   "tests": [],
+   "acknowledgementRemoved": null,
+   "nextTests": [
+    "a Quasar lockout test, solo: heat.cool_per_second_overheated 6.66 -> 20 leaves about 5 s between overheat and the next charge; as the A/B, heat.cool_per_second 6.66 -> 20 alone leaves the lockout at about 15 s; restoring 6.66 brings the 15 s back on the next frame"
    ]
   }
  },
