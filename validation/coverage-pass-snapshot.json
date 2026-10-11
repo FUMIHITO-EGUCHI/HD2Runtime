@@ -79,14 +79,14 @@
   },
   "mode": "snapshot-overlay",
   "playerProjectileMembers": {
-    "fields": 77,
+    "fields": 79,
     "roundTrip": {
       "field": "projectile.penetration_slowdown",
       "from": 0.25,
       "to": 0.5,
       "weapon": "AR-23 Liberator"
     },
-    "weapons": 66
+    "weapons": 68
   },
   "protectionChanges": 24,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",

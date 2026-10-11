@@ -187,8 +187,11 @@ class LiveEvidenceTests(unittest.TestCase):
         player = [f for w in self.player['weapons'] for f in w['fields'] if f.get('statusSlot')]
         for field in player:
             # Rows a weapon may not fire (charge / heat levels, spawned entities) do not inherit the promotion.
+            # 0.31.1: nor do the ammunition rows of a weapon whose base member is 0 (Peacemaker, Redeemer): no live test
+            # has shown an edit of those rows in play (scripts/ammunition_attacks.py).
             projectile = field['backing'].get('settings') == 'damage' and field.get('writeScope') == \
-                'shared_projectile_damage_definition' and field['effect']['activeSource'] == 'ACTIVE_DIRECT'
+                'shared_projectile_damage_definition' and field['effect']['activeSource'] == 'ACTIVE_DIRECT' \
+                and not field.get('ammunitionSource')
             self.assertEqual(bool(field.get('liveEvidence')), projectile, field['semanticFieldId'])
             self.assertEqual(field.get('acknowledgement') is None, projectile)
         support = [f for f in self.support['fieldInstances']

@@ -27,7 +27,7 @@ class PlayerCoverageTests(unittest.TestCase):
         hosts = [w for w in self.catalog['weapons'] if any(f['semanticFieldId'] == 'projectile.velocity'
             or f['semanticFieldId'].startswith('projectile.') and f['semanticFieldId'].endswith('.velocity')
             for f in w['fields'])]
-        self.assertEqual(len(hosts), 66)
+        self.assertEqual(len(hosts), 68)   # 0.31.1: + the P-2 Peacemaker and P-19 Redeemer ammunition rows, scripts/ammunition_attacks.py
         for weapon in hosts:
             ids = {f['semanticFieldId'].replace('.primary.', '.').replace('.alternate.', '.') for f in weapon['fields']}
             for field in ('projectile.velocity', 'projectile.drag', 'projectile.penetration_slowdown'):

@@ -22,6 +22,7 @@ import status_fields
 import equipment_fields
 import beam_fields
 import missile_fields
+import ammunition_attacks
 
 ROOT=Path(__file__).resolve().parents[1]
 DEFAULT_REPORT=ROOT/'build/snapshot-results-authoring/PlayerWeaponRuntimeMap.json'
@@ -151,6 +152,17 @@ def build(catalog_path=CATALOG):
     from generate_attack_outputs import active_sources,source_reason
     projectile_sources=active_sources()[1]
     ammo_by_name={item['name']:item for item in ammo_source['weapons']}
+    # 0.31.1 (scripts/ammunition_attacks.py): a weapon whose base ProjectileWeapon member is 0 fires only its default
+    # ammunition's projectile; its attack is that row (the P-2 Peacemaker and P-19 Redeemer had no attack before).
+    for entry in source['weapons']:
+        attack=ammunition_attacks.authoring_attack(entry['name'])
+        if not attack:continue
+        candidate=source['candidates'][entry['resources'][0]]
+        assert not candidate.get('attacks'),entry['name']+': the reviewed catalogue now has an attack'
+        candidate['attacks']=[attack]
+        reviewed=composition_source['weapons'][entry['name']]
+        assert not reviewed['attacks'],entry['name']+': the reviewed composition now has an attack'
+        reviewed['attacks']=[ammunition_attacks.composition_attack(entry['name'])]
     assert len(ammo_by_name)==80 and set(ammo_by_name)=={item['name'] for item in source['weapons']}, \
         'ammo capability catalog must cover the same 80 player weapons'
     report={'gameFingerprints':source['gameFingerprints']};identities={};candidates=source['candidates']
@@ -289,6 +301,8 @@ def build(catalog_path=CATALOG):
 
     projectile_members={(weapon['name'],branch['prefix']):branch for weapon in
         json.loads(PROJECTILE_MEMBERS.read_text())['weapons'] for branch in weapon['branches']}
+    for name in ammunition_attacks.weapons():
+        projectile_members[(name,'projectile')]=ammunition_attacks.projectile_member(name)
     reticle_rows,reticle_research=reticle_fields.load()
     movement_rows=weapon_movement_fields.load()
     fire_mode_rows,_=fire_mode_fields.load()
@@ -984,6 +998,7 @@ def api_constant(field_id,legacy):
 def outputs(catalog_path=CATALOG):
     value=build(catalog_path)
     rows=settings_row_sources(value)
+    ammunition_attacks.annotate(value['weapons'])
     # The Lua constant for each field, so authors never pick a legacy fixed-resource constant by accident.
     legacy={}
     for resource in json.loads((ROOT/'schemas/sdk.json').read_text())['resources'].values():

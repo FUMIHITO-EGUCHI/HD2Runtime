@@ -182,6 +182,14 @@ a projectile pointer exists.
 - **Projectile edits follow the active source.** Projectile and damage fields of an INDIRECT weapon resolve through
   its ammunition projectile, so after an ammunition swap they report `COMPOSITION_TARGET_CHANGED` exactly like a
   direct swap.
+- **Weapons whose only projectile is their ammunition (0.31.1).** The P-2 Peacemaker and P-19 Redeemer have no base
+  projectile member (it is 0): they fire only what their default ammunition sets. They now publish the same `primary`
+  attack and projectile / damage fields as the other INDIRECT weapons, built from that ammunition row (Peacemaker:
+  9x20mm HOLLOW POINT, 100 damage; Redeemer: 9x20mm FULL METAL JACKET, 70 damage), on
+  `hd2.weapon(name):attack('primary'):projectile()`. The write re-proves the ammunition delta like an ammunition swap.
+  They need `allow_shared` (the MP-98 Knight, and for the HOLLOW POINT the Redeemer, can equip the same ammunition)
+  and `allow_unverified_effect` until a live test shows an edit in play. The attack's own reference stays read-only
+  (`DORMANT_PROJECTILE_REFERENCE`): swap their projectile through `weapon:ammunition()`.
 - **Cross-class projectile outputs** need `allow_unverified_reference` and `allow_unverified_effect`, on either
   mechanism.
 - **Host eligibility.** 59 hosts: 53 `component` hosts (29 player, 8 support, 9 mounted weapons and 7 sentries or

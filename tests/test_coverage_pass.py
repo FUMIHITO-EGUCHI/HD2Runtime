@@ -235,7 +235,8 @@ class StatusTests(unittest.TestCase):
         # effect); they keep allow_unverified_effect and do not inherit the projectile status promotion. The 26
         # explosion status slots (0.30.2) are gated too: a status on an explosion is not live-proven.
         self.assertEqual(sum(1 for f in promoted if f.get('liveEvidence')), 129)
-        self.assertEqual(sum(1 for f in promoted if f.get('acknowledgement')), 73)
+        # 0.31.1: + the four status slots of the Peacemaker and Redeemer ammunition rows (gated until a live test).
+        self.assertEqual(sum(1 for f in promoted if f.get('acknowledgement')), 77)
         explosion = [f for f in promoted if f['semanticFieldId'].startswith('explosion.')]
         self.assertEqual(len(explosion), 26)
         self.assertTrue(all(f.get('acknowledgement') == 'allow_unverified_effect' for f in explosion))
@@ -343,13 +344,13 @@ class PlayerProjectileMemberTests(unittest.TestCase):
         catalog = json.loads((ROOT / 'sdk/PlayerWeaponAuthoringCapabilities.json').read_text())
         fields = [f for w in catalog['weapons'] for f in w['fields']
             if re.match(r'^projectile\.(primary\.|alternate\.)?(penetration_slowdown|lifetime)$', f['semanticFieldId'])]
-        self.assertEqual(len(fields), 77)
-        self.assertEqual(sum(1 for f in fields if f['editable']), 77)   # + GP-31 and P-72 (0.30.2: the seven DUPLICATE weapons resolved to their proven roots, research/weapon-roots)
+        self.assertEqual(len(fields), 79)   # 0.31.1: + the P-2 Peacemaker and P-19 Redeemer ammunition rows, scripts/ammunition_attacks.py
+        self.assertEqual(sum(1 for f in fields if f['editable']), 79)   # + GP-31 and P-72 (0.30.2: the seven DUPLICATE weapons resolved to their proven roots, research/weapon-roots)
         self.assertTrue(all(f['writeScope'] == 'shared_projectile_definition' and f['backing']['offset'] in (52, 64)
             for f in fields))
         self.assertFalse([f for f in fields if f['semanticFieldId'].endswith('lifetime') and not f['currentDefault']])
         record = json.loads((ROOT / 'validation/coverage-pass-snapshot.json').read_text())['playerProjectileMembers']
-        self.assertEqual((record['fields'], record['weapons']), (77, 66))   # (0.30.2: the seven weapons resolved to their proven roots)
+        self.assertEqual((record['fields'], record['weapons']), (79, 68))   # (0.30.2: the seven weapons resolved to their proven roots; 0.31.1: + the P-2 Peacemaker and P-19 Redeemer ammunition rows, scripts/ammunition_attacks.py)
 
 
 PROVEN = {'entity.health', 'entity.armor', 'zone.health', 'zone.armor', 'zone.affects_main_health'}

@@ -4,6 +4,10 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import ammunition_attacks  # noqa: E402  0.31.1: the ammunition attack of a weapon whose base member is 0
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'schemas/player_weapon_composition_catalog.json'
@@ -31,7 +35,10 @@ def build():
     for name, item in source['weapons'].items():
         attacks = {}
         order = []
-        for attack in item['attacks']:
+        reviewed = item['attacks']
+        if not reviewed and ammunition_attacks.entry(name):
+            reviewed = [ammunition_attacks.composition_attack(name)]
+        for attack in reviewed:
             value = {'role': attack['role'], 'aliases': attack['aliases'],
                 'projectile_type': attack['projectileType'],
                 'projectile_settings': attack['projectileSettings'],
@@ -41,6 +48,8 @@ def build():
                 'target_backing': attack['targetBacking'],
                 'writable_reference_swap': attack['writableReferenceSwap'],
                 'explosions': attack.get('explosions', []),
+                **({'active_source': attack['activeSource'], 'ammunition_item': attack['ammunitionItem']}
+                    if attack.get('activeSource') else {}),
                 'terminal_actions': {action['phase']: {
                     'phase': action['phase'], 'offset': action['offset'],
                     'reference_type': action['referenceType'],

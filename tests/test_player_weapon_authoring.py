@@ -68,11 +68,20 @@ class PlayerWeaponAuthoringTests(unittest.TestCase):
         self.assertEqual(corrected['LAS-7 Dagger']['resources'],['0x7B06196E90154C88'])
         by_name={w['name']:w for w in CAPABILITIES['weapons']}
         for name in ('P-2 Peacemaker','P-19 Redeemer'):
-            editable=[f['semanticFieldId'] for f in by_name[name]['fields'] if f['editable']]
+            editable=[f for f in by_name[name]['fields'] if f['editable']]
             self.assertTrue(editable)
-            # Weapon-level fields only: the customization-owned projectile fields fail closed.
-            self.assertTrue(all(field.startswith(('weapon.','fire_mode.','fire_rate.','weapon_function.',
-                'function_ammo.','presentation.')) for field in editable))
+            # 0.31.1: their projectile is their default ammunition's (base member 0). Its projectile and damage rows are
+            # written through the ammunition delta the write re-proves, never through the dormant base member, and only
+            # with allow_unverified_effect until a live test (scripts/ammunition_attacks.py).
+            for field in editable:
+                if field['semanticFieldId'].startswith(('projectile.','damage.')):
+                    self.assertEqual(field['acknowledgement'],'allow_unverified_effect',field['semanticFieldId'])
+                    self.assertTrue(field['ammunitionSource'])
+                else:
+                    self.assertTrue(field['semanticFieldId'].startswith(('weapon.','fire_mode.','fire_rate.',
+                        'weapon_function.','function_ammo.','presentation.')),field['semanticFieldId'])
+            reference=next(f for f in by_name[name]['fields'] if f['semanticFieldId']=='attack.primary.projectile')
+            self.assertFalse(reference['editable'])
 
     def test_derived_and_shared_metadata_are_explicit(self):
         fields=[field for weapon in CAPABILITIES['weapons'] for field in weapon['fields']]
@@ -152,7 +161,7 @@ class PlayerWeaponAuthoringTests(unittest.TestCase):
         audit=CAPABILITIES['backingCollisionAudit']
         self.assertEqual(audit['fieldInstancesAudited'],CAPABILITIES['summary']['fieldInstances'])
         # weapon.third_person_reticle is a distinct boolean view over the crosshair_type bytes.
-        self.assertEqual(audit['exactBackingCollisionGroups'],289)
+        self.assertEqual(audit['exactBackingCollisionGroups'],291)   # 0.31.1: + the P-2 Peacemaker and P-19 Redeemer ammunition rows, scripts/ammunition_attacks.py
         self.assertEqual(audit['aliasPairInstances'],62)
         self.assertEqual(audit['unclassifiedCollisionPairs'],0)
         jar=next(w for w in CAPABILITIES['weapons'] if w['name']=='JAR-5 Dominator')
