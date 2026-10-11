@@ -256,12 +256,24 @@ function M.allocate_policies(world,definitions,present,global_exclude,opts)
     end
     table.sort(unique,function(a,c)return a.id<c.id end)
     definitions=unique
+    -- 0.31.2: one discovery per distinct (token, exclusions, Eagle mode) in this allocation, shared by the definitions
+    -- that ask the same (read-only, nothing is written in between: the same result). Each definition used to run its
+    -- own over every catalogued stratagem: with many custom stratagems a ~50 ms frame at every revalidation.
+    local discovered={}
     for _,d in ipairs(definitions)do
         local exclude={}
         for _,name in ipairs(global_exclude or{})do exclude[#exclude+1]=name end
         for _,name in ipairs(d.policy.exclude or{})do exclude[#exclude+1]=name end
         -- A custom Eagle (d.eagle) discovers in Eagle mode: only Eagles, their limited uses being its own.
-        local found=slots.discover_carriers(world,d.token,{present=present or{},exclude=exclude,eagle=d.eagle==true})
+        local names={}
+        for k,name in ipairs(exclude)do names[k]=tostring(name)end
+        table.sort(names)
+        local key=(d.eagle==true and'eagle'or'-')..'\0'..tostring(d.token)..'\0'..table.concat(names,'\0')
+        local found=discovered[key]
+        if not found then
+            found=slots.discover_carriers(world,d.token,{present=present or{},exclude=exclude,eagle=d.eagle==true})
+            discovered[key]=found
+        end
         if not found.ready then
             out.ready=false;out.reason=d.label..': '..tostring(found.reason)
             return out

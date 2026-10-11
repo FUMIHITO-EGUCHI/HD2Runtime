@@ -15,6 +15,8 @@ local hud=require('hd2runtime/runtime/stratagem_hud')
 local b=require('hd2runtime/core/bytes')
 local profile=require('hd2runtime/schemas/current')
 local C=require('hd2runtime/domains/stratagem_calldown')
+local scheduler=require('hd2runtime/runtime/scheduler')
+local transaction=require('hd2runtime/core/guarded_transaction')
 local L,REC=C.loadout,C.hud.records
 local TABLE,ENTRIES=profile.stratagem.table_rva,profile.stratagem.entries
 local MAX_RECORDS=64
@@ -46,16 +48,32 @@ function M.id_of(world,kind)
 end
 -- The type whose row +4 is id, or nil. Rows do not move while game.dll stays loaded, so a found type is remembered per
 -- loaded game.dll (a full scan reads 149 rows).
+-- 0.31.2: a full scan that found nothing is remembered for the rest of the update (scheduler.serial, the same world and
+-- core/guarded_transaction's write count): every id it read answers there, and an id it did not see is missing without
+-- another scan. (A carrier discovery asks for every catalogued stratagem: each one without a row read all 149 rows
+-- again, per discovery.)
 local types={}
+local scanned={}
 function M.type_of(world,id)
     if type(id)~='number'or id==0 then return nil end
     local known=types[world.game]
     if not known then known={};types[world.game]=known end
     local kind=known[id]
     if kind and M.id_of(world,kind)==id then return kind end
-    for candidate=1,ENTRIES-1 do
-        if M.id_of(world,candidate)==id then known[id]=candidate;return candidate end
+    local serial=scheduler.serial()
+    local s=scanned
+    if serial and s.serial==serial and s.game==world.game and s.issued==transaction.issued then
+        kind=s.ids[id]
+        if not kind then return nil end
+        if M.id_of(world,kind)==id then known[id]=kind;return kind end
     end
+    local ids={}
+    for candidate=1,ENTRIES-1 do
+        local found=M.id_of(world,candidate)
+        if found==id then known[id]=candidate;return candidate end
+        if found~=nil and ids[found]==nil then ids[found]=candidate end
+    end
+    if serial then scanned={serial=serial,game=world.game,issued=transaction.issued,ids=ids}end
 end
 
 -- {saved = bool, pairs = {{id, uses, type}}}, or nil, code, reason.
@@ -104,5 +122,5 @@ function M.record(world)
     return nil,'NO_RECORD','the local player has no stratagem record'
 end
 
-function M.reset_for_tests()proven,types={},{}end
+function M.reset_for_tests()proven,types,scanned={},{},{}end
 return M

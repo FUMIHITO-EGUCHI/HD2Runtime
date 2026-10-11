@@ -489,21 +489,62 @@ local function discovery_context(world,token,opts)
     end
     return {token_id=token_id,exclude=exclude,present=opts.present or{},payload=opts.payload,eagle=opts.eagle==true}
 end
--- Every carrier guard on one catalogued stratagem, read now: the candidate table (eligible, reasons, codes), or nil
--- when it has no row on this build or is the token.
-local function evaluate(world,name,entry,ctx)
+-- What a discovery reads of one catalogued stratagem, whatever the definition asking (its type, its row's flags, look
+-- and code count, its ownership, its package and presentation): false when it has no row on this build.
+-- 0.31.2: read once per update (scheduler.serial) and shared by every discovery of that update. An allocation
+-- discovered once per custom stratagem, so an update that allocated ten of them read every catalogued stratagem ten
+-- times (about 1,700 reads each; live, one ReadProcessMemory per read: a ~50 ms update at every 5 s revalidation, the
+-- custom stratagem "pulse"). The same reads, made once: kept only while the update, the world and
+-- core/guarded_transaction's write count (any native write) are the same; outside an update read every time.
+-- The row's members are read in one piece (its first ROW_SPAN bytes; each on its own when that read fails).
+local ROW_SPAN=math.max(ROWM.selectable,ROWM.enabled,ROWM.maxUses,ROWM.beam,ROWM.ping,0x48)+4
+local facts_cache={}
+local function row_u32(world,crow,block,offset)
+    if block then return b.u32(block,offset)end
+    return world.view.u32(crow+offset)
+end
+local function carrier_facts(world,name,entry)
+    local serial=scheduler.serial()
+    local cache=facts_cache
+    if not(serial and cache.serial==serial and cache.key==world.key and cache.issued==transaction.issued)then
+        cache={serial=serial,key=world.key,issued=transaction.issued,by={}}
+        if serial then facts_cache=cache end
+    end
+    local f=cache.by[name]
+    if f~=nil then return f end
     local P=require('hd2runtime/domains/stratagem_calldown').presentation
     local id=entry.root and entry.root.id
     local kind=id and loadout.type_of(world,id)
     local crow=kind and row(world,kind)
-    if not crow or id==ctx.token_id then return nil end
-    local c={name=name,id=id,type=kind,family=entry.family,component=entry.rootLink and entry.rootLink.component,
+    if not crow then cache.by[name]=false;return false end
+    local block=world.view.read(crow,ROW_SPAN)
+    f={id=id,type=kind}
+    f.selectable=math.floor((row_u32(world,crow,block,ROWM.selectable)or 0)/ROWM.selectableBit)%2==1
+    f.enabled=(row_u32(world,crow,block,ROWM.enabled)or 0)%2==1
+    f.unlimited=signed(row_u32(world,crow,block,ROWM.maxUses))==-1
+    f.ownership=ownership(world,id)
+    f.beam=row_u32(world,crow,block,ROWM.beam)
+    f.ping=row_u32(world,crow,block,ROWM.ping)
+    f.package=core_assets.dependencies_for_stratagem(id,name)~=nil and core_assets.call_in_complete(name)
+    f.presentation=P.values[tostring(id)]~=nil
+    local count=row_u32(world,crow,block,0x48)
+    f.code=count~=nil and count>=1 and count<=8
+    cache.by[name]=f
+    return f
+end
+-- Every carrier guard on one catalogued stratagem, read now (carrier_facts): the candidate table (eligible, reasons,
+-- codes), or nil when it has no row on this build or is the token.
+local function evaluate(world,name,entry,ctx)
+    local f=carrier_facts(world,name,entry)
+    local id=entry.root and entry.root.id
+    if not f or id==ctx.token_id then return nil end
+    local c={name=name,id=id,type=f.type,family=entry.family,component=entry.rootLink and entry.rootLink.component,
         reasons={},codes={}}
     local function no(code,why)c.reasons[#c.reasons+1]=why;c.codes[#c.codes+1]=code end
-    c.selectable=math.floor((world.view.u32(crow+ROWM.selectable)or 0)/ROWM.selectableBit)%2==1
-    c.enabled=(world.view.u32(crow+ROWM.enabled)or 0)%2==1
-    c.unlimited=signed(world.view.u32(crow+ROWM.maxUses))==-1
-    c.ownership=ownership(world,id)
+    c.selectable=f.selectable
+    c.enabled=f.enabled
+    c.unlimited=f.unlimited
+    c.ownership=f.ownership
     c.owned=c.ownership~=nil and c.ownership.owned
     c.inLoadout=ctx.present[id]==true
     c.special=SPECIAL_FAMILY[entry.family]
@@ -519,16 +560,15 @@ local function evaluate(world,name,entry,ctx)
     c.class=class
     -- The beacon's look (research "beaconPresentation"): the beam colour IS the beacon category (1 red = offensive,
     -- 2 blue = support, 3 yellow = other, 0 none); the ping colour is a separate member. Neither is the family.
-    c.beam=world.view.u32(crow+ROWM.beam)
-    c.ping=world.view.u32(crow+ROWM.ping)
+    c.beam=f.beam
+    c.ping=f.ping
     c.beamColour=c.beam and D.beacon.beams[c.beam]or'none'
     c.beaconCategory=c.beam and D.beacon.categories[c.beam]or'none'
     c.pingColour=c.ping and(D.beacon.pings[c.ping]or D.beacon.pingOther)or'unreadable'
     -- Every package the mission loader would request for it (a support weapon's comes from its weapon, +0xF8).
-    c.package=core_assets.dependencies_for_stratagem(id,name)~=nil and core_assets.call_in_complete(name)
-    c.presentation=P.values[tostring(id)]~=nil
-    local count=world.view.u32(crow+0x48)
-    c.code=count~=nil and count>=1 and count<=8
+    c.package=f.package
+    c.presentation=f.presentation
+    c.code=f.code
     if ctx.exclude[id]then no('donor','excluded ('..ctx.exclude[id]..': the donor, not a carrier)')end
     if not c.selectable then no('not_selectable','not selectable')end
     if not c.enabled then no('disabled','not enabled')end
@@ -1160,6 +1200,6 @@ function M.reset_for_tests()
     for _,c in pairs(conversions)do if c.keeper then c.keeper.cancel()end end
     conversions,latest={},nil
     disarm()
-    proven={}
+    proven,facts_cache,catalogue_index={},{},{}
 end
 return M

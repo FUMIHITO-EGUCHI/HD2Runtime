@@ -3,6 +3,9 @@ local metrics=require('hd2runtime/runtime/metrics')
 local protection=require('hd2runtime/core/page_protection')
 local M={}
 local PAGE=4096
+-- Every native write a transaction has issued (rollbacks too), counted before the write: a reader that keeps game
+-- memory for one update (runtime/stratagem_slot_conversion.lua, the carrier facts) drops it when this moves.
+M.issued=0
 -- Hard ceiling on the guarded bytes one transaction may read. The allowance itself is derived from the plan's shape
 -- (see M.read_allowance); a plan whose allowance exceeds this is refused before any page is opened.
 local READ_CEILING=64*1024*1024
@@ -319,6 +322,7 @@ function M.apply(runtime,plan)
                         'rollback target changed')
                     assert(writable_now(change.page),'rollback page protection changed')
                     report.writes=report.writes+1
+                    M.issued=M.issued+1
                     local wrote,reason,count=runtime.write(change.owner.base+change.offset,change.before,change.packed)
                     assert(wrote and count==#change.before,'rollback write failed: '..tostring(reason))
                     actual[attempt.index]=change.before
@@ -350,6 +354,7 @@ function M.apply(runtime,plan)
                 check(current_states)
                 local attempt={index=index,count=-1};attempted[#attempted+1]=attempt
                 report.writes=report.writes+1
+                M.issued=M.issued+1
                 local wrote,reason,count=runtime.write(change.owner.base+change.offset,change.desired,change.packed)
                 attempt.count=tonumber(count) or -1
                 report.bytes_written=report.bytes_written+math.max(0,attempt.count)

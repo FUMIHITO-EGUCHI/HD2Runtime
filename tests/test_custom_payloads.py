@@ -1024,8 +1024,9 @@ assert(a.ready and a.distinct)
 assert(a.assignments.hmg_sentry.family=='sentry','sentry got '..tostring(a.assignments.hmg_sentry.family))
 assert(a.assignments.stun_pods.family=='eagle','eagle got '..tostring(a.assignments.stun_pods.family))
 assert(a.assignments.gas_barrage.family=='orbital')
--- Discovered in id order (gas_barrage, hmg_sentry, stun_pods), whatever the input order.
-assert(table.concat(modes,',')=='plain,plain,eagle',table.concat(modes,','))
+-- Discovered in id order (gas_barrage, hmg_sentry, stun_pods), whatever the input order; since 0.31.2 once per
+-- distinct discovery (gas_barrage and hmg_sentry ask the same plain one: shared).
+assert(table.concat(modes,',')=='plain,eagle',table.concat(modes,','))
 -- No Eagle left: refused, never an orbital; no sentry left: refused, never an emplacement or a support weapon.
 local busy={[2]=true,[3]=true,[4]=true,[5]=true}
 for _,c in ipairs(ALL)do if busy[c.id]then c.family=c.family..'-gone'end end
