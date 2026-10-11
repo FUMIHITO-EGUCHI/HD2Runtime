@@ -366,7 +366,8 @@ M.sounds={list=sounds.list,describe=sounds.describe,play=sounds.play,available=s
 local ui=require('hd2runtime/api/ui')
 M.ui={overlay=ui.overlay,overlays=ui.overlays,cursor=ui.cursor,colour=ui.colour,color=ui.color,can_draw=ui.can_draw,
     unsupported=ui.unsupported,game_fonts=ui.game_fonts,MAX_LAYER=ui.MAX_LAYER,
-    DEFAULT_LAYER=ui.DEFAULT_LAYER}
+    DEFAULT_LAYER=ui.DEFAULT_LAYER,open_settings=ui.open_settings,close_settings=ui.close_settings,
+    settings_open=ui.settings_open,language=ui.language}
 -- Selectable custom stratagems and their spawned instances (development API, solo host; api/custom_stratagem.lua).
 local custom_stratagem=require('hd2runtime/api/custom_stratagem')
 M.custom_stratagem={register=custom_stratagem.register,status=custom_stratagem.status,

@@ -78,6 +78,29 @@ function M.text(ctx,screen,s,font,size,x,y,layer,colour)
     return first
 end
 
+-- 0.31.1 (translated Runtime text, runtime/i18n.lua): the Runtime's fonts by engine name (FS Sinclair, monaco), for the
+-- panels that draw through screen.text with a font name.
+function M.by_name(name)
+    local ok,D=pcall(require,'hd2runtime/domains/ui_fonts')
+    for _,font in pairs(ok and D.fonts or{})do if font.name==name then return font end end
+    return nil
+end
+-- screen.text(s, name, size, name, x, y, layer, colour) with the characters `name` lacks in a loaded game font (M.text);
+-- a font the Runtime has no metrics for is handed to the engine as before.
+function M.screen_text(ctx,screen,s,name,size,x,y,layer,colour)
+    local font=M.by_name(name)
+    if not font then return screen.text(s,name,size,name,x,y,layer,colour)end
+    return M.text(ctx,screen,s,font,size,x,y,layer,colour)
+end
+-- A size at which s fits in width (down to `least` times size): a translation longer than the English one shrinks
+-- rather than leaving its panel.
+function M.fit_size(ctx,name,s,size,width,least)
+    local font=M.by_name(name)
+    if not font or width<=0 then return size end
+    local ok,w=pcall(M.width,ctx,font,s,size)
+    if not ok or not w or w<=width then return size end
+    return math.max(size*(least or 0.7),size*width/w)
+end
 -- Whether every game font this GUI's text uses is still loaded: true, or false and the font's key.
 function M.still_ready(ctx)
     for key,entry in pairs(ctx and ctx.used or{})do

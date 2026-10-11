@@ -73,6 +73,7 @@ M.TEXT={
     notice_issues='Public lobbies can cause issues or crashes due to mods.',
     notice_advice='Friends Only / Invite Only is safest when playing with mods.',
     notice_settings='Press F10 for HD2Runtime settings: turn this and other messages off.',
+    sos_advice='Do not use the SOS Beacon while Runtime is active.',
 }
 
 local state
@@ -241,6 +242,8 @@ function M.observe(world)
     return o
 end
 local function privacy_name(v)return M.NAMES[v]or('privacy '..tostring(v))end
+-- 0.31.1: the notice's text in the Runtime's language (runtime/i18n.lua); the log stays English.
+local function T(source,...)return require('hd2runtime/runtime/i18n').t(source,...)end
 -- The value the setter is called with: the player's own setting when it is not public, else Friends Only.
 local function target_of(o)
     local p=o.privacy
@@ -271,8 +274,8 @@ local function notify(line,rule,advice,title)
     local last=state.notices[key]
     if last and state.clock-last<M.NOTICE_REPEAT then return false end
     state.notices[key]=state.clock
-    state.notice={lines={title or M.TEXT.title,line,rule or M.TEXT.rule,advice or M.TEXT.advice},queued=state.clock,
-        shown=nil}
+    state.notice={lines={T(title or M.TEXT.title),T(line),T(rule or M.TEXT.rule),T(advice or M.TEXT.advice)},
+        queued=state.clock,shown=nil}
     close_screen()
     metrics.count('matchmaking_safety.notices_queued')
     return true
@@ -293,14 +296,23 @@ local function draw(world,lines)
     local x,y=W-w-m,H-h-m-(72+12)*(H/1080)      -- below the startup progress panel's place
     local pad=10*u
     local function need(id,what)if id==nil then error(what,0)end return id end
+    -- (the characters monaco lacks, a translation's, in a loaded game font: runtime/game_text.lua; a line longer than
+    -- the panel shrinks)
+    local GT=require('hd2runtime/runtime/game_text')
+    local ctx=GT.context(world.runtime)
+    state.text_ctx=ctx
+    local function line(s,size,ly,colour,what)
+        size=GT.fit_size(ctx,font,s,size,w-2*pad)
+        need(GT.screen_text(ctx,screen,s,font,size,x+pad,ly,LAYER+2,colour),what)
+    end
     local ok,err=pcall(function()
         need(screen.rect(x,y,LAYER,w,h,COLOURS.panel),'the panel')
         need(screen.rect(x,y+h-2*u,LAYER+1,w,2*u,COLOURS.edge),'the edge')
-        need(screen.text(lines[1],font,12*u,font,x+pad,y+h-18*u,LAYER+2,COLOURS.title),'the title')
-        need(screen.text(lines[2],font,10*u,font,x+pad,y+h-35*u,LAYER+2,COLOURS.event),'the event')
-        need(screen.text(lines[3],font,9*u,font,x+pad,y+22*u,LAYER+2,COLOURS.text),'the rule')
+        line(lines[1],12*u,y+h-18*u,COLOURS.title,'the title')
+        line(lines[2],10*u,y+h-35*u,COLOURS.event,'the event')
+        line(lines[3],9*u,y+22*u,COLOURS.text,'the rule')
         -- An empty fourth line is not drawn (the startup notice has none since 0.30.2).
-        if lines[4]~=''then need(screen.text(lines[4],font,9*u,font,x+pad,y+8*u,LAYER+2,COLOURS.text),'the advice')end
+        if lines[4]~=''then line(lines[4],9*u,y+8*u,COLOURS.text,'the advice')end
     end)
     if not ok then return nil,err,true end      -- a refused primitive: the GUI path does not work here
     return true
@@ -309,7 +321,14 @@ local function show(world)
     local n=state.notice
     if not n or state.gui_disabled then return end
     if n.shown then
-        if state.clock-n.shown>=M.NOTICE_SECONDS then close_screen();state.notice=nil end
+        if state.clock-n.shown>=M.NOTICE_SECONDS then close_screen();state.notice=nil;return end
+        -- a game font its text uses was unloaded (a language switch): drawn again, never left on a font that is gone
+        local GT=require('hd2runtime/runtime/game_text')
+        if state.text_ctx and not GT.still_ready(state.text_ctx)then
+            close_screen()
+            local ok,drawn=pcall(draw,world,n.lines)
+            if not(ok and drawn)then close_screen();state.notice=nil end
+        end
         return
     end
     if state.clock-n.queued>=M.NOTICE_WAIT then state.notice=nil;return end
@@ -434,7 +453,7 @@ local function enforce_privacy(world,o)
         ..'Only with compatible Runtime users.'):format(privacy_name(target),why_text,D.setter.rva,state.enforced>1
         and(' (Public chosen again: enforcement '..state.enforced..')')or''))
     event('privacy',why_text)
-    notify(M.TEXT.privacy:format(privacy_name(target)))
+    notify(T(M.TEXT.privacy,T(privacy_name(target))))
     return {status='enforced',before=why_text,value=target}
 end
 
@@ -529,7 +548,7 @@ function M.check(world,quickplay_only)
             ..'privacy "'..tostring(o.advertised)..'", SOSBeacons "'..tostring(o.sos_key)..'"): strangers can join through '
             ..'Quickplay until it ends. HD2Runtime cannot block the SOS Beacon; do not use it while Runtime is active.')
         event('sos',o.sos_key)
-        notify(M.TEXT.sos,M.TEXT.rule,'Do not use the SOS Beacon while Runtime is active.')
+        notify(M.TEXT.sos,M.TEXT.rule,M.TEXT.sos_advice)
     elseif not sos and state.sos then
         log('MATCHMAKING SAFETY: the SOS Beacon ended; the lobby advertises the privacy setting again')
     end

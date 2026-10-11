@@ -515,9 +515,10 @@ local writes=#(W.runtime.writes or{})
 -- A client with a player without HD2Runtime: the launch would lock the custom slots.
 local v={status='unavailable',peers={A={state='missing'},B={state='compatible'}}}
 custom.readiness_step(world,v)
-assert(#notices==1 and notices[1]:find('warn | Check before launch | 1 player without HD2Runtime: your custom slots '
-    ..'will be locked. | Fix: everyone needs the same custom stratagem mods.',1,true),notices[1])
-assert(count('READINESS: 1 problem: 1 player without HD2Runtime')==1)
+-- (0.31.1: the fix lines carry no "Fix:" prefix, the card labels them; one player is "A player")
+assert(#notices==1 and notices[1]:find('warn | Check before launch | A player without HD2Runtime: your custom slots '
+    ..'will be locked. | Everyone needs the same custom stratagem mods.',1,true),notices[1])
+assert(count('READINESS: 1 problem: A player without HD2Runtime')==1)
 custom.readiness_step(world,v)
 assert(#notices==1,'the same problem is not shown again within a minute')
 -- At the launch: shown once more, as a failure.
@@ -534,12 +535,12 @@ custom.internals_for_tests().ship().status.pelican_close_air_support='NOT READY:
 local problems=custom.readiness(world,v)
 assert(#problems==2,#problems)
 assert(problems[1].line:find(': no free member of its carrier group',1,true)
-    and problems[1].advice=='Fix: free its carrier or pick another custom stratagem.')
+    and problems[1].advice=='Free its carrier or pick another custom stratagem.')
 assert(problems[2].line=='Another mod changed the stratagem data: custom names/looks will fail.')
 custom.readiness_step(world,v)
 -- Every problem is on the card (it lists three and counts the rest), each with its fix.
-assert(notices[#notices]:find('no free member of its carrier group | Fix: free its carrier or pick another custom '
-    ..'stratagem. | Another mod changed the stratagem data: custom names/looks will fail. | Fix: disable mods that '
+assert(notices[#notices]:find('no free member of its carrier group | Free its carrier or pick another custom '
+    ..'stratagem. | Another mod changed the stratagem data: custom names/looks will fail. | Disable mods that '
     ..'change stratagems or hellpods, then restart.',1,true),notices[#notices])
 -- Fixed: the problem card goes and a short READY confirmation replaces it. (The stratagem table is read once per
 -- selection: another mod's change stands until a restart.)

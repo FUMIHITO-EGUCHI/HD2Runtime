@@ -3271,6 +3271,18 @@ function HD2UI:unsupported(text, font) end
 ---The game's language fonts overlays draw with: {key, label, languages (the game language codes that load it), glyphs, resident, reason}. The game loads only the selected language's; the Runtime loads the one a text needs.
 ---@return table[]
 function HD2UI:game_fonts() end
+---HD2Runtime 0.31.1+: opens HD2Runtime's own settings panel (F10: its language and the messages it shows on screen), for a button in a mod's own settings. Close your own window first: the panel frees the cursor while it is open.
+---@return boolean
+function HD2UI:open_settings() end
+---HD2Runtime 0.31.1+: closes HD2Runtime's settings panel.
+---@return boolean
+function HD2UI:close_settings() end
+---HD2Runtime 0.31.1+: whether HD2Runtime's settings panel is open.
+---@return boolean
+function HD2UI:settings_open() end
+---HD2Runtime 0.31.1+: the language HD2Runtime shows its own text in (a game language code: 'us', 'de', 'jp' ...) and its F10 Language setting ('auto': the game's language, or a code).
+---@return string, string
+function HD2UI:language() end
 
 ---@class HD2OverlayOptions
 ---@field id string|nil 1 to 48 letters, digits, _ . - (default 'main').

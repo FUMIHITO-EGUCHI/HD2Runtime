@@ -145,7 +145,9 @@ class MatchmakingSafetyResearchTests(unittest.TestCase):
         self.assertEqual(required, {'hd2runtime/runtime/event_world', 'hd2runtime/runtime/scheduler',
             'hd2runtime/runtime/log', 'hd2runtime/runtime/metrics', 'hd2runtime/core/bytes',
             'hd2runtime/domains/matchmaking_safety', 'hd2runtime/runtime/windows_ffi',
-            'hd2runtime/runtime/init_progress'})
+            'hd2runtime/runtime/init_progress',
+            # 0.31.1: the notice's text in the Runtime's language, drawn with the game's fonts where it needs them
+            'hd2runtime/runtime/i18n', 'hd2runtime/runtime/game_text'})
         for word in ('peer_channel', 'peer_protocol', 'custom_mp', 'custom_multiplayer', 'custom_stratagems',
                 'native_lobby_publish', 'native_lobby_read', 'hd2rt', 'platform_lobby', 'crossplay_mode',
                 'runtime.write', 'WriteProcessMemory', 'VirtualProtect'):

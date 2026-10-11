@@ -52,6 +52,11 @@ local function log(text)log_module.emit('[HD2Runtime] custom stratagem panel '..
 M.SAFE={x=0.67,top=0.16,w=0.29,h=0.15}
 M.COLUMNS=3
 M.TITLE='CUSTOM STRATAGEMS'
+-- 0.31.1: the panel's own text in the Runtime's language (runtime/i18n.lua: the title, box titles, stats and traits);
+-- a mod's names and descriptions in the language when the mod gives one (virtual.strings), else its own.
+local i18n=require('hd2runtime/runtime/i18n')
+local function T(source,...)return i18n.t(source,...)end
+local function title_text()return i18n.upper(T(M.TITLE))end
 -- Native units.
 local PAD,HEADER,HEADER_GAP,TITLE_SIZE,NAME_SIZE,TEXT_SIZE=8,18,6,13,12,9
 local MIN_DESCRIPTION=110        -- units the description area needs beside the grid
@@ -213,7 +218,8 @@ function M.draw(runtime,layout,entries,state)
         local P=layout.panel
         rect(P,10,COLOURS.panel,'the panel')
         frame(P,px(1),11,COLOURS.panelEdge,'the panel edge')
-        need(screen.text(M.TITLE,font,layout.title.size,font,layout.title.x,layout.title.y,17,COLOURS.title),'the title')
+        need(GT.screen_text(ctx,screen,title_text(),font,layout.title.size,layout.title.x,layout.title.y,17,
+            COLOURS.title),'the title')
         for index,entry in ipairs(entries)do
             local tile=layout.tiles[index]
             if tile and tile.visible then
@@ -262,7 +268,7 @@ end
 function M.entries()
     local out={}
     for _,definition in ipairs(virtual.list())do
-        local name,description=virtual.strings(definition,'us')
+        local name,description=virtual.strings(definition,i18n.language())
         out[#out+1]={id=definition.id,name=name,description=description,icon=definition.display.icon}
     end
     return out
@@ -414,8 +420,10 @@ function M.draw_compact(runtime,layout,entries,report)
         local P=layout.panel
         need(screen.rect(P.x,P.y,BASE+10,P.w,P.h,COLOURS.panel),'the panel')
         frame_rects(screen,P,px(1),BASE+11,COLOURS.panelEdge,'the panel edge')
-        need(screen.text(M.TITLE,font,layout.title.size,font,layout.title.x,layout.title.y,BASE+17,COLOURS.title),
-            'the title')
+        local GT=require('hd2runtime/runtime/game_text')
+        screen.game_text=screen.game_text or GT.context(runtime)
+        need(GT.screen_text(screen.game_text,screen,title_text(),font,layout.title.size,layout.title.x,layout.title.y,
+            BASE+17,COLOURS.title),'the title')
         for index,entry in ipairs(entries)do
             local tile=layout.tiles[index]
             if tile and tile.visible then
@@ -925,8 +933,11 @@ function M.draw_native(runtime,layout,entries,report)
         need(screen.rect(P.x+NV.pad*u,layout.header.y,BASE+11,P.w-2*NV.pad*u,math.max(1,math.floor(u+0.5)),
             NCOLOURS.panelEdge),'the header rule')
         local size=fonts.size_for_cap(title_font,layout.title.cap)
-        local w=fonts.width(title_font,M.TITLE,size)
-        need(screen.text(M.TITLE,title_font.name,size,title_font.name,layout.title.cx-w/2,layout.title.baseline,BASE+17,
+        local GT=require('hd2runtime/runtime/game_text')
+        screen.game_text=screen.game_text or GT.context(runtime)
+        local title=title_text()
+        local w=GT.width(screen.game_text,title_font,title,size)
+        need(GT.text(screen.game_text,screen,title,title_font,size,layout.title.cx-w/2,layout.title.baseline,BASE+17,
             NCOLOURS.title),'the title')
         for index,entry in ipairs(entries)do
             local tile=layout.tiles[index]
@@ -1045,9 +1056,9 @@ function M.draw_native_focus(runtime,layout,entry,index,info)
             need(GT.text(ctx,screen,s,font,size,x,Y(baseline),BASE+24,colour),what)
             return size
         end
-        text(string.upper(info.category or'CUSTOM STRATAGEM'),title_font,DT.category.cap,X(DT.textX),DT.category.baseline,
+        text(i18n.upper(info.category or T('CUSTOM STRATAGEM')),title_font,DT.category.cap,X(DT.textX),DT.category.baseline,
             NCOLOURS.category,'the category')
-        text(string.upper(info.name or entry.name or entry.id),title_font,DT.name.cap,X(DT.textX),DT.name.baseline,
+        text(i18n.upper(info.name or entry.name or entry.id),title_font,DT.name.cap,X(DT.textX),DT.name.baseline,
             NCOLOURS.name,'the name')
         local dsize=fonts.size_for_cap(body_font,DT.description.cap*du)
         local lines=GT.wrap(ctx,body_font,info.description or entry.description or'',dsize,
@@ -1065,21 +1076,22 @@ function M.draw_native_focus(runtime,layout,entry,index,info)
             -- its cap hanging under the top edge.
             local tsize=fonts.size_for_cap(title_font,DT.boxTitleCap*du)
             local tx=r.x+DT.titleX*du
-            local te=tx+fonts.width(title_font,box.title,tsize)+DT.titleGap*du
+            local box_title=i18n.upper(T(box.title))
+            local te=tx+GT.width(ctx,title_font,box_title,tsize)+DT.titleGap*du
             for _,e in ipairs({{r.x,r.y,t,r.h},{r.x+r.w-t,r.y,t,r.h},{r.x,r.y,r.w,t},{te,r.y+r.h-t,r.x+r.w-te,t}})do
                 need(screen.rect(e[1],e[2],BASE+22,e[3],e[4],NCOLOURS.boxEdge),'a box edge')
             end
-            need(screen.text(box.title,title_font.name,tsize,title_font.name,tx,Y(DT.titleBaseline),BASE+24,
-                NCOLOURS.label),'a box title')
+            need(GT.text(ctx,screen,box_title,title_font,tsize,tx,Y(DT.titleBaseline),BASE+24,NCOLOURS.label),
+                'a box title')
         end
         local rsize=fonts.size_for_cap(title_font,DT.rowCap*du)
         local rows=DT.stats.rows
         for k,row in ipairs(info.stats or{})do
             if rows[k]then
-                local label=string.upper(row[1])
-                need(screen.text(label,title_font.name,rsize,title_font.name,X(DT.stats.labelX),Y(rows[k]),
-                    BASE+24,NCOLOURS.label),'a stat label')
-                local value=string.upper(tostring(row[2]))
+                local label=i18n.upper(row[1])
+                need(GT.text(ctx,screen,label,title_font,rsize,X(DT.stats.labelX),Y(rows[k]),BASE+24,NCOLOURS.label),
+                    'a stat label')
+                local value=i18n.upper(tostring(row[2]))
                 -- The call-in code in the game's arrows when the font has them (the Runtime's FS Sinclair; monaco
                 -- keeps the words).
                 if type(row.code)=='table'and#row.code>0 then
@@ -1089,12 +1101,12 @@ function M.draw_native_focus(runtime,layout,entry,index,info)
                     if fonts.has(title_font,arrows)then value=arrows end
                 end
                 -- A value wider than the room right of its label is drawn smaller to fit (a long call-in code).
-                local room=X(DT.stats.valueRight)-(X(DT.stats.labelX)+fonts.width(title_font,label,rsize)+12*du)
+                local room=X(DT.stats.valueRight)-(X(DT.stats.labelX)+GT.width(ctx,title_font,label,rsize)+12*du)
                 local vsize=rsize
-                local vw=fonts.width(title_font,value,vsize)
+                local vw=GT.width(ctx,title_font,value,vsize)
                 if vw>room and room>0 then vsize=rsize*room/vw;vw=room end
-                need(screen.text(value,title_font.name,vsize,title_font.name,X(DT.stats.valueRight)-vw,Y(rows[k]),
-                    BASE+24,NCOLOURS.value),'a stat value')
+                need(GT.text(ctx,screen,value,title_font,vsize,X(DT.stats.valueRight)-vw,Y(rows[k]),BASE+24,
+                    NCOLOURS.value),'a stat value')
             end
         end
         -- Five traits (CUSTOM STRATAGEM and four of the definition's): a tighter pitch in the same box.
@@ -1103,7 +1115,7 @@ function M.draw_native_focus(runtime,layout,entry,index,info)
             if rows[k]then
                 need(screen.rect(X(DT.traits.bulletX),Y(rows[k]),BASE+24,math.max(1,2.5*du),DT.rowCap*du,
                     NCOLOURS.bullet),'a trait bullet')
-                need(GT.text(ctx,screen,string.upper(trait),title_font,rsize,X(DT.traits.textX),Y(rows[k]),
+                need(GT.text(ctx,screen,i18n.upper(trait),title_font,rsize,X(DT.traits.textX),Y(rows[k]),
                     BASE+24,NCOLOURS.value),'a trait')
             end
         end
@@ -1286,6 +1298,7 @@ function M.panel(opts)
         screens.panel,S.layout,S.renderer,S.shown=drawn,layout,renderer,true
         if layout.grid then S.scroll=layout.grid.scroll or 0 end
         S.availability=availability_key()
+        S.language=i18n.language()
         track.resolution=res[1]..'x'..res[2]
         track.details=rect_text(details.rect)
         local shown_tiles=0
@@ -1387,6 +1400,10 @@ function M.panel(opts)
             show(view,world,'the details panel moved')
         elseif opts.availability and availability_key()~=S.availability then
             show(view,world,'the availability of an entry changed')
+        elseif S.shown and i18n.language()~=S.language then
+            -- the Runtime's language changed (F10, or the game's): the panel and the focused details again
+            show(view,world,'the language changed')
+            if screens.focus then draw_focus()end
         end
     end
     scheduler.attach(S.follower)

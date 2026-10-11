@@ -5,11 +5,15 @@
 --   * alert_cards       the custom stratagem alert cards (problems before a launch, DISABLED, vanilla names);
 --   * version_label     the HD2Runtime / game build label in the bottom-left corner aboard the ship;
 --   * startup_progress  the asset loading panel in the top-right corner while mods load.
+-- 0.31.1: a Language setting (a list: Automatic follows the game's language, or one of the game languages), the language
+-- every text the Runtime shows is in (runtime/i18n.lua); and hd2.ui.open_settings() opens the panel from a mod.
 -- Every setting is on by default and saved between sessions in the Runtime's own store (hd2.store's file for the owner
 -- "hd2runtime"). Turning one off hides it at once; the log keeps every line either way. The panel is drawn through the
 -- Runtime's mod overlay (runtime/mod_overlay.lua: a screen GUI in the Ui World) and frees the cursor while it is open.
 -- Nothing of the game is written.
 local log_module=require('hd2runtime/runtime/log')
+local i18n=require('hd2runtime/runtime/i18n')
+local T=i18n.t
 local M={}
 M.KEY='F10'
 M.OWNER='hd2runtime'
@@ -26,6 +30,12 @@ M.ITEMS={
 }
 local KNOWN={}
 for _,item in ipairs(M.ITEMS)do KNOWN[item.key]=item end
+-- Settings that hold a value rather than on / off: their default, and the values they accept.
+M.VALUES={language={default=i18n.AUTO,valid=function(v)
+    if v==i18n.AUTO then return true end
+    for _,item in ipairs(i18n.languages())do if item.code==v then return true end end
+    return false
+end}}
 -- The HD2R Editor's theme (HD2RuntimeEditor src/editor/ui/theme.lua), the colours a, r, g, b as {r, g, b, a}.
 M.COLOUR={panel={11,14,18,240},header={7,9,12,250},footer={7,9,12,250},rail={255,199,44,255},
     line={255,255,255,14},line_strong={255,255,255,30},text={234,234,228,255},dim={160,164,170,255},
@@ -33,7 +43,8 @@ M.COLOUR={panel={11,14,18,240},header={7,9,12,250},footer={7,9,12,250},rail={255
     hover={255,255,255,10},shadow={0,0,0,110},error={255,96,84,255},error_soft={255,96,84,44}}
 M.SIZE={title=22,heading=13,body=16,small=13,tiny=12}
 M.CAP_OFFSET=(49.25-34.75/2)/56   -- FS Sinclair: from a line's vertical centre to its top
-M.W,M.HEADER,M.FOOTER,M.ROW,M.PAD=560,58,46,52,18
+M.W,M.HEADER,M.FOOTER,M.ROW,M.PAD=620,58,46,52,18
+M.OPTION=30   -- a row of the language list
 
 local function log(text)pcall(log_module.emit,'[HD2Runtime] settings '..text)end
 
@@ -73,7 +84,32 @@ function M.set(key,on)
     for _,fn in ipairs(listeners)do pcall(fn,key,on)end
     return on
 end
--- fn(key, on) whenever a setting changes.
+-- A value setting (M.VALUES): its saved value, or its default.
+function M.value(key)
+    local spec=assert(M.VALUES[key],'unknown HD2Runtime value setting: '..tostring(key))
+    local s=store()
+    local value
+    if s then
+        local ok,v=pcall(s.get,s,'setting.'..key)
+        if ok then value=v end
+    else value=memory['value.'..key]end
+    if value==nil or not spec.valid(value)then return spec.default end
+    return value
+end
+-- Sets a value setting (saved); listeners hear it as fn(key, value).
+function M.set_value(key,value)
+    local spec=assert(M.VALUES[key],'unknown HD2Runtime value setting: '..tostring(key))
+    assert(spec.valid(value),'not a value of '..key..': '..tostring(value))
+    local s=store()
+    if s then
+        local ok,why=pcall(s.set,s,'setting.'..key,value)
+        if not ok then log('could not save '..key..': '..tostring(why))end
+    else memory['value.'..key]=value end
+    log(('%s = %s'):format(key,tostring(value)))
+    for _,fn in ipairs(listeners)do pcall(fn,key,value)end
+    return value
+end
+-- fn(key, value) whenever a setting changes (true / false for a toggle).
 function M.on_change(fn)listeners[#listeners+1]=fn end
 
 -------------------------------------------------------------------------------------------------- the panel --
@@ -83,12 +119,17 @@ local function clicked_in(m,box)
 end
 -- Lays the panel out for a w x h overlay at scale s: {x, y, w, h, k, rows = {{item, box, toggle}}, close}. Pure.
 function M.layout(width,height,scale)
-    local h=M.HEADER+M.PAD+22+#M.ITEMS*M.ROW+M.PAD+22+3*22+M.PAD+M.FOOTER
+    local h=M.HEADER+M.PAD+22+M.ROW+M.PAD+22+#M.ITEMS*M.ROW+M.PAD+22+3*22+M.PAD+M.FOOTER
     local k=math.max(0.5,math.min(scale,width/(M.W+24),height/(h+24)))
     local w=M.W*k
     local x,y=math.floor((width-w)/2),math.floor((height-h*k)/2)
     local L={x=x,y=y,w=w,h=h*k,k=k,rows={}}
     local cy=y+(M.HEADER+M.PAD)*k
+    -- LANGUAGE: one list row
+    L.language_y=cy
+    cy=cy+22*k
+    L.language={x=x+M.PAD*k,y=cy,w=w-2*M.PAD*k,h=(M.ROW-6)*k}
+    cy=cy+(M.ROW+M.PAD)*k
     L.messages_y=cy
     cy=cy+22*k
     for _,item in ipairs(M.ITEMS)do
@@ -97,6 +138,15 @@ function M.layout(width,height,scale)
     end
     L.about_y=cy+M.PAD*k
     L.close={x=x+w-50*k,y=y+12*k,w=36*k,h=34*k}
+    -- the open language list: below its row, every option (Automatic first), kept on screen
+    local options={{code=i18n.AUTO}}
+    for _,item in ipairs(i18n.languages())do options[#options+1]={code=item.code,name=item.name}end
+    local lh=#options*M.OPTION*k
+    local ly=math.min(L.language.y+L.language.h,math.max(0,height-lh))
+    L.options={}
+    for n,option in ipairs(options)do
+        L.options[n]={option=option,box={x=L.language.x,y=ly+(n-1)*M.OPTION*k,w=L.language.w,h=M.OPTION*k}}
+    end
     return L
 end
 local function text(d,s,x,cy,size,colour,font,align,z)
@@ -106,13 +156,21 @@ local function about_lines()
     local ok,label=pcall(require,'hd2runtime/runtime/version_label')
     local first,second='HD2Runtime','Game'
     if ok and label.lines then first,second=label.lines()end
-    local wheel='Mouse wheel hook: unknown'
+    local wheel=T('Mouse wheel hook: unknown')
     local okw,mw=pcall(require,'hd2runtime/runtime/mouse_wheel')
     if okw and mw.native_allowed then
         local okn,allowed=pcall(mw.native_allowed)
-        if okn then wheel='Mouse wheel hook: '..(allowed and'on'or'off (the install choice)')end
+        if okn then wheel=allowed and T('Mouse wheel hook: on')or T('Mouse wheel hook: off (the install choice)')end
     end
-    return {first..'  |  '..second,wheel,'Settings are saved for every game session.'}
+    return {first..'  |  '..second,wheel,T('Settings are saved for every game session.')}
+end
+-- The language list's text for a value: a language's own name, or Automatic with the game's language.
+function M.language_text(code)
+    if code==i18n.AUTO then
+        local game=i18n.game_language()
+        return game and T('Automatic (the game: %s)',i18n.name(game)or game)or T("Automatic (the game's language)")
+    end
+    return i18n.name(code)or code
 end
 -- One frame of the panel (the overlay's draw function).
 function M.draw(d,mouse,input)
@@ -130,7 +188,7 @@ function M.draw(d,mouse,input)
     local hy=y+M.HEADER*k/2
     text(d,'HD2R',x+20*k,hy,S.title*k,C.text,'title')
     text(d,'RUNTIME',x+20*k+d:text_width('HD2R ',S.title*k,'title'),hy,S.title*k,C.gold,'title')
-    text(d,'SETTINGS',x+w-62*k,hy,S.heading*k,C.faint,'title','right')
+    text(d,i18n.upper(T('SETTINGS')),x+w-62*k,hy,S.heading*k,C.faint,'title','right')
     local close_hover=clicked_in(mouse,L.close)
     d:rect(L.close.x,L.close.y,L.close.w,L.close.h,close_hover and C.error_soft or C.panel,3)
     d:rect(L.close.x,L.close.y,L.close.w,math.max(1,k),close_hover and C.error or C.line_strong,4)
@@ -142,20 +200,39 @@ function M.draw(d,mouse,input)
         local lw=d:text_width(label,S.tiny*k,'title')
         d:rect(x+M.PAD*k+lw+10*k,sy,w-2*M.PAD*k-lw-10*k,math.max(1,k),C.line,2)
     end
-    section('MESSAGES ON SCREEN',L.messages_y)
+    -- LANGUAGE: the current choice; a click opens the list
+    section(i18n.upper(T('LANGUAGE')),L.language_y)
+    local current=M.value('language')
+    local lbox=L.language
+    local menu=panel.menu
+    local language_hover=not menu and clicked_in(mouse,lbox)
+    if language_hover then d:rect(lbox.x-6*k,lbox.y,lbox.w+12*k,lbox.h,C.hover,2)end
+    local ly=lbox.y+lbox.h/2
+    text(d,T('Language'),lbox.x,ly-8*k,S.body*k,C.text,'body')
+    local lines=d:wrap(T('The language of everything HD2Runtime shows on screen.'),lbox.w*0.55,{size=S.small*k,lines=1})
+    text(d,lines[1]or'',lbox.x,ly+10*k,S.small*k,C.dim,'body')
+    local bw=lbox.w*0.42
+    d:rect(lbox.x+lbox.w-bw,ly-14*k,bw,28*k,C.header,3)
+    d:rect(lbox.x+lbox.w-bw,ly+14*k-math.max(1,k),bw,math.max(1,k),menu and C.gold or C.line_strong,4)
+    local shown=d:wrap(M.language_text(current),bw-34*k,{size=S.small*k,lines=1})
+    text(d,shown[1]or'',lbox.x+lbox.w-bw+10*k,ly,S.small*k,C.text,'body')
+    text(d,menu and'^'or'v',lbox.x+lbox.w-12*k,ly,S.small*k,C.gold,'title','right')
+    section(i18n.upper(T('MESSAGES ON SCREEN')),L.messages_y)
     local hit
     for _,row in ipairs(L.rows)do
         local on=M.enabled(row.item.key)
-        local hovered=clicked_in(mouse,row.box)
+        local hovered=not menu and clicked_in(mouse,row.box)
         if hovered then hit=row;d:rect(row.box.x-6*k,row.box.y,row.box.w+12*k,row.box.h,C.hover,2)end
         local tx,ty=row.box.x,row.box.y+row.box.h/2
         d:rect(tx,ty-9*k,34*k,18*k,on and C.gold or C.line_strong,3)
         d:rect(on and tx+18*k or tx+2*k,ty-7*k,14*k,14*k,on and C.inverse or C.dim,4)
-        text(d,row.item.label,tx+48*k,ty-8*k,S.body*k,C.text,'body')
-        text(d,row.item.description,tx+48*k,ty+10*k,S.small*k,C.dim,'body')
-        text(d,on and'ON'or'OFF',row.box.x+row.box.w,ty,S.tiny*k,on and C.gold or C.faint,'title','right')
+        text(d,T(row.item.label),tx+48*k,ty-8*k,S.body*k,C.text,'body')
+        local desc=d:wrap(T(row.item.description),row.box.w-48*k-60*k,{size=S.small*k,lines=1})
+        text(d,desc[1]or'',tx+48*k,ty+10*k,S.small*k,C.dim,'body')
+        text(d,i18n.upper(on and T('ON')or T('OFF')),row.box.x+row.box.w,ty,S.tiny*k,on and C.gold or C.faint,'title',
+            'right')
     end
-    section('ABOUT',L.about_y)
+    section(i18n.upper(T('ABOUT')),L.about_y)
     for n,line in ipairs(about_lines())do
         text(d,line,x+M.PAD*k,L.about_y+(14+(n-1)*22)*k,S.small*k,n==3 and C.faint or C.dim,'body')
     end
@@ -163,10 +240,37 @@ function M.draw(d,mouse,input)
     local fy=y+L.h-M.FOOTER*k
     d:rect(x,fy,w,M.FOOTER*k,C.footer,1)
     d:rect(x,fy,w,math.max(1,k),C.line_strong,2)
-    text(d,'F10 or Esc closes  |  click a row to turn it on or off',x+M.PAD*k,fy+M.FOOTER*k/2,S.small*k,C.faint,'body')
-    -- Input: a click on a row toggles it; the x or Esc closes.
+    local footer=d:wrap(T('F10 or Esc closes  |  click a row to turn it on or off'),w-2*M.PAD*k,{size=S.small*k,lines=1})
+    text(d,footer[1]or'',x+M.PAD*k,fy+M.FOOTER*k/2,S.small*k,C.faint,'body')
+    -- The open language list, over everything: a click picks a language; a click elsewhere or Esc closes the list.
+    local picked
+    if menu then
+        local top,last=L.options[1].box,L.options[#L.options].box
+        local lh=last.y+last.h-top.y
+        d:rect(top.x-2*k,top.y-2*k,top.w+4*k,lh+4*k,C.shadow,20)
+        d:rect(top.x,top.y,top.w,lh,C.header,21)
+        d:rect(top.x,top.y,3*k,lh,C.rail,23)
+        for _,o in ipairs(L.options)do
+            local hovered=clicked_in(mouse,o.box)
+            local chosen=o.option.code==current
+            if hovered then picked=o;d:rect(o.box.x,o.box.y,o.box.w,o.box.h,C.hover,22)end
+            local label=o.option.code==i18n.AUTO and M.language_text(i18n.AUTO)or o.option.name
+            text(d,label,o.box.x+16*k,o.box.y+o.box.h/2,S.small*k,chosen and C.gold or C.text,'body',nil,24)
+            if chosen then text(d,'*',o.box.x+o.box.w-12*k,o.box.y+o.box.h/2,S.small*k,C.gold,'title','right',24)end
+        end
+    end
+    -- Input: the list first; a click on a row toggles it; the x or Esc closes.
+    local escape=input and input.pressed('ESCAPE')
+    if menu then
+        if press then
+            if picked then M.set_value('language',picked.option.code)end
+            panel.menu=nil
+        elseif escape then panel.menu=nil end
+        return L
+    end
+    if press and language_hover then panel.menu=true;return L end
     if press and hit then M.set(hit.item.key,not M.enabled(hit.item.key))end
-    if(press and close_hover)or(input and input.pressed('ESCAPE'))then M.close()end
+    if(press and close_hover)or escape then M.close()end
     return L
 end
 
@@ -190,6 +294,7 @@ function M.open()
     log('panel opened')
 end
 function M.close()
+    panel.menu=nil
     if panel.overlay then panel.overlay:hide()end
 end
 function M.toggle()
@@ -207,5 +312,6 @@ function M.reset_for_tests()
     if panel.overlay then pcall(panel.overlay.close,panel.overlay)end
     panel={overlay=nil,binding=nil,was_left=false}
     memory,listeners={},{}
+    i18n.reset_for_tests()
 end
 return M

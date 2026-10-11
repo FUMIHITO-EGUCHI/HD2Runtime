@@ -93,6 +93,32 @@ local C=require('hd2runtime/domains/stratagem_calldown')
 local SLOTS=require('hd2runtime/domains/stratagem_slots')
 local SD=require('hd2runtime/domains/support_delivery')
 local M={}
+-- 0.31.1: on-screen text (the alert cards, the panel details) in the Runtime's language (runtime/i18n.lua); the log
+-- stays English.
+-- (a field, not a local: the main chunk keeps headroom under LuaJIT's 200 locals)
+function M.T(source,...)return require('hd2runtime/runtime/i18n').t(source,...)end
+-- A NOT READY reason list as the alert card shows it: each reason the allocation or the code check gives, in plain words
+-- in the Runtime's language (a reason it does not know stays as it is).
+function M.shown_reasons(reasons)
+    local out={}
+    for _,why in ipairs(reasons or{})do
+        why=tostring(why)
+        local code,other=why:match('^its code (.-) collides with (.-) in your loadout')
+        local text
+        if code then text=M.T('its code %s collides with %s in your loadout',code,other)
+        elseif why:find('^its code ')then
+            code,other=why:match('^its code (.-) collides with (.*)$')
+            text=code and M.T('its code %s collides with %s',code,other)or why
+        elseif why:find('^not in the synchronized lobby table yet')then text=M.T('not synchronized with the lobby yet')
+        elseif why:find('^no carrier was allocated')then text=M.T('no carrier was found for it')
+        elseif why:find('^no unused red')then text=M.T('no free offensive (red) carrier stratagem is left')
+        elseif why:find('^no unused')then text=M.T('no free carrier stratagem is left')
+        elseif why:find('^UNAVAILABLE: its carrier weapon')then text=M.T('its carrier weapon is not available')
+        else text=why end
+        out[#out+1]=text
+    end
+    return table.concat(out,'; ')
+end
 M.TOKEN='Orbital Precision Strike'
 M.MAX=16
 M.STEP=0.5               -- the ship and mission step
@@ -2059,6 +2085,9 @@ local function ship_step(world,v)
         end
         local text=#reasons==0 and('READY: carrier %s (%s, %s beacon), code %s'):format(mine.carrier,tostring(mine.family),
             tostring(mine.beam),d.code_text)or('NOT READY: '..table.concat(reasons,'; '))
+        -- (what the alert card shows, in the Runtime's language: runtime/i18n.lua; the log keeps the English text)
+        ship.shown=ship.shown or{}
+        ship.shown[d.id]=#reasons>0 and M.shown_reasons(reasons)or nil
         if ship.status[d.id]~=text then
             ship.status[d.id]=text
             log(('PRE-MISSION (%s): %s'):format(d.id,text))
@@ -2560,6 +2589,14 @@ do
     -- s a waiting state (a lobby member's first post, a host hash) may last before it counts
     M.READINESS_TRANSIENT=20
     local readiness={key=nil,shown=-math.huge,since={},table_ok=nil,table_key=nil,launched=nil}
+    -- 0.31.1: the card's text in the Runtime's language (runtime/i18n.lua): English (for the log and the change key)
+    -- and the translation of every template.
+    local function both(source,...)
+        local args={...}
+        local n=select('#',...)
+        local english=n>0 and source:format(...)or source
+        return english,M.T(source,unpack(args,1,n))
+    end
     local function short(text,n)
         text=tostring(text):gsub('%s+',' ')
         if#text>n then return text:sub(1,n-3)..'...'end
@@ -2620,7 +2657,10 @@ do
         local list=selected()
         if#list==0 then return {},list end
         local problems={}
-        local function add(line,advice)problems[#problems+1]={line=short(line,90),advice=short(advice,90)}end
+        local function add(line,shown,advice,shown_advice)
+            problems[#problems+1]={line=short(line,90),advice=short(advice,90),shown=shown,shown_advice=shown_advice}
+        end
+        local same_mods='Everyone needs the same custom stratagem mods.'
         local game=world_module.game_state(world)
         local players=#(world_module.players(world)or{})
         local host=game and game.host==true
@@ -2629,28 +2669,30 @@ do
             if v.status=='unavailable'then
                 local missing=0
                 for _,peer in pairs(v.peers or{})do if peer.state=='missing'then missing=missing+1 end end
-                if missing>0 then
-                    add(('%d player%s without HD2Runtime: your custom slots will be locked.'):format(missing,
-                        missing==1 and''or's'),
-                        'Fix: everyone needs the same custom stratagem mods.')
+                if missing==1 then
+                    local line,shown=both('A player without HD2Runtime: your custom slots will be locked.')
+                    add(line,shown,both(same_mods))
+                elseif missing>1 then
+                    local line,shown=both('%d players without HD2Runtime: your custom slots will be locked.',missing)
+                    add(line,shown,both(same_mods))
                 else
-                    add('A player has other custom stratagem mods: your custom slots will be locked.',
-                        'Fix: everyone needs the same custom stratagem mods.')
+                    local line,shown=both('A player has other custom stratagem mods: your custom slots will be locked.')
+                    add(line,shown,both(same_mods))
                 end
             end
             if v.status=='waiting'then
                 readiness.since.waiting=readiness.since.waiting or clock
                 if clock-readiness.since.waiting>=M.READINESS_TRANSIENT then
-                    add("Still waiting for the lobby's HD2Runtime state: custom slots may be locked.",
-                        'Fix: wait a moment; if it stays, a player may lack HD2Runtime.')
+                    local line,shown=both("Still waiting for the lobby's HD2Runtime state: custom slots may be locked.")
+                    add(line,shown,both('Wait a moment; if it stays, a player may lack HD2Runtime.'))
                 end
             else readiness.since.waiting=nil end
             local ag=v.status=='enabled'and v.table_hash and sync.agreement(v,v.table_hash)
             if ag and ag.status=='differ'then
                 readiness.since.differ=readiness.since.differ or clock
                 if clock-readiness.since.differ>=M.READINESS_TRANSIENT then
-                    add('Your custom picks differ from what the host sees.',
-                        'Fix: wait a few seconds, or re-pick the slot.')
+                    local line,shown=both('Your custom picks differ from what the host sees.')
+                    add(line,shown,both('Wait a few seconds, or re-pick the slot.'))
                 end
             else readiness.since.differ=nil end
         end
@@ -2658,24 +2700,26 @@ do
         for _,d in ipairs(list)do
             local text=ship.status[d.id]
             if text and text:find('^NOT READY')then
-                add((d.name or d.id)..': '..text:gsub('^NOT READY: ',''),
-                    'Fix: free its carrier or pick another custom stratagem.')
+                local why=text:gsub('^NOT READY: ','')
+                local shown_why=ship.shown and ship.shown[d.id]or why
+                add((d.name or d.id)..': '..why,(d.name or d.id)..': '..shown_why,
+                    both('Free its carrier or pick another custom stratagem.'))
             end
         end
         -- 3. A carrier slot that must still move (another player picked its carrier) before the launch.
         for _,m in ipairs(M.pending_moves and M.pending_moves()or{})do
             if clock-m.since>=M.PROBE_MOVE_SETTLE+M.PROBE_MOVE_RETRY*2 then
                 local d=defs[m.definition]
-                add(('%s (slot %d) must switch carrier before the launch.'):format(d and d.name or m.definition,
-                    m.slot+1),
-                    'Fix: open the stratagem selection, stay un-Ready, and let it switch.')
+                local line,shown=both('%s (slot %d) must switch carrier before the launch.',d and d.name or m.definition,
+                    m.slot+1)
+                add(line,shown,both('Open the stratagem selection, stay un-Ready, and let it switch.'))
             end
         end
         -- 4. The stratagem table as the presentation reads it (another mod may have changed it): the session's clean
         -- read (table_step).
         if readiness.table_ok~=nil and readiness.table_ok~=true then
-            add('Another mod changed the stratagem data: custom names/looks will fail.',
-                'Fix: disable mods that change stratagems or hellpods, then restart.')
+            local line,shown=both('Another mod changed the stratagem data: custom names/looks will fail.')
+            add(line,shown,both('Disable mods that change stratagems or hellpods, then restart.'))
         end
         return problems,list
     end
@@ -2700,8 +2744,8 @@ do
                 if card then
                     card.clear('readiness')
                     if list and#list>0 then
-                        card.post({key='readiness',severity='ok',title='Custom stratagems',tag='Ready',seconds=5,
-                            items={{line='The problem is fixed: your selected custom stratagems will work.'}}},true)
+                        card.post({key='readiness',severity='ok',title=M.T('Custom stratagems'),tag=M.T('Ready'),seconds=5,
+                            items={{line=M.T('The problem is fixed: your selected custom stratagems will work.')}}},true)
                     end
                 end
             end
@@ -2711,12 +2755,12 @@ do
         if key~=readiness.key then log('READINESS: '..#problems..' problem'..(#problems==1 and''or's')..': '..key)end
         readiness.key,readiness.shown=key,clock
         local items={}
-        for _,p in ipairs(problems)do items[#items+1]={line=p.line,fix=p.advice}end
+        for _,p in ipairs(problems)do items[#items+1]={line=p.shown or p.line,fix=p.shown_advice or p.advice}end
         if card then
-            card.post({key='readiness',severity=launching and'fail'or'warn',title='Custom stratagems',
-                tag=launching and'Will fail'or'Check before launch',items=items,
-                footer=launching and'Launching anyway: these slots stay locked for the mission.'
-                    or'Shown again every minute while it stands.'},true)
+            card.post({key='readiness',severity=launching and'fail'or'warn',title=M.T('Custom stratagems'),
+                tag=launching and M.T('Will fail')or M.T('Check before launch'),items=items,
+                footer=launching and M.T('Launching anyway: these slots stay locked for the mission.')
+                    or M.T('Shown again every minute while it stands.')},true)
         end
     end
     function M.reset_readiness_for_tests()readiness={key=nil,shown=-math.huge,since={},table_ok=nil,table_key=nil}end
@@ -4585,11 +4629,11 @@ end
 function M.disabled_notice(advice)
     local card=M.hooks.alert()
     if not card then return end
-    local items={{line='Incompatible custom-stratagem mods detected in the lobby.',
-        fix='All players must use the same custom stratagems and versions.'}}
+    local items={{line=M.T('Incompatible custom-stratagem mods detected in the lobby.'),
+        fix=M.T('All players must use the same custom stratagems and versions.')}}
     if advice then items[#items+1]={line=advice}end
-    pcall(card.post,{key='disabled',severity='fail',title='Custom stratagems',tag='Disabled',items=items,
-        footer='Custom stratagems are unavailable; vanilla gameplay is unaffected.'})
+    pcall(card.post,{key='disabled',severity='fail',title=M.T('Custom stratagems'),tag=M.T('Disabled'),items=items,
+        footer=M.T('Custom stratagems are unavailable; vanilla gameplay is unaffected.')})
 end
 -- Every custom slot of this machine that will NOT run in this mission is LOCKED: its token (Orbital Precision Strike)
 -- is never called (runtime/slot_cooldown.lua lock: its own entry unavailable all mission; the client's write carries the
@@ -4606,7 +4650,7 @@ do
             log(('CUSTOM STRATAGEM LOCK FAILED: the stratagem record is unreadable: DO NOT CALL your custom stratagem '
                 ..'slots in this mission (each would call the native %s). Why they do not run: %s'):format(M.TOKEN,
                 tostring(reason)))
-            M.disabled_notice('DO NOT call your custom slots: they would call '..M.TOKEN..'.')
+            M.disabled_notice(M.T('DO NOT call your custom slots: they would call %s.',M.TOKEN))
             return 0
         end
         -- Loadout slot -> record entry (the granted mission defaults hold no slot).
@@ -4639,7 +4683,7 @@ do
                             log(('CUSTOM STRATAGEM LOCK FAILED: loadout slot %d (%s): %s: %s. DO NOT CALL loadout slot %d in '
                                 ..'this mission: it would call the native %s'):format(slot,v.definition,tostring(e.code),
                                 tostring(e.reason),slot,native))
-                            M.disabled_notice(('DO NOT call loadout slot %d: it would call %s.'):format(slot+1,native))
+                            M.disabled_notice(M.T('DO NOT call loadout slot %d: it would call %s.',slot+1,native))
                         end
                     end)
                 count=count+1
@@ -5646,7 +5690,7 @@ local function tick(dt)
         if block then
             mission.disabled=block
             if fail_closed(world,block)>0 then
-                M.disabled_notice('Your custom stratagem slots are locked for this mission.')
+                M.disabled_notice(M.T('Your custom stratagem slots are locked for this mission.'))
             end
         end
     end
@@ -5882,6 +5926,9 @@ end
 -- panel's arrows) and ITEM TRAITS. Read-only.
 M.KIND_TRAITS={expendable='EXPENDABLE WEAPON',support='SUPPORT WEAPON',pod='SUPPLY POD',sentry='SENTRY',silo='MISSILE SILO',
     eagle='EAGLE',orbital='ORBITAL',orbital_native='ORBITAL',pelican='PELICAN GUNSHIP',runtime='SCRIPTED DELIVERY'}
+-- 0.31.1: in the Runtime's language (runtime/i18n.lua), whole phrases; a definition's own traits are its mod's text.
+M.CATEGORIES={DEFENSIVE='CUSTOM DEFENSIVE STRATAGEM',OFFENSIVE='CUSTOM OFFENSIVE STRATAGEM',
+    SUPPLY='CUSTOM SUPPLY STRATAGEM'}
 -- The native CALL-IN TIME is the row's call-in time with the account's upgrades (0x879900), plus a hellpod's travel for a
 -- hellpod delivery (0x6ADB40). Every hellpod delivery is the pod 0x73F8498BFFDCF415 (hellpod/hellpod/hellpod_payload),
 -- whose HellpodComponentData gives 4.75 s. The upgrades are the account's and not read here: this is the base time.
@@ -5892,12 +5939,12 @@ function M.panel_details(id)
     if not d then return nil end
     local policy=d.alloc_policy or d.policy or{}
     local section=d.kind=='sentry'and'DEFENSIVE'or policy.beacon=='offensive'and'OFFENSIVE'or'SUPPLY'
-    local name,description=virtual.strings(d.virtual,'us')
+    local name,description=virtual.strings(d.virtual,require('hd2runtime/runtime/i18n').language())
     local words,code={},{}
     for _,v in ipairs(d.code_values or{})do words[#words+1]=calldown.text({v});code[#code+1]=calldown.names({v})[1]end
-    local uses='UNLIMITED'
-    if d.kind=='eagle'and d.eagle and d.eagle.uses then uses=('%d PER REARM'):format(d.eagle.uses)end
-    if d.uses then uses=('%d PER MISSION'):format(d.uses)end
+    local uses=M.T('UNLIMITED')
+    if d.kind=='eagle'and d.eagle and d.eagle.uses then uses=M.T('%d PER REARM',d.eagle.uses)end
+    if d.uses then uses=M.T('%d PER MISSION',d.uses)end
     -- Its carrier: the one allocated for its pick, else the one the availability view would allocate; an expendable
     -- not picked yet, its carrier weapons' own stratagems (each its own beacon carrier) when they agree.
     local a=cache[id]or(group_view.a and group_view.a.assignments[id])
@@ -5918,31 +5965,31 @@ function M.panel_details(id)
         return value
     end
     local cooldown=d.cooldown or carrier_value('stratagem.cooldown')
-    cooldown=cooldown and('%d SEC'):format(math.floor(cooldown+0.5))or'AS ITS CARRIER'
+    cooldown=cooldown and M.T('%d SEC',math.floor(cooldown+0.5))or M.T('AS ITS CARRIER')
     local call_in=carrier_value('stratagem.call_in_time')
     if call_in then
         call_in=call_in+(M.POD_KINDS[d.kind]and M.POD_TRAVEL or 0)
-        call_in=('%.2f SEC'):format(math.floor(call_in*20+0.5)/20)
+        call_in=M.T('%.2f SEC',math.floor(call_in*20+0.5)/20)
     end
     -- The definition's own traits (spec.traits: CUSTOM STRATAGEM first, up to five rows), else its family's.
-    local traits={'CUSTOM STRATAGEM'}
+    local traits={M.T('CUSTOM STRATAGEM')}
     if d.traits then
-        for k,t in ipairs(d.traits)do traits[k]=t end
+        for k,t in ipairs(d.traits)do traits[k]=k==1 and t=='CUSTOM STRATAGEM'and traits[1]or t end
     else
         local kind=d.kind=='expendable'and d.delivery~='runtime'and d.delivery.variant and'support'or d.kind
         if d.kind=='orbital'and d.orbital and d.orbital.native then kind='orbital_native'end
-        traits[#traits+1]=M.KIND_TRAITS[kind]or string.upper(tostring(d.kind))
+        traits[#traits+1]=M.KIND_TRAITS[kind]and M.T(M.KIND_TRAITS[kind])or string.upper(tostring(d.kind))
         if d.delivery~='runtime'and type(d.delivery)=='table'then
-            if d.delivery.model then traits[#traits+1]='CUSTOM MODEL'end
-            if d.delivery.round then traits[#traits+1]=string.upper(tostring(d.delivery.round.label
-                or d.delivery.round.name))..' ROUNDS'end
+            if d.delivery.model then traits[#traits+1]=M.T('CUSTOM MODEL')end
+            if d.delivery.round then traits[#traits+1]=M.T('%s ROUNDS',string.upper(tostring(d.delivery.round.label
+                or d.delivery.round.name)))end
             if d.delivery.impact then traits[#traits+1]=string.upper(tostring(d.delivery.impact))end
         end
         while#traits>4 do table.remove(traits)end
     end
-    return {category=('CUSTOM %s STRATAGEM'):format(section),name=name,description=description,
-        stats={{'CALL-IN TIME',call_in or'AS ITS CARRIER'},{'USES',uses},{'COOLDOWN TIME',cooldown},
-            {'CALL-IN CODE',table.concat(words,' '),code=code}},traits=traits}
+    return {category=M.T(M.CATEGORIES[section]),name=name,description=description,
+        stats={{M.T('CALL-IN TIME'),call_in or M.T('AS ITS CARRIER')},{M.T('USES'),uses},{M.T('COOLDOWN TIME'),cooldown},
+            {M.T('CALL-IN CODE'),table.concat(words,' '),code=code}},traits=traits}
 end
 -- The carrier groups (runtime/carrier_groups.lua catalogue).
 function M.groups()return groups.catalogue()end

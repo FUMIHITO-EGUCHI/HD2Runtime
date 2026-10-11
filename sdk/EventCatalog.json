@@ -5313,6 +5313,30 @@
       "params": [],
       "returns": "table[]",
       "doc": "The game's language fonts overlays draw with: {key, label, languages (the game language codes that load it), glyphs, resident, reason}. The game loads only the selected language's; the Runtime loads the one a text needs."
+     },
+     {
+      "name": "open_settings",
+      "params": [],
+      "returns": "boolean",
+      "doc": "HD2Runtime 0.31.1+: opens HD2Runtime's own settings panel (F10: its language and the messages it shows on screen), for a button in a mod's own settings. Close your own window first: the panel frees the cursor while it is open."
+     },
+     {
+      "name": "close_settings",
+      "params": [],
+      "returns": "boolean",
+      "doc": "HD2Runtime 0.31.1+: closes HD2Runtime's settings panel."
+     },
+     {
+      "name": "settings_open",
+      "params": [],
+      "returns": "boolean",
+      "doc": "HD2Runtime 0.31.1+: whether HD2Runtime's settings panel is open."
+     },
+     {
+      "name": "language",
+      "params": [],
+      "returns": "string, string",
+      "doc": "HD2Runtime 0.31.1+: the language HD2Runtime shows its own text in (a game language code: 'us', 'de', 'jp' ...) and its F10 Language setting ('auto': the game's language, or a code)."
      }
     ],
     "fields": [

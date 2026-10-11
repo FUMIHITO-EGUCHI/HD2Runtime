@@ -136,7 +136,8 @@ local function counts(game_world)
     return out
 end
 -- The weighted percentage and the first incomplete stage: percent (0-100), stage (or nil when every stage is done),
--- label text.
+-- label text (English, for the log) and the label as the panel shows it (in the Runtime's language, runtime/i18n.lua).
+local function T(source,...)return require('hd2runtime/runtime/i18n').t(source,...)end
 function M.progress(c)
     local sum,total,first=0,0,nil
     for _,s in ipairs(M.STAGES)do
@@ -148,8 +149,12 @@ function M.progress(c)
     local percent=math.floor(100*sum/total+0.5)
     if first and percent>=100 then percent=99 end
     local label=first and first.label or'Ready'
-    if first and c[first.key].total>1 then label=('%s (%d/%d)'):format(label,c[first.key].done,c[first.key].total)end
-    return percent,first,label
+    local shown=T(label)
+    if first and c[first.key].total>1 then
+        label=('%s (%d/%d)'):format(label,c[first.key].done,c[first.key].total)
+        shown=('%s (%d/%d)'):format(shown,c[first.key].done,c[first.key].total)
+    end
+    return percent,first,label,shown
 end
 
 local function close_screen()
@@ -178,18 +183,26 @@ local function draw(world,percent,label)
     local pad=10*u
     local bar_w,bar_h=w-2*pad-42*u,7*u
     local function need(id,what)if id==nil then error(what,0)end return id end
+    -- (translated text: the characters monaco lacks in a loaded game font, runtime/game_text.lua; a longer line shrinks)
+    local GT=require('hd2runtime/runtime/game_text')
+    local ctx=GT.context(world.runtime)
+    state.text_ctx=ctx
+    local function line(s,size,lx,ly,colour,what,width)
+        size=GT.fit_size(ctx,font,s,size,width or(w-2*pad))
+        need(GT.screen_text(ctx,screen,s,font,size,lx,ly,LAYER+2,colour),what)
+    end
     local ok,err=pcall(function()
         need(screen.rect(x,y,LAYER,w,h,COLOURS.panel),'the panel')
         need(screen.rect(x,y+h-2*u,LAYER+1,w,2*u,COLOURS.edge),'the edge')
         need(screen.text(version_text(),font,12*u,font,x+pad,y+h-17*u,LAYER+2,COLOURS.title),'the title')
-        need(screen.text('Initializing...',font,10*u,font,x+pad,y+h-31*u,LAYER+2,COLOURS.text),'the status')
+        line(T('Initializing...'),10*u,x+pad,y+h-31*u,COLOURS.text,'the status')
         local by=y+22*u
         need(screen.rect(x+pad,by,LAYER+1,bar_w,bar_h,COLOURS.bar),'the bar')
         if percent>0 then
             need(screen.rect(x+pad,by,LAYER+2,math.max(1,bar_w*percent/100),bar_h,COLOURS.fill),'the bar fill')
         end
         need(screen.text(percent..'%',font,10*u,font,x+pad+bar_w+6*u,by,LAYER+2,COLOURS.text),'the percentage')
-        need(screen.text(label,font,9*u,font,x+pad,y+8*u,LAYER+2,COLOURS.label),'the stage')
+        line(label,9*u,x+pad,y+8*u,COLOURS.label,'the stage')
     end)
     if not ok then return nil,err end
     return true
@@ -222,7 +235,7 @@ local function tick(dt)
     local ok_game,world=pcall(M.hooks.game)
     world=ok_game and world or nil
     local c=counts(world)
-    local percent,first,label=M.progress(c)
+    local percent,first,label,shown=M.progress(c)
     -- Stage completion times, once each.
     for _,s in ipairs(M.STAGES)do
         local x=c[s.key]
@@ -240,7 +253,11 @@ local function tick(dt)
             end
         end
     end
-    local key=percent..'|'..label
+    -- (the shown label carries the language: a switch redraws it; a game font unloaded under it too)
+    local key=percent..'|'..shown
+    if state.screen and state.text_ctx and not require('hd2runtime/runtime/game_text').still_ready(state.text_ctx)then
+        state.drawn_key=nil
+    end
     if key~=state.last_key then state.last_key=key;state.last_change=t end
     if not state.started and world then
         state.started=true
@@ -280,7 +297,7 @@ local function tick(dt)
     if not panel_on and state.screen then close_screen();state.drawn_key=nil end
     if world and panel_on and not state.disabled and state.world_at and(t-state.world_at)>=M.SHOW_AFTER then
         if key~=state.drawn_key and(t-state.drawn_at)>=M.REDRAW then
-            local ok,drawn,why=pcall(draw,world,percent,label)
+            local ok,drawn,why=pcall(draw,world,percent,shown)
             if not ok then fail(drawn)
             elseif not drawn then
                 -- Not drawable now (no font yet, no Ui World): try again later, quietly.

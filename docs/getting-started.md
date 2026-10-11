@@ -514,6 +514,19 @@ while it is open; F10 again, Esc or the x close it. Each thing the Runtime shows
 - F10 is the Runtime's own key. A mod that binds F10 is left unbound and logs the conflict; it can be rebound.
 - The startup notice says where to find the panel.
 
+**Language (0.31.1).** The first row of the panel picks the language of everything HD2Runtime shows on screen (this
+panel, the notices, the alert cards, the custom stratagem panel, the startup progress):
+
+- **Automatic** (the default) follows the language the game is set to (Options), checked once a second, so changing
+  the game's language changes the Runtime's too.
+- Or pick one of the game's 15 languages from the list (each in its own name); it stays whatever the game uses.
+- The log stays English. Text a mod gives (a custom stratagem's name and description) is the mod's own, in your language
+  when the mod provides it.
+- Chinese, Japanese, Korean and Russian draw with the game's own fonts; one that is not loaded yet shows `?` for a
+  moment while the Runtime loads it.
+- A mod can open the panel from its own settings: `hd2.ui.open_settings()` (the HD2R Editor's Settings has a button).
+  `hd2.ui.language()` returns the language in use and the setting.
+
 ## 11. Common problems
 
 | You see | Meaning | What to do |

@@ -19,6 +19,7 @@ local function builder(w,h)
     function d:rect(x,y,rw,rh,c,z)self.rects[#self.rects+1]={x=x,y=y,w=rw,h=rh,c=c,z=z}end
     function d:text(s,x,y,o)self.texts[#self.texts+1]={s=s,x=x,y=y,size=o.size,colour=o.colour,font=o.font}end
     function d:text_width(s,size)return#s*size*0.55 end
+    function d:wrap(s)return {s}end
     return d
 end
 local keys={}

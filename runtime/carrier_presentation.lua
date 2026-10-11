@@ -68,10 +68,12 @@ function M.text_fallback_alert(carrier)
     if not seen then text_fallbacks[#text_fallbacks+1]=carrier end
     local ok,card=pcall(require,'hd2runtime/runtime/stratagem_alert')
     if not(ok and type(card)=='table'and card.post)then return end
-    pcall(card.post,{key='text_fallback',severity='warn',title='Custom stratagems',tag='Vanilla names',
-        items={{line=table.concat(text_fallbacks,', ')..' keep their vanilla name and description: the game text list '
-            ..'is full.',fix='Disable some mods that add text, then restart the game.'}},
-        footer='Their custom icons and call-in codes still work.'})
+    -- (in the Runtime's language, runtime/i18n.lua; the stratagem names stay as they are)
+    local T=require('hd2runtime/runtime/i18n').t
+    pcall(card.post,{key='text_fallback',severity='warn',title=T('Custom stratagems'),tag=T('Vanilla names'),
+        items={{line=T('%s keep their vanilla name and description: the game text list is full.',
+            table.concat(text_fallbacks,', ')),fix=T('Disable some mods that add text, then restart the game.')}},
+        footer=T('Their custom icons and call-in codes still work.')})
 end
 local function member_bytes(row,offset,width)return row:sub(offset+1,offset+width)end
 local function code_text(values)return values and calldown.text(values)or'unreadable'end

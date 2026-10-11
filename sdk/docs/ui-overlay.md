@@ -104,6 +104,10 @@ end})
   scale, items, frames, engine_calls, opened, refused, first_refusal}`).
 - `hd2.ui.overlays()`: every overlay's status. `hd2.ui.colour(c)`: a colour as `{r, g, b, a}`, or nil.
 - `hd2.ui.can_draw(text, font)` and `hd2.ui.game_fonts()`: see [Other scripts](#other-scripts-chinese-japanese-korean-russian-0310).
+- `hd2.ui.open_settings()`, `hd2.ui.close_settings()`, `hd2.ui.settings_open()` (0.31.1): HD2Runtime's own settings
+  panel (F10), for a button in your mod's settings; close your own window first (the panel frees the cursor).
+  `hd2.ui.language()`: the language HD2Runtime shows its own text in (a game language code) and its F10 Language
+  setting (`'auto'` or a code). See getting-started.md, "Settings (F10)".
 - `overlay:free_cursor(on, {camera = true})` and `hd2.ui.cursor()`: see [The cursor](#the-cursor-experimental-r50).
   `status()` also reports `waiting_images`, `image_reason`, `cursor`, and for game fonts `game_fonts` (the keys drawn
   last frame), `waiting_text` and `text_reason`.

@@ -410,8 +410,9 @@ local function warn_other(peer,d)
             ..'CRASHES THEIR GAME. Do not use it while they are in the lobby (docs/beam-conversion.md "Multiplayer")')
             :format(peer,text))
         pcall(function()
-            require('hd2runtime/runtime/matchmaking_safety').notice(NOTICE.title,'Another player has '..text..
-                ' swap-converted.',NOTICE.rule,NOTICE.advice)
+            -- (translated by the notice, runtime/i18n.lua; the weapon names stay as they are)
+            require('hd2runtime/runtime/matchmaking_safety').notice(NOTICE.title,require('hd2runtime/runtime/i18n').t(
+                'Another player has %s swap-converted.',text),NOTICE.rule,NOTICE.advice)
         end)
     end
     if#add>0 then

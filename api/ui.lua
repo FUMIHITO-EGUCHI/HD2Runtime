@@ -42,6 +42,17 @@ function M.unsupported(text,font)
 end
 -- The game's language fonts overlays draw with: {key, label, languages, glyphs, resident, reason}.
 function M.game_fonts()return overlays.game_fonts()end
+-- HD2Runtime's own settings panel (F10; runtime/runtime_settings.lua), 0.31.1: open it from a mod (a button in its own
+-- settings), close it, and whether it is open. The panel itself is the Runtime's: a mod only shows or hides it.
+function M.open_settings()require('hd2runtime/runtime/runtime_settings').open();return true end
+function M.close_settings()require('hd2runtime/runtime/runtime_settings').close();return true end
+function M.settings_open()return require('hd2runtime/runtime/runtime_settings').visible()end
+-- The language HD2Runtime shows its own text in (the F10 Language setting: the game's, or the one picked), its code
+-- ('us', 'de', 'jp' ...), and the setting itself ('auto' or a code).
+function M.language()
+    local i18n=require('hd2runtime/runtime/i18n')
+    return i18n.language(),i18n.hooks.setting()
+end
 -- The layer range an overlay may use and the default base.
 M.MAX_LAYER=overlays.MAX_LAYER
 M.DEFAULT_LAYER=overlays.DEFAULT_LAYER

@@ -147,7 +147,8 @@ local function tick(dt)
                     table.concat(left,'; ')..(err and('; '..err)or'')))
                 pcall(function()
                     require('hd2runtime/runtime/matchmaking_safety').notice(M.TEXT.title,
-                        table.concat(st.converted,', ')..' converted; '..tostring(why)..'.',M.TEXT.rule,M.TEXT.advice)
+                        require('hd2runtime/runtime/i18n').t('%s converted; %s.',table.concat(st.converted,', '),
+                        tostring(why)),M.TEXT.rule,M.TEXT.advice)
                 end)
             elseif#kept_names>0 then
                 local parts={}

@@ -56,8 +56,9 @@ function M.hooks.fallback(alert)
     local ok,safety=pcall(require,'hd2runtime/runtime/matchmaking_safety')
     if not(ok and type(safety)=='table'and safety.notice)then return false end
     local first=alert.items[1]or{}
-    local more=#alert.items>1 and(' (+'..(#alert.items-1)..' more in the log)')or''
-    local title=string.upper(alert.title)..(alert.tag and(' - '..string.upper(alert.tag))or'')
+    local i18n=require('hd2runtime/runtime/i18n')
+    local more=#alert.items>1 and(' '..i18n.t('(+%d more in the log)',#alert.items-1))or''
+    local title=i18n.upper(alert.title)..(alert.tag and(' - '..i18n.upper(alert.tag))or'')
     return pcall(safety.notice,title,(first.line or'')..more,first.fix,alert.footer)
 end
 
@@ -101,13 +102,16 @@ function M.layout(alert,W,H,title_font,body_font,extra)
     local y=-pad
     local left=accent_w+pad
     -- The header: the title (upper case, the title font) and the tag right-aligned in the accent colour.
-    local tag=alert.tag and string.upper(alert.tag)
+    -- (the card's own words in the Runtime's language, runtime/i18n.lua; the caller translates its text)
+    local i18n=require('hd2runtime/runtime/i18n')
+    local tag=alert.tag and i18n.upper(alert.tag)
+    local fix_label=i18n.upper(i18n.t('FIX'))
     if tag then
         local size=fonts.size_for_cap(title_font,8*u)
-        local tw=fonts.width(title_font,tag,size)
+        local tw=fonts.measure(title_font,tag,size,extra)
         text(tag,title_font,8,w-pad-tw,y-3*u,accent)     -- on the title's baseline
     end
-    text(string.upper(alert.title),title_font,11,left,y,M.COLOURS.title)
+    text(i18n.upper(alert.title),title_font,11,left,y,M.COLOURS.title)
     y=y-11*u-10*u
     ops[#ops+1]={kind='rect',x=left,y=y,w=inner,h=math.max(1,u),colour=M.COLOURS.rule}
     y=y-12*u
@@ -116,7 +120,7 @@ function M.layout(alert,W,H,title_font,body_font,extra)
     local bsize=fonts.size_for_cap(body_font,body_cap*u)
     local fsize=fonts.size_for_cap(body_font,fix_cap*u)
     local label_size=fonts.size_for_cap(title_font,fix_cap*u)
-    local label_w=fonts.width(title_font,'FIX',label_size)+5*u
+    local label_w=fonts.measure(title_font,fix_label,label_size,extra)+5*u
     local tx=left+14*u
     for i=1,math.min(#alert.items,M.MAX_ITEMS)do
         local item=alert.items[i]
@@ -130,7 +134,7 @@ function M.layout(alert,W,H,title_font,body_font,extra)
         local fix=clean(item.fix):gsub('^[Ff]ix:%s*','')
         if fix~=''then
             y=y-7*u
-            text('FIX',title_font,fix_cap,tx,y,accent)
+            text(fix_label,title_font,fix_cap,tx,y,accent)
             for n,line in ipairs(fonts.wrap(body_font,fix,fsize,w-pad-tx-label_w,2,extra))do
                 if n>1 then y=y-fix_cap*u*1.75 end
                 text(line,body_font,fix_cap,tx+label_w,y,M.COLOURS.fix)
@@ -141,7 +145,7 @@ function M.layout(alert,W,H,title_font,body_font,extra)
     local rest=#alert.items-M.MAX_ITEMS
     if rest>0 then
         y=y-10*u
-        text(('+%d more in the HD2Runtime log'):format(rest),body_font,7,tx,y,M.COLOURS.dim)
+        text(i18n.t('+%d more in the HD2Runtime log',rest),body_font,7,tx,y,M.COLOURS.dim)
         y=y-7*u
     end
     if alert.footer and alert.footer~=''then

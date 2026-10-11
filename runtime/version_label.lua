@@ -52,8 +52,10 @@ function M.hooks.open_screen(world)return require('hd2runtime/runtime/stratagem_
 function M.lines()
     local ok,metadata=pcall(require,'hd2runtime/domains/metadata')
     local okp,profile=pcall(require,'hd2runtime/schemas/current')
-    return 'HD2Runtime '..tostring(ok and metadata.version or'?'),
-        'Game '..tostring(okp and type(profile.exe_sha)=='string'and profile.exe_sha:sub(1,12)or'?')
+    -- (the word "Game" in the Runtime's language, runtime/i18n.lua)
+    local game=tostring(okp and type(profile.exe_sha)=='string'and profile.exe_sha:sub(1,12)or'?')
+    local okt,i18n=pcall(require,'hd2runtime/runtime/i18n')
+    return 'HD2Runtime '..tostring(ok and metadata.version or'?'),okt and i18n.t('Game %s',game)or'Game '..game
 end
 
 -- The window scale: the GUI resolution against 1920 x 1080, by the tighter of width and height, so the label is the
@@ -78,7 +80,17 @@ local function show()
     local u=M.scale(screen.width,screen.height)
     local size,x,y=M.SIZE*u,M.MARGIN*u,M.MARGIN*u
     local first,second=M.lines()
-    local ok=screen.text(second,font,size,font,x,y,M.LAYER,M.COLOUR,{optional=true})~=nil
+    -- a translated "Game" in a script monaco lacks: in a loaded game font (runtime/game_text.lua)
+    local second_id
+    if second:find('[\128-\255]')then
+        local GT=require('hd2runtime/runtime/game_text')
+        label.text_ctx=GT.context(world.runtime)
+        second_id=GT.screen_text(label.text_ctx,screen,second,font,size,x,y,M.LAYER,M.COLOUR)
+    else
+        label.text_ctx=nil
+        second_id=screen.text(second,font,size,font,x,y,M.LAYER,M.COLOUR,{optional=true})
+    end
+    local ok=second_id~=nil
         and screen.text(first,font,size,font,x,y+size*1.35,M.LAYER,M.COLOUR,{optional=true})~=nil
     if not ok then close();return nil,'a text was refused'end
     label.shown_text=first..' / '..second
@@ -107,6 +119,11 @@ local function tick(dt)
         end
     elseif not aboard and label.screen then
         close()
+    elseif label.screen then
+        -- another language (the F10 setting, or the game's), or a game font unloaded under it: drawn again next check
+        local first,second=M.lines()
+        local GT=require('hd2runtime/runtime/game_text')
+        if label.shown_text~=first..' / '..second or(label.text_ctx and not GT.still_ready(label.text_ctx))then close()end
     end
 end
 
