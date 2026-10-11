@@ -22,8 +22,8 @@
    "ok": true,
    "tail": [
     "checked generate_sdk",
-    "[HD2Runtime] HD2Runtime 0.31.0 initialized (API 1)",
-    "[HD2Runtime] log unavailable: offline-resource-fixture:40234: Bingus logging unavailable"
+    "[HD2Runtime] HD2Runtime 0.31.1 initialized (API 1)",
+    "[HD2Runtime] log unavailable: offline-resource-fixture:40655: Bingus logging unavailable"
    ]
   },
   {
@@ -49,7 +49,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] shared records index built in 147.0 ms CPU (1592 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 231.0 ms CPU (1603 keys, 11 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -84,8 +84,8 @@
    "name": "validate_options_binding_snapshot",
    "ok": true,
    "tail": [
-    "[HD2Runtime] HD2Runtime 0.31.0 initialized (API 1)",
-    "[HD2Runtime] shared records index built in 90.0 ms CPU (1592 keys, 11 catalogues)",
+    "[HD2Runtime] HD2Runtime 0.31.1 initialized (API 1)",
+    "[HD2Runtime] shared records index built in 196.0 ms CPU (1603 keys, 11 catalogues)",
     "[HD2Runtime] patch one-shot rejected: option-bound values require hd2.ensure"
    ]
   },
@@ -94,7 +94,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] shared records index built in 160.0 ms CPU (1592 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 237.0 ms CPU (1603 keys, 11 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -148,7 +148,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] HD2Runtime 0.31.0 initialized (API 1)",
+    "[HD2Runtime] HD2Runtime 0.31.1 initialized (API 1)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -166,7 +166,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] shared records index built in 100.0 ms CPU (1592 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 225.0 ms CPU (1603 keys, 11 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -193,7 +193,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] HD2Runtime 0.31.0 initialized (API 1)",
+    "[HD2Runtime] HD2Runtime 0.31.1 initialized (API 1)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -201,7 +201,7 @@
    "name": "validate_weapon_sound_snapshot",
    "ok": true,
    "tail": [
-    "[HD2Runtime] shared records index built in 108.0 ms CPU (1592 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 235.0 ms CPU (1603 keys, 11 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable",
     "[HD2Runtime] FOREIGN VALUE: support_weapon MG-43 Machine Gun weapon.sound is 0x00000000000000007856341201, not HD2Runtime's reviewed support/mg43: owner unknown mod (a mod outside HD2Runtime: a data-file mod or another program writing game memory). HD2Runtime leaves it as it is and refuses writes to this value only; every other value is unaffected"
    ]
@@ -210,9 +210,9 @@
    "name": "examples",
    "ok": true,
    "tail": [
-    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_fire: its main file ([string \"IncendiaryFire\"]) took 27.9 ms in one call",
-    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_hellpods: its main file ([string \"IncendiaryHellpods\"]) took 76.0 ms in one call",
-    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/minefield_tuning: its main file ([string \"MinefieldTuning\"]) took 19.5 ms in one call"
+    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_fire: its main file ([string \"IncendiaryFire\"]) took 22.2 ms in one call",
+    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_hellpods: its main file ([string \"IncendiaryHellpods\"]) took 16.4 ms in one call",
+    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/minefield_tuning: its main file ([string \"MinefieldTuning\"]) took 20.1 ms in one call"
    ]
   },
   {
@@ -237,18 +237,9 @@
    "name": "full test suite",
    "ok": true,
    "tail": [
-    "Ran 2214 tests in 201.240s",
+    "Ran 2245 tests in 80.642s",
     "",
     "OK"
-   ]
-  },
-  {
-   "name": "packaged runtime",
-   "ok": true,
-   "tail": [
-    "example-warp-pack-test PASS writes=11 reset_reapplied=True applied=3",
-    "example-weapon-presentation-test PASS writes=14 reset_reapplied=True applied=2",
-    "example-weapon-roots-test PASS writes=24 reset_reapplied=True applied=7"
    ]
   }
  ],
