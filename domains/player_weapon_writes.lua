@@ -17,7 +17,7 @@ local function database_for(kind)
     return kind=='support_weapon'and support_database or database
 end
 local M={}
-local catalogued_explosion_change
+local catalogued_explosion_change,support_explosion_change
 local beam_restores,beam_change
 -- Catalogued attack outputs, projectile sources and ammunition sources (domains/attack_outputs.lua).
 local function attack_outputs()return require('hd2runtime/domains/attack_outputs')end
@@ -161,6 +161,9 @@ local function field_for(weapon,id,role,path,phase)
         if id=='attack.projectile'then
             assert(type(role)=='string','attack.projectile requires weapon:attack(role) target')
             resolved='attack.'..role..'.projectile'
+        elseif id=='terminal.explosion'and path=='terminal_action'then
+            -- 0.31.2: an impact or expiry payload of the projectile row the attack fires (scripts/payload_fields.py).
+            resolved='terminal.'..role..'.'..phase..'.explosion'
         elseif path=='projectile_reference'and id:match('^projectile%.')then
             resolved='projectile.'..role..'.'..id:sub(#'projectile.'+1)
         elseif path=='projectile_reference'and id:match('^damage%.')then
@@ -175,6 +178,7 @@ local function field_for(weapon,id,role,path,phase)
             resolved=domain..'.'..role..'.'..id:sub(#domain+2)
         end
         for _,field in ipairs(weapon.fields)do if field.semanticFieldId==resolved then return field end end
+        if weapon.fieldRefusals and weapon.fieldRefusals[resolved]then not_exposed(weapon,resolved)end
         not_exposed(weapon,id)
     end
     if id=='attack.projectile'then
@@ -360,11 +364,13 @@ local function explosion_selector(value,label)
     end
     for key in pairs(value)do assert(key=='resource'or key=='path'or key=='weapon'or key=='attack'
         or key=='phase',label..' contains unsupported explosion reference identity')end
-    assert(value.resource=='player_weapon'and(value.path=='explosion'or value.path=='no_explosion')
+    -- 0.31.2: a support weapon's terminal action handle too (its impact and expiry payloads).
+    assert((value.resource=='player_weapon'or value.resource=='support_weapon')
+        and(value.path=='explosion'or value.path=='no_explosion')
         and type(value.weapon)=='string'and type(value.attack)=='string'
         and(value.phase=='impact'or value.phase=='expiry'),
         label..' must come from projectile:terminal_action(phase):explosion()')
-    return {weapon=value.weapon,attack=value.attack,phase=value.phase,
+    return {weapon=value.weapon,attack=value.attack,phase=value.phase,resource=value.resource,
         is_null=value.path=='no_explosion'}
 end
 -- The firing-sound catalogue (runtime/weapon_sounds.lua; docs/weapon-sounds.md).
@@ -442,6 +448,63 @@ function catalogued_explosion_change(item,field,expected,desired,allow_unverifie
     return {field=item.field,canonical_field=field.semanticFieldId,descriptor=field,
         semantic_aliases={item.field},expect=item.expect,value=item.value,
         expected_selector=expected,desired_selector=desired,catalogue_explosion=entry,asset_dependency=dependency}
+end
+-- The catalogued explosion a weapon's terminal explosion handle names (its reviewed reference): {catalogue, entry}.
+local explosion_ids
+function M.explosion_handle_entry(selector)
+    assert(not selector.is_null,'a terminal action\'s no_explosion() names no explosion')
+    local source=database_for(selector.resource or'player_weapon').weapons[selector.weapon]
+    assert(source,'unknown explosion source weapon: '..tostring(selector.weapon))
+    local field
+    for _,candidate in ipairs(source.fields)do
+        if candidate.semanticFieldId=='terminal.'..selector.attack..'.'..selector.phase..'.explosion'then
+            field=candidate
+        end
+    end
+    local explosion_type=field and field.currentDefault.explosionType or 0
+    assert(explosion_type~=0,'source is not a reviewed ExplosionSettings reference: '..selector.weapon..' '
+        ..selector.attack..' '..selector.phase)
+    local catalogue=require('hd2runtime/domains/explosion_catalogue')
+    if not explosion_ids then
+        explosion_ids={}
+        for id,entry in pairs(catalogue.explosions)do explosion_ids[entry.type]=id end
+    end
+    local id=assert(explosion_ids[explosion_type],'UNKNOWN_EXPLOSION: the explosion of '..selector.weapon..' '
+        ..selector.attack..' '..selector.phase..' is not catalogued')
+    return {catalogue=id,entry=catalogue.explosions[id]}
+end
+-- 0.31.2 (scripts/payload_fields.py; docs/explosions.md "Payloads on support weapons"): a support weapon's impact or
+-- expiry payload, terminal.<role>.<phase>.explosion on the projectile row its attack fires. The values: the target's own
+-- terminal:explosion() (restores the reviewed explosion) or terminal:no_explosion() (none); hd2.explosion(name), any
+-- catalogued explosion with a known package (catalogued_explosion_change: allow_unverified_reference too, its package
+-- loaded first, the chain re-proven in prepare); another weapon's terminal explosion handle, as the catalogued explosion
+-- it names. Every write needs allow_unverified_effect (the field's acknowledgement: no support payload is live-tested)
+-- and allow_shared (a support projectile row is always treated as shared).
+function support_explosion_change(weapon,item,field,role,phase,allow_unverified_reference,allow_unverified_effect)
+    assert(field.referenceKind=='explosion'and field.referenceRole==role and field.referencePhase==phase,
+        'explosion reference target changed')
+    local resource=host_resource(weapon)
+    local function own(selector)
+        return not selector.catalogue and selector.resource==resource and selector.weapon==weapon.name
+            and selector.attack==role and selector.phase==phase
+    end
+    local expected=explosion_selector(item.expect,'expect')
+    assert(own(expected),'expect must be the target terminal action current explosion handle '
+        ..'(terminal:explosion(), or terminal:no_explosion() where the row has none)')
+    local native=field.currentDefault.explosionType
+    assert(expected.is_null==(native==0),'expect does not represent the reviewed terminal reference'
+        ..(native==0 and' (the row has no '..phase..' explosion: terminal:no_explosion())'or''))
+    local desired=explosion_selector(item.value,'value')
+    if own(desired)then
+        assert(desired.is_null or native~=0,'the row has no '..phase..' explosion of its own to restore: '
+            ..'terminal:no_explosion()')
+        return {field=item.field,canonical_field=field.semanticFieldId,descriptor=field,semantic_aliases={item.field},
+            expect=item.expect,value=item.value,expected_selector=expected,desired_selector=desired,
+            source_descriptor=field,self_reference=not desired.is_null}
+    end
+    assert(not desired.is_null,'value: "none" is the target terminal action\'s own terminal:no_explosion()')
+    if not desired.catalogue then desired=M.explosion_handle_entry(desired)end
+    return catalogued_explosion_change(item,field,expected,desired,allow_unverified_reference,allow_unverified_effect)
 end
 -- Beam swaps (0.31.0; research/beam-outputs-F5FEE03DCFDB.json, docs/attack-outputs.md "Beam swaps"). A beam host's
 -- BeamType reference (BeamWeapon +0 of its own record, or the default muzzle delta row that patches it) takes a
@@ -722,18 +785,29 @@ local function validate_change(weapon,item,allow_shared,role,path,phase,allow_un
     if field.type=='beam_reference'then
         return beam_change(weapon,item,field,allow_unverified_reference,allow_unverified_effect)
     end
+    if field.type=='explosion_reference'and weapon.supportWeapon then
+        return support_explosion_change(weapon,item,field,role,phase,allow_unverified_reference,allow_unverified_effect)
+    end
     if field.type=='explosion_reference'then
         assert(field.referenceKind=='explosion'and field.referenceRole==role
             and field.referencePhase==phase,'explosion reference target changed')
         local expected=explosion_selector(item.expect,'expect')
         local desired=explosion_selector(item.value,'value')
-        assert(not expected.catalogue and expected.weapon==weapon.name and expected.attack==role
-            and expected.phase==phase,'expect must be the target terminal action current explosion handle')
+        assert(not expected.catalogue and expected.resource=='player_weapon'and expected.weapon==weapon.name
+            and expected.attack==role and expected.phase==phase,
+            'expect must be the target terminal action current explosion handle')
         assert(expected.is_null==(field.currentDefault.explosionType==0),
             'expect does not represent the reviewed terminal reference')
         if desired.catalogue then
             return catalogued_explosion_change(item,field,expected,desired,allow_unverified_reference,
                 allow_unverified_effect)
+        end
+        if desired.resource=='support_weapon'then
+            -- 0.31.2: a support weapon's payload handle as a donor: the catalogued explosion it names (the catalogue's
+            -- rules: allow_unverified_reference, allow_unverified_effect, its package loaded first).
+            assert(not desired.is_null,'value: "none" is the target terminal action\'s own terminal:no_explosion()')
+            return catalogued_explosion_change(item,field,expected,M.explosion_handle_entry(desired),
+                allow_unverified_reference,allow_unverified_effect)
         end
         local source
         if not desired.is_null then
@@ -1829,6 +1903,15 @@ function M.prepare(resolved,reader,spec,packing)
                 source_identity={component='ExplosionSettings',record_index=settings.row,explosion_type=source_type,
                     settings_group=settings.group,settings_row=settings.row,settings_type=settings.settings_type,
                     scope='catalogued_explosion_source'}
+            elseif change.self_reference then
+                -- A support payload restored to the row's own explosion: its reviewed type, whose live row is re-proven.
+                local reviewed_settings=assert(change.descriptor.referenceSettings,'reviewed explosion row missing')
+                local settings=require('hd2runtime/domains/explosion_writes').settings_row(resolved.roots,'explosion',
+                    reviewed,reviewed_settings.group,reviewed_settings.row,reviewed_settings.settingsType,change.field)
+                source_type=reviewed
+                source_identity={component='ExplosionSettings',record_index=settings.row,explosion_type=source_type,
+                    settings_group=settings.group,settings_row=settings.row,settings_type=settings.settings_type,
+                    scope='explosion_reference_own'}
             elseif not change.desired_selector.is_null then
                 local source_candidate=assert(resolved.reference_sources[change.canonical_field],
                     'explosion source was not freshly resolved')

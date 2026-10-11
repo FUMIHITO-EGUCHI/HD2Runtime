@@ -147,6 +147,13 @@ spare twins and the composition classes.
   with their labels and icons (`weapon_mode_presentation`). Every other host, donor and label keeps
   `allow_unverified_effect`.
 
+### Payloads per feed (0.31.2, offline only)
+
+A native ProgrammableAmmo projectile (the AC-8 flak, the GR-8 and the RL-77 cluster round) has its own impact and
+expiry payload, apart from the weapon's normal round: `hd2.support_weapon(name):attack('programmable'):projectile()
+:terminal_action(phase)` with `hd2.fields.terminal.explosion`. It writes the row the function fires now (+576,
+re-read on every write: a swapped feed refuses). See [explosions](explosions.md) "Payloads on support weapons".
+
 ## Stun-field donors
 
 `scripts/research_stun_field_donors.py` (`research/stun-field-donors-F5FEE03DCFDB.json`) answers what a stun field

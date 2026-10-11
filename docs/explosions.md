@@ -164,10 +164,11 @@ hd2.ensure({patch = {id = 'eruptor-loyalist-blast', target = impact, field = hd2
     allow_unverified_reference = true, allow_unverified_effect = true}})
 ```
 
-- `terminal.explosion` (player, support and mounted weapons) and an attack output's `projectile.impact_explosion` /
-  `projectile.expiry_explosion` slots (docs/attack-outputs.md) take `hd2.explosion(name)` as the value; the custom
-  projectile rows' `impact_explosion` component takes it too (docs/custom-projectile-rows.md; infrastructure, no
-  public definition API yet).
+- `terminal.explosion` (primary, secondary and, since 0.31.2, support weapons: below) and an attack output's
+  `projectile.impact_explosion` / `projectile.expiry_explosion` slots (docs/attack-outputs.md) take
+  `hd2.explosion(name)` as the value; the custom projectile rows' `impact_explosion` component takes it too
+  (docs/custom-projectile-rows.md; infrastructure, no public definition API yet). Mounted weapons have no
+  `terminal.explosion` field: their rows are reached through their attack output's slots.
 - A catalogued donor is not live-tested: `allow_unverified_reference` and `allow_unverified_effect`. The existing
   donors (another weapon's explosion handle, an output's slot handle) keep their rules unchanged.
 - Its package is loaded before the write (the operation waits, `WAITING_FOR_ASSETS`); a mission-effects donor needs no
@@ -176,6 +177,137 @@ hd2.ensure({patch = {id = 'eruptor-loyalist-blast', target = impact, field = hd2
 - Before the write the donor's live row is re-proven, and a donor whose shrapnel chain would release the written
   projectile again is refused (`RECURSIVE_COMPOSITION`).
 - The explosion row is shared by reference only: nothing is written to the donor.
+
+## Payloads on support weapons (0.31.2, offline only)
+
+Support weapons have the impact and expiry payload of the primaries: `terminal.<role>.<phase>.explosion`, the
+ExplosionType members (+144 impact, +156 expiry) of the projectile row an attack fires. Before 0.31.2 a support weapon
+could only edit its current explosion's values (`attack('primary_impact'):explosion()`), and a payload could only be
+changed through the attack output's slot (`hd2.attack_output(id)`, which some outputs, such as the AC-8 flak, do not
+have).
+
+```lua
+local apw = hd2.support_weapon('APW-1 Anti-Materiel Rifle'):attack('primary'):projectile():terminal_action('impact')
+hd2.ensure({patch = {id = 'apw-frag', target = apw, field = hd2.fields.terminal.explosion,
+    expect = apw:current(), value = hd2.explosion('throwable/g6_frag/detonation'),
+    allow_shared = true, allow_unverified_effect = true, allow_unverified_reference = true}})
+
+-- Per fire mode: the AC-8's flak (its ProgrammableAmmo row) has its own payload, apart from its HE round.
+local flak = hd2.support_weapon('AC-8 Autocannon'):attack('programmable'):projectile():terminal_action('impact')
+```
+
+- **Target.** `hd2.support_weapon(name):attack(role):projectile():terminal_action(phase)`, `phase` `impact` or
+  `expiry`. `role` is every attack that fires a projectile row: `primary` (the normal round), `programmable` (the
+  ProgrammableAmmo feed: AC-8 flak, GR-8, RL-77 cluster round), the charge levels (`primary` and `full_charge` on the
+  PLAS-45 Epoch) and the rounds feed (`feed_primary` on the SG-88). The field is `hd2.fields.terminal.explosion` (the
+  qualified id `terminal.<role>.<phase>.explosion` is the same field).
+- **Values.** `terminal:explosion()` (the row's own explosion: the reviewed baseline, where it has one),
+  `terminal:no_explosion()` (none), `hd2.explosion(name)` (any explosion with `payload = true`) or another weapon's
+  terminal explosion handle, which is taken as the catalogued explosion it names. `terminal:current()` is the expect:
+  `explosion()` or `no_explosion()`, whichever the row holds natively.
+- **Acknowledgements.** Every write needs `allow_unverified_effect` (no support payload is live-tested) and
+  `allow_shared`: a support projectile row is always treated as shared, and `terminal:describe()` lists who else fires
+  or releases it (`consumers`, `released_by`). A catalogued donor also needs `allow_unverified_reference`.
+- **Write.** The row is the one the role's projectile fields already write, re-resolved through the weapon on every
+  write (ProjectileWeapon +0, WeaponRounds +64, the WeaponCharge level selectors or ProjectileWeapon +576), so a
+  swapped feed or projectile refuses the write instead of editing another row. A catalogued donor's package is loaded
+  first, its live row is re-proven, and a chain that would release the written row again is refused
+  (`RECURSIVE_COMPOSITION`), as for the primaries. The spawn copies the row's members into each shot: the write
+  applies to shots fired after it.
+- **Caveats carried in the field** (`payload.notes`): the MG-43 and MGX-42 fire a magazine pattern whose tracer rounds
+  are another row, which keeps its own explosions; a row with no lifetime (0) only expires through a fuse, so an expiry
+  payload on it may never go off (the AC-8 flak, the RL-77 rockets, the Quasar and the Railgun have a lifetime); each
+  Epoch field names its charge level.
+- **Missiles.** The FAF-14 Spear, MLS-4X Commando and StA-X3 W.A.S.P. spawn a missile that carries the weapon's row as
+  its hit row: its impact explosion is the row's +144 (research/wasp-rocket), so the impact payload is offered. The
+  missile ends by its own lifetime, and whether the carried row's expiry explosion ever fires is not traced: no expiry
+  payload is offered (`blockedFields`, and the target names the reason). The W.A.S.P.'s ProgrammableAmmo missile has
+  no reviewed attack and no payload field. Changing the W.A.S.P.'s row also changes the seven submunitions its cluster
+  missile releases (`released_by`), and that cluster's explosion is refused on it.
+- **Proof.** Every one of the 51 fields resolves on the retained snapshot to its reviewed row and value (guarded
+  no-op, `scripts/validate_support_weapon_authoring_snapshot.py`). The APW-1 impact set to a grenade's explosion, the
+  AC-8 flak to an orbital shell's, the RL-77 cluster expiry removed and the W.A.S.P. recursion refusal are exercised on
+  the snapshot (`scripts/validate_explosion_catalogue_snapshot.py`). Nothing is live-tested.
+- **Not this.** These are shared row writes, like the primaries'. A payload for one weapon's shots alone, without
+  touching the row (`hd2.projectiles.payload`), is 0.32.0 work.
+
+| Support weapon | Roles (phases) |
+| --- | --- |
+| AC-8 Autocannon | `primary` HE round, `programmable` flak (impact, expiry) |
+| APW-1, EAT-17, EAT-411, EAT-700, GL-21, GL-28, GL-52, LAS-99, M-1000, M-105, MG-206, MG-43, MGX-42, RS-422, S-11 | `primary` (impact, expiry) |
+| GR-8 Recoilless Rifle, RL-77 Airburst Rocket Launcher | `primary`, `programmable` (impact, expiry) |
+| PLAS-45 Epoch | `primary` (partial charge), `full_charge` (impact, expiry) |
+| SG-88 Break-Action Shotgun | `feed_primary` (impact, expiry) |
+| FAF-14 Spear, MLS-4X Commando, StA-X3 W.A.S.P. Launcher | `primary` (impact only) |
+
+Not offered: support weapons without a projectile (beams, arcs, sprays, melee, the C4 and the Solo Silo).
+
+## Payload options (0.31.2)
+
+Every value a payload field takes, for an editor's picker, grouped by where the explosion comes from. Offline
+metadata (`domains/payload_options.lua`, `sdk/PayloadOptions.json`, generated by
+`scripts/generate_payload_options.py`); no raw ids.
+
+```lua
+-- One field: its own explosion, none and every option it takes, each with the value to write and its acknowledgements.
+local o = hd2.support_weapon('AC-8 Autocannon'):attack('programmable'):projectile():terminal_action('impact')
+    :payload_options()
+for _, item in ipairs(o.options) do
+    mod:log(item.group_label .. ': ' .. item.label .. ' ' .. table.concat(item.warnings, ','))
+end
+-- Every option a payload accepts, optionally filtered.
+hd2.explosions.payload_options({group = 'hellbomb'})
+```
+
+- `hd2.explosions.payload_options(filter)`: every catalogued explosion a payload accepts, in display order, as `{name,
+  label, owner, group, group_label, family, damage, durable_damage, inner_radius, outer_radius, statuses,
+  lingering_field, fire, shrapnel, arc, warnings, shared_row, package {mission, loaded_by_runtime, via},
+  acknowledgements, value}`; `value` is `hd2.explosion(name)`.
+- `hd2.explosions.payload_options(terminal, filter)` and `terminal:payload_options(filter)` (primary, secondary and
+  support terminal actions): `{field, resource, weapon, attack, phase, current, current_label, editable, reason,
+  shared, acknowledgements {own, none, catalogue}, own, none, options, excluded, groups}`. `own` and `none` carry the
+  value to write; the options leave out the field's own explosion and list `excluded` ones with the reason. On a
+  primary, an option that is another primary's own explosion keeps that weapon's handle (`via = 'weapon_handle'`):
+  it needs only the field's acknowledgements and loads that weapon's package, as before.
+- Filters: `group`, `search` (name, label or owner), `warning`, `without_warning`.
+  `hd2.explosions.payload_groups()` and `hd2.explosions.payload_warnings()` give the groups and warning texts.
+
+| Group | Options |
+| --- | ---: |
+| Primary and secondary weapons (`weapon`) | 18 |
+| Support weapons (`support_weapon`) | 31 |
+| Grenades and throwables (`throwable`) | 23 |
+| Orbital strikes (`orbital`) | 13 |
+| Eagle strikes (`eagle`) | 12 |
+| Hellbombs (`hellbomb`) | 2 |
+| Sentries and emplacements (`sentry`) | 7 |
+| Mines (`mine`) | 4 |
+| Vehicles and exosuits (`vehicle`) | 11 |
+| Backpacks (`backpack`) | 1 |
+| Enemies (`enemy`) | 7 |
+| Other (world objects) (`other`) | 9 |
+
+138 options: every catalogued explosion whose package is known (`payload = true`). The other 103 named explosions
+(most enemy explosions, whose effects ship in faction content, and the Cyborg Production Unit's objective package) are
+refused as payloads (`ASSET_UNAVAILABLE`). 14 options are in the mission effects package (no load). An explosion is a
+row of one ExplosionSettings table that the game looks up by type whatever requests it, so an option's source family
+does not limit it: a Hellbomb's or an orbital shell's explosion works from a projectile's impact like a weapon's.
+
+**Warnings** (`warnings`, texts from `payload_warnings()`): `very_large` (2000 damage or more, or an outer radius of
+20 m or more: 17 options, the Hellbombs among them, 10000 damage), `lingering_field` (a status field the explosion
+leaves; the game holds at most 4096 and does not check the count, so avoid it on fast-firing weapons: 12), `fire`,
+`shrapnel`, `arc`, `no_damage`. They inform; none is a refusal.
+
+**Packages.** Choosing an option loads its package before the write: the operation waits (`waiting_for_assets`) and
+writes once the package is resident. A mission effects option needs no load. A package that is not resident after
+90 s, or that cannot be requested (the 64-package budget, a failed proof, a runtime without package loading), rejects
+the operation with `ASSET_UNAVAILABLE`: the row keeps its value and nothing is written (docs/asset-loading.md). In a
+lobby, the package is shared with the compatible Runtimes (synced asset loading; development, not live-proven), so
+their games can draw the effect; the payload itself changes only the rows of the machines running the mod.
+
+**Refusals per field** (`excluded`, `fields[].excluded` in the SDK file): an explosion whose shrapnel chain releases
+the row the field writes. One today: the W.A.S.P. cluster explosion on the W.A.S.P.'s own row. The write path
+re-proves the chain live in any case.
 
 ## Requesting an explosion
 

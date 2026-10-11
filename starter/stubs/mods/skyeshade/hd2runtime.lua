@@ -507,6 +507,61 @@ function HD2TerminalAction:describe() end
 function HD2TerminalAction:explosion() end
 ---@return HD2NoExplosion
 function HD2TerminalAction:no_explosion() end
+---HD2Runtime 0.31.2+: explosion() or no_explosion(), whichever the row holds natively (the expect).
+---@return HD2Explosion|HD2NoExplosion
+function HD2TerminalAction:current() end
+---HD2Runtime 0.31.2+: every value this payload field takes (own, none and the catalogued explosions, grouped
+---by source family, each with its value handle and acknowledgements; docs/explosions.md "Payload options").
+---@param filter? HD2PayloadOptionFilter
+---@return HD2PayloadFieldOptions
+function HD2TerminalAction:payload_options(filter) end
+
+---@class HD2PayloadOptionFilter
+---@field group? string a group id (hd2.explosions.payload_groups())
+---@field search? string a substring of the name, label or owner
+---@field warning? string
+---@field without_warning? string
+
+---@class HD2PayloadOption
+---@field name string
+---@field label string
+---@field owner string
+---@field group string
+---@field group_label string
+---@field family string
+---@field damage number
+---@field durable_damage number
+---@field inner_radius number
+---@field outer_radius number
+---@field statuses string[]
+---@field lingering_field boolean
+---@field fire boolean
+---@field shrapnel boolean
+---@field arc boolean
+---@field warnings string[]
+---@field shared_row boolean
+---@field package {mission: boolean, loaded_by_runtime: boolean, via: string}
+---@field acknowledgements string[]
+---@field value table the write value (hd2.explosion(name), or a weapon handle)
+---@field via "weapon_handle"|nil
+
+---@class HD2PayloadFieldOptions
+---@field field "terminal.explosion"
+---@field resource "player_weapon"|"support_weapon"
+---@field weapon string
+---@field attack string
+---@field phase "impact"|"expiry"
+---@field current string|nil
+---@field current_label string|nil
+---@field editable boolean
+---@field reason string|nil
+---@field shared boolean
+---@field acknowledgements {own: string[], none: string[], catalogue: string[]}
+---@field own {value: table, name: string, label: string, acknowledgements: string[]}|nil
+---@field none {value: table, acknowledgements: string[]}
+---@field options HD2PayloadOption[]
+---@field excluded {name: string, label: string, reason: string}[]
+---@field groups {id: string, label: string, count: integer}[]
 
 ---@class HD2NoExplosion
 ---@field resource "player_weapon"
@@ -549,7 +604,7 @@ local HD2AttachmentOption = {}
 ---@return table
 function HD2AttachmentOption:describe() end
 
----@alias HD2AuthoringTarget HD2Weapon|HD2DamageProfile|HD2Stratagem|HD2StratagemAttack|HD2EagleRearm|HD2PlayerAttack|HD2WeaponAmmunition|HD2ProjectileReference|HD2TerminalAction|HD2Explosion|HD2SupportWeapon|HD2SupportAttack|HD2SupportProjectile|HD2SupportExplosion|HD2DeployedEntity|HD2DeployedShield|HD2DeployedZone|HD2MountedWeapon|HD2VehicleEntity|HD2VehicleZone|HD2VehicleMount|HD2VehicleWeapon|HD2VehicleWeaponAttack|HD2Backpack|HD2BackpackZone|HD2BackpackLinked|HD2BackpackLinkedZone|HD2BoosterTarget|HD2WeaponAttachment|HD2PodRack|HD2PodSlot|HD2CatalogueExplosion
+---@alias HD2AuthoringTarget HD2Weapon|HD2DamageProfile|HD2Stratagem|HD2StratagemAttack|HD2EagleRearm|HD2PlayerAttack|HD2WeaponAmmunition|HD2ProjectileReference|HD2TerminalAction|HD2Explosion|HD2SupportWeapon|HD2SupportAttack|HD2SupportProjectile|HD2SupportTerminalAction|HD2SupportExplosion|HD2DeployedEntity|HD2DeployedShield|HD2DeployedZone|HD2MountedWeapon|HD2VehicleEntity|HD2VehicleZone|HD2VehicleMount|HD2VehicleWeapon|HD2VehicleWeaponAttack|HD2Backpack|HD2BackpackZone|HD2BackpackLinked|HD2BackpackLinkedZone|HD2BoosterTarget|HD2WeaponAttachment|HD2PodRack|HD2PodSlot|HD2CatalogueExplosion
 
 ---@param role HD2AttackRole
 ---@return HD2PlayerAttack
@@ -705,6 +760,35 @@ local HD2SupportProjectile = {}
 function HD2SupportProjectile:describe() end
 ---@return HD2SupportProjectile
 function HD2SupportProjectile:damage() end
+---HD2Runtime 0.31.2+: the impact or expiry payload of this projectile row (hd2.fields.terminal.explosion;
+---docs/explosions.md "Payloads on support weapons"). Raises with the reason where none is offered.
+---@param phase "impact"|"expiry"
+---@return HD2SupportTerminalAction
+function HD2SupportProjectile:terminal_action(phase) end
+
+---@class HD2SupportTerminalAction
+---@field resource "support_weapon"
+---@field path "terminal_action"
+---@field weapon HD2SupportWeaponName
+---@field attack string
+---@field phase "impact"|"expiry"
+local HD2SupportTerminalAction = {}
+---{field, weapon, attack, phase, current, editable, shared, consumers, unnamed_consumers, released_by,
+---unit_driven, notes, acknowledgements}
+---@return table
+function HD2SupportTerminalAction:describe() end
+---The row's own explosion (expect and restore value); raises where the row has none.
+---@return table
+function HD2SupportTerminalAction:explosion() end
+---None: removes the explosion (and the expect where the row has none).
+---@return table
+function HD2SupportTerminalAction:no_explosion() end
+---explosion() or no_explosion(), whichever the row holds natively (the expect of a write).
+---@return table
+function HD2SupportTerminalAction:current() end
+---@param filter? HD2PayloadOptionFilter
+---@return HD2PayloadFieldOptions
+function HD2SupportTerminalAction:payload_options(filter) end
 
 ---@class HD2SupportExplosion
 ---@field resource "support_weapon"
@@ -2529,6 +2613,17 @@ function HD2Explosions.describe(name) end
 ---The reviewed spawn set (0.29's hd2.explosions.list()), each with its catalogue name.
 ---@return {name: string, weapon: string|nil, source: "behavior"|"weapon", assets_known: boolean, objective: boolean|nil, catalogue: string|nil}[]
 function HD2Explosions.reviewed() end
+---HD2Runtime 0.31.2+: every catalogued explosion a projectile payload accepts (138, grouped by source family, with labels, warnings and acknowledgements); given a terminal action handle first, what that payload field takes (own, none, options with their value handles and acknowledgements, refused ones). Offline; no raw ids (docs/explosions.md "Payload options").
+---@param target_or_filter? HD2TerminalAction|HD2SupportTerminalAction|HD2PayloadOptionFilter
+---@param filter? HD2PayloadOptionFilter
+---@return HD2PayloadOption[]|HD2PayloadFieldOptions
+function HD2Explosions.payload_options(target_or_filter, filter) end
+---HD2Runtime 0.31.2+: the payload option groups in display order (weapon, support_weapon, throwable, orbital, eagle, hellbomb, sentry, mine, vehicle, backpack, enemy, other).
+---@return {id: string, label: string, count: integer}[]
+function HD2Explosions.payload_groups() end
+---HD2Runtime 0.31.2+: the text of every payload option warning code (very_large, lingering_field, fire, shrapnel, arc, no_damage).
+---@return table<string, string>
+function HD2Explosions.payload_warnings() end
 
 ---hd2.actions: what event scripts can make the game do.
 ---@class HD2Actions

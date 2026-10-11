@@ -266,6 +266,23 @@ hd2.ensure({transaction={id='eat-scorcher',target=source.target,allow_unverified
     changes={{field=source.field,expect=source.expect,value=hd2.weapon('PLAS-1 Scorcher'):attack('primary'):projectile()}}}})
 ```
 
+## Impact and expiry payloads (0.31.2, offline only)
+
+Every projectile row a support attack fires has the primaries' payload field, `hd2.fields.terminal.explosion` on
+`support:attack(role):projectile():terminal_action('impact' | 'expiry')`: per feed (`programmable`: the AC-8 flak, GR-8,
+RL-77 cluster round), per charge level (Epoch) and on the rounds feed (SG-88). The missiles offer their impact only.
+Values: `terminal:explosion()`, `terminal:no_explosion()`, `hd2.explosion(name)`; every write needs `allow_shared` and
+`allow_unverified_effect`, a catalogued explosion also `allow_unverified_reference`, and its package loads first.
+`terminal:payload_options()` lists every value with its acknowledgements. See [explosions](explosions.md) "Payloads on
+support weapons" and "Payload options".
+
+```lua
+local flak=hd2.support_weapon('AC-8 Autocannon'):attack('programmable'):projectile():terminal_action('impact')
+hd2.ensure({patch={id='ac8-flak-shell',target=flak,field=hd2.fields.terminal.explosion,expect=flak:current(),
+    value=hd2.explosion('stratagem/orbital_120mm_he_barrage/shell_impact'),allow_shared=true,
+    allow_unverified_effect=true,allow_unverified_reference=true}})
+```
+
 ## Beam swaps (LAS-98, 40-K Meltagun; 0.31.0, offline only)
 
 The LAS-98 Laser Cannon and the 40-K Meltagun write their own BeamWeapon +0 (no customization patches it): any

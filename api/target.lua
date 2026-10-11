@@ -72,6 +72,13 @@ function M.new(describe)
             return {resource='player_weapon',path='no_explosion',weapon=name,
                 attack=attack.role,phase=phase}
         end
+        -- 0.31.2: explosion() or no_explosion(), whichever the row holds natively (the expect of a write).
+        function methods.current()
+            if action.reference_type~=0 then return methods.explosion()end
+            return methods.no_explosion()
+        end
+        -- 0.31.2: every value this payload field takes, grouped by source family (api/payload_options.lua).
+        function methods.payload_options(self,filter)return require('hd2runtime/api/payload_options').for_target(self,filter)end
         return setmetatable({resource='player_weapon',path='terminal_action',weapon=name,
             attack=attack.role,phase=phase},{__index=methods})
     end
@@ -1006,6 +1013,47 @@ function M.new(describe)
         end
         return result
     end
+    -- 0.31.2 (scripts/payload_fields.py; docs/explosions.md "Payloads on support weapons"): the impact or expiry payload
+    -- of the projectile row a support attack fires, terminal.<role>.<phase>.explosion. The handle is a write target for
+    -- hd2.fields.terminal.explosion; :explosion() / :no_explosion() are its expect and restore values.
+    local function support_terminal(name,role,phase)
+        assert(phase=='impact'or phase=='expiry','terminal action phase must be impact or expiry')
+        local authoring=support_authoring.weapons[name]
+        local id='terminal.'..tostring(role)..'.'..phase..'.explosion'
+        local field
+        for _,candidate in ipairs(authoring and authoring.fields or{})do
+            if candidate.semanticFieldId==id then field=candidate end
+        end
+        if not field then
+            local reason=authoring and authoring.fieldRefusals and authoring.fieldRefusals[id]
+            error(name..' offers no '..phase..' payload for attack '..tostring(role)..(reason and(': '..reason)or''),2)
+        end
+        local methods={}
+        function methods.describe()
+            local payload=field.payload
+            return {field='terminal.explosion',weapon=name,attack=role,phase=phase,current=payload.current,
+                editable=field.editable,shared=true,consumers=copy(payload.consumers),
+                unnamed_consumers=payload.unnamedConsumers,released_by=copy(payload.releasedBy),
+                unit_driven=payload.unitDriven,notes=copy(payload.notes),acknowledgements=copy(payload.acknowledgements)}
+        end
+        function methods.explosion()
+            assert(field.currentDefault.explosionType~=0,name..' attack '..tostring(role)..' has no '..phase
+                ..' explosion: use terminal:no_explosion()')
+            return setmetatable({resource='support_weapon',path='explosion',weapon=name,attack=role,phase=phase},
+                {__index={describe=function()return {explosion=field.payload.current}end}})
+        end
+        function methods.no_explosion()
+            return {resource='support_weapon',path='no_explosion',weapon=name,attack=role,phase=phase}
+        end
+        -- The handle the row holds now: :explosion(), or :no_explosion() where it has none (the expect of a write).
+        function methods.current()
+            if field.currentDefault.explosionType~=0 then return methods.explosion()end
+            return methods.no_explosion()
+        end
+        function methods.payload_options(self,filter)return require('hd2runtime/api/payload_options').for_target(self,filter)end
+        return setmetatable({resource='support_weapon',path='terminal_action',weapon=name,attack=role,phase=phase},
+            {__index=methods})
+    end
     support_attack=function(name,index)
         local weapon=assert(support_catalog.weapons[name],'unknown reviewed support weapon')
         local attack=assert(weapon.attackGraph[index],'unknown support weapon attack index')
@@ -1019,6 +1067,7 @@ function M.new(describe)
             local projectile_methods={}
             function projectile_methods.describe()return copy(writable)end
             function projectile_methods.damage(self)return self end
+            function projectile_methods.terminal_action(_,phase)return support_terminal(name,role,phase)end
             return setmetatable({resource='support_weapon',path='projectile_reference',weapon=name,
                 attack=role},{__index=projectile_methods})
         end
@@ -1090,6 +1139,7 @@ function M.new(describe)
                     local projectile_methods={}
                     function projectile_methods.describe()return copy(feed)end
                     function projectile_methods.damage(self)return self end
+                    function projectile_methods.terminal_action(_,phase)return support_terminal(name,feed.role,phase)end
                     return setmetatable({resource='support_weapon',path='projectile_reference',weapon=name,
                         attack=feed.role},{__index=projectile_methods})
                 end

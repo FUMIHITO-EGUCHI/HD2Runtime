@@ -420,6 +420,11 @@ end
 explosions.list=catalogue_api.list
 -- One catalogued explosion in full: the list entry plus its owners, package and editable fields; nil and the reason.
 explosions.describe=catalogue_api.describe
+-- 0.31.2: what a projectile payload field takes (api/payload_options.lua; docs/explosions.md "Payload options"):
+-- hd2.explosions.payload_options(filter) / (terminal, filter), payload_groups(), payload_warnings().
+explosions.payload_options=function(...)return require('hd2runtime/api/payload_options').payload_options(...)end
+explosions.payload_groups=function()return require('hd2runtime/api/payload_options').groups()end
+explosions.payload_warnings=function()return require('hd2runtime/api/payload_options').warnings()end
 M.explosions=explosions
 
 ------------------------------------------------------------------------------------------------ projectiles --

@@ -33,7 +33,9 @@ DAMAGE = {'standard_damage', 'durable_damage', 'ap_direct', 'ap_slight', 'ap_lar
     'push_force'}
 # 0.31.2: every empty status slot (1 to 4) is offered, not only the first.
 STATUS = {f'status_{slot}_{part}' for slot in range(1, 5) for part in ('type', 'strength')}
-PROJECTILE_ROLE = PROJECTILE | {'damage.' + name for name in DAMAGE} | {'damage.' + name for name in STATUS}
+# 0.31.2: the impact and expiry payload of the row (terminal.<role>.<phase>.explosion, scripts/payload_fields.py).
+PROJECTILE_ROLE = (PROJECTILE | {'damage.' + name for name in DAMAGE} | {'damage.' + name for name in STATUS}
+    | {'terminal.explosion'})
 EXPLOSION_ROLE = ({'explosion.inner_radius', 'explosion.outer_radius', 'explosion.shockwave_radius'}
     | {'explosion.damage.' + name for name in DAMAGE}
     | {'explosion.damage.' + name for name in STATUS})
@@ -233,7 +235,8 @@ class LegacyTableTests(unittest.TestCase):
             for item in instances(EPOCH, role)} - {'explosion.primary_impact.damage.status_1_type',
             'explosion.primary_impact.damage.status_1_strength'} - {f'{prefix}.status_{slot}_{part}'
             for prefix in ('damage.primary', 'explosion.primary_impact.damage') for slot in range(2, 5)
-            for part in ('type', 'strength')}
+            for part in ('type', 'strength')} - {'terminal.primary.impact.explosion',
+            'terminal.primary.expiry.explosion'}   # 0.31.2 payloads: new fields too
         self.assertEqual({entry['field'] for entry in entries}, partial)
         self.assertEqual(len(entries), 30)
         self.assertEqual({(entry['resource'], entry['target']) for entry in entries}, {('support_weapon', EPOCH)})
@@ -397,10 +400,11 @@ class SnapshotTests(unittest.TestCase):
     def test_every_field_round_trips_on_the_retained_snapshot(self):
         report = json.loads(SNAPSHOT_REPORT.read_text(encoding='utf-8'))
         self.assertEqual(report['status'], 'VALIDATED')
-        expected = sum(len(fields) for roles in ROLES.values() for _, fields in roles.values())
+        # (the payload references are exercised by the support and explosion catalogue validators)
+        expected = sum(len(fields - {'terminal.explosion'}) for roles in ROLES.values() for _, fields in roles.values())
         self.assertEqual(report['fields'], expected)
-        self.assertEqual(report['byRole'], {f'{weapon}/{role}': len(fields) for weapon, roles in ROLES.items()
-            for role, (_, fields) in roles.items()})
+        self.assertEqual(report['byRole'], {f'{weapon}/{role}': len(fields - {'terminal.explosion'})
+            for weapon, roles in ROLES.items() for role, (_, fields) in roles.items()})
         for key in ('baselineMatches', 'noOps', 'changedWrites', 'isolatedWrites', 'protectionRestored', 'rollbacks',
                 'conflictRejections', 'acknowledgementRejections', 'sharedRejections', 'staleExpectRejections'):
             self.assertEqual(report[key], report['fields'], key)

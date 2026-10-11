@@ -94,7 +94,7 @@ class LiveEvidenceTests(unittest.TestCase):
                 'enemy_spawn_weights', 'event_explosion', 'explosion_catalogue_edit', 'explosion_catalogue_payload',
                 'explosion_catalogue_spawn',
                 'orbital_pattern_fields', 'projectile_homing', 'projectile_more_donors', 'quasar_overheated_cooling_0_31_2', 'sentry_component_fields', 'stratagem_call_in_time', 'support_charge_level_rows',
-                'support_overcharge_explosion_rows', 'support_projectile_traced_hosts_0_31_2', 'weapon_fire_rate_wind_up', 'weapon_presentation_traits',
+                'support_overcharge_explosion_rows', 'support_payload_0_31_2', 'support_projectile_traced_hosts_0_31_2', 'weapon_fire_rate_wind_up', 'weapon_presentation_traits',
                 'weapon_sound_template']})
         self.assertEqual((catalog['summary']['tests'], catalog['summary']['passed']), (136, 107))   # + WeaponRootsTest (5), 0.30.4 dev2 (2) and dev3 (1), BugHoleEventTest (1), F10 (1)
         for name, entry in self.registry['families'].items():

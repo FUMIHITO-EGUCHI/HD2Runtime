@@ -2899,6 +2899,33 @@
       "params": [],
       "returns": "{name: string, weapon: string|nil, source: \"behavior\"|\"weapon\", assets_known: boolean, objective: boolean|nil, catalogue: string|nil}[]",
       "doc": "The reviewed spawn set (0.29's hd2.explosions.list()), each with its catalogue name."
+     },
+     {
+      "name": "payload_options",
+      "params": [
+       [
+        "target_or_filter",
+        "HD2TerminalAction|HD2SupportTerminalAction|HD2PayloadOptionFilter|nil"
+       ],
+       [
+        "filter",
+        "HD2PayloadOptionFilter|nil"
+       ]
+      ],
+      "returns": "HD2PayloadOption[]|HD2PayloadFieldOptions",
+      "doc": "HD2Runtime 0.31.2+: every catalogued explosion a projectile payload accepts (138, grouped by source family, with labels, warnings and acknowledgements); given a terminal action handle first, what that payload field takes (own, none, options with their value handles and acknowledgements, refused ones). Offline; no raw ids (docs/explosions.md \"Payload options\")."
+     },
+     {
+      "name": "payload_groups",
+      "params": [],
+      "returns": "{id: string, label: string, count: integer}[]",
+      "doc": "HD2Runtime 0.31.2+: the payload option groups in display order (weapon, support_weapon, throwable, orbital, eagle, hellbomb, sentry, mine, vehicle, backpack, enemy, other)."
+     },
+     {
+      "name": "payload_warnings",
+      "params": [],
+      "returns": "table<string, string>",
+      "doc": "HD2Runtime 0.31.2+: the text of every payload option warning code (very_large, lingering_field, fire, shrapnel, arc, no_damage)."
      }
     ]
    },

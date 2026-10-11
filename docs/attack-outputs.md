@@ -671,6 +671,11 @@ donor output:
   a known package, `hd2.explosion(name)` (docs/explosions.md: `hd2.explosions.list({payload = true})`), with
   `allow_unverified_reference` and `allow_unverified_effect`. Its package is loaded before the write (none for the
   mission effects package); its live ExplosionSettings row is re-proven, and the recursion rule below applies.
+- **Through the weapon (0.31.2).** A support weapon's rows also have the primaries' payload field,
+  `terminal.<role>.<phase>.explosion` on `support:attack(role):projectile():terminal_action(phase)`, for every feed,
+  including rows that have no selectable output (the AC-8 flak, the GR-8 and RL-77 ProgrammableAmmo rows, the Epoch
+  charge levels): docs/explosions.md "Payloads on support weapons". It writes the same member of the same row as the
+  output's slot, re-resolved through the weapon.
 - **Recursion.** A composition must never make a projectile spawn itself. Before an explosion slot is written, the
   chain explosion → submunition projectile → its impact and expiry explosions is followed in the live tables, and a
   chain that reaches the written row is refused (`RECURSIVE_COMPOSITION`). Native submunition chains (the EAT-700

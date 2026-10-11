@@ -16,17 +16,20 @@
   "fixtureFallback": "disabled",
   "identityProofs": 241,
   "mode": "snapshot-overlay",
-  "payloadRollbacks": 3,
+  "payloadRollbacks": 6,
   "payloadWrites": 3,
   "proofRejections": {
     "damageLink": 1,
     "donorRow": 2,
     "rowType": 1,
+    "supportRecursion": 1,
     "wrongBuild": 1
   },
   "protectionChanges": 0,
   "rollbacks": 475,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
   "status": "VALIDATED",
-  "writes": 956
+  "supportPayloadNoops": 1,
+  "supportPayloadWrites": 3,
+  "writes": 962
 }

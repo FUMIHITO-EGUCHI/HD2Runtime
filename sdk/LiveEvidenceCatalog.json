@@ -126,6 +126,7 @@
     "stratagem_call_in_time",
     "support_charge_level_rows",
     "support_overcharge_explosion_rows",
+    "support_payload_0_31_2",
     "support_projectile_traced_hosts_0_31_2",
     "weapon_fire_rate_wind_up",
     "weapon_presentation_traits",
@@ -2350,6 +2351,19 @@
    "acknowledgementRemoved": null,
    "nextTests": [
     "a traced-host swap test, solo: the Quasar <- EAT-17 rocket and the Railgun <- APW-1 round fire the donor after a fresh call-in (the Quasar still charges and overheats as before, the Railgun still charges); restoring the own projectile brings the vanilla shot back after the next call-in"
+   ]
+  },
+  "support_payload_0_31_2": {
+   "status": "pending",
+   "domain": "support_weapon",
+   "fields": [
+    "terminal.<role>.<phase>.explosion"
+   ],
+   "scope": "Impact and expiry payloads on support weapons (scripts/payload_fields.py): the ExplosionType members of the projectile row an attack fires, per feed (primary, programmable, charge levels, rounds feed), with any catalogued explosion whose package is known (domains/payload_options.lua). Offline evidence: validation/explosion-catalogue-snapshot.json (supportPayloadWrites, supportRecursion), research/support-weapon-authoring-validation-F5FEE03DCFDB.json (payloadTerminals).",
+   "tests": [],
+   "acknowledgementRemoved": null,
+   "nextTests": [
+    "a support payload test, solo: the APW-1 impact set to throwable/g6_frag/detonation explodes on hit (the frag package loads first); the AC-8 flak impact set to stratagem/orbital_120mm_he_barrage/shell_impact changes only the flak rounds, the HE rounds keep their own; the RL-77 cluster expiry set to none stops its bomblets; restoring each own value brings the vanilla shot back"
    ]
   }
  },

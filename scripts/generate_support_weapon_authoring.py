@@ -24,6 +24,7 @@ import equipment_fields
 import beam_fields
 import missile_fields
 import missile_hit_fields
+import payload_fields
 import programmable_feed_fields
 import charge_fields
 import support_callin_linkage
@@ -145,6 +146,8 @@ def canonical_public_field_id(qualified):
         return 'explosion.'+'.'.join(parts[2:])
     if parts[0]=='attack'and len(parts)==3 and parts[2]=='projectile':
         return 'attack.projectile'
+    if parts[0]=='terminal'and len(parts)==4 and parts[3]=='explosion':
+        return payload_fields.FIELD
     return qualified
 
 
@@ -266,6 +269,8 @@ def build(catalog_path=CATALOG):
             return definitions['explosion.'+'.'.join(parts[2:])]
         if parts[0]=='attack'and len(parts)==3 and parts[2]=='projectile':
             return definitions['attack.projectile']
+        if parts[0]=='terminal'and len(parts)==4 and parts[3]=='explosion':
+            return definitions[payload_fields.FIELD]
         return definitions[field_id]
 
     def component(candidate,name,offset,storage):
@@ -814,6 +819,10 @@ def build(catalog_path=CATALOG):
                 for field in fields:
                     if field['semanticFieldId']=='charge.overcharge_explosion':
                         field['charge']=dict(field['charge'],contents="attack('overcharge_explosion'):explosion()")
+            # 0.31.2: the impact and expiry payload of every projectile row an attack fires (scripts/payload_fields.py),
+            # the primaries' terminal.<role>.<phase>.explosion on the row the role's projectile fields write.
+            payload,payload_blocked=payload_fields.add(weapon['name'],fields,attacks,make_field,settings,hit)
+            fields+=payload;blocked.extend(payload_blocked)
         fed=fed_backpacks.get(weapon['name']);team=team_backpacks.get(weapon['name'])
         if fed:
             blocked.append({'field':'weapon magazine','reason':
@@ -846,7 +855,9 @@ def build(catalog_path=CATALOG):
             'nonDeliveredRoots':weapon.get('nonDeliveredRoots'),
             'fields':fields,'attacks':attacks}
         # A refused firing-sound field names its reason at write time (blocked declarations are public metadata only).
-        refusals={item['field']:item['reason'] for item in blocked if item['field']==weapon_sound_fields.FIELD}
+        # 0.31.2: so does a payload field that is not offered (a missile's expiry; scripts/payload_fields.py).
+        refusals={item['field']:item['reason'] for item in blocked if item['field']==weapon_sound_fields.FIELD
+            or item['field'].startswith('terminal.')}
         if refusals:runtime_weapons[weapon['name']]['fieldRefusals']=refusals
         roles=charge_fields.branch_roles(weapon,charge_levels)
         if weapon['name']in ability_explosion_fields.REVIEWED:
@@ -984,7 +995,10 @@ def build(catalog_path=CATALOG):
     for weapon_name,weapon in runtime_weapons.items():
         for field in weapon['fields']:
             target=field['target'];role=target.get('attack');attack=weapon['attacks'].get(role)or{}
-            register_consumer(field['backing'],semantic_consumer(weapon_name,target['path'],role,
+            # A payload field (terminal_action) writes the projectile row its attack's projectile object consumes: the
+            # same consumer, not another one.
+            path='projectile_reference'if target['path']=='terminal_action'else target['path']
+            register_consumer(field['backing'],semantic_consumer(weapon_name,path,role,
                 attack.get('kind'),attack.get('parentRole')))
 
     sdk_schema=json.loads((ROOT/'schemas/sdk.json').read_text())
@@ -1104,6 +1118,7 @@ def build(catalog_path=CATALOG):
                 accessor.append('attack')
                 if target['path']=='projectile_reference':accessor.append('projectile')
                 elif target['path']=='explosion':accessor.append('explosion')
+                elif target['path']=='terminal_action':accessor+=['projectile','terminal_action']
             instance={'instanceKey':instance_key,'supportWeapon':weapon_name,
                 'supportWeaponIdentity':{'weaponKey':weapon_key(weapon_name),
                     'name':weapon_name,'identityStatus':public_weapon['identityStatus']},
@@ -1180,6 +1195,16 @@ def build(catalog_path=CATALOG):
                 instance['value']['baseline']=instance['value']['expected']={'weapon':weapon_name,'attack':role}
                 instance['value']['reference']['expectedSemanticReference']=(
                     'hd2.support_weapon(name):attack("'+role+'"):projectile()')
+            if field['type']=='explosion_reference':
+                # 0.31.2 (scripts/payload_fields.py): an impact or expiry payload, by catalogue name only (no native
+                # type): the current explosion, who else fires or releases the row, notes and acknowledgements.
+                payload=field['payload']
+                instance['payload']=dict(payload,field=payload_fields.FIELD,
+                    target='hd2.support_weapon(name):attack("'+role+'"):projectile():terminal_action("'
+                        +payload['phase']+'")')
+                instance['value']['baseline']=instance['value']['expected']={'explosion':payload['current']or'none'}
+                instance['value']['reference']['expectedSemanticReference']=(
+                    'terminal:explosion()'if payload['current']else'terminal:no_explosion()')
             if field_id==weapon_mode_fields.FUNCTION_PROJECTILE_FIELD:
                 instance['functionAmmo']={key:field.get(key) for key in ('functionAmmoState','selectorBound',
                     'selectorInput','bindableInputs','compatibilityClass')}

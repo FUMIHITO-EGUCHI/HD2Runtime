@@ -204,7 +204,9 @@ local worker=coroutine.create(function()
  for name,roles in pairs(ROLES)do
   local wanted={};for _,role in ipairs(roles)do wanted[role]=true end
   for _,field in ipairs(support_db.weapons[name].fields)do
-   if field.backing.kind=='settings'and wanted[field.target.attack]then
+   -- (0.31.2 payload references, terminal.<role>.<phase>.explosion, are exercised by the support and explosion
+   -- catalogue snapshot validators: they take explosion handles, not values.)
+   if field.backing.kind=='settings'and wanted[field.target.attack]and field.type~='explosion_reference'then
     parts[name..'/'..field.semanticFieldId]=exercise(name,field)
    end
   end

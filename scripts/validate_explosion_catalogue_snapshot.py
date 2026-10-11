@@ -13,7 +13,10 @@ For every catalogued explosion:
 Once (EXTRAS): a changed row type (EXPLOSION_ROW_ABSENT), a changed damage link (CONFLICT), a different build
 fingerprint; and the payloads: the R-36 Eruptor's terminal impact explosion re-pointed to catalogued explosions (a
 stratagem call-in package donor and a mission-effects donor) and an attack output's impact-explosion slot, each applied,
-read back and rolled back.
+read back and rolled back; 0.31.2: support weapon payloads (terminal.<role>.<phase>.explosion) - the APW-1's impact
+(none) to a grenade's, the AC-8 flak (its ProgrammableAmmo row) to an orbital shell's and back to its own, the RL-77
+cluster round's expiry removed - each applied through the weapon's own resolved row, read back and rolled back, and the
+W.A.S.P.'s carried row refused an explosion whose shrapnel is that row (RECURSIVE_COMPOSITION).
 """
 from __future__ import annotations
 
@@ -245,6 +248,58 @@ local worker=coroutine.create(function()
   local restored=guarded.apply(runtime,guarded.inverse(oplan))
   assert(restored.status=='APPLIED','slot rollback failed')
   result.payloadWrites=result.payloadWrites+1;result.payloadRollbacks=result.payloadRollbacks+1
+  reset()
+  -- 0.31.2: support weapon payloads, through the weapon (its own row resolved on every write).
+  local function support_cycle(t,expect,value,check)
+   local sspec=weapons.validate_patch({id='support-payload',target=t,field='terminal.explosion',expect=expect,
+    value=value,allow_unverified_reference=true,allow_unverified_effect=true,allow_shared=true})
+   reset()
+   local splan=resolve(sspec,weapons)
+   local schange=splan.changes[1]
+   check(b.u32(schange.before,0),b.u32(schange.desired,0))
+   if schange.before==schange.desired then
+    -- Restoring the row's own explosion while it holds it: a guarded no-op.
+    local checked=guarded.apply(runtime,splan)
+    assert(checked.status=='ALREADY_DESIRED'and checked.writes==0,'support payload own value is not a no-op')
+    result.supportPayloadNoops=(result.supportPayloadNoops or 0)+1
+    reset();return
+   end
+   local applied=guarded.apply(runtime,splan)
+   assert(applied.status=='APPLIED'and applied.writes==1,'support payload write failed: '..tostring(applied.reason))
+   assert(runtime.read(schange.owner.base+schange.offset,4)==schange.desired,'support payload write did not land')
+   assert(resolve(sspec,weapons).changes[1].already_desired,'support payload not recognised as desired')
+   local restored=guarded.apply(runtime,guarded.inverse(splan))
+   assert(restored.status=='APPLIED'and runtime.read(schange.owner.base+schange.offset,4)==schange.before,
+    'support payload rollback failed')
+   for _ in pairs(protection)do error('page protection not restored (support payload)')end
+   result.supportPayloadWrites=(result.supportPayloadWrites or 0)+1
+   result.payloadRollbacks=result.payloadRollbacks+1
+   reset()
+  end
+  local apw=hd2.support_weapon('APW-1 Anti-Materiel Rifle'):attack('primary'):projectile():terminal_action('impact')
+  local frag=catalogue.explosions['throwable/g6_frag/detonation']
+  support_cycle(apw,apw:no_explosion(),hd2.explosion('throwable/g6_frag/detonation'),function(before,desired)
+   assert(before==0 and desired==frag.type,'APW-1 impact payload bytes')end)
+  local flak=hd2.support_weapon('AC-8 Autocannon'):attack('programmable'):projectile():terminal_action('impact')
+  local shell=catalogue.explosions['stratagem/orbital_120mm_he_barrage/shell_impact']
+  support_cycle(flak,flak:explosion(),hd2.explosion('stratagem/orbital_120mm_he_barrage/shell_impact'),
+   function(before,desired)
+    assert(before==catalogue.explosions['support_weapon/ac8_autocannon/function_impact'].type
+     and desired==shell.type,'AC-8 flak impact payload bytes')end)
+  support_cycle(flak,flak:explosion(),flak:explosion(),function(before,desired)
+   assert(before==desired,'AC-8 flak own explosion')end)
+  local cluster=hd2.support_weapon('RL-77 Airburst Rocket Launcher'):attack('programmable'):projectile()
+   :terminal_action('expiry')
+  support_cycle(cluster,cluster:explosion(),cluster:no_explosion(),function(before,desired)
+   assert(before~=0 and desired==0,'RL-77 cluster expiry removal bytes')end)
+  -- The W.A.S.P.'s function missile releases seven of the W.A.S.P.'s own rows: that explosion on that row refuses.
+  local wasp=hd2.support_weapon('StA-X3 W.A.S.P. Launcher'):attack('primary'):projectile():terminal_action('impact')
+  local wspec2=weapons.validate_patch({id='support-recursion',target=wasp,field='terminal.explosion',
+   expect=wasp:explosion(),value=hd2.explosion('support_weapon/stax3_wasp_launcher/function_impact'),
+   allow_unverified_reference=true,allow_unverified_effect=true,allow_shared=true})
+  reset()
+  rejects(function()resolve(wspec2,weapons)end,'RECURSIVE_COMPOSITION','support payload recursion')
+  record('supportRecursion')
   reset()
  end
  result.writes=counts.writes;result.protectionChanges=counts.protection_changes

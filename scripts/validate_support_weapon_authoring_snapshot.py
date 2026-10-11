@@ -29,6 +29,7 @@ def public_field(field):
     field_id=field['semanticFieldId'];target=field['target'];role=target.get('attack')
     if target['path']=='weapon':return field_id
     if field_id=='attack.'+str(role)+'.projectile':return 'attack.projectile'
+    if target['path']=='terminal_action':return 'terminal.explosion'
     if field_id.startswith('explosion.'+str(role)+'.'):
         return 'explosion.'+field_id[len('explosion.'+str(role)+'.'):]
     for domain in ('projectile','damage','arc','beam','status'):
@@ -57,6 +58,10 @@ def validate(snapshot=DEFAULT_SNAPSHOT,output=DEFAULT_OUTPUT):
                 # A support host's projectile reference: its own attack projectile (the reviewed baseline).
                 expect={'resource':'support_weapon','path':'projectile_reference','weapon':weapon['name'],
                     'attack':target['attack']}
+            if field['type']=='explosion_reference':
+                # 0.31.2 (scripts/payload_fields.py): an impact or expiry payload, at its own current handle.
+                expect={'resource':'support_weapon','path':'explosion'if expect['explosionType']else'no_explosion',
+                    'weapon':weapon['name'],'attack':target['attack'],'phase':target['phase']}
             if field['type']=='beam_reference':
                 # A beam host's BeamType reference (0.31.0 beam swaps): its own beam (the reviewed baseline).
                 expect={'resource':'support_weapon','path':'beam_reference','weapon':weapon['name']}
@@ -125,6 +130,8 @@ for _,weapon in ipairs(audit)do
      result.projectileBranches=result.projectileBranches+1
     elseif batch.target.path=='explosion'then
      result.explosionBranches=result.explosionBranches+1
+    elseif batch.target.path=='terminal_action'then
+     result.payloadTerminals=(result.payloadTerminals or 0)+1
     end
    end
   end
