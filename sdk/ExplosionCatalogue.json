@@ -320,6 +320,24 @@
           "name": "support_weapon/rl77_airburst_rocket_launcher/function_expiry",
           "role": "shrapnel_expiry",
           "reference": "chain"
+        },
+        {
+          "category": "explosion",
+          "name": "support_weapon/rl77_airburst_rocket_launcher/function_expiry",
+          "role": "shrapnel_impact",
+          "reference": "chain"
+        },
+        {
+          "category": "explosion",
+          "name": "support_weapon/rl77_airburst_rocket_launcher/impact",
+          "role": "shrapnel_expiry",
+          "reference": "chain"
+        },
+        {
+          "category": "explosion",
+          "name": "support_weapon/rl77_airburst_rocket_launcher/impact",
+          "role": "shrapnel_impact",
+          "reference": "chain"
         }
       ],
       "package": {
@@ -1895,6 +1913,12 @@
           "category": "explosion",
           "name": "throwable/g7_pineapple/detonation",
           "role": "shrapnel_expiry",
+          "reference": "chain"
+        },
+        {
+          "category": "explosion",
+          "name": "throwable/g7_pineapple/detonation",
+          "role": "shrapnel_impact",
           "reference": "chain"
         }
       ],
