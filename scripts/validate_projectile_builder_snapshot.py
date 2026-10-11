@@ -179,6 +179,13 @@ local worker=coroutine.create(function()
   {allow_unverified_effect=true,allow_unverified_reference=true})
  host_swap('support <- support handle',hd2.support_weapon('MG-206 Heavy Machine Gun'),
   hd2.support_weapon('M-105 Stalwart'):attack('primary'):projectile(),{allow_unverified_effect=true})
+ -- 0.31.2: hosts admitted by the fired-type trace (research/fired-type-callers): the Quasar (heat) and the Railgun
+ -- (charge); every donor needs allow_unverified_reference, the write is still the host's own ProjectileWeapon +0.
+ host_swap('traced heat host (Quasar) <- support output',hd2.support_weapon('LAS-99 Quasar Cannon'),
+  hd2.attack_output('EAT-17 Expendable Anti-Tank'),{allow_unverified_effect=true,allow_unverified_reference=true})
+ host_swap('traced charge host (Railgun) <- support handle',hd2.support_weapon('RS-422 Railgun'),
+  hd2.support_weapon('APW-1 Anti-Materiel Rifle'):attack('primary'):projectile(),
+  {allow_unverified_effect=true,allow_unverified_reference=true})
  host_swap('primary <- support handle',hd2.weapon('SMG-32 Reprimand'),
   hd2.support_weapon('EAT-700 Expendable Napalm'):attack('primary'):projectile(),
   {allow_unverified_effect=true,allow_unverified_reference=true})

@@ -151,7 +151,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn('A/M-23 EMS Mortar Sentry', summary['stratagemDonors'])
         self.assertIn('Eagle 500kg Bomb', summary['stratagemDonors'])
         self.assertEqual((summary['selectable'], summary['projectileHosts'], summary['componentHosts'],
-            summary['ammunitionHosts'], summary['directWritableAttackFields']), (111, 59, 53, 6, 61))   # +7 sentry hosts; -1 the retired Defender donor
+            summary['ammunitionHosts'], summary['directWritableAttackFields']), (111, 61, 55, 6, 63))   # +7 sentry hosts; -1 the retired Defender donor; 0.31.2: +2 the Quasar and the Railgun (fired-type trace)
         # Every selectable projectile output carries its weapon-function mode label and icon (native values only).
         presentation = self.catalog['modePresentation']
         icons = {i['value']: i for i in presentation['icons']}
@@ -257,9 +257,10 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(sorted(n for n in hosts['componentHosts'] if n.endswith(' / weapon')), sentries)
         self.assertEqual(len(sentries), 7)
         support = sorted(n for n in hosts['componentHosts'] if kinds[n] == 'support_weapon')
+        # 0.31.2: + the LAS-99 Quasar and the RS-422 Railgun, admitted by the fired-type trace (hostProof).
         self.assertEqual(support, ['APW-1 Anti-Materiel Rifle', 'EAT-17 Expendable Anti-Tank', 'EAT-411 Leveller',
-            'EAT-700 Expendable Napalm', 'GL-21 Grenade Launcher', 'M-105 Stalwart', 'MG-206 Heavy Machine Gun',
-            'S-11 Speargun'])
+            'EAT-700 Expendable Napalm', 'GL-21 Grenade Launcher', 'LAS-99 Quasar Cannon', 'M-105 Stalwart',
+            'MG-206 Heavy Machine Gun', 'RS-422 Railgun', 'S-11 Speargun'])
         self.assertTrue(all(kinds[n] == 'player_weapon' for n in hosts['ammunitionHosts']))
         mounted = sorted(n for n in hosts['componentHosts'] if kinds[n] == 'vehicle_weapon' and n not in sentries)
         self.assertEqual(mounted, ['AX/AR-23 Guard Dog / gun', 'EXO-45 Patriot Exosuit / right_gun',
@@ -477,6 +478,61 @@ rejects(function()swap(gl28:attack('primary'),gl28:attack('primary'):projectile(
  'field is not exposed')
 rejects(function()swap(source.target,source.expect,hd2.attack_output('S-11 Speargun (spare twin)'))end,'OUTPUT_SCOPE')
 rejects(function()swap(source.target,source.expect,hd2.attack_output('A/M-23 EMS Mortar Sentry'))end,'OUTPUT_SCOPE')
+return 'ok'
+''')
+
+    def test_traced_support_hosts_need_the_reference_acknowledgement(self):
+        # 0.31.2 (research/fired-type-callers-F5FEE03DCFDB.json): the Quasar (heat) and the Railgun (charge) are
+        # component hosts by the offline fired-type trace only; the Maxigun and the GL-28 (linked ammunition) are not.
+        research = load('research/fired-type-callers-F5FEE03DCFDB.json')
+        self.assertEqual(research['writes'], 0)
+        self.assertEqual(research['answer']['proven'], ['LAS-99 Quasar Cannon', 'RS-422 Railgun'])
+        self.assertEqual(research['answer']['notProven'], ['M-1000 Maxigun', 'GL-28 Belt-Fed Grenade Launcher'])
+        self.assertEqual(research['checks']['fireArgument6'], {'reads': ['0x61405b'], 'stores': []})
+        self.assertEqual(len(research['checks']['fireCallers']['sites']), 5)
+        self.assertEqual(len(research['checks']['genericFireCallers']['sites']), 9)
+        catalog = load('sdk/AttackOutputCapabilities.json')
+        sources = {s['weapon']: s for s in catalog['projectileSources'] if s.get('kind') == 'support_weapon'}
+        for name in ('LAS-99 Quasar Cannon', 'RS-422 Railgun'):
+            self.assertTrue(sources[name]['directWritable'], name)
+            self.assertIn('fired-type trace', sources[name]['reason'])
+            self.assertNotRegex(sources[name]['reason'], r'0x[0-9A-Fa-f]{5,}')
+        for name in ('M-1000 Maxigun', 'GL-28 Belt-Fed Grenade Launcher'):
+            self.assertFalse(sources[name]['directWritable'], name)
+            self.assertIn('linked ammunition source', sources[name]['reason'])
+        run('''
+local hd2=require('hd2runtime/api/hd2')
+local patches=require('hd2runtime/domains/patches')
+local S=require('hd2runtime/domains/support_weapon_authoring').weapons
+local function rejects(fn,needle)local ok,why=pcall(fn);assert(not ok and tostring(why):find(needle,1,true),tostring(why))end
+for _,name in ipairs({'LAS-99 Quasar Cannon','RS-422 Railgun'})do
+ local w=hd2.support_weapon(name)
+ local source=w:projectile_source()
+ assert(source.writable and source.field=='attack.projectile',name)
+ local field
+ for _,f in ipairs(S[name].fields)do if f.semanticFieldId=='attack.primary.projectile'then field=f end end
+ assert(field and field.hostProof and field.hostProof.liveControl==false and field.acknowledgement=='allow_unverified_effect',name)
+ local function swap(value,extra)
+  local request={id='s',target=source.target,field=hd2.fields.attack.projectile,expect=source.expect,value=value,
+   allow_unverified_effect=true,allow_unverified_reference=true}
+  for k,v in pairs(extra or{})do if v==false then request[k]=nil else request[k]=v end end
+  return patches.validate(request)
+ end
+ -- Any donor, even of its own class, needs allow_unverified_reference on a traced host.
+ swap(hd2.attack_output('EAT-17 Expendable Anti-Tank'))
+ rejects(function()swap(hd2.attack_output('EAT-17 Expendable Anti-Tank'),{allow_unverified_reference=false})end,
+  'HOST_STRUCTURE_UNVERIFIED')
+ rejects(function()swap(hd2.attack_output('M-105 Stalwart'),{allow_unverified_reference=false})end,
+  'allow_unverified_reference')
+ rejects(function()swap(hd2.attack_output('EAT-17 Expendable Anti-Tank'),{allow_unverified_effect=false})end,
+  'allow_unverified_effect')
+ -- Restoring its own projectile needs nothing.
+ assert(swap(source.expect,{allow_unverified_effect=false,allow_unverified_reference=false}).changes[1].self_reference)
+end
+for _,name in ipairs({'M-1000 Maxigun','GL-28 Belt-Fed Grenade Launcher'})do
+ local s=hd2.support_weapon(name):projectile_source()
+ assert(not s.writable and s.reason:find('linked ammunition source',1,true),name)
+end
 return 'ok'
 ''')
 

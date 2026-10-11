@@ -661,6 +661,14 @@ local function validate_change(weapon,item,allow_shared,role,path,phase,allow_un
             require_output_scope(output,field.semanticFieldId)
             assert(output.editable~=false and output.backing,'attack output is not selectable: '..output.id)
             require_unverified_donor(output,allow_unverified_reference,allow_unverified_effect)
+            -- 0.31.2: a support host outside the live controls' magazine-fed structure (the Quasar, the Railgun) is
+            -- admitted by the offline fired-type trace only (research/fired-type-callers): every donor also needs
+            -- allow_unverified_reference until a live control of its structure passes.
+            if field.hostProof and field.hostProof.liveControl==false then
+                assert(allow_unverified_reference,'HOST_STRUCTURE_UNVERIFIED: '..weapon.name..' is a projectile host '
+                    ..'by the offline fired-type trace only ('..tostring(field.hostProof.structure)..', no live '
+                    ..'control): a donor requires allow_unverified_reference=true')
+            end
             local cross=output.compatibilityClass~=field.compatibilityClass
             if cross then
                 local host=attack_outputs().hosts[weapon.name]

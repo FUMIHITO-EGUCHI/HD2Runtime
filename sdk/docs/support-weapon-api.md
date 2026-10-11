@@ -248,9 +248,12 @@ through their firing charge (`heat.firing_charge` / `heat.charge_gain_per_second
 
 ## Projectile swaps (support hosts)
 
-Eight support weapons are projectile hosts: APW-1, EAT-17, EAT-411, EAT-700, GL-21, M-105 Stalwart, MG-206 HMG and
-S-11 Speargun. They pass the same rule as player component hosts: magazine-fed, and every shot is their own
-ProjectileWeapon +0. `hd2.fields.attack.projectile` on `support:attack(role)` replaces what they fire. The donor is
+Ten support weapons are projectile hosts: APW-1, EAT-17, EAT-411, EAT-700, GL-21, M-105 Stalwart, MG-206 HMG and
+S-11 Speargun pass the same rule as player component hosts: magazine-fed, and every shot is their own
+ProjectileWeapon +0. Since 0.31.2 the LAS-99 Quasar Cannon and the RS-422 Railgun are hosts by an offline trace of
+the game's fire path (not live-tested): their donors always need `allow_unverified_reference` too
+([attack outputs](attack-outputs.md) "Hosts outside the magazine-fed structure"). The M-1000 Maxigun and the GL-28
+stay read-only. `hd2.fields.attack.projectile` on `support:attack(role)` replaces what they fire. The donor is
 any catalogued projectile output or another weapon's attack projectile handle, from any loadout slot. The support host
 path is not live-proven yet, so it needs `allow_unverified_effect`; cross-class donors also need
 `allow_unverified_reference`. `support:projectile_source()` gives the target, field and expect, or the reason a

@@ -192,14 +192,16 @@ a projectile pointer exists.
   (`DORMANT_PROJECTILE_REFERENCE`): swap their projectile through `weapon:ammunition()`.
 - **Cross-class projectile outputs** need `allow_unverified_reference` and `allow_unverified_effect`, on either
   mechanism.
-- **Host eligibility.** 59 hosts: 53 `component` hosts (29 player, 8 support, 9 mounted weapons and 7 sentries or
+- **Host eligibility.** 61 hosts: 55 `component` hosts (29 player, 10 support, 9 mounted weapons and 7 sentries or
   emplacements) and 6
   `ammunition` hosts. Loadout category never decides it: the native output family and the active source do. Each keeps the live controls' structure: magazine-fed, empty magazine pattern, no WeaponRounds,
   WeaponCharge or WeaponHeat. Others fail with `CROSS_CLASS_HOST_REJECTED`, and the magazine structure is re-proven
-  live before every write.
-- **Support hosts.** A support weapon is a host by the same rule, not a separate system. The eight are the APW-1,
+  live before every write. The one exception is the two support hosts the fired-type trace admits (below).
+- **Support hosts.** A support weapon is a host by the same rule, not a separate system. Eight are the APW-1,
   EAT-17, EAT-411, EAT-700, GL-21, M-105 Stalwart, MG-206 HMG and S-11 Speargun: magazine-fed, no customization delta
-  patches a projectile member, and no other selector exists, so every shot is their own ProjectileWeapon +0.
+  patches a projectile member, and no other selector exists, so every shot is their own ProjectileWeapon +0. Since
+  0.31.2 the LAS-99 Quasar Cannon and the RS-422 Railgun are hosts too, by the fired-type trace ("Hosts outside the
+  magazine-fed structure (0.31.2)" below); their donors always need `allow_unverified_reference` as well.
   - **API.** `hd2.support_weapon(name):projectile_source()` and `:attack(role):projectile_source()` return the same
     shape as for a player weapon. The field is `hd2.fields.attack.projectile` on `support:attack(role)`, with
     `support:attack(role):projectile()` as the expect and the restore value.
@@ -210,8 +212,8 @@ a projectile pointer exists.
     - another selector owns the projectile (WeaponRounds ammo types, a magazine pattern, a spawned entity, charge
       levels);
     - a weapon function switches it (GR-8, RL-77);
-    - the weapon is not magazine-fed (GL-28, Quasar, Maxigun, Railgun: ACTIVE_DIRECT, but outside the rule the live
-      controls established).
+    - the weapon is fed from linked ammunition (GL-28, M-1000 Maxigun: ACTIVE_DIRECT by the data path, but the fired
+      type comes from the linked ammunition source whenever one is linked; see below).
 - **Mounted hosts.** Mounted weapons (vehicles, Exosuits, emplacements, Guard Dog drones) follow the same rule
   (research/active-projectile-sources, research/projectile-builder `mountedHosts`). The nine hosts:
   - EXO-45 Patriot minigun;
@@ -293,6 +295,52 @@ a projectile pointer exists.
   The donor weapon never needs to be equipped.
 - **Mod Options.** A choice option's `values` may be reference handles, so one dropdown can select between complete
   output compositions. Each choice is a single reference value, so switching choices is one atomic write.
+
+## Hosts outside the magazine-fed structure (0.31.2, offline only)
+
+The host rule keeps every host to the structure of the two live controls (the Reprimand and the Liberator are both
+magazine-fed). The rule exists because, for another structure, something other than ProjectileWeapon +0 might select
+the fired projectile: a write to +0 would then be a no-op or a partial change. 0.31.2 relaxes it for exactly two
+support weapons, where an offline trace of the game code shows that nothing else selects it
+(`research/fired-type-callers-F5FEE03DCFDB.json`, `research/docs/projectile-swap-and-payloads-F5FEE03DCFDB.md`
+section 1).
+
+**What the guard protects, and the trace.**
+- The fire function takes the fired type from a caller-supplied argument when it is non-zero, else from the fired-type
+  resolver. The argument is only read there. Every caller was enumerated (complete call and pointer scans):
+  - the ProjectileWeapon update and two other callers pass 0;
+  - the heat fire passes the reached heat level's projectile (WeaponHeat +4 / +28 / +52), or 0 when no level threshold
+    is above 0;
+  - the charge release passes the released charge level's projectile (WeaponCharge +4 / +28 / +52);
+  - two externally dispatched handlers pass a type of their own. They do not depend on the weapon's structure: they
+    would override +0 on the live-proven magazine-fed hosts in the same way.
+- The resolver chooses by the weapon's state: WeaponHeat -> ProjectileWeapon +0; WeaponMagazine -> the magazine's round
+  type, its pattern, else +0 (the live-proven hosts' path); WeaponRounds -> WeaponRounds +64 / +68; WeaponLinkedAmmo ->
+  the type of the linked ammunition source whenever one is linked.
+
+**Why the risk is absent for these two.**
+- **LAS-99 Quasar Cannon** (heat): its heat level thresholds and level projectiles are all 0, so its fire passes no type.
+  The resolver takes ProjectileWeapon +0 for a heat weapon. It owns its ProjectileWeapon record alone.
+- **RS-422 Railgun** (charge + magazine): its three charge level projectiles are 0, so the charge release passes no
+  type. The resolver takes the magazine path with no pattern, the path of the live-proven magazine-fed hosts. It owns
+  its record alone.
+
+**Kept read-only.** The M-1000 Maxigun and the GL-28 (linked ammunition): the resolver takes the type of their linked
+source (their ammunition backpack) whenever one is linked. Which value that source holds, and who writes it, is not
+traced, so a write to +0 is not proven to change what they fire. Missing: the identity of that source and a live
+control. The weapons that need another member (AC-8, GL-52, SG-88 rounds; MG-43, MGX-42 magazine pattern; the Epoch's
+charge levels) are unchanged.
+
+**Guards kept and added.**
+- Every other host guard applies: the record identity (sole owner) is re-proven before every write, the donor's
+  package is loaded first, family and scope checks, `allow_unverified_effect` on every swap.
+- New: on these two hosts every donor also needs `allow_unverified_reference` (`HOST_STRUCTURE_UNVERIFIED`), even of the
+  host's own class, until a live control of the structure passes. The field publishes `hostProof`
+  (`rule = 'fired_type_traced'`, `liveControl = false`). Restoring the weapon's own projectile needs nothing.
+- Offline evidence: `tests/test_attack_outputs.py` and `validation/projectile-builder-snapshot.json` (a swap on each
+  host lands in its own ProjectileWeapon +0 and rolls back).
+- Live test pending, solo: the Quasar <- EAT-17 rocket and the Railgun <- APW-1 round fire the donor after a fresh
+  call-in. The multiplayer behaviour is that of every other support host swap.
 
 ## Beam swaps (0.31.0; not live-tested)
 

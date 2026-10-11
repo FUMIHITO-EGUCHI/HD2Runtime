@@ -839,6 +839,7 @@ def outputs():
     support_sources = {}
     # Mounted weapons join the same rule and pool (kind vehicle_weapon; sharedEntity: another mount carries the same
     # weapon entity, so a write there changes both mounts).
+    linked = {entry['weapon']: entry.get('components', []) for entry in active['weapons']}
     host_items = ([(item, 'support_weapon') for item in builder['supportHosts']]
         + [(item, 'vehicle_weapon') for item in builder.get('mountedHosts', [])])
     # Sentry and emplacement hosts (0.30.2; research/sentry-projectile-hosts-F5FEE03DCFDB.json): their deployed entity's
@@ -858,14 +859,27 @@ def outputs():
         reason = item['reason']
         if item['weapon'] in spawned and only_spawned_entity(item):
             reason = spawned[item['weapon']][0]
+        proof = item.get('hostProof')
+        if host and proof:
+            hosts[item['weapon']]['hostProof'] = proof
+            reason = (item['reason'] + ' Not magazine-fed (' + proof['structure'] + '): admitted by the offline '
+                'fired-type trace (' + proof['research'] + '): ' + proof['summary'] + '. No live control of this '
+                'structure yet, so a donor also needs allow_unverified_reference.')
         if not host and item['status'] == 'ACTIVE_DIRECT':
-            reason = ('Every shot is ProjectileWeapon +0, but the weapon is not magazine-fed: the host rule the live '
+            reason = ('Every shot is ProjectileWeapon +0 by the data path, but the weapon is not magazine-fed and the '
+                'fired-type trace (research/fired-type-callers) does not prove its structure: a linked-ammunition '
+                'weapon fires the type of its linked ammunition source whenever one is linked. Its projectile '
+                'reference stays read-only.'
+                if any(c.startswith('WeaponLinkedAmmo') for c in linked.get(item['weapon'], [])) else
+                'Every shot is ProjectileWeapon +0, but the weapon is not magazine-fed: the host rule the live '
                 'controls established covers magazine-fed weapons only (no rounds feed, charge or heat), so its '
                 'projectile reference stays read-only.')
         support_sources[item['weapon']] = {'status': item['status'], 'mechanism': item['mechanism'],
             'member': 'ProjectileWeapon +0' if item['mechanism'] == 'component' else None, 'reason': reason,
             'writable': host, 'compatibilityClass': classes.get(item['weapon']), 'kind': kind,
             'sharedEntity': item.get('sharedEntity') or []}
+        if host and proof:
+            support_sources[item['weapon']]['hostProof'] = proof
     for name, roles in sorted(sources.items()):
         primary = roles.get('primary')
         entry = by_weapon.get(name)
@@ -967,7 +981,10 @@ def outputs():
                 'the attack\'s own ProjectileWeapon +0 is its active source (ACTIVE_DIRECT). ammunition: the default '
                 'ammunition delta is (INDIRECT), written through weapon:ammunition(). Both keep the live controls\' '
                 'structure: magazine-fed, empty magazine pattern, no WeaponRounds, WeaponCharge or WeaponHeat. A '
-                'projectile pointer existing is not enough. Support weapons follow the same rule (component hosts: '
+                'projectile pointer existing is not enough. 0.31.2: a support weapon outside that structure is a '
+                'component host only where the fired-type trace proves every shot of its own fire paths is its +0 '
+                '(the LAS-99 Quasar, the RS-422 Railgun; hostProof), and its donors then also need '
+                'allow_unverified_reference. Support weapons follow the same rule (component hosts: '
                 'hd2.support_weapon(name):attack(role) with hd2.fields.attack.projectile); the donor pool is one '
                 'catalog (hd2.attack_output(name)) whatever loadout slot the donor comes from.'),
             'hostLiveProof': {name: host_live_proof(name) for name in sorted(hosts) if host_live_proof(name)},

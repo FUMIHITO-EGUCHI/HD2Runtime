@@ -46,6 +46,26 @@ ATTACK_RESEARCH = ROOT / 'research/attack-outputs-F5FEE03DCFDB.json'
 ACTIVE_RESEARCH = ROOT / 'research/active-projectile-sources-F5FEE03DCFDB.json'
 DONOR_RESEARCH = ROOT / 'research/stun-field-donors-F5FEE03DCFDB.json'
 STATUS_RESEARCH = ROOT / 'research/status-effects-F5FEE03DCFDB.json'
+# 0.31.2: the fired-type trace (research/scripts/research_fired_type_callers.py). A support weapon outside the
+# magazine-fed structure is a component host only when the trace proves every shot of its own fire paths is
+# ProjectileWeapon +0 (no caller-supplied level projectile, no resolver branch other than +0 for its structure).
+FIRED_TYPE_RESEARCH = ROOT / 'research/fired-type-callers-F5FEE03DCFDB.json'
+
+
+def fired_type_proven():
+    """{weapon: proof} for the support weapons the fired-type trace proves fire their own +0 on every shot."""
+    research = json.loads(FIRED_TYPE_RESEARCH.read_text(encoding='utf-8'))
+    if research['writes'] or research['protectionChanges']:
+        raise ValueError('the fired-type research must be read-only')
+    summaries = {
+        'heat': ('no heat level threshold is above 0 and every heat level projectile is 0, so its fire passes no '
+            'type of its own; for a heat weapon the resolver takes ProjectileWeapon +0'),
+        'charge+magazine': ('every charge level projectile is 0, so the charge release passes no type of its own; the '
+            'resolver takes the magazine path with no pattern, as on the live-proven magazine-fed hosts')}
+    return {w['weapon']: {'rule': 'fired_type_traced', 'structure': w['structure'],
+        'summary': summaries[w['structure']], 'liveControl': False,
+        'research': 'research/fired-type-callers-F5FEE03DCFDB.json'}
+        for w in research['weapons'] if w['everyOwnShotIsPlus0']}
 PROJECTILE_STRIDE, EXPLOSION_STRIDE, DAMAGE_STRIDE = 272, 152, 76
 PROJECTILE_SETTINGS_TYPE, EXPLOSION_SETTINGS_TYPE = '0xBD4042C2', '0x2AEA2592'
 REFERENCES = {'directDamage': 60, 'impactExplosion': 144, 'expiryExplosion': 156}
@@ -289,15 +309,19 @@ def main():
             'selector and handling.']}
 
     active_by_weapon = {entry['weapon']: entry for entry in active['weapons']}
+    traced = fired_type_proven()
     support_hosts = []
     for entry in active['weapons']:
         if entry['kind'] != 'support_weapon':
             continue
         source = entry.get('activeSource') or {}
-        support_hosts.append({'weapon': entry['weapon'], 'status': entry['status'],
+        host = {'weapon': entry['weapon'], 'status': entry['status'],
             'magazineFed': entry.get('magazineFed'), 'mechanism': source.get('kind'),
             'componentHost': entry['status'] == 'ACTIVE_DIRECT' and bool(entry.get('magazineFed')),
-            'reason': entry.get('reason')})
+            'reason': entry.get('reason')}
+        if not host['componentHost'] and entry['status'] == 'ACTIVE_DIRECT' and entry['weapon'] in traced:
+            host.update(componentHost=True, hostProof=traced[entry['weapon']])
+        support_hosts.append(host)
     # Mounted weapons (vehicles, Exosuits, Guard Dog drones, emplacements): the same host rule. Two mounts can carry
     # the same weapon entity (the M-102 Gunner FRV and the Super Earth FRV): writing it changes both (sharedEntity).
     mounted_hosts = []

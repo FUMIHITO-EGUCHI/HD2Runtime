@@ -1242,7 +1242,7 @@
    "status": "ACTIVE_DIRECT",
    "mechanism": "component",
    "member": "ProjectileWeapon +0",
-   "reason": "Every shot is ProjectileWeapon +0, but the weapon is not magazine-fed: the host rule the live controls established covers magazine-fed weapons only (no rounds feed, charge or heat), so its projectile reference stays read-only.",
+   "reason": "Every shot is ProjectileWeapon +0 by the data path, but the weapon is not magazine-fed and the fired-type trace (research/fired-type-callers) does not prove its structure: a linked-ammunition weapon fires the type of its linked ammunition source whenever one is linked. Its projectile reference stays read-only.",
    "directWritable": false,
    "previouslyWritable": false,
    "sharedEntity": [],
@@ -1281,11 +1281,11 @@
    "status": "ACTIVE_DIRECT",
    "mechanism": "component",
    "member": "ProjectileWeapon +0",
-   "reason": "Every shot is ProjectileWeapon +0, but the weapon is not magazine-fed: the host rule the live controls established covers magazine-fed weapons only (no rounds feed, charge or heat), so its projectile reference stays read-only.",
-   "directWritable": false,
+   "reason": "No customization delta patches a projectile member and no other selector exists: every shot is ProjectileWeapon +0. Not magazine-fed (heat): admitted by the offline fired-type trace (research/fired-type-callers-F5FEE03DCFDB.json): no heat level threshold is above 0 and every heat level projectile is 0, so its fire passes no type of its own; for a heat weapon the resolver takes ProjectileWeapon +0. No live control of this structure yet, so a donor also needs allow_unverified_reference.",
+   "directWritable": true,
    "previouslyWritable": false,
    "sharedEntity": [],
-   "write": null
+   "write": "hd2.support_weapon(name):attack(role):projectile_source() (hd2.fields.attack.projectile)"
   },
   {
    "weapon": "M-1000 Maxigun",
@@ -1294,7 +1294,7 @@
    "status": "ACTIVE_DIRECT",
    "mechanism": "component",
    "member": "ProjectileWeapon +0",
-   "reason": "Every shot is ProjectileWeapon +0, but the weapon is not magazine-fed: the host rule the live controls established covers magazine-fed weapons only (no rounds feed, charge or heat), so its projectile reference stays read-only.",
+   "reason": "Every shot is ProjectileWeapon +0 by the data path, but the weapon is not magazine-fed and the fired-type trace (research/fired-type-callers) does not prove its structure: a linked-ammunition weapon fires the type of its linked ammunition source whenever one is linked. Its projectile reference stays read-only.",
    "directWritable": false,
    "previouslyWritable": false,
    "sharedEntity": [],
@@ -1426,11 +1426,11 @@
    "status": "ACTIVE_DIRECT",
    "mechanism": "component",
    "member": "ProjectileWeapon +0",
-   "reason": "Every shot is ProjectileWeapon +0, but the weapon is not magazine-fed: the host rule the live controls established covers magazine-fed weapons only (no rounds feed, charge or heat), so its projectile reference stays read-only.",
-   "directWritable": false,
+   "reason": "No customization delta patches a projectile member and no other selector exists: every shot is ProjectileWeapon +0. Not magazine-fed (charge+magazine): admitted by the offline fired-type trace (research/fired-type-callers-F5FEE03DCFDB.json): every charge level projectile is 0, so the charge release passes no type of its own; the resolver takes the magazine path with no pattern, as on the live-proven magazine-fed hosts. No live control of this structure yet, so a donor also needs allow_unverified_reference.",
+   "directWritable": true,
    "previouslyWritable": false,
    "sharedEntity": [],
-   "write": null
+   "write": "hd2.support_weapon(name):attack(role):projectile_source() (hd2.fields.attack.projectile)"
   },
   {
    "weapon": "S-11 Speargun",
@@ -1931,6 +1931,7 @@
    "GATER Oil Rig / turret",
    "GL-21 Grenade Launcher",
    "GP-20 Ultimatum",
+   "LAS-99 Quasar Cannon",
    "M-102 Gunner FRV / gun",
    "M-103 Supply FRV / gun",
    "M-105 Stalwart",
@@ -1946,6 +1947,7 @@
    "R-63CS Diligence Counter Sniper",
    "R-72 Censor",
    "R/40-K Hot-Shot Marksman Rifle",
+   "RS-422 Railgun",
    "S-11 Speargun",
    "SG-225SP Breaker Spray&Pray",
    "SG-8P Punisher Plasma",
@@ -1964,7 +1966,7 @@
    "R-63 Diligence",
    "SG-225 Breaker"
   ],
-  "rule": "A projectile output needs a player attack whose fired projectile Runtime can write. component: the attack's own ProjectileWeapon +0 is its active source (ACTIVE_DIRECT). ammunition: the default ammunition delta is (INDIRECT), written through weapon:ammunition(). Both keep the live controls' structure: magazine-fed, empty magazine pattern, no WeaponRounds, WeaponCharge or WeaponHeat. A projectile pointer existing is not enough. Support weapons follow the same rule (component hosts: hd2.support_weapon(name):attack(role) with hd2.fields.attack.projectile); the donor pool is one catalog (hd2.attack_output(name)) whatever loadout slot the donor comes from.",
+  "rule": "A projectile output needs a player attack whose fired projectile Runtime can write. component: the attack's own ProjectileWeapon +0 is its active source (ACTIVE_DIRECT). ammunition: the default ammunition delta is (INDIRECT), written through weapon:ammunition(). Both keep the live controls' structure: magazine-fed, empty magazine pattern, no WeaponRounds, WeaponCharge or WeaponHeat. A projectile pointer existing is not enough. 0.31.2: a support weapon outside that structure is a component host only where the fired-type trace proves every shot of its own fire paths is its +0 (the LAS-99 Quasar, the RS-422 Railgun; hostProof), and its donors then also need allow_unverified_reference. Support weapons follow the same rule (component hosts: hd2.support_weapon(name):attack(role) with hd2.fields.attack.projectile); the donor pool is one catalog (hd2.attack_output(name)) whatever loadout slot the donor comes from.",
   "hostLiveProof": {
    "AR-23 Liberator": [
     {
@@ -2295,10 +2297,10 @@
   "selectable": 111,
   "beamDonors": 6,
   "beamHosts": 6,
-  "projectileHosts": 59,
-  "componentHosts": 53,
+  "projectileHosts": 61,
+  "componentHosts": 55,
   "ammunitionHosts": 6,
-  "directWritableAttackFields": 61
+  "directWritableAttackFields": 63
  },
  "outputs": [
   {

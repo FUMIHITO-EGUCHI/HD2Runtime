@@ -80,7 +80,7 @@
   },
   "mode": "snapshot-overlay",
   "proofScope": "guarded write mechanics; every composition here is pending a live test",
-  "protectionChanges": 56,
+  "protectionChanges": 64,
   "rejections": {
     "beamHasNoSlots": "has no projectile slots",
     "builderWithoutAcknowledgement": "allow_unverified",
@@ -238,7 +238,23 @@
       "member": "ProjectileWeapon +0",
       "packages": 1,
       "to": 276
+    },
+    "traced charge host (Railgun) <- support handle": {
+      "crossClass": false,
+      "from": 186,
+      "host": "RS-422 Railgun",
+      "member": "ProjectileWeapon +0",
+      "packages": 1,
+      "to": 226
+    },
+    "traced heat host (Quasar) <- support output": {
+      "crossClass": false,
+      "from": 133,
+      "host": "LAS-99 Quasar Cannon",
+      "member": "ProjectileWeapon +0",
+      "packages": 1,
+      "to": 132
     }
   },
-  "writes": 48
+  "writes": 52
 }

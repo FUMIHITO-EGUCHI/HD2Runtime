@@ -46,6 +46,10 @@ ATTACK_OUTPUTS=ROOT/'research/attack-outputs-F5FEE03DCFDB.json'
 HOST_UNVERIFIED=('Replaces the projectile this support weapon fires (its ProjectileWeapon +0, copied into the weapon '
     'when it is built). The same structural rule as player component hosts: no customization delta patches a projectile '
     'member and no other selector exists. Not yet shown in game for a support weapon.')
+HOST_TRACED_UNVERIFIED=('Replaces the projectile this support weapon fires (its ProjectileWeapon +0, copied into the '
+    'weapon when it is built). It is not magazine-fed ({structure}): the host is admitted by the offline fired-type '
+    'trace (every shot of its own fire paths is its +0; no level projectile, no other resolver branch), with no live '
+    'control of this structure yet, so every donor needs allow_unverified_reference as well. Not yet shown in game.')
 # Team-reload weapons (research/team-reload-ammo-F5FEE03DCFDB.json, docs/support-weapon-api.md "Team-reload weapons"):
 # the reload uses the weapon's own spares first and the worn backpack's deposit only when they are spent; spawn and
 # resupply clamp the own spares to the maximum (magazine.spare_magazines / rounds.spare_rounds), which is 0 natively.
@@ -345,6 +349,13 @@ def build(catalog_path=CATALOG):
         field['acknowledgementReason']=HOST_UNVERIFIED
         field['projectileSource']={'status':host['status'],'mechanism':host['mechanism'],
             'member':'ProjectileWeapon +0','reason':host['reason']}
+        if host.get('hostProof'):
+            # 0.31.2: a host outside the magazine-fed structure the live controls established (the Quasar: heat; the
+            # Railgun: charge), admitted by the fired-type trace (research/fired-type-callers-F5FEE03DCFDB.json).
+            # Every donor also needs allow_unverified_reference until a live control of its structure passes.
+            field['acknowledgementReason']=HOST_TRACED_UNVERIFIED.format(structure=host['hostProof']['structure'])
+            field['hostProof']=dict(host['hostProof'],acknowledgements=['allow_unverified_effect',
+                'allow_unverified_reference'])
         field['referenceKind']='projectile';field['compatibilityClass']=research['compatibilityClass']
         field['referenceRole']=role;field['referenceSettings']=research['output']['settings']
         field['residency']={'classification':'PACKAGE_AUTO_LOADED'if research['packageAutoLoad']else'PACKAGE_REQUIRED',
