@@ -401,6 +401,27 @@ hd2.ensure({transaction={id='quick-quasar',target=quasar,allow_unverified_effect
 If a heat write is refused with "the game reads its WeaponHeatComponentData table from another place", another mod
 has moved the game's heat table ([diagnostics](diagnostics.md) "Component tables another mod moved").
 
+## Explosions of submunitions (0.31.2, offline only)
+
+Some catalog branches are explosions caused by the submunitions of one of the weapon's own explosions. For example,
+"RL-77 P1 IE" is the impact of the bomblets the RL-77's rocket burst ("RL-77 P IE") releases. They used to be listed as
+unresolved ("no structurally linked ExplosionSettings branch matched this catalog branch"). The game links them
+structurally, and the research records hold each link:
+- the parent explosion branch is resolved to one of the weapon's explosions;
+- its shrapnel projectile (+84) impacts as one ExplosionSettings row;
+- the explosion catalogue names that row.
+
+Such a branch now carries `explosionCatalogue` (`explosion`, `handle`, `chain`, `evidence`) and is authored through
+`hd2.explosion(name)`, not through the support weapon:
+
+| Branch | Explosion |
+| --- | --- |
+| RL-77 P1 IE | `support_weapon/rl77_airburst_rocket_launcher/bomblet` (the bomblets of both the rocket and the cluster round) |
+| EAT-700 P1 IE | `support_weapon/eat700_expendable_napalm/impact/shrapnel_impact` |
+
+The link is structural. The branch's published values are not compared, because the wiki record keeps only the fields
+that differ from the weapon's own explosion. The RL-77 rocket's direct hit (350) and its burst are unchanged.
+
 ## Ammunition maxima (0.31.2, offline only)
 
 `weapon.capacity` takes at most 2047 and `magazine.starting_magazines`, `magazines_from_supply` and `spare_magazines`

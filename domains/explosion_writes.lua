@@ -17,12 +17,15 @@ local FIELDS={}
 for index,field in ipairs(catalogue.fields)do FIELDS[field.id]={index=index,definition=field}end
 M.FIELDS=FIELDS
 
--- A catalogued explosion by its semantic id, or by its label (case-insensitive): entry, id. nil when unknown.
+-- A catalogued explosion by its semantic id, an alias of it (0.31.2: an owner-neutral second id, catalogue.aliases) or its
+-- label (case-insensitive): entry, id (always the semantic id). nil when unknown.
 local by_label
 function M.entry(name)
     if type(name)~='string'then return nil end
     local entry=catalogue.explosions[name]
     if entry then return entry,name end
+    local aliased=(catalogue.aliases or{})[name]
+    if aliased and catalogue.explosions[aliased]then return catalogue.explosions[aliased],aliased end
     if not by_label then
         by_label={}
         for id,item in pairs(catalogue.explosions)do by_label[item.label:lower()]=id end

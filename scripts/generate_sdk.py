@@ -763,7 +763,9 @@ def outputs():
     # The explosion catalogue (sdk/ExplosionCatalogue.json; docs/explosions.md): semantic ids only. The class
     # HD2CatalogueExplosion itself comes from schemas/events.json (api classes).
     explosion_catalogue=json.loads((ROOT/'sdk/ExplosionCatalogue.json').read_text(encoding='utf-8'))
-    alias('HD2CatalogueExplosionName',[item['name'] for item in explosion_catalogue['explosions']])
+    # (0.31.2: plus each owner-neutral alias, which names the same explosion.)
+    alias('HD2CatalogueExplosionName',[item['name'] for item in explosion_catalogue['explosions']]
+        +[item['alias'] for item in explosion_catalogue.get('aliases',[])])
     # Event actions: the named explosions (Hellbombs) and the statuses hd2.status offers (domains/event_natives.lua).
     event_actions = json.loads((ROOT/'research/event-actions-F5FEE03DCFDB.json').read_text(encoding='utf-8'))
     alias('HD2ExplosionName',[item['name'] for item in event_actions['namedExplosions']]

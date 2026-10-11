@@ -112,6 +112,31 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
         team=found[('GR-8 Recoilless Rifle','magazine.spare_magazines')]
         self.assertEqual((team['teamReload']['max'],team['networkLimit']['max']),(31,31))
 
+    def test_submunition_explosion_branches_link_to_the_explosion_catalogue(self):
+        # 0.31.2 (scripts/submunition_links.py): the RL-77's "RL-77 P1 IE" is the impact of the bomblets its rocket's
+        # burst ("RL-77 P IE") releases. The game links it structurally (the burst's shrapnel projectile and that
+        # projectile's impact explosion), so it points to the catalogued bomblet explosion instead of staying
+        # unresolved. The EAT-700's napalm shrapnel is linked the same way; the GR-8 backblast has no such chain.
+        weapons={weapon['name']:weapon for weapon in self.capabilities['weapons']}
+        def branch(weapon,name):
+            return next(item for item in weapons[weapon]['attackBranches']if item['name']==name)
+        rl77=branch('RL-77 Airburst Rocket Launcher','RL-77 P1 IE')
+        self.assertEqual(rl77['explosionCatalogue']['explosion'],'support_weapon/rl77_airburst_rocket_launcher/bomblet')
+        self.assertEqual(rl77['explosionCatalogue']['researchId'],
+            'support_weapon/rl77_airburst_rocket_launcher/function_expiry/shrapnel_expiry')
+        self.assertIn("hd2.explosion('support_weapon/rl77_airburst_rocket_launcher/bomblet')",rl77['blockedReason'])
+        self.assertFalse(rl77['writable'])   # authored through the explosion catalogue, not the support weapon
+        self.assertEqual(rl77['explosionCatalogue']['chain'][0],
+            'RL-77 P IE (support_weapon/rl77_airburst_rocket_launcher/impact)')
+        eat=branch('EAT-700 Expendable Napalm','EAT-700 P1 IE')
+        self.assertEqual(eat['explosionCatalogue']['explosion'],
+            'support_weapon/eat700_expendable_napalm/impact/shrapnel_impact')
+        unresolved=[item['reason']for weapon in weapons.values()for item in weapon['blockedFields']
+            if item['field']=='unresolved branch']
+        self.assertFalse([reason for reason in unresolved if reason.startswith(('RL-77 P1 IE','EAT-700 P1 IE'))])
+        self.assertIn('GR-8 BACKBLAST E: no structurally linked ExplosionSettings branch matched this catalog branch',
+            unresolved)
+
     def test_gui_can_group_recoilless_instances_without_native_layout_knowledge(self):
         instances=[item for item in self.capabilities['fieldInstances']
             if item['supportWeapon']=='GR-8 Recoilless Rifle']

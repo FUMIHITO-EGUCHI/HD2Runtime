@@ -44,7 +44,8 @@ local function stats(entry)
 end
 local function summary(id,entry)
     local legacy=entry.legacy
-    return {name=id,label=entry.label,family=entry.family,evidence=entry.evidence,shared=entry.shared==true,
+    return {name=id,aliases=copy(entry.aliases),label=entry.label,family=entry.family,evidence=entry.evidence,
+        shared=entry.shared==true,
         owners=entry.ownerCount,package_known=entry.package~=nil,mission_package=entry.package~=nil
             and entry.package.mission==true or false,payload=entry.payload==true,spawn=entry.spawn==true,
         reviewed_spawn=legacy~=nil,legacy_name=legacy and legacy.name or nil,stats=stats(entry)}
@@ -71,6 +72,7 @@ function M.list(filter)
         if keep and filter.search then
             local text=tostring(filter.search):lower()
             keep=id:find(text,1,true)~=nil or entry.label:lower():find(text,1,true)~=nil
+            for _,alias in ipairs(entry.aliases or{})do if alias:find(text,1,true)then keep=true end end
         end
         if keep and filter.owner then
             local text=tostring(filter.owner):lower()

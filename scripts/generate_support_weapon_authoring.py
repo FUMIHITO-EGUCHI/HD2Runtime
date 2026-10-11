@@ -29,6 +29,7 @@ import charge_fields
 import support_callin_linkage
 import ability_explosion_fields
 import live_evidence
+import submunition_links
 
 ROOT=Path(__file__).resolve().parents[1]
 CATALOG=ROOT/'schemas/support_weapon_authoring_catalog.json'
@@ -813,8 +814,12 @@ def build(catalog_path=CATALOG):
             blocked.append({'field':'linked stratagem scalars','reason':
                 'Cooldown and uses are owned by the linked stratagem view (linkedStratagem.semanticId); '
                 'call-in scalar ownership through the support weapon is not reviewed.'})
+        # 0.31.2: an explosion branch below a resolved explosion's submunition is linked to the explosion catalogue
+        # (scripts/submunition_links.py: the RL-77's bomblet explosion); it is no longer an unresolved branch.
+        submunition=submunition_links.links(weapon,candidate if unique else None)
         for reason in weapon['unresolvedLinks']:
             if(fed or team)and reason.startswith('backpack entity/package ownership link'):continue
+            if any(reason.startswith(name+':')for name in submunition):continue
             blocked.append({'field':'unresolved branch','reason':reason})
 
         runtime_weapons[weapon['name']]={'name':weapon['name'],'resolution':weapon['resolution'],
@@ -846,7 +851,10 @@ def build(catalog_path=CATALOG):
                 'parentAttack':branch.get('parentAttack'),'runtimeRole':runtime_role,
                 'state':branch['state'],'writable':unique and branch['state']=='RESOLVED'
                     and runtime_role in attacks,
-                'blockedReason':block if not unique else branch.get('unresolvedReason'),
+                'blockedReason':block if not unique else(submunition[branch['name']]['reason']
+                    if branch['name']in submunition else branch.get('unresolvedReason')),
+                **({'explosionCatalogue':{key:value for key,value in submunition[branch['name']].items()
+                    if key!='reason'}}if branch['name']in submunition else{}),
                 **({'chargeLevel':branch['chargeLevel'],'resolvedBy':branch.get('resolvedBy')}
                     if branch.get('chargeLevel')else{})})
         resolution_basis=None

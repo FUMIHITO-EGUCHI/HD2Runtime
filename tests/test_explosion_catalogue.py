@@ -88,6 +88,46 @@ return 'ok'
 '''), b'ok')
 
 
+class AliasTests(unittest.TestCase):
+    """0.31.2: the RL-77's bomblet explosion (explosion 7) is the impact of the bomblets both its rocket's burst and its
+    cluster round's release. Its research id names the cluster round only; the owner-neutral alias names it for both,
+    and the research id keeps working."""
+
+    BOMBLET = 'support_weapon/rl77_airburst_rocket_launcher/bomblet'
+    RESEARCH_ID = 'support_weapon/rl77_airburst_rocket_launcher/function_expiry/shrapnel_expiry'
+
+    def test_the_alias_is_published_and_checked_against_the_research(self):
+        self.assertEqual([(a['alias'], a['name']) for a in SDK['aliases']], [(self.BOMBLET, self.RESEARCH_ID)])
+        entry = next(item for item in SDK['explosions'] if item['name'] == self.RESEARCH_ID)
+        self.assertEqual(entry['aliases'], [self.BOMBLET])
+        self.assertEqual((entry['stats']['damage']['standard'], entry['stats']['innerRadius']), (500, 4.0))
+        self.assertIsNone(re.search(r'(325|300|78|233)', SDK['aliases'][0]['reason']), 'semantic ids only')
+        # The bomblet chains are re-checked from the research records (shrapnel projectile -> impact explosion).
+        self.assertEqual(generate_explosion_catalogue.aliases(RESEARCH)[self.BOMBLET][0], self.RESEARCH_ID)
+
+    def test_the_alias_resolves_everywhere_the_id_does(self):
+        self.assertEqual(lua_ok(r'''
+local hd2=require('hd2runtime/api/hd2')
+local writes=require('hd2runtime/domains/explosion_writes')
+local alias,id='support_weapon/rl77_airburst_rocket_launcher/bomblet',
+ 'support_weapon/rl77_airburst_rocket_launcher/function_expiry/shrapnel_expiry'
+local h=hd2.explosion(alias)
+assert(h.explosion==id,'a handle carries the semantic id')
+assert(hd2.explosion(id).explosion==id,'the research id keeps working')
+local d=hd2.explosions.describe(alias)
+assert(d.name==id and d.aliases[1]==alias)
+local found=hd2.explosions.list({search='bomblet'})
+assert(#found==1 and found[1].name==id)
+local spec=writes.validate_patch({id='bomblet',target={resource='explosion',explosion=alias},allow_unverified_effect=true,
+ allow_shared=true,
+ field='explosion.damage.standard_damage',expect=500,value=400})
+assert(spec.explosion==id,tostring(spec.explosion))
+-- The package of the alias is the package of the explosion.
+assert(require('hd2runtime/api/assets').key_for({resource='explosion',explosion=alias})=='explosion/'..id)
+return 'ok'
+'''), b'ok')
+
+
 class WriteValidationTests(unittest.TestCase):
     def test_acknowledgements_ranges_and_identity(self):
         self.assertEqual(lua_ok(r'''

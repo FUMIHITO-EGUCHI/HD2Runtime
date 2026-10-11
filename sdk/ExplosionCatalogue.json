@@ -232,6 +232,13 @@
       "the impact or expiry of projectiles nothing proven fires": 40
     }
   },
+  "aliases": [
+    {
+      "alias": "support_weapon/rl77_airburst_rocket_launcher/bomblet",
+      "name": "support_weapon/rl77_airburst_rocket_launcher/function_expiry/shrapnel_expiry",
+      "reason": "the RL-77 Airburst Rocket Launcher's bomblets (25 per burst) explode as this one row, both those of its rocket's burst (support_weapon/rl77_airburst_rocket_launcher/impact) and those of its cluster round (support_weapon/rl77_airburst_rocket_launcher/function_expiry)"
+    }
+  ],
   "explosions": [
     {
       "name": "enemy/boomer/impact",
@@ -300,6 +307,9 @@
     },
     {
       "name": "support_weapon/rl77_airburst_rocket_launcher/function_expiry/shrapnel_expiry",
+      "aliases": [
+        "support_weapon/rl77_airburst_rocket_launcher/bomblet"
+      ],
       "label": "RL-77 Airburst Rocket Launcher (function expiry, shrapnel expiry)",
       "family": "support_weapon",
       "evidence": "chain",

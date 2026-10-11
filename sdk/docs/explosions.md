@@ -37,6 +37,24 @@ stratagem, backpack, vehicle, enemy, other entity); every owner is listed. Roles
 entity named through the inventory item or the fired entity that holds it. Two rows with the same id are numbered
 (`_2`, `_3`) in type order.
 
+**Chains with several sources (0.31.2).** A chain explosion takes its id from the first named explosion whose shrapnel
+requests it, but every such explosion is one of its owners. The RL-77 Airburst Rocket Launcher's bomblets explode as
+one row. The 25 bomblets of its rocket's burst (`support_weapon/rl77_airburst_rocket_launcher/impact`) and those of its
+cluster round (`.../function_expiry`) both use it, while its id, `.../function_expiry/shrapnel_expiry`, names the
+cluster round only. It therefore also has an owner-neutral **alias**,
+`support_weapon/rl77_airburst_rocket_launcher/bomblet`:
+- `hd2.explosion(alias)`, `hd2.explosions.describe(alias)` and every place that takes an explosion name accept it;
+- the handle carries the semantic id, which keeps working;
+- `hd2.explosions.list({search='bomblet'})` finds it;
+- the catalogue lists aliases (`aliases`, and per explosion).
+
+The catalogue generator re-checks the alias against the research records: both bursts' shrapnel projectiles impact as
+this row. The bomblet row's damage is shared with other references, so a damage edit needs `allow_shared`.
+
+The second chain shows in the explosion's owners once `research/explosion-identities-F5FEE03DCFDB.json` is
+regenerated with `scripts/research_explosion_identities.py` (0.31.2 records every named source). Names, sharing and
+packages stay the same.
+
 | Family | Named |
 | --- | ---: |
 | weapon | 20 |

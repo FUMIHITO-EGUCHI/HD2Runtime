@@ -604,20 +604,28 @@ def build():
         if owner:
             names[kind] = ('%s/%s/%s' % (family_of(owner['category']), slug(owner['name']), owner['role']),
                 '%s (%s)' % (owner['name'], owner['role'].replace('_', ' ')), family_of(owner['category']))
-    # Chains: an explosion only a submunition of a named explosion requests (two passes cover the depth seen).
+    # Chains: an explosion only a submunition of a named explosion requests (two passes cover the depth seen). The
+    # name comes from the first named source; every named source is an owner (0.31.2: the RL-77's bomblet explosion 7
+    # is the impact of both its rocket's bomblets, 325 -> 78, and its cluster round's, 300 -> 233; before, only the
+    # first chain was recorded).
+    chained = set()
     for _ in range(3):
         for kind, item in explosions.items():
-            if kind in names or not item['chain']:
+            if (kind in names and kind not in chained) or not item['chain']:
                 continue
             for source in sorted(item['chain'], key=lambda s: (s['explosion'], s['phase'])):
-                if source['explosion'] in names and source['explosion'] != kind:
-                    base_id, base_label, family = names[source['explosion']]
+                if source['explosion'] not in names or source['explosion'] == kind:
+                    continue
+                base_id, base_label, family = names[source['explosion']]
+                if kind not in names:
                     names[kind] = (base_id + '/shrapnel_' + source['phase'], base_label.rsplit(' (', 1)[0] + ' ('
                         + base_label.rsplit(' (', 1)[1].rstrip(')') + ', shrapnel ' + source['phase'] + ')', family)
-                    item['owners'].append({'resource': None, 'category': 'explosion', 'name': base_id,
-                        'path': None, 'names': [], 'reference': 'chain', 'role': 'shrapnel_' + source['phase'],
-                        'explosion': base_id, 'projectile': source['projectile']})
-                    break
+                    chained.add(kind)
+                owner = {'resource': None, 'category': 'explosion', 'name': base_id, 'path': None, 'names': [],
+                    'reference': 'chain', 'role': 'shrapnel_' + source['phase'], 'explosion': base_id,
+                    'projectile': source['projectile']}
+                if owner not in item['owners']:
+                    item['owners'].append(owner)
     # Unique ids: a collision keeps the lowest type's id and numbers the others in type order.
     used = collections.defaultdict(list)
     for kind in sorted(names):
@@ -666,7 +674,10 @@ def build():
         damage_type = u32(raw, 4)
         damage = damage_rows.get(damage_type)
         owner_set = {(o.get('resource') or o.get('name'), o['reference'] == 'chain') for o in item['owners']}
-        distinct = {o.get('resource') or ('chain', o.get('explosion')) for o in item['owners']}
+        # A chain owner counts once per owner of its source (the id's family/owner part): the RL-77 bomblet explosion,
+        # reached from two RL-77 explosions, is not shared by that.
+        distinct = {o.get('resource') or ('chain', o.get('explosion') and '/'.join(o['explosion'].split('/')[:2]))
+            for o in item['owners']}
         unnamed_refs = [r for r in references.get(kind, []) if r['kind'] == 'code' and not r['dispatchers']]
         shared = len(distinct) + (1 if unnamed_refs else 0) + (1 if unowned.get(kind) else 0) > 1
         stats = {'damageType': damage_type, 'innerRadius': f32(raw, 16), 'outerRadius': f32(raw, 20),

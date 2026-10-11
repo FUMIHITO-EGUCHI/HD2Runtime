@@ -16,7 +16,9 @@ Rules carried into the tables:
   allow_unverified_reference (and allow_unverified_effect, as every projectile donor);
 * a spawn (hd2.explosions.spawn) needs a package (or the mission effects package resident) and the type proven against
   the settings table; an explosion outside the reviewed spawn set (event-actions: the named explosions and the
-  catalogued weapon explosions) also needs allow_unverified_effect.
+  catalogued weapon explosions) also needs allow_unverified_effect;
+* an alias (ALIASES, 0.31.2) is a second, owner-neutral id of one explosion: hd2.explosion(alias) is that explosion,
+  and the research id keeps working.
 """
 from __future__ import annotations
 
@@ -33,6 +35,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / 'research/explosion-identities-F5FEE03DCFDB.json'
 RESIDENCY = ROOT / 'research/package-residency-F5FEE03DCFDB.json'
 ACTIONS = ROOT / 'research/event-actions-F5FEE03DCFDB.json'
+PROJECTILES = ROOT / 'research/projectile-identities-F5FEE03DCFDB.json'
 LUA_OUTPUT = ROOT / 'domains/explosion_catalogue.lua'
 JSON_OUTPUT = ROOT / 'sdk/ExplosionCatalogue.json'
 CONTRACT = 'hd2runtime.explosion_catalogue.v1'
@@ -53,6 +56,15 @@ FIELDS = [
     ('explosion.damage.stagger', 'damage', 32, 'u32', 'integer', 'force', (0, 500)),
     ('explosion.damage.push_force', 'damage', 36, 'u32', 'integer', 'force', (0, 5000)),
 ]
+# Owner-neutral aliases (0.31.2), reviewed: explosion type -> (alias, why). The research id of a chain explosion names
+# the first named explosion whose shrapnel requests it (scripts/research_explosion_identities.py). Explosion 7 is the
+# RL-77's bomblet explosion: the impact of the 25 bomblets both its rocket's burst (325 -> projectile 78) and its
+# cluster round's burst (300 -> projectile 233) release, so its research id ("function_expiry/shrapnel_expiry") names
+# only the cluster round. The structural chain is checked here from the research records.
+ALIASES = {7: ('support_weapon/rl77_airburst_rocket_launcher/bomblet',
+    "the RL-77 Airburst Rocket Launcher's bomblets (25 per burst) explode as this one row, both those of its rocket's "
+    'burst (support_weapon/rl77_airburst_rocket_launcher/impact) and those of its cluster round '
+    '(support_weapon/rl77_airburst_rocket_launcher/function_expiry)')}
 LABELS = {'explosion.inner_radius': 'Inner radius', 'explosion.outer_radius': 'Outer radius',
     'explosion.shockwave_radius': 'Shockwave radius', 'explosion.shrapnel_count': 'Shrapnel count',
     'explosion.damage.standard_damage': 'Standard damage', 'explosion.damage.durable_damage': 'Durable damage',
@@ -82,8 +94,33 @@ def value_of(field_id, stats):
         'explosion.damage.push_force': damage.get('pushForce')}[field_id]
 
 
+def aliases(research):
+    """{alias: (research id, why)} of the reviewed ALIASES, each checked against the research records: the type is named
+    and is the impact explosion of the shrapnel projectile of every source explosion the alias names."""
+    projectiles = {t['type']: t for t in load(PROJECTILES)['types']}
+    by_type = {item['type']: item for item in research['explosions']}
+    out = {}
+    for kind, (alias, why) in ALIASES.items():
+        item = by_type.get(kind)
+        if not item or not item['name'] or alias in {r['name'] for r in research['explosions']}:
+            raise ValueError(f'explosion alias {alias}: type {kind} is not named, or the alias is an id')
+        if not item['name'].startswith('/'.join(alias.split('/')[:2]) + '/'):
+            raise ValueError(f'explosion alias {alias}: {item["name"]} has another owner')
+        sources = [r for r in research['explosions'] if r['name'] and r['stats']['shrapnelProjectile']
+            and (((projectiles.get(r['stats']['shrapnelProjectile']) or {}).get('properties') or {}).get(
+                'impactExplosion') or {}).get('type') == kind]
+        if sorted(r['type'] for r in sources) != [300, 325]:
+            raise ValueError(f'explosion alias {alias}: the bomblet chains changed: {[r["type"] for r in sources]}')
+        out[alias] = (item['name'], why)
+    return out
+
+
 def outputs(research_path=RESEARCH):
     research = load(research_path)
+    alias_map = aliases(research)
+    aliases_of = {}
+    for alias, (name, _why) in alias_map.items():
+        aliases_of.setdefault(name, []).append(alias)
     residency = load(RESIDENCY)['catalog']
     actions = load(ACTIONS)
     layout = research['layout']
@@ -136,7 +173,10 @@ def outputs(research_path=RESEARCH):
                 'bytes': package.get('bytes')} if known else None,
             'payload': payload, 'spawn': bool(item['settingsVerified'] and known),
             'legacy': legacy.get(item['type']), 'values': [fields[f[0]]['currentDefault'] for f in FIELDS]}
-        public.append({'name': item['name'], 'label': item['label'], 'family': item['family'],
+        if item['name'] in aliases_of:
+            runtime[item['name']]['aliases'] = sorted(aliases_of[item['name']])
+        public.append({'name': item['name'], **({'aliases': sorted(aliases_of[item['name']])}
+                if item['name'] in aliases_of else {}), 'label': item['label'], 'family': item['family'],
             'evidence': item['evidenceTier'], 'shared': item['shared'], 'owners': owners,
             'package': {'known': known, 'name': (package or {}).get('name') if known else None,
                 'via': via if known else None, 'mission': bool(known and package.get('mission'))},
@@ -155,6 +195,7 @@ def outputs(research_path=RESEARCH):
         if not item['name']:
             unnamed[item['unnamedReason']] = unnamed.get(item['unnamedReason'], 0) + 1
     table = {'version': 1, 'build': research['build'], 'explosions': runtime, 'order': sorted(runtime),
+        'aliases': {alias: name for alias, (name, _why) in alias_map.items()},
         'layout': {'damageLink': layout['ExplosionSettings']['damageType'], 'stride': layout['ExplosionSettings']['stride']},
         'fields': [{'id': f[0], 'backing': f[1], 'offset': f[2], 'storage': f[3], 'type': f[4], 'unit': f[5],
             'min': ranges[f[0]][0], 'max': ranges[f[0]][1]} for f in FIELDS]}
@@ -182,6 +223,7 @@ def outputs(research_path=RESEARCH):
             'shared': sum(1 for p in public if p['shared']), 'packageKnown': sum(1 for p in public if p['package']['known']),
             'payload': sum(1 for p in public if p['payload']), 'spawn': sum(1 for p in public if p['spawn']),
             'reviewedSpawn': sum(1 for p in public if p['reviewedSpawn']), 'unnamed': dict(sorted(unnamed.items()))},
+        'aliases': [{'alias': alias, 'name': name, 'reason': why} for alias, (name, why) in sorted(alias_map.items())],
         'explosions': public, 'safety': {'rawIds': False, 'writes': 0}}
     lua = ('-- Generated by scripts/generate_explosion_catalogue.py from research/explosion-identities-F5FEE03DCFDB.json;'
         ' do not edit.\nreturn ' + generate_entity_authoring.lua(migration_overlay.apply('explosion_catalogue', table))
