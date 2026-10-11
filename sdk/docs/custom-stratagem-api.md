@@ -630,8 +630,10 @@ The sweep covers 35 weapon types: the `equipment/support_weapons/` ones, plus ev
 own pod holds (the M-105 Stalwart, the TX-41 Sterilizer, the CQC melee support weapons, the C4 detonator, the
 SH-20 shield, the MS-11 Solo Silo). Results:
 - **34 hosts** (`hd2.custom_stratagems.groups()`, the `weapon` group's members; `weapon_clone.variants()`).
-- **32 register.** The TX-41 Sterilizer and the MS-11 Solo Silo are refused at registration: their pods are not
-  reviewed pickup racks (`... rack has no authored active slot ...`). Their group entry says so in `refused`.
+- **33 register.** The MS-11 Solo Silo is refused at registration: its pod delivers the silo and its remote, not
+  pickups (`... rack has no authored active slot ...`). Its group entry says so in `refused`. The TX-41 Sterilizer
+  registers since 0.31.2: its pod became an authored pickup rack ([pod payloads](pod-payloads.md) "Read-only racks").
+  Its variant and its carrier delivery are offline only (not live-tested).
 - **Excluded: the SG-88 Break-Action Shotgun.** No stratagem of its own delivers it.
 - **No round** for the 12 hosts without a ProjectileWeapon (beam, arc, spray, melee and the gadgets: the LAS-98,
   ARC-3, FLAM-40, B/FLAM-80, 40-K, TX-41, the CQC weapons, ...). `round` is refused; presentation and model still

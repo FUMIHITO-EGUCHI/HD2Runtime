@@ -794,7 +794,9 @@ local wm={}
 for _,m in ipairs(g[7].members)do wm[m.name]=m end
 assert(wm['M-1000 Maxigun']and wm['M-1000 Maxigun'].shared==nil and wm['M-1000 Maxigun'].round==true)
 assert(wm['MG-43 Machine Gun'].shared and wm['LAS-98 Laser Cannon'].round==false and wm['SG-88 Break-Action Shotgun']==nil)
-assert(#wm['TX-41 Sterilizer'].carries==0 and wm['TX-41 Sterilizer'].refused[1]:find('no authored active slot',1,true))
+-- 0.31.2: the TX-41's pod is an authored pickup rack (its pickup admitted by name); the MS-11 stays refused.
+assert(#wm['TX-41 Sterilizer'].carries==1 and #wm['TX-41 Sterilizer'].refused==0)
+assert(#wm['MS-11 Solo Silo'].carries==0 and wm['MS-11 Solo Silo'].refused[1]:find('no authored active slot',1,true))
 assert(hd2.custom_stratagem.describe('no such custom stratagem')==nil)
 return 'ok'
 """), b'ok')

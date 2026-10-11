@@ -189,8 +189,8 @@ function M.catalogue()
             local custom=require('hd2runtime/runtime/custom_stratagems')
             for k,name in ipairs(clone.variants())do
                 local h=clone.variant(name)
-                -- A host whose own pod is not an authored support delivery (the TX-41 Sterilizer: its rack item has no
-                -- resolvable pickup name; the MS-11 Solo Silo: it delivers a deployable) cannot be registered: refused
+                -- A host whose own pod is not an authored support delivery (the MS-11 Solo Silo: it delivers a
+                -- deployable; since 0.31.2 the TX-41 Sterilizer's pod is authored) cannot be registered: refused
                 -- names why, and carries is empty.
                 local d,why=custom.support_delivery(name)
                 members[k]={name=name,stable_id=require('hd2runtime/runtime/weapon_carriers').stable_id(name),

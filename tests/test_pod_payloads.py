@@ -40,11 +40,11 @@ class PodPayloadTests(unittest.TestCase):
 
     def test_catalog_coverage_and_safety(self):
         summary = self.catalog['summary']
-        self.assertEqual((summary['racks'], summary['writableRacks'], summary['sharedRacks']), (56, 48, 6))
-        self.assertEqual(summary['writableSlots'], 192)
-        self.assertEqual(summary['pickups'], 68)
+        self.assertEqual((summary['racks'], summary['writableRacks'], summary['sharedRacks']), (56, 49, 6))  # 0.31.2: +1 the TX-41
+        self.assertEqual(summary['writableSlots'], 196)
+        self.assertEqual(summary['pickups'], 69)
         self.assertEqual(summary['pickupsByCategory'], {'ammo': 2, 'backpack': 25, 'grenade': 1, 'stim': 2,
-            'supply': 1, 'support_weapon': 37})
+            'supply': 1, 'support_weapon': 38})
         self.assertEqual(summary['alwaysResidentPickups'], 1)
         self.assertTrue(self.pickups['Supply Box']['residency']['alwaysResident'])
         self.assertEqual(self.pickups['Grenade Box']['compatibility'], 'UNVERIFIED_REFERENCE')
@@ -54,13 +54,32 @@ class PodPayloadTests(unittest.TestCase):
         self.assertNotRegex(json.dumps(self.catalog).lower(), re.compile(r'0x[0-9a-f]{8,}'))
         self.assertEqual(set(self.catalog['categories']), set(summary['pickupsByCategory']))
 
+    def test_tx41_rack_without_a_pickup_path(self):
+        # 0.31.2: the TX-41's pickup has no resource path; it is admitted by its unique catalogue name, so its
+        # ordinary rack (one item, one consumer, unshared) is writable. Every other path-less item stays out.
+        self.assertEqual(generator.PATHLESS_PICKUPS, ('TX-41 Sterilizer',))
+        rack = self.racks['TX-41 Sterilizer pod']
+        self.assertTrue(rack['writable'] and not rack['shared'])
+        self.assertEqual(rack['spawnCount']['value'], 1)
+        self.assertEqual([s['current']['name'] for s in rack['slots'][:2]], ['TX-41 Sterilizer'] * 2)
+        self.assertEqual(rack['slots'][0]['acknowledgements'], ['allow_unverified_reference'])
+        pickup = self.pickups['TX-41 Sterilizer']
+        self.assertEqual((pickup['category'], pickup['compatibility']), ('support_weapon', 'SCHEMA_COMPATIBLE'))
+        self.assertTrue(pickup['packageDependency']['known'] and pickup['packageDependency']['autoLoadSupported'])
+        self.assertFalse(pickup['packageDependency']['liveTested'])
+        # The racks that stay read-only say why, accurately.
+        self.assertIn('neither a resource path nor a unique catalogue name',
+            self.racks['Dark Fluid Backpack pod']['reason'])
+        self.assertIn('deployable or objective entity', self.racks['MS-11 Solo Silo pod']['reason'])
+        self.assertNotIn('no resolvable name', json.dumps(self.catalog))
+
     def test_snapshot_overlay_validation(self):
         result = json.loads((ROOT / 'validation/pod-payload-snapshot.json').read_text())
         self.assertEqual(result['status'], 'VALIDATED')
         for key in ('slots', 'baselineMatches', 'noOps', 'changedWrites', 'rollbacks', 'conflictRejections',
                     'acknowledgementRejections'):
-            self.assertEqual(result[key], 192, key)
-        self.assertEqual((result['racks'], result['spawnCounts'], result['sharedRejections']), (48, 48, 24))
+            self.assertEqual(result[key], 196, key)
+        self.assertEqual((result['racks'], result['spawnCounts'], result['sharedRejections']), (49, 49, 24))
         self.assertEqual(len(result['rejections']), 9)
         self.assertIn('live-verified pickup outside its tested slot', result['rejections'])
         for key in ('surplus_eat_support_weapon', 'surplus_eat_consumable', 'two_different_slots', 'same_entity_twice',
@@ -89,7 +108,7 @@ rejects({id='d',target=rack:slot(1),field=hd2.fields.payload.entity,expect=eat,v
 assert(not pcall(function()return rack:slot(5)end))
 local maxigun=hd2.stratagem('M-1000 Maxigun'):payload()
 assert(maxigun:slot(2):current().category=='backpack')
-assert(#hd2.pickups('supply')==1 and #hd2.pickups()==68)
+assert(#hd2.pickups('supply')==1 and #hd2.pickups()==69)
 assert(not pcall(function()return hd2.stratagem('Orbital Laser'):payload()end))
 return 'ok'
 ''')

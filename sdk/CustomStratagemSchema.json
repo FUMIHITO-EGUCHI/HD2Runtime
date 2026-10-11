@@ -4624,7 +4624,7 @@
     "name": "MS-11 Solo Silo",
     "packageKnown": true,
     "rateSelector": false,
-    "reason": "MS-11 Solo Silo's rack has no authored active slot (its pod is not a reviewed pickup rack: an item with no resolvable pickup name, or a deployable; domains/pod_payload_authoring.lua)"
+    "reason": "MS-11 Solo Silo's rack has no authored active slot (its pod is not a reviewed pickup rack: it delivers a deployable or objective, or an item that is not a reviewed pickup; domains/pod_payload_authoring.lua)"
    },
    {
     "count": 1,
@@ -4768,12 +4768,20 @@
     "stableId": 890972990
    },
    {
-    "deliverable": false,
+    "count": 1,
+    "deliverable": true,
     "family": "support",
+    "items": [
+     {
+      "entityType": "88F61AFFF48AC8A4",
+      "kind": "weapon"
+     }
+    ],
+    "modifiable": true,
     "name": "TX-41 Sterilizer",
     "packageKnown": true,
     "rateSelector": false,
-    "reason": "TX-41 Sterilizer's rack has no authored active slot (its pod is not a reviewed pickup rack: an item with no resolvable pickup name, or a deployable; domains/pod_payload_authoring.lua)"
+    "stableId": 4152191751
    }
   ],
   "textLanguages": [
@@ -6223,7 +6231,7 @@
     "deliverable": false,
     "name": "MS-11 Solo Silo",
     "packageKnown": true,
-    "refused": "MS-11 Solo Silo's rack has no authored active slot (its pod is not a reviewed pickup rack: an item with no resolvable pickup name, or a deployable; domains/pod_payload_authoring.lua)",
+    "refused": "MS-11 Solo Silo's rack has no authored active slot (its pod is not a reviewed pickup rack: it delivers a deployable or objective, or an item that is not a reviewed pickup; domains/pod_payload_authoring.lua)",
     "round": false,
     "rounds": [],
     "stableId": 1337271929
@@ -6579,10 +6587,9 @@
     "stableId": 890972990
    },
    {
-    "deliverable": false,
+    "deliverable": true,
     "name": "TX-41 Sterilizer",
     "packageKnown": true,
-    "refused": "TX-41 Sterilizer's rack has no authored active slot (its pod is not a reviewed pickup rack: an item with no resolvable pickup name, or a deployable; domains/pod_payload_authoring.lua)",
     "round": false,
     "rounds": [],
     "stableId": 4152191751

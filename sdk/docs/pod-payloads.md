@@ -130,5 +130,14 @@ Required acknowledgements:
 | Rack | Reason |
 | --- | --- |
 | MS-11 Solo Silo, Remote Explosives, Carry Data, Cyborg Carry Data, Spire Sterilizer | Deliver deployables or objectives, not pickups |
-| TX-41 Sterilizer, Dark Fluid Backpack | Their item entity has no resolvable name, so it cannot be offered as a reviewed pickup |
+| Dark Fluid Backpack | Its item entity has neither a resource path nor a unique catalogue name, so it cannot be offered as a reviewed pickup |
+
+**The TX-41 Sterilizer pod (0.31.2, offline only).** Its pickup has no resource path, which used to make the whole rack
+read-only. The rack itself is ordinary: one item, one consumer, unshared, no random draw. A typed pickup without a path
+is now offered when it has a catalogue name no other offered pickup uses, an entity row and a vanilla rack that
+delivers it. Its identity is proven as for every pickup (entity row, interact record, `PickupWeaponSupport`): the
+name only replaces the path as its label. The generator asserts that the TX-41 is the only such pickup. Its own
+loadout package (`chemgun`) is known, so Runtime loads it before the TX-41 is placed in another pod. Slot and count
+writes keep their usual acknowledgements, and the custom stratagem delivery and weapon variant this enables are not
+live-tested.
 | Jammed Pod | Draws a random subset (`random_payload_size`), so slot order does not decide what spawns |

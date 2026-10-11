@@ -1219,16 +1219,18 @@
         }
       ],
       "shared": false,
-      "writable": false,
-      "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+      "writable": true,
+      "reason": null,
       "spawnCount": {
         "value": 1,
-        "writable": false,
+        "writable": true,
         "range": [
           1,
           4
         ],
-        "acknowledgements": [],
+        "acknowledgements": [
+          "allow_unverified_effect"
+        ],
         "field": "hd2.fields.payload.spawn_count"
       },
       "randomPayloadSize": 0,
@@ -1237,30 +1239,34 @@
           "slot": 1,
           "active": true,
           "current": {
-            "pickup": null,
-            "name": null,
-            "category": null
+            "pickup": "pickup/v1/tx-41-sterilizer/3e57897e03c89547",
+            "name": "TX-41 Sterilizer",
+            "category": "support_weapon"
           },
           "applyDeltas": true,
           "rackSide": 2,
-          "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
-          "acknowledgements": [],
+          "writable": true,
+          "reason": null,
+          "acknowledgements": [
+            "allow_unverified_reference"
+          ],
           "liveVerifiedPickups": []
         },
         {
           "slot": 2,
           "active": false,
           "current": {
-            "pickup": null,
-            "name": null,
-            "category": null
+            "pickup": "pickup/v1/tx-41-sterilizer/3e57897e03c89547",
+            "name": "TX-41 Sterilizer",
+            "category": "support_weapon"
           },
           "applyDeltas": true,
           "rackSide": 1,
-          "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
-          "acknowledgements": [],
+          "writable": true,
+          "reason": null,
+          "acknowledgements": [
+            "allow_unverified_reference"
+          ],
           "liveVerifiedPickups": []
         },
         {
@@ -1269,9 +1275,11 @@
           "current": null,
           "applyDeltas": true,
           "rackSide": 2,
-          "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
-          "acknowledgements": [],
+          "writable": true,
+          "reason": null,
+          "acknowledgements": [
+            "allow_unverified_reference"
+          ],
           "liveVerifiedPickups": []
         },
         {
@@ -1280,9 +1288,11 @@
           "current": null,
           "applyDeltas": true,
           "rackSide": 1,
-          "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
-          "acknowledgements": [],
+          "writable": true,
+          "reason": null,
+          "acknowledgements": [
+            "allow_unverified_reference"
+          ],
           "liveVerifiedPickups": []
         },
         {
@@ -1292,7 +1302,7 @@
           "applyDeltas": true,
           "rackSide": 0,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "Slots 5 to 8 carry no rack side in weapon racks; not authored.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1303,7 +1313,7 @@
           "applyDeltas": true,
           "rackSide": 0,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "Slots 5 to 8 carry no rack side in weapon racks; not authored.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1314,7 +1324,7 @@
           "applyDeltas": true,
           "rackSide": 0,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "Slots 5 to 8 carry no rack side in weapon racks; not authored.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1325,12 +1335,14 @@
           "applyDeltas": true,
           "rackSide": 0,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "Slots 5 to 8 carry no rack side in weapon racks; not authored.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         }
       ],
-      "residentPackages": [],
+      "residentPackages": [
+        "package/1e6dbe6da6cdb37f"
+      ],
       "field": "hd2.fields.payload.entity"
     },
     {
@@ -1347,7 +1359,7 @@
       ],
       "shared": false,
       "writable": false,
-      "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+      "reason": "An active slot holds a typed pickup that is not a reviewed pickup (it has neither a resource path nor a unique catalogue name), so its current item cannot be expressed as one.",
       "spawnCount": {
         "value": 1,
         "writable": false,
@@ -1371,7 +1383,7 @@
           "applyDeltas": true,
           "rackSide": 2,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "An active slot holds a typed pickup that is not a reviewed pickup (it has neither a resource path nor a unique catalogue name), so its current item cannot be expressed as one.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1382,7 +1394,7 @@
           "applyDeltas": true,
           "rackSide": 1,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "An active slot holds a typed pickup that is not a reviewed pickup (it has neither a resource path nor a unique catalogue name), so its current item cannot be expressed as one.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1393,7 +1405,7 @@
           "applyDeltas": true,
           "rackSide": 2,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "An active slot holds a typed pickup that is not a reviewed pickup (it has neither a resource path nor a unique catalogue name), so its current item cannot be expressed as one.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1404,7 +1416,7 @@
           "applyDeltas": true,
           "rackSide": 1,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "An active slot holds a typed pickup that is not a reviewed pickup (it has neither a resource path nor a unique catalogue name), so its current item cannot be expressed as one.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1415,7 +1427,7 @@
           "applyDeltas": true,
           "rackSide": 0,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "An active slot holds a typed pickup that is not a reviewed pickup (it has neither a resource path nor a unique catalogue name), so its current item cannot be expressed as one.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1426,7 +1438,7 @@
           "applyDeltas": true,
           "rackSide": 0,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "An active slot holds a typed pickup that is not a reviewed pickup (it has neither a resource path nor a unique catalogue name), so its current item cannot be expressed as one.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1437,7 +1449,7 @@
           "applyDeltas": true,
           "rackSide": 0,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "An active slot holds a typed pickup that is not a reviewed pickup (it has neither a resource path nor a unique catalogue name), so its current item cannot be expressed as one.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         },
@@ -1448,7 +1460,7 @@
           "applyDeltas": true,
           "rackSide": 0,
           "writable": false,
-          "reason": "An active slot holds a typed pickup whose entity has no resolvable name, so its current item cannot be expressed as a reviewed pickup.",
+          "reason": "An active slot holds a typed pickup that is not a reviewed pickup (it has neither a resource path nor a unique catalogue name), so its current item cannot be expressed as one.",
           "acknowledgements": [],
           "liveVerifiedPickups": []
         }
@@ -10304,25 +10316,61 @@
         "blocker": null
       },
       "packageOwners": []
+    },
+    {
+      "name": "TX-41 Sterilizer",
+      "semanticId": "pickup/v1/tx-41-sterilizer/3e57897e03c89547",
+      "category": "support_weapon",
+      "categoryLabel": "Support Weapons",
+      "compatibility": "SCHEMA_COMPATIBLE",
+      "compatibilityBasis": "Vanilla spawns this entity from a hellpod rack slot.",
+      "evidence": {
+        "rackPayloadOf": [
+          "TX-41 Sterilizer pod"
+        ],
+        "vanillaRackCount": 1,
+        "worldLoot": false,
+        "standalonePickup": true,
+        "interactTypes": [
+          "PickupWeaponSupport"
+        ],
+        "ownsBackpack": false,
+        "ownsWeaponData": true
+      },
+      "residency": {
+        "packageKey": "package/1e6dbe6da6cdb37f",
+        "alwaysResident": false,
+        "basis": "Own loadout package; Runtime loads it before writing a slot that references this pickup."
+      },
+      "packageDependency": {
+        "known": true,
+        "alwaysResident": false,
+        "autoLoadSupported": true,
+        "package": "chemgun",
+        "packageResidency": "LIVE_PROVEN",
+        "liveTested": false,
+        "blocker": null
+      },
+      "packageOwners": []
     }
   ],
   "summary": {
     "racks": 56,
-    "writableRacks": 48,
+    "writableRacks": 49,
     "sharedRacks": 6,
-    "writableSlots": 192,
-    "writableFieldInstances": 240,
-    "pickups": 68,
+    "writableSlots": 196,
+    "writableFieldInstances": 245,
+    "pickups": 69,
     "pickupsByCategory": {
       "ammo": 2,
       "backpack": 25,
       "grenade": 1,
       "stim": 2,
       "supply": 1,
-      "support_weapon": 37
+      "support_weapon": 38
     },
     "pickupsByCompatibility": {
-      "SCHEMA_COMPATIBLE": 60,
+      "SCHEMA_COMPATIBLE": 61,
       "UNVERIFIED_REFERENCE": 8
     },
     "worldLootPickups": 14,
@@ -10333,7 +10381,7 @@
       "primary_weapon": 67,
       "sidearm": 11,
       "stim": 1,
-      "support_weapon": 13,
+      "support_weapon": 12,
       "untyped": 18
     }
   },

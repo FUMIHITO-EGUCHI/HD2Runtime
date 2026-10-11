@@ -211,8 +211,8 @@ for i,n in ipairs(names)do
         refused_names[#refused_names+1]=n
     end
 end
-assert(#ok_n==32,#ok_n)
-assert(table.concat(refused_names,',')=='MS-11 Solo Silo,TX-41 Sterilizer',table.concat(refused_names,','))
+assert(#ok_n==33,#ok_n)  -- 0.31.2: +1 the TX-41 Sterilizer (its pod rack is authored)
+assert(table.concat(refused_names,',')=='MS-11 Solo Silo',table.concat(refused_names,','))
 """)
 
     def test_no_fallback_availability_and_blocking(self):

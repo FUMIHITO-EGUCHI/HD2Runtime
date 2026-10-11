@@ -135,9 +135,9 @@
     "refcountFillLimit": 0.75
   },
   "summary": {
-    "semanticObjects": 503,
-    "known": 430,
-    "ownPackage": 277,
+    "semanticObjects": 504,
+    "known": 431,
+    "ownPackage": 278,
     "holderPackage": 7,
     "stratagemPackage": 3,
     "objectivePackage": 2,
@@ -4768,6 +4768,21 @@
         "autoLoadSupported": true,
         "derivation": "delivering_stratagem_package",
         "package": "ammo_rack",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "pickup/pickup/v1/tx-41-sterilizer/3e57897e03c89547",
+      "label": "TX-41 Sterilizer",
+      "kind": "pickup_support_weapon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "own_loadout_package",
+        "package": "chemgun",
         "packageNamed": true,
         "liveTested": false,
         "packageLiveLoaded": false,

@@ -238,8 +238,8 @@ function M.support_delivery(name)
         end
     end
     if count==0 then
-        return nil,name..'\'s rack has no authored active slot (its pod is not a reviewed pickup rack: an item with no '
-            ..'resolvable pickup name, or a deployable; domains/pod_payload_authoring.lua)'
+        return nil,name..'\'s rack has no authored active slot (its pod is not a reviewed pickup rack: it delivers a '
+            ..'deployable or objective, or an item that is not a reviewed pickup; domains/pod_payload_authoring.lua)'
     end
     return {stratagem=name,id=entry.root.id,rack=rack.resource,count=count,items=items,family=entry.family}
 end

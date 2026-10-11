@@ -33,6 +33,8 @@ NATIVE_LABELS = {'AmmoRack': 'Resupply', 'AmmoRack_PresidentReward': 'Resupply (
     'DarkFluidBackpack': 'Dark Fluid Backpack', 'ShoulderMountedCamera': 'Shoulder Mounted Camera',
     'CarryData': 'Carry Data', 'CyborgCarryData': 'Cyborg Carry Data', 'RemoteExplosives': 'Remote Explosives',
     'SpireSterilizer': 'Spire Sterilizer', 'JammedPinata': 'Jammed Pod'}
+# Typed pickups without a resource path, admitted by their unique catalogue name (0.31.2).
+PATHLESS_PICKUPS = ('TX-41 Sterilizer',)
 UNVERIFIED = ('Same native RackAttach reference mechanism as the vanilla payload, but this replacement has not been '
     'spawned from this pod in game.')
 COUNT_UNVERIFIED = ('spawn_payload_size is the native count of spawned slots and vanilla racks use 1, 2, 4 and 6, '
@@ -104,19 +106,32 @@ def build(research_path=RESEARCH):
     if len(set(rack_names.values())) != len(rack_names):
         raise ValueError('rack names collide')
 
-    # Pickup catalog: typed categories only.
-    candidates = [c for c in research['candidates'] if c['category'] in OFFERED and c['path'] and c['entityRow'] is not None]
+    # Pickup catalog: typed categories only, each with a resource path. 0.31.2: a typed pickup WITHOUT a path is
+    # admitted when it has a catalogue name unique among the offered pickups, an entity row and a vanilla rack that
+    # delivers it (research/docs/projectile-swap-and-payloads-F5FEE03DCFDB.md section 4). Its identity is proven the
+    # same way (entity row, interact record, interact type); the name only replaces the path as its label. Exactly
+    # the TX-41 Sterilizer qualifies (asserted): the other path-less items are unnamed, or share a name and have no
+    # rack.
+    typed = [c for c in research['candidates'] if c['category'] in OFFERED and c['entityRow'] is not None]
+    candidates = [c for c in typed if c['path']]
+    names = Counter(c['name'] or title(c['path']) for c in candidates)
+    pathless = Counter(c['name'] for c in typed if not c['path'] and c['name'])
+    admitted = [c for c in typed if not c['path'] and c['name'] and c['vanillaRackPaths']
+        and pathless[c['name']] == 1 and names[c['name']] == 0]
+    if sorted(c['name'] for c in admitted) != list(PATHLESS_PICKUPS):
+        raise ValueError('path-less pickups admitted by name changed: ' + ', '.join(sorted(c['name'] for c in admitted)))
+    candidates += admitted
     by_name = Counter(c['name'] or title(c['path']) for c in candidates)
     pickups, pickup_by_resource = [], {}
     always_resident, names_used = set(), set()
     for rack in research['racks']:
         if any(row['alwaysAvailable'] for row in rack['consumers']):
             always_resident.update(slot['item'] for slot in rack['slots'] if slot['item'])
-    for candidate in sorted(candidates, key=lambda c: (c['category'], c['name'] or title(c['path']), c['path'])):
+    for candidate in sorted(candidates, key=lambda c: (c['category'], c['name'] or title(c['path']), c['path'] or '')):
         base = candidate['name'] or title(candidate['path'])
         name = base if by_name[base] == 1 else base + (' (pod)' if candidate['vanillaRackPaths'] else ' (world)')
         if name in names_used:
-            name = base + ' (' + candidate['path'].rsplit('/', 1)[-1] + ')'
+            name = base + ' (' + (candidate['path'] or candidate['resource']).rsplit('/', 1)[-1] + ')'
         names_used.add(name)
         semantic = 'pickup/v1/' + slug(name) + '/' + digest({'entity': candidate['resource']})
         proven = bool(candidate['vanillaRackPaths'])
@@ -173,10 +188,10 @@ def build(research_path=RESEARCH):
         if rack['randomPayloadSize']:
             blocked = 'The rack draws a random subset (random_payload_size); slot order does not decide what spawns.'
         elif any(item not in pickup_by_resource for item in active_items):
-            typed = {c['resource']: c['category'] for c in research['candidates']}
-            if all(typed.get(item) in OFFERED for item in active_items):
-                blocked = ('An active slot holds a typed pickup whose entity has no resolvable name, so its current '
-                    'item cannot be expressed as a reviewed pickup.')
+            categories = {c['resource']: c['category'] for c in research['candidates']}
+            if all(categories.get(item) in OFFERED for item in active_items):
+                blocked = ('An active slot holds a typed pickup that is not a reviewed pickup (it has neither a '
+                    'resource path nor a unique catalogue name), so its current item cannot be expressed as one.')
             else:
                 blocked = ('An active slot delivers a deployable or objective entity, not a pickup; its delivery '
                     'semantics differ and it is not authored as a pickup slot.')

@@ -370,7 +370,7 @@ class ValidatorTests(unittest.TestCase):
         bad['stratagems'][0]['payload'].update(weapon='LAS-98 Laser Cannon', round='output/v1/projectile/las-58-talon')
         self.assertTrue(any('fires no projectile' in x for x in P.validate(bad, schema)))
         bad = copy.deepcopy(project)
-        bad['stratagems'][0]['payload'].update(weapon='TX-41 Sterilizer')
+        bad['stratagems'][0]['payload'].update(weapon='MS-11 Solo Silo')
         del bad['stratagems'][0]['payload']['round']
         self.assertTrue(any('.weapon: cannot be delivered' in x for x in P.validate(bad, schema)))
         bad = copy.deepcopy(project)
@@ -412,7 +412,8 @@ return 'ok'
         self.assertEqual(len(hosts), 34)
         self.assertTrue(hosts['M-1000 Maxigun']['deliverable'] and hosts['M-1000 Maxigun']['round'])
         self.assertNotIn('shared', hosts['M-1000 Maxigun'])
-        self.assertTrue(hosts['MG-43 Machine Gun']['shared'] and not hosts['TX-41 Sterilizer']['deliverable'])
+        self.assertTrue(hosts['MG-43 Machine Gun']['shared'] and not hosts['MS-11 Solo Silo']['deliverable'])
+        self.assertTrue(hosts['TX-41 Sterilizer']['deliverable'])  # 0.31.2: its pod rack is authored
         # Every payload family a project may use has its live-test record (a builder's badges).
         families = {f['family'] for f in schema['families']} | {schema['podFamily']['family'],
             schema['variantFamily']['family']}

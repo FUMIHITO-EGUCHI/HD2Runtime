@@ -1,12 +1,12 @@
 {
-  "acknowledgementRejections": 192,
-  "baselineMatches": 192,
-  "changedWrites": 192,
-  "conflictRejections": 192,
+  "acknowledgementRejections": 196,
+  "baselineMatches": 196,
+  "changedWrites": 196,
+  "conflictRejections": 196,
   "fixtureFallback": "disabled",
   "mode": "snapshot-overlay",
-  "noOps": 192,
-  "racks": 48,
+  "noOps": 196,
+  "racks": 49,
   "rejections": [
     "raw identifier",
     "unknown pickup",
@@ -18,7 +18,7 @@
     "slot lost its attach node",
     "replacement lost its pickup interaction"
   ],
-  "rollbacks": 192,
+  "rollbacks": 196,
   "scenarios": {
     "live_verified_pair": {
       "changes": [
@@ -141,8 +141,8 @@
     }
   },
   "sharedRejections": 24,
-  "slots": 192,
+  "slots": 196,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
-  "spawnCounts": 48,
+  "spawnCounts": 49,
   "status": "VALIDATED"
 }
