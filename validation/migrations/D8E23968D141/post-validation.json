@@ -22,8 +22,8 @@
    "ok": true,
    "tail": [
     "checked generate_sdk",
-    "[HD2Runtime] HD2Runtime 0.31.2 initialized (API 1)",
-    "[HD2Runtime] log unavailable: offline-resource-fixture:41252: Bingus logging unavailable"
+    "[HD2Runtime] HD2Runtime 0.31.3 initialized (API 1)",
+    "[HD2Runtime] log unavailable: offline-resource-fixture:41484: Bingus logging unavailable"
    ]
   },
   {
@@ -49,7 +49,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] shared records index built in 273.0 ms CPU (1605 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 255.0 ms CPU (1610 keys, 11 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -84,8 +84,8 @@
    "name": "validate_options_binding_snapshot",
    "ok": true,
    "tail": [
-    "[HD2Runtime] HD2Runtime 0.31.2 initialized (API 1)",
-    "[HD2Runtime] shared records index built in 206.0 ms CPU (1605 keys, 11 catalogues)",
+    "[HD2Runtime] HD2Runtime 0.31.3 initialized (API 1)",
+    "[HD2Runtime] shared records index built in 156.0 ms CPU (1610 keys, 11 catalogues)",
     "[HD2Runtime] patch one-shot rejected: option-bound values require hd2.ensure"
    ]
   },
@@ -94,7 +94,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] shared records index built in 293.0 ms CPU (1605 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 268.0 ms CPU (1610 keys, 11 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -102,7 +102,7 @@
    "name": "validate_reticle_authoring_snapshot",
    "ok": true,
    "tail": [
-    "D2Runtime leaves it as it is and refuses writes to this value only; every other value is unaffected",
+    "[HD2Runtime] FOREIGN VALUE: support_weapon RS-422 Railgun weapon.third_person_reticle is 1, not HD2Runtime's reviewed true: owner unknown mod (a mod outside HD2Runtime: a data-file mod or another program writing game memory). HD2Runtime leaves it as it is and refuses writes to this value only; every other value is unaffected",
     "[HD2Runtime] FOREIGN VALUE: support_weapon SG-88 Break-Action Shotgun weapon.third_person_reticle is 1, not HD2Runtime's reviewed true: owner unknown mod (a mod outside HD2Runtime: a data-file mod or another program writing game memory). HD2Runtime leaves it as it is and refuses writes to this value only; every other value is unaffected",
     "[HD2Runtime] FOREIGN VALUE: support_weapon StA-X3 W.A.S.P. Launcher weapon.third_person_reticle is 1, not HD2Runtime's reviewed true: owner unknown mod (a mod outside HD2Runtime: a data-file mod or another program writing game memory). HD2Runtime leaves it as it is and refuses writes to this value only; every other value is unaffected"
    ]
@@ -111,7 +111,7 @@
    "name": "validate_vehicle_weapon_authoring_snapshot",
    "ok": true,
    "tail": [
-    "  \"vehicleFields\": 874,",
+    "  \"vehicleFields\": 878,",
     "  \"vehicleWeapons\": 34",
     "}"
    ]
@@ -129,7 +129,7 @@
    "name": "validate_weapon_authoring_snapshot",
    "ok": true,
    "tail": [
-    "  \"weapons\": 80,",
+    "  \"weapons\": 81,",
     "  \"writes\": 0",
     "}"
    ]
@@ -148,7 +148,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] HD2Runtime 0.31.2 initialized (API 1)",
+    "[HD2Runtime] HD2Runtime 0.31.3 initialized (API 1)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -166,7 +166,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] shared records index built in 188.0 ms CPU (1605 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 183.0 ms CPU (1610 keys, 11 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -193,7 +193,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] HD2Runtime 0.31.2 initialized (API 1)",
+    "[HD2Runtime] HD2Runtime 0.31.3 initialized (API 1)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -201,7 +201,7 @@
    "name": "validate_weapon_sound_snapshot",
    "ok": true,
    "tail": [
-    "[HD2Runtime] shared records index built in 403.0 ms CPU (1605 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 241.0 ms CPU (1610 keys, 11 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable",
     "[HD2Runtime] FOREIGN VALUE: support_weapon MG-43 Machine Gun weapon.sound is 0x00000000000000007856341201, not HD2Runtime's reviewed support/mg43: owner unknown mod (a mod outside HD2Runtime: a data-file mod or another program writing game memory). HD2Runtime leaves it as it is and refuses writes to this value only; every other value is unaffected"
    ]
@@ -210,9 +210,9 @@
    "name": "examples",
    "ok": true,
    "tail": [
-    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_fire: its main file ([string \"IncendiaryFire\"]) took 21.4 ms in one call",
-    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_hellpods: its main file ([string \"IncendiaryHellpods\"]) took 17.4 ms in one call",
-    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/minefield_tuning: its main file ([string \"MinefieldTuning\"]) took 37.9 ms in one call"
+    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_fire: its main file ([string \"IncendiaryFire\"]) took 21.2 ms in one call",
+    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_hellpods: its main file ([string \"IncendiaryHellpods\"]) took 14.3 ms in one call",
+    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/minefield_tuning: its main file ([string \"MinefieldTuning\"]) took 25.0 ms in one call"
    ]
   },
   {

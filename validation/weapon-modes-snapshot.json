@@ -1,6 +1,6 @@
 {
   "acknowledgementRejections": 220,
-  "adversarialRejections": 1606,
+  "adversarialRejections": 1610,
   "blockedRejections": 9,
   "concussive": {
     "record": 104,
@@ -12,7 +12,7 @@
       }
     ]
   },
-  "conflictRejections": 248,
+  "conflictRejections": 249,
   "fixtureFallback": "disabled",
   "functions": {
     "checked": 52,
@@ -59,15 +59,15 @@
       "row": 321
     }
   },
-  "neighbourChecks": 105,
+  "neighbourChecks": 106,
   "overlapRejected": true,
   "presentation": {
     "added": 20,
-    "checked": 105,
+    "checked": 106,
     "outputs": 80,
-    "removed": 85,
-    "replaced": 85,
-    "traits": 108
+    "removed": 86,
+    "replaced": 86,
+    "traits": 109
   },
   "rates": {
     "added": 59,
@@ -82,7 +82,7 @@
       "M-1000 Maxigun"
     ]
   },
-  "rollbacks": 552,
+  "rollbacks": 555,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
   "speargun": {
     "assetDependency": {
@@ -280,6 +280,11 @@
       "kind": "player_weapon",
       "rates": "addable",
       "weapon": "LAS-17 Double-Edge Sickle"
+    },
+    {
+      "armorPenetration": "light",
+      "kind": "player_weapon",
+      "weapon": "LAS-22 Shear"
     },
     {
       "armorPenetration": "light",

@@ -1,12 +1,12 @@
 {
-  "acknowledgementRejections": 88,
-  "changedWrites": 89,
-  "conflictRejections": 89,
-  "fieldChecks": 89,
+  "acknowledgementRejections": 89,
+  "changedWrites": 90,
+  "conflictRejections": 90,
+  "fieldChecks": 90,
   "fixtureFallback": "disabled",
   "gameplayProven": 1,
   "mode": "snapshot-overlay",
-  "rollbacks": 89,
+  "rollbacks": 90,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
   "status": "VALIDATED",
   "weapons": [
@@ -225,6 +225,14 @@
       "kind": "player_weapon",
       "to": 3,
       "weapon": "LAS-17 Double-Edge Sickle"
+    },
+    {
+      "acknowledgement": "allow_unverified_effect",
+      "baseline": true,
+      "from": 10,
+      "kind": "player_weapon",
+      "to": 3,
+      "weapon": "LAS-22 Shear"
     },
     {
       "acknowledgement": "allow_unverified_effect",
