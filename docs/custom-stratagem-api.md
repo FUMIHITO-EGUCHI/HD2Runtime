@@ -197,7 +197,36 @@ carrier the ship allocation gives it at that moment. A mod does not ask for it; 
 described in the rest of this document. A pick writes the token when:
 - several players are in the lobby without custom multiplayer (a teammate without a matching Runtime and mod set);
 - custom multiplayer is still `WAITING` (a teammate joining): pick again once it shows `ENABLED`;
-- no carrier is known for the custom stratagem yet.
+- no carrier is known for the custom stratagem yet (solo: the allocation cannot run yet, e.g. the account catalogue is
+  not filled).
+
+**Only a carrier this account owns is written** (0.31.3, a player report: with custom multiplayer the EAT-40 Expendable
+Gas and EAT-23 Expendable EMS picks tried to write the EAT-700 Expendable Napalm and the EAT-411 Leveller, which that
+account does not own; the selector refused every click, `TOKEN_NOT_OWNED`, nothing written). The saved loadout, the
+game's server and the other players read the slot, so the selector's ownership guard stays: a direct write of a
+carrier or token the account does not own is still refused (`TOKEN_NOT_OWNED`). What the pick writes instead
+(`custom_stratagems.pick_plan`):
+- **Solo:** the allocation ranks only owned carriers (the policy's preferred families first, from the dynamic pool).
+  An expendable whose carrier weapon's own stratagem is not owned takes a separate blue support carrier the account
+  owns (its carrier weapon stays the clone; the same custom stratagem). A carrier from an older view that the account
+  does not own is never written: the allocation is asked again for the pick. No owned carrier at all: the pick is
+  refused with the reason (nothing written; the tile already shows `UNAVAILABLE` with it).
+- **Custom multiplayer:** the lobby's carrier for an id is ranked without ownership, so every machine computes the
+  same one. When this account does not own it, the pick takes the first carrier of the definition's own pool (its group
+  or policy, in the allocator's rank) that this account owns and no other custom id holds. It is checked by allocating
+  the lobby again with this player's slot holding it: every machine reads that slot as the id's pin (r41), so the
+  lobby's carrier for the id becomes that carrier on every machine, and the carrier map and hash agree. An expendable
+  then throws its beacon from that separate support carrier (a slot of it holding a separate support carrier makes it a
+  fallback one for every machine; solo that changes nothing). None (or another player's slot already holds the id with
+  a carrier this account does not own): `UNAVAILABLE` with the reason; the token would be refused at mission start the
+  same way (never remapped).
+- **The panel** says a refused pick once while it stays open (`<how> on <id> REFUSED (nothing written): ...`), the tile
+  keeps its warning and its details say why; it never retries the write on every click.
+- The availability line says what the pick writes (`AVAILABILITY (<id>): AVAILABLE: ... its beacon carrier is X when it
+  is picked (a support carrier this account owns: the lobby's condensed carrier Y is not owned by this account)`, or
+  `AVAILABLE: its carrier is X (group G): the lobby's carrier Y is not owned by this account; its pick writes this one,
+  which it owns`).
+- Offline only (tests/test_custom_stratagem_unowned_carrier.py); not live-tested.
 
 `selection = 'token'` (Lua only, development) makes a definition always use the token: for testing that path. Any
 other value is refused at registration. The registry hash line of every definition names its selection
@@ -380,7 +409,7 @@ use is refused at registration with the reason. `hd2.custom_stratagem.groups()` 
 | `any` | any eligible carrier, any beam | runtime, Runtime bombardment, native orbital, Pelican |
 | `support` | a blue support or backpack carrier whose beacon is REDIRECTED to a donor's vanilla pod (the carrier's own pod never comes) | **support delivery (`donor`)**, also runtime, bombardments, Pelican |
 | `support_pod` | a blue support or backpack carrier delivering its OWN pod: an exclusive rack (one owner, one consumer row) rewritten for the mission; capacity = its usable rack slots (1 or 2); each slot's role (weapon or backpack) takes its kind | **carrier pod (`item`)** |
-| `expendable` | the carrier WEAPON's own stratagem (the EAT-700, then the EAT-411, for the EAT-17's class): one vanilla stratagem is the beacon carrier, the clone and the pod (CONDENSED); a separate blue support/backpack carrier only when that stratagem cannot carry a beacon | **expendable** |
+| `expendable` | the carrier WEAPON's own stratagem (the EAT-700, then the EAT-411, for the EAT-17's class): one vanilla stratagem is the beacon carrier, the clone and the pod (CONDENSED); a separate blue support/backpack carrier only when that stratagem cannot carry a beacon (solo: e.g. not owned; with custom multiplayer: when a player's slot of it holds a separate support carrier, because that player's account does not own the condensed one, 0.31.3) | **expendable** |
 | `weapon` | a support weapon's OWN stratagem for its variant (32 support weapons, see below): its row is the beacon carrier, its own type the variant, its own pod the delivery; a separate blue support/backpack carrier only when that row cannot carry a beacon. A native pick of the weapon makes the variant unavailable; a selected variant blocks the weapon | **weapon** |
 | `sentry` | catalogue family sentry (blue): the donor sentry's pod by redirect | **sentry** |
 | `emplacement` | catalogue family emplacement | (none yet) |
@@ -1339,7 +1368,9 @@ lobby member without a compatible Runtime), the rules below apply unchanged.
 5. **Otherwise the id claims the first remaining candidate.**
 
 **Ownership:** with several players it never ranks. A carrier this account does not own is refused locally (`NOT OWNED
-here`), never remapped.
+here`), never remapped. 0.31.3: a pick never writes it: the pick takes a carrier of the same pool this account owns,
+and this player's slot then pins it for every machine (see *The loadout slot holds the carrier itself*, "Only a carrier
+this account owns is written").
 
 Tests: tests/test_custom_stratagem_lobby.py, tests/test_custom_stratagem_multiplayer.py.
 
