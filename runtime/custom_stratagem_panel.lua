@@ -1500,12 +1500,18 @@ function M.panel(opts)
             log(('%s on %s refused: placeholders cannot be selected'):format(how or'selection',entry.id))
             return'placeholders cannot be selected'
         end
-        local unavailable=availability_of(entry.id)
-        if unavailable then
-            log(('%s on %s REFUSED (nothing written): %s'):format(how or'selection',entry.id,tostring(unavailable)))
-            if opts.on_selected then opts.on_selected({status='refused',code='UNAVAILABLE',reason=unavailable})end
-            return'unavailable: '..tostring(unavailable)
+        -- A refused pick is explained once while the panel stays open (0.31.3: a player's log repeated the same refusal
+        -- on every click); the tile's warning and its details keep saying why.
+        local function refuse(code,reason)
+            local key='refused '..entry.id
+            local line=('%s on %s REFUSED (nothing written): %s'):format(how or'selection',entry.id,tostring(reason))
+            local again=said[key]==line
+            say(key,line)
+            if opts.on_selected then opts.on_selected({status='refused',code=code,reason=reason,repeated=again or nil})end
+            return'unavailable: '..tostring(reason)
         end
+        local unavailable=availability_of(entry.id)
+        if unavailable then return refuse('UNAVAILABLE',unavailable)end
         local world=world_module.open()
         local ok,view=false,nil
         if world then ok,view=pcall(selector.screen,world)end
@@ -1514,13 +1520,17 @@ function M.panel(opts)
                 tostring(track.slot)))
             return'the selector is no longer open for slot '..tostring(track.slot)
         end
-        -- The carrier-in-slot probe (runtime/carrier_in_slot.lua): the carrier itself instead of the token.
-        local carrier=opts.carrier_for and opts.carrier_for(entry.id)or nil
+        -- The carrier-in-slot probe (runtime/carrier_in_slot.lua): the carrier itself instead of the token; or why
+        -- nothing can be picked (0.31.3: never a carrier this account does not own).
+        local carrier,cannot
+        if opts.carrier_for then carrier,cannot=opts.carrier_for(entry.id)end
+        if not carrier and cannot then return refuse('UNAVAILABLE',cannot)end
         local holds=carrier and carrier.name or tostring(virtual.get(entry.id)and virtual.get(entry.id).selection.token)
         log(('%s: selecting %s (%s %s) into slot %d'):format(how or'selection',entry.id,carrier and'its carrier'
             or'token',holds,view.editedSlot))
         S.handle=selector.select(entry.id,function(handle)
             if handle.status=='selected'then
+                said['refused '..entry.id]=nil
                 S.selected={id=entry.id,slot=handle.index}
                 log(('SELECTED %s: slot %d now holds %s%s; virtual slots: %s'):format(entry.id,handle.index,
                     holds,handle.written and''or' (already; no write)',

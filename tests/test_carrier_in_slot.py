@@ -582,6 +582,9 @@ local conv=require('hd2runtime/runtime/stratagem_slot_conversion')
 conv.validate_carrier=function(world,token,weapon,opts)
     return {ready=true,valid=true,candidate={id=1813634375,name=weapon,beaconCategory='support'}}
 end
+-- (and owned, as that verdict says: 0.31.3 writes only a carrier the account catalogue shows as owned)
+local owned=conv.owned
+conv.owned=function(world,sid)if sid==1813634375 then return true end return owned(world,sid)end
 tick(40)
 ship({})
 tick(40)

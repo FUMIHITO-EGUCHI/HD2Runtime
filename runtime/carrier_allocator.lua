@@ -382,6 +382,9 @@ function M.allocate_policies(world,definitions,present,global_exclude,opts)
         end
     end
     out.distinct=distinct
+    -- 0.31.3: each definition's pool in rank order (before what other definitions took): where the owned alternative
+    -- of a pick whose lobby carrier this account does not own is looked for (custom_stratagems.pick_plan).
+    out.pools=pools
     out.line='CUSTOM CARRIERS: '..table.concat(parts,', ')..'; distinct = '..tostring(distinct)
     return out
 end
@@ -397,7 +400,9 @@ end
 --   * the order is explicit: definitions by (fewest eligible, id), candidates by (family preference, red ping, class,
 --     stable id); never player order, join order, entity ids, timing or which peer evaluates first;
 --   * ownership is per account: with several players the ranking ignores it (so every peer agrees); a carrier this
---     account does not own is refused locally (local_refused), never replaced by another.
+--     account does not own is refused locally (local_refused), never replaced by another here. 0.31.3: a PICK never
+--     writes it: the pick takes a carrier of the pool this account owns instead, which its slot then pins for every
+--     machine alike (the pins are read from the players' loadouts: custom_stratagems.pick_plan).
 -- M.lobby_native(world, saved): {present = set of stable ids, peers = {hex ids}, records, players, complete,
 -- sources = text}. `saved` is the local saved loadout (a set). complete = every player's record was read.
 function M.lobby_native(world,saved)

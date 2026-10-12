@@ -35,6 +35,8 @@
 -- in the mission the lock is marked as a lockout write (this machine's own entry), the native uses go through the
 -- client-write proof, and every other player's carrier slot is presented on each machine (custom_stratagems
 -- probe_remote_step), so the teammate panel shows it natively. Without custom multiplayer: the token, as before.
+-- 0.31.3: a pick writes only a carrier this account owns (custom_stratagems.pick_plan): a lobby's carrier it does not
+-- own is replaced by an owned one of the same pool, which the slot then pins for every machine; none: refused.
 local world_module=require('hd2runtime/runtime/event_world')
 local log_module=require('hd2runtime/runtime/log')
 local M={}

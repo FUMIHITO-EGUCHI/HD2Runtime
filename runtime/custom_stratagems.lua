@@ -1518,7 +1518,10 @@ M.condensed_carrier=condensed_carrier
 -- candidate), then each one's carrier: condensed when its weapon's own stratagem can carry the beacon, else marked for a
 -- separate support carrier (the fallback, allocated with the policies). {assignments, refused, fallback = {[id] = why},
 -- weapons, weapon_line, line}.
-local function expendable_pass(world,present,list,ids,who,lobby)
+-- 0.31.3: pins (several players; the carriers the players' carrier slots hold, read alike by every machine): a slot of
+-- it that holds a separate support carrier, not its carrier weapon's own stratagem, makes it a fallback one for every
+-- machine (the pick of a player whose account does not own that stratagem: pick_plan). Solo it changes nothing.
+local function expendable_pass(world,present,list,ids,who,lobby,pins)
     local scope={}
     if ids then for _,id in ipairs(ids)do scope[id]=true end else for _,d in ipairs(list)do scope[d.id]=true end end
     local claims={}
@@ -1548,6 +1551,11 @@ local function expendable_pass(world,present,list,ids,who,lobby)
         elseif x then
             local d=defs[id]
             local c,second=condensed_carrier(world,x.weapon,present,lobby)
+            local pin=lobby and pins and pins[id]
+            if c and pin and pin~=c.id then
+                c,second=nil,('its slot holds a separate support carrier, not %s (the pick of a player whose account does '
+                    ..'not own it)'):format(c.name)
+            end
             if c then
                 out.assignments[id]={label=d.label,carrier=c.name,stable_id=c.id,type=c.type,class=c.class,
                     family=c.family,beacon=c.beaconCategory,beam=c.beamColour,ping=c.pingColour,eligible=1,skipped=0,
@@ -1637,13 +1645,13 @@ local function allocate(world,present,list,where,ids,who,quiet,pins_given)
     local only
     if ids then only={};for _,id in ipairs(ids)do only[id]=true end end
     local players=world_module.players(world)or{}
-    -- The expendable custom stratagems first: a condensed one takes no policy carrier (its carrier is its weapon's own
-    -- stratagem); only a fallback one is allocated a separate support carrier with the policies.
-    local ex=expendable_pass(world,present,list,ids,who,#players>1)
     -- The carrier-in-slot probe: a definition whose loadout slots hold its carrier keeps it while nobody else holds it
     -- (the allocator's pin); never with the synced lobby table (every peer must allocate alike).
     -- With several players the caller gives them (M.ship_pins aboard the ship; the first-seen records at mission start).
     local pins=pins_given or(not ids and M.probe_pins()or{})
+    -- The expendable custom stratagems first: a condensed one takes no policy carrier (its carrier is its weapon's own
+    -- stratagem); only a fallback one is allocated a separate support carrier with the policies.
+    local ex=expendable_pass(world,present,list,ids,who,#players>1,pins)
     for _,d in ipairs(list)do report[d.id]=true end
     for _,d in ipairs(order)do
         if(not only or only[d.id])and(d.kind~='expendable'or ex.fallback[d.id])then
@@ -2575,34 +2583,196 @@ function M.probe_reconvert(d,a,players)
     local x=require('hd2runtime/runtime/carrier_in_slot').slots_by_definition(selector.virtual_slots())[d.id]
     return {from=x.id,from_name=name,text=text}
 end
--- The carrier-in-slot probe (runtime/carrier_in_slot.lua): the carrier a definition's pick writes into the slot now,
--- {id (stable id), name}, or nil (its pick writes the token: another selection mode, several players, or no carrier
--- known yet).
-function M.probe_carrier(id)
-    local d=defs[id]
-    if not(d and d.selection=='carrier')then return nil end
-    local world=world_module.open()
-    local players=world and world_module.players(world)
-    if players and#players>1 then
-        local v=sync.view()
-        if not(v and v.status=='enabled')then
-            require('hd2runtime/runtime/carrier_in_slot').log(id..': several players without custom multiplayer: its pick '
-                ..'writes the token')
-            return nil
+-- What this player's pick of a definition writes into its loadout slot (0.31.3; a player report of 2026-10-12: with
+-- custom multiplayer, the EAT-40 and EAT-23 picks wrote the EAT-700 Expendable Napalm and the EAT-411 Leveller, which
+-- that account does not own; the selector refused each click, TOKEN_NOT_OWNED). The carrier written is always one THIS
+-- account owns: the selector's ownership guard is never relaxed, and the saved loadout never holds unowned content.
+-- Returns {carrier = {id, name}, lobby = the lobby's carrier this account does not own (an owned one was taken
+-- instead)}, {token = why} (the Orbital Precision Strike token: the Runtime's fallback, converted at mission start), or
+-- {refused = why} (nothing can be written now; the panel says why).
+--   * solo: the allocation ranks only owned carriers (its policy's preferred families first, from the dynamic pool). A
+--     carrier from an older view that this account does not own is never written: the allocation is asked again for
+--     this pick; none: the token;
+--   * custom multiplayer: the lobby's carrier for an id is the same on every machine, whatever each account owns
+--     (never ranked by ownership). When this account does not own it, the pick takes the first carrier of the
+--     definition's own pool (the allocator's rank) that this account owns and no other custom id holds, checked by
+--     allocating the lobby again with this player's slot holding it: every machine reads that slot as the id's pin (the
+--     r41 pins), so the lobby's carrier for the id becomes that carrier everywhere. An expendable then takes a separate
+--     support carrier for its beacon (its carrier weapon stays the clone: expendable_pass). None: refused (the token
+--     would be refused at mission start for the same reason: never remapped);
+--   * several players without custom multiplayer: the token, as before.
+do
+    local plan_cache={}
+    M.PLAN_TRIES=6
+    local function probe_log(text)require('hd2runtime/runtime/carrier_in_slot').log(text)end
+    local function owned_here(world,stable_id)
+        local ok,r=pcall(slots.owned,world,stable_id)
+        return ok and r==true
+    end
+    local function base_assignment(d,id)
+        -- The ship preview's own assignment first (r41: with several players it holds the pins, so a pick of an id another
+        -- player already holds takes that player's carrier), then the selection's cache, then the availability view.
+        local a=(ship.alloc and ship.alloc.assignments[id])or cache[id]or(group_view.a and group_view.a.assignments[id])
+            -- r43: an expendable's condensed carrier (its carrier weapon's own stratagem), from the availability step.
+            or(d.kind=='expendable'and avail.carrier[id])or nil
+        if a and a.stable_id and a.carrier then return a end
+    end
+    local function copy(t)local o={};for k,v in pairs(t or{})do o[k]=v end;return o end
+    local function keys_of(t)
+        local o={}
+        for k,v in pairs(t or{})do o[#o+1]=tostring(k)..(v==true and''or('='..tostring(v)))end
+        table.sort(o)
+        return table.concat(o,',')
+    end
+    -- Solo: the allocation of this player's picks with this one, quiet (it ranks owned carriers only): its carrier, or
+    -- refused when the allocation has none for it (the mission start would have none either), else the token.
+    local function solo_plan(world,d,id,why)
+        local ids=loadout_ids(world)
+        if not ids then return {token=why}end
+        local present=lobby_picks(world,ids)
+        local list={}
+        for _,x in ipairs(selected())do if x.id~=id then list[#list+1]=x end end
+        list[#list+1]=d
+        local names={}
+        for k,x in ipairs(list)do names[k]=x.id end
+        local key=id..'|solo|'..table.concat(names,',')..'|'..keys_of(present)..'|'..keys_of(M.probe_pins())
+        local hit=plan_cache[id]
+        if hit and hit.key==key and clock<hit.at+M.REVALIDATE_EVERY then return hit.plan end
+        local ok,a=pcall(allocate,world,present,list,'pick',nil,nil,true)
+        local x=ok and a and a.assignments[id]
+        local plan
+        if x and x.stable_id and x.carrier and owned_here(world,x.stable_id)then
+            plan={carrier={id=x.stable_id,name=x.carrier}}
+        elseif ok and a and a.refused and a.refused[id]then
+            plan={refused=tostring(a.refused[id])}
+        else
+            plan={token=why}
         end
-        require('hd2runtime/runtime/carrier_in_slot').log(id..': several players (custom multiplayer, EXPERIMENTAL r38): '
-            ..'its pick writes the carrier the lobby gives it')
+        plan_cache[id]={key=key,at=clock,plan=plan}
+        return plan
     end
-    -- The ship preview's own assignment first (r41: with several players it holds the pins, so a pick of an id another
-    -- player already holds takes that player's carrier), then the selection's cache, then the availability view.
-    local a=(ship.alloc and ship.alloc.assignments[id])or cache[id]or(group_view.a and group_view.a.assignments[id])
-        -- r43: an expendable's condensed carrier (its carrier weapon's own stratagem), from the availability step.
-        or(d.kind=='expendable'and avail.carrier[id])or nil
-    if not(a and a.stable_id and a.carrier)then
-        require('hd2runtime/runtime/carrier_in_slot').log(id..': no carrier is allocated yet: its pick writes the token')
-        return nil
+    -- Custom multiplayer: an owned carrier of the definition's pool that the lobby's allocation gives it once this
+    -- player's slot pins it, or refused.
+    local function lobby_plan(world,v,d,id,lobby_carrier)
+        local loadout=loadout_ids(world)
+        if not loadout then return {refused='the loadout cannot be read now'}end
+        local present,who=lobby_picks(world,loadout)
+        local pins=M.ship_pins(world,v)
+        -- Another player's slot already pins this id (the lowest peer's holder decides for every machine): this player
+        -- cannot change its carrier.
+        if pins[id]then
+            local mine=false
+            local V=selector.virtual_slots()
+            for _,e in pairs(V and V.slots or{})do
+                if e.definition==id and e.carrier and e.token==pins[id]then mine=true end
+            end
+            if not mine then
+                return {refused=('another player\'s slot holds it with %s, which this account does not own: the lobby\'s '
+                    ..'carrier for it (never remapped)'):format(tostring(lobby_carrier))}
+            end
+        end
+        local ids={}
+        local seen=false
+        for _,x in ipairs(sync.table_ids(v.table))do ids[#ids+1]=x;seen=seen or x==id end
+        if not seen then ids[#ids+1]=id end
+        local key=id..'|'..tostring(v.table_hash)..'|'..keys_of(present)..'|'..keys_of(pins)
+        local hit=plan_cache[id]
+        if hit and hit.key==key and clock<hit.at+M.REVALIDATE_EVERY then return hit.plan end
+        local function run(pin)
+            local p=copy(pins);p[id]=pin
+            local ok,a=pcall(allocate,world,present,{},'pick',ids,who,true,p)
+            if ok and a then return a end
+        end
+        -- -1 pins nothing (no carrier has it) but marks an expendable's slot as a separate carrier's: its fallback pool.
+        local base=run(-1)
+        local plan
+        if not base then
+            plan={refused='the lobby\'s carriers cannot be allocated now'}
+        else
+            local held={}
+            for other,x in pairs(base.assignments)do
+                if other~=id and not x.tentative then
+                    if x.stable_id then held[x.stable_id]=true end
+                    if x.weapon and x.weapon.stable_id then held[x.weapon.stable_id]=true end
+                end
+            end
+            local list={}
+            for _,c in ipairs(base.pools and base.pools[id]or{})do
+                if c.eligible==true and not held[c.id]and not present[c.id]then list[#list+1]=c end
+            end
+            for k,c in ipairs(list)do
+                if k>M.PLAN_TRIES then break end
+                local a=run(c.id)
+                local x=a and a.assignments[id]
+                local keeps=x~=nil
+                for _,other in ipairs(ids)do
+                    if other~=id and base.assignments[other]and not(a and a.assignments[other])then keeps=false end
+                end
+                if keeps and x.stable_id==c.id and not x.local_refused and owned_here(world,c.id)then
+                    plan={carrier={id=c.id,name=c.name},lobby=lobby_carrier}
+                    break
+                end
+            end
+            plan=plan or{refused=('the lobby\'s carrier for it is %s, which this account does not own, and no carrier '
+                ..'of its pool that this account owns is free for it%s'):format(tostring(lobby_carrier),
+                base.refused[id]and(' ('..tostring(base.refused[id])..')')or'')}
+        end
+        plan_cache[id]={key=key,at=clock,plan=plan}
+        return plan
     end
-    return {id=a.stable_id,name=a.carrier}
+    function M.pick_plan(world,id)
+        local d=defs[id]
+        if not(d and d.selection=='carrier')then return {token='its selection is the token'}end
+        if not world then return {token='no game world'}end
+        local players=world_module.players(world)
+        local v
+        if players and#players>1 then
+            v=sync.view()
+            if not(v and v.status=='enabled'and v.table)then return {token='several players without custom multiplayer'}end
+        end
+        local a=base_assignment(d,id)
+        if a and not a.local_refused and owned_here(world,a.stable_id)then
+            return {carrier={id=a.stable_id,name=a.carrier}}
+        end
+        if not v then
+            return solo_plan(world,d,id,a and(('its carrier %s is not owned by this account'):format(a.carrier))
+                or'no carrier is allocated yet')
+        end
+        if not a then return {token='no carrier is allocated yet'}end
+        return lobby_plan(world,v,d,id,a.carrier)
+    end
+    function M.reset_pick_plans()plan_cache={}end
+    -- A refused plan as the availability's UNAVAILABLE text.
+    function M.unavailable_text(why)
+        why=tostring(why)
+        return why:find('^UNAVAILABLE')and why or('UNAVAILABLE: '..why)
+    end
+    -- The carrier-in-slot probe (runtime/carrier_in_slot.lua): the carrier a definition's pick writes into the slot now,
+    -- {id (stable id), name}; or nil (its pick writes the token), with why when it cannot be picked at all.
+    function M.probe_carrier(id)
+        local d=defs[id]
+        if not(d and d.selection=='carrier')then return nil end
+        local world=world_module.open()
+        local players=world and world_module.players(world)
+        local several=players and#players>1
+        local plan=M.pick_plan(world,id)
+        if plan.carrier and plan.lobby then
+            probe_log(('%s: several players (custom multiplayer, EXPERIMENTAL r38): the lobby\'s carrier for it is %s, which '
+                ..'this account does not own: its pick writes %s, a carrier of its pool this account owns (its slot then '
+                ..'holds it for every machine)'):format(id,plan.lobby,plan.carrier.name))
+        elseif plan.carrier then
+            if several then
+                probe_log(id..': several players (custom multiplayer, EXPERIMENTAL r38): its pick writes the carrier the '
+                    ..'lobby gives it')
+            end
+        elseif plan.refused then
+            probe_log(id..': its pick is REFUSED (nothing written): '..plan.refused)
+            return nil,plan.refused
+        else
+            probe_log(id..': '..tostring(plan.token)..': its pick writes the token')
+        end
+        return plan.carrier
+    end
 end
 -- The readiness notice (0.30.2): aboard the ship, what will make this player's selected custom stratagems fail at the
 -- launch, predicted from what the mission start decides (the same rules, read-only), shown on screen with how to fix it
@@ -2862,7 +3032,30 @@ local function availability_step(world,v)
             elseif not reason then
                 -- Its beacon: the carrier weapon's own stratagem (condensed), else a separate support carrier.
                 local c,second=condensed_carrier(world,weapon.weapon,present,players>1)
-                if c then
+                -- 0.31.3: as the allocation decides (expendable_pass): a slot of it holding a separate support carrier
+                -- makes it a fallback one for every machine.
+                if c and players>1 and pins[d.id]and pins[d.id]~=c.id then
+                    c,second=nil,('its slot holds a separate support carrier, not %s (the pick of a player whose account '
+                        ..'does not own it)'):format(c.name)
+                end
+                if c and second==true then
+                    -- 0.31.3: the lobby's condensed carrier, which this account does not own: never written; the pick
+                    -- takes a support carrier this account owns for its beacon (pick_plan), else it is unavailable here.
+                    avail.carrier[d.id]={stable_id=c.id,carrier=c.name,local_refused=true}
+                    local plan
+                    if not selected[d.id]then plan=M.pick_plan(world,d.id)end
+                    if not plan then
+                        reason=('UNAVAILABLE: the lobby\'s carrier for it is %s, which this account does not own'):format(
+                            c.name)
+                    elseif plan.carrier then
+                        mode=('its beacon carrier is %s when it is picked (a support carrier this account owns: the '
+                            ..'lobby\'s condensed carrier %s is not owned by this account)'):format(plan.carrier.name,c.name)
+                    elseif plan.refused then
+                        reason=M.unavailable_text(plan.refused)
+                    else
+                        mode=('its pick writes the token (%s)'):format(tostring(plan.token))
+                    end
+                elseif c then
                     mode=('condensed: %s is also its beacon carrier and its pod'):format(weapon.weapon)
                     avail.carrier[d.id]={stable_id=c.id,carrier=c.name}
                 else
@@ -2875,8 +3068,18 @@ local function availability_step(world,v)
                         reason=('UNAVAILABLE: its carrier weapon %s cannot carry its beacon (%s) and no separate support '
                             ..'carrier is free: %s'):format(weapon.weapon,tostring(second),tostring(carrier_why))
                     else
-                        mode=('fallback: a separate support carrier throws its beacon, because %s cannot carry it: %s')
-                            :format(weapon.weapon,tostring(second))
+                        -- 0.31.3: a tile not picked yet, solo: what its pick writes (pick_plan), so the text says it.
+                        local plan
+                        if players<=1 and not selected[d.id]then plan=M.pick_plan(world,d.id)end
+                        if plan and plan.refused then
+                            reason=M.unavailable_text(plan.refused)
+                        elseif plan and plan.carrier then
+                            mode=('fallback: its beacon carrier is %s when it is picked, because %s cannot carry it: %s')
+                                :format(plan.carrier.name,weapon.weapon,tostring(second))
+                        else
+                            mode=('fallback: a separate support carrier throws its beacon, because %s cannot carry it: %s')
+                                :format(weapon.weapon,tostring(second))
+                        end
                     end
                 end
             end
@@ -2892,7 +3095,18 @@ local function availability_step(world,v)
                 a=group_allocation(world,present,players,pins,picked)
             end
             local x=a and a.assignments[d.id]
-            if x then
+            -- 0.31.3: with several players the lobby's carrier is ranked without ownership; one this account does not
+            -- own is never written: the pick takes an owned carrier of its group (pick_plan), else it is unavailable here.
+            local plan=x and x.local_refused and M.pick_plan(world,d.id)or nil
+            if plan and plan.refused then
+                reason=M.unavailable_text(plan.refused)
+                text=reason
+            elseif plan then
+                text=('AVAILABLE: its carrier is %s (group %s%s)%s'):format(plan.carrier and plan.carrier.name or M.TOKEN,
+                    tostring(d.group),d.slots and(', capacity '..d.slots)or'',plan.carrier and(': the lobby\'s carrier '
+                    ..x.carrier..' is not owned by this account; its pick writes this one, which it owns')
+                    or(' (the token: '..tostring(plan.token)..')'))
+            elseif x then
                 text=('AVAILABLE: its carrier is %s (group %s%s)'):format(x.carrier,tostring(d.group),d.slots and
                     (', capacity '..d.slots)or'')
             elseif a and a.refused[d.id]then
@@ -5833,7 +6047,7 @@ function M.start()
                 log(('SHIP: selected into loadout slot %s (%s); virtual slots: %s'):format(tostring(h.index),
                     e and e.carrier and'the saved loadout holds its carrier itself: the carrier-in-slot probe'
                     or('the saved loadout holds the '..M.TOKEN..' token'),selector.slots_text(vs)))
-            elseif h.status~='restored'then
+            elseif h.status~='restored'and not h.repeated then
                 log(('SHIP: selection REFUSED (nothing written): %s: %s'):format(tostring(h.code),tostring(h.reason)))
             end
         end})
@@ -6040,6 +6254,7 @@ function M.reset_for_tests()
     mp_ship.at=-math.huge
     avail={state={},text={},at=-math.huge,carrier={},kept={}}
     group_view={key=nil,at=-math.huge}
+    M.reset_pick_plans()
     if loop then loop.cancel();loop=nil end
     if landing then landing.cancel();landing=nil end
     if remote_overlays then remote_overlays.stop();remote_overlays=nil end
