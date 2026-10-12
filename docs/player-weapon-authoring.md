@@ -210,6 +210,15 @@ Runtime catalogues no field for that burst; no member is proven for it. Nothing 
 values are its records on the reference snapshot, and every writable field resolves there
 (`scripts/validate_weapon_authoring_snapshot.py`, `tests/test_shear.py`).
 
+## `weapon.suppressed` has no audible effect
+
+`weapon.suppressed` is set on the four suppressed weapons (AR-59 Suppressor, M6C/SOCOM Pistol, M7S SMG, R-72 Censor)
+and stays writable, but in this game build it has no audible or AI effect. The game only uses it to tag a shot's
+impact noise, and both tagged noise types have zero strength, so an impact is equally silent to enemies either way.
+What makes the suppressed weapons quiet is each weapon's firing noise class (an unmapped member, not exposed) and its
+own firing sound (`weapon.sound`, which refuses the suppressed weapons). Setting `weapon.suppressed` on another weapon
+does not make it quieter. Research: `research/docs/weapon-suppressed-F5FEE03DCFDB.md`.
+
 ## Firing sound (`weapon.sound`, offline only)
 
 `hd2.fields.weapon.sound` sets a weapon's firing sound to a catalogue sound name, on its type's ProjectileWeapon

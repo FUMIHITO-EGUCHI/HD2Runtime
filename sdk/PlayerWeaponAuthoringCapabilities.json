@@ -306,7 +306,8 @@
       "writable": true,
       "component": "WeaponDataComponentData",
       "offset": 112,
-      "storage": "u8"
+      "storage": "u8",
+      "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md)."
     },
     {
       "id": "weapon.stationary_while_firing",
@@ -2555,7 +2556,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -6613,7 +6614,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -10680,7 +10681,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -14741,7 +14742,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -18774,7 +18775,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -22732,7 +22733,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -26675,7 +26676,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -30614,7 +30615,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -34551,7 +34552,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -38609,7 +38610,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -42670,7 +42671,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -45728,7 +45729,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -49791,7 +49792,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -55359,7 +55360,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -57926,7 +57927,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -60496,7 +60497,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -63063,7 +63064,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -65633,7 +65634,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -68203,7 +68204,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -70776,7 +70777,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -74989,7 +74990,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -77933,7 +77934,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -83708,7 +83709,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -89288,7 +89289,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -95079,7 +95080,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -99167,7 +99168,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -103740,7 +103741,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -107561,7 +107562,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -112178,7 +112179,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -117276,7 +117277,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -121128,7 +121129,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -124974,7 +124975,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -129527,7 +129528,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -133319,7 +133320,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -137401,7 +137402,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -141470,7 +141471,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -145683,7 +145684,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -149751,7 +149752,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -153760,7 +153761,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -156763,7 +156764,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -160843,7 +160844,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -164689,7 +164690,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -168574,7 +168575,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -175706,7 +175707,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -181425,7 +181426,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -185568,7 +185569,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -189804,7 +189805,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -194039,7 +194040,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -196988,7 +196989,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -201761,7 +201762,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -207385,7 +207386,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -213035,7 +213036,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -218639,7 +218640,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -224148,7 +224149,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -229706,7 +229707,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -233769,7 +233770,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -238002,7 +238003,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -243661,7 +243662,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -247598,7 +247599,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -251811,7 +251812,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -255898,7 +255899,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -259959,7 +259960,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -263893,7 +263894,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -268028,7 +268029,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -274159,7 +274160,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -278424,7 +278425,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -282360,7 +282361,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -286297,7 +286298,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -290232,7 +290233,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -294470,7 +294471,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -298741,7 +298742,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -304325,7 +304326,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -308539,7 +308540,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -312752,7 +312753,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -316689,7 +316690,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -320753,7 +320754,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -324699,7 +324700,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -328640,7 +328641,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -332573,7 +332574,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -336707,7 +336708,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
@@ -340860,7 +340861,7 @@
           "writeScope": "weapon_local",
           "sharedWithWeapons": [],
           "affectsMultipleWeapons": false,
-          "reason": null,
+          "reason": "No audible or AI effect in this game build: the game only uses it to tag a shot's impact noise, and both tagged noise types have zero strength. What makes suppressed weapons quiet is each weapon's firing noise class (an unmapped member) and its own firing sound (docs/player-weapon-authoring.md).",
           "acceptedForWrites": true,
           "apiFieldConstant": "hd2.fields.weapon.suppressed",
           "effect": {
