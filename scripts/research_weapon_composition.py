@@ -1,6 +1,6 @@
 """Build the four player-weapon composition capability graphs from an HD2 snapshot.
 
-The scan is deliberately bounded to the 80 reviewed player weapon resources, five
+The scan is deliberately bounded to the 81 reviewed player weapon resources, five
 weapon component types, and their already-resolved projectile records.  It never
 constructs a writer or changes page protection.
 """
@@ -40,6 +40,12 @@ OUTPUTS = {
 }
 COMPOSITION_CATALOG = ROOT / 'schemas/player_weapon_composition_catalog.json'
 HEAT_RESEARCH = ROOT / 'research/player-weapon-heat-F5FEE03DCFDB.json'
+# 0.31.3: a catalogued weapon with no published heat data (the LAS-22 Shear, research/weapon-roots additions). Its heat
+# members are the same WeaponHeat members as every published heat weapon's (owner, offsets, storage), but no published
+# value cross-checks this weapon's: writable behind allow_unverified_effect instead of a per-weapon correlation.
+UNPUBLISHED_HEAT_REASON = ('No published heat data exists for this weapon, so its value is not cross-checked as on '
+    'the published heat weapons (the WeaponHeat member itself is the same as theirs); the effect of a write is not '
+    'shown in game.')
 
 
 def lua(value):
@@ -346,7 +352,7 @@ def analyze(raw):
         'snapshotOnly': True}
     common = {'schemaVersion': 1, 'sourceSnapshot': SNAPSHOT.name,
         'hd2RuntimeVersion': (ROOT / 'VERSION').read_text().strip(),
-        'gameFingerprints': raw['fingerprints'], 'catalogWeapons': 80, 'safety': safety}
+        'gameFingerprints': raw['fingerprints'], 'catalogWeapons': len(author_by_name), 'safety': safety}
 
     imported_attachments = {item['name']: item for item in attachment_source['weapons']}
     imported_weapons = {item['name']: item for item in player_source['weapons']}
@@ -426,7 +432,7 @@ def analyze(raw):
     magazine = {**common, 'feature': 'attachment_option_capabilities',
         'importer': {'commit': '6c60b215377a40a004b54c011dc26dc674a1abfe',
             'importedAt': attachment_source['importedAt'], 'source': attachment_source['source']},
-        'summary': {'weapons': 80, 'primaryWeaponsWithAttachments': 37,
+        'summary': {'weapons': len(author_by_name), 'primaryWeaponsWithAttachments': 37,
             'attachmentOptionsMapped': mapped_rows, 'attachmentOptionsTotal': 419,
             'magazineOptionsMapped': 36, 'magazineOptionsTotal': 36,
             'magazineOptionsWithNativeIdentity': native_magazine_options,
@@ -472,7 +478,8 @@ def analyze(raw):
         body = bytes.fromhex(raw_component['bytes'])
         owner = raw_component['identity']
         heat_shared[owner['recordIndex']].append(name)
-        wiki_heat = _wiki_heat_values(imported_weapons[name])
+        published = name in imported_weapons
+        wiki_heat = _wiki_heat_values(imported_weapons[name]) if published else {}
         cooling = wiki_heat.get('Cool Per Sec') or []
         expected = {
             'heat.capacity': (wiki_heat.get('Overheats at') or [None])[0],
@@ -498,6 +505,16 @@ def analyze(raw):
             wiki_value = expected[field_id]
             matches = wiki_value is not None and math.isclose(value, wiki_value,
                 rel_tol=1e-6, abs_tol=1e-5)
+            if not published:
+                fields.append({'id': field_id, 'value': value, 'wikiValue': None, 'correlationMatches': None,
+                    'offset': offset, 'storage': storage,
+                    'owner': {'component': 'WeaponHeatComponentData',
+                        'recordIndex': owner['recordIndex'], 'indexRow': owner['indexRow'],
+                        'ownerCount': owner['ownerCount'], 'uniqueOwner': owner['uniqueOwner']},
+                    'writable': bool(unique), 'writeScope': 'weapon_local',
+                    'acknowledgement': 'allow_unverified_effect', 'acknowledgementReason': UNPUBLISHED_HEAT_REASON,
+                    'reason': None if unique else 'Ambiguous or shared WeaponHeat component ownership.'})
+                continue
             fields.append({'id': field_id, 'value': value, 'wikiValue': wiki_value,
                 'correlationMatches': matches, 'offset': offset, 'storage': storage,
                 'owner': {'component': 'WeaponHeatComponentData',
@@ -537,7 +554,7 @@ def analyze(raw):
     heat_groups = [{'recordIndex': record, 'weapons': sorted(consumers)}
         for record, consumers in sorted(heat_shared.items()) if len(consumers) > 1]
     heat = {**common, 'feature': 'player_weapon_heat_capabilities',
-        'summary': {'weapons': 80,
+        'summary': {'weapons': len(author_by_name),
             'weaponsWithHeatMechanism': sum(w['heatMechanismPresent'] for w in heat_weapons),
             'weaponsWithHeatsinkMechanism': sum(w['heatsinkMechanismPresent'] for w in heat_weapons),
             'directSemanticFieldsResolved': sum(1 for w in heat_weapons for f in w['fields']
@@ -727,7 +744,7 @@ def analyze(raw):
         'consumers':sorted(value,key=lambda item:(item['weapon'],item['role']))}
         for key,value in sorted(projectile_groups.items()) if len(value)>1]
     projectile = {**common, 'feature': 'projectile_reference_graph',
-        'summary': {'weapons': 80, 'weaponsWithProjectileAttack': sum(bool(w['attacks']) for w in projectile_weapons),
+        'summary': {'weapons': len(author_by_name), 'weaponsWithProjectileAttack': sum(bool(w['attacks']) for w in projectile_weapons),
             'projectileAttacks': sum(len(w['attacks']) for w in projectile_weapons),
             'writableTargetAttacks': writable_attacks,
             'compatibleSourceAttacks': sum(map(len, compatible_sources.values())),
@@ -780,7 +797,7 @@ def analyze(raw):
             'reason': (None if writable else
                 'Only conventional, uniquely resolved weapons with both native 1 and 2 in their three-slot vector are writable.')})
     fire_mode = {**common, 'feature': 'fire_mode_graph',
-        'summary': {'weapons': 80, 'nativePrimaryValueReadable': sum(w['primaryFireModeNativeValue'] is not None for w in fire_weapons),
+        'summary': {'weapons': len(author_by_name), 'nativePrimaryValueReadable': sum(w['primaryFireModeNativeValue'] is not None for w in fire_weapons),
             'allowedModeListsProven': sum(bool(w['nativeModeVector']) for w in fire_weapons),
             'writableWeapons': sum(w['writable'] for w in fire_weapons)},
         'nativeValueGroups': dict(sorted(fire_groups.items())),
@@ -796,7 +813,7 @@ def analyze(raw):
         'weapons': fire_weapons}
 
     terminal = {**common, 'feature': 'projectile_terminal_action_graph',
-        'summary': {'weapons': 80, 'projectileAttacks': sum(len(w['attacks']) for w in terminal_weapons),
+        'summary': {'weapons': len(author_by_name), 'projectileAttacks': sum(len(w['attacks']) for w in terminal_weapons),
             'readableActions': sum(2 * len(w['attacks']) for w in terminal_weapons),
             'writableActions': sum(action['writable'] for weapon in terminal_weapons
                 for attack in weapon['attacks'] for action in attack['actions']),

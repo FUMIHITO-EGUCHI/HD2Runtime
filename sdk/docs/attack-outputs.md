@@ -387,6 +387,7 @@ only (`selectableAsBeamReference`; a projectile host refuses it with `INCOMPATIB
 | `hd2.attack_output(...)` | BeamType | Class | Length | Package (loaded before the swap) |
 | --- | ---: | --- | ---: | --- |
 | `LAS-5 Scythe` | 8 | continuous | 1000 m | laser_rifle |
+| `LAS-22 Shear` (0.31.3) | 8 (the Scythe's row) | continuous | 1000 m | laser_rifle_charge |
 | `LAS-7 Dagger` | 11 | continuous | 1000 m | laser_pistol |
 | `LAS-13 Trident` | 6 | pulsed (the only pulse row) | 200 m | laser_shotgun |
 | `LAS-98 Laser Cannon` | 1 | continuous | 1000 m | laser_cannon |
@@ -398,7 +399,7 @@ Each owner's own loadout package lists the beam row's resources (checked against
 - `AX/LAS-5 Rover / gun`: which beam the drone fires is not proven (below).
 - The five Illuminate beams (`Illuminate tripod beam`, `Illuminate tripod second beam`, `Illuminate war machine cannon
   beam`, `Illuminate turret beam`, `Illuminate objective turret beam`): no catalogued package ships their effects.
-- Not catalogued at all: the dropped roots (`laser_rifle_charge`, the Dagger's second root), the LAS-98's
+- Not catalogued at all: the Dagger's dropped second root, the LAS-98's
   non-delivered root (`manned_turret_laser`), the shoulder-mounted objective camera and six unnamed entities.
 
 **Active beam source.** As for projectiles, the written member must be the one the weapon fires. Five entity deltas patch
@@ -410,6 +411,7 @@ BeamWeapon +0, each in its own 4-byte row; one of them is a default:
 | LAS-98 Laser Cannon, 40-K Meltagun | ACTIVE_DIRECT | its own BeamWeapon +0 | writable (`component`) |
 | A/LAS-98 Laser Sentry | ACTIVE_DIRECT | its deployed entity's BeamWeapon +0 (type-level, like sentry projectile swaps) | writable (`component`) |
 | LAS-5 Scythe | INDIRECT | its default muzzle **Laser. Standard Prism** patches +0 at weapon build: its delta row | writable (`attachment`, `allow_shared`) |
+| LAS-22 Shear (0.31.3) | INDIRECT | its own default muzzle **Laser. Charge Standard** patches +0 at weapon build: its own delta row (no other weapon equips it) | writable (`attachment`, `allow_shared`) |
 | AX/LAS-5 Rover / gun | AMBIGUOUS | its record names BeamType 25, its default muzzle (the same Standard Prism) BeamType 8 | read-only |
 
 The Scythe's record member is dormant (`attack.beam` on the weapon itself refuses with `DORMANT_BEAM_REFERENCE` and the
@@ -417,6 +419,13 @@ redirect). The Rover is the open case: applying default customization deltas whe
 for player weapons only (the Liberator ammunition), and the wiki publishes the Rover's record row (its damage, 200 /
 40), not the muzzle's (the Scythe's, 350 / 70). Its beam swap stays read-only until a live test shows which one it
 fires; its own beam row and damage fields are unchanged.
+
+**The Scythe and the Shear share a row (0.31.3).** The LAS-22 Shear, catalogued in 0.31.3, fires BeamType 8 like the
+Scythe: the same BeamSettings row and DamageInfo row (350 / 70). Each weapon's `beam.*` and `damage.*` row fields
+therefore change both weapons and need `allow_shared` (`sharedWithWeapons` names the other). A mod that declares SDK
+0.31.2 or older keeps writing the Scythe's fields without it, as a logged legacy operation
+(docs/legacy-sdk-compatibility.md). Each weapon still fires its own output (`output/v1/beam/las-5-scythe`,
+`output/v1/beam/las-22-shear`; the same row through its own package) and keeps its own muzzle delta row.
 
 ```lua
 local source = hd2.weapon('LAS-5 Scythe'):beam_source()

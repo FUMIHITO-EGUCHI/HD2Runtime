@@ -294,13 +294,22 @@ class EffectModelTests(unittest.TestCase):
 
     def test_ownership_audit(self):
         summary = self.ownership['summary']
-        self.assertEqual(summary['byStatus'], {'ACTIVE_AT_INSTANTIATION': 2368, 'AMBIGUOUS': 33, 'OVERRIDDEN': 42})   # 0.30.2: the seven DUPLICATE weapons resolved to their proven roots
-        self.assertEqual(summary['editableByStatus'], {'ACTIVE_AT_INSTANTIATION': 1696, 'AMBIGUOUS': 25})
-        self.assertEqual(summary['editableOverriddenByField'], {})
+        # 0.31.3: regenerated with the LAS-22 Shear (29 rows), which also adds the 0.31.0 fields' rows the stored output
+        # lacked (firing charge, beam pulse and beam reference, missile and projectile reference: 74 rows).
+        self.assertEqual(summary['byStatus'], {'ACTIVE_AT_INSTANTIATION': 2456, 'AMBIGUOUS': 33, 'OVERRIDDEN': 57})   # 0.30.2: the seven DUPLICATE weapons resolved to their proven roots
+        self.assertEqual(summary['editableByStatus'], {'ACTIVE_AT_INSTANTIATION': 1780, 'AMBIGUOUS': 25,
+            'OVERRIDDEN': 9})
+        # The nine: the Shear's heat members its default Laser Heatsink (Charge) overwrites. block_overridden keeps
+        # them read-only in the SDK and the runtime (tests/test_shear.py).
+        self.assertEqual(summary['editableOverriddenByField'], {field: 1 for field in ('heat.charge_gain_per_second',
+            'heat.charge_loss_per_second', 'heat.cool_per_second', 'heat.firing_charge', 'heat.heat_per_second',
+            'heat.reset_charge_after_shot', 'heatsink.from_supply', 'heatsink.spare', 'heatsink.starting')})
 
     def test_published_effects(self):
-        self.assertEqual(self.summary['editableFieldInstances'], {'ACTIVE_AT_INSTANTIATION': 1545,
-            'ACTIVE_DIRECT': 2112, 'AMBIGUOUS': 227, 'DORMANT_OR_METADATA': 71,
+        # 0.31.3: + the LAS-22 Shear; the LAS weapons' firing charge and beam pulse fields now have their ownership
+        # rows (AMBIGUOUS -> ACTIVE_AT_INSTANTIATION).
+        self.assertEqual(self.summary['editableFieldInstances'], {'ACTIVE_AT_INSTANTIATION': 1600,
+            'ACTIVE_DIRECT': 2133, 'AMBIGUOUS': 189, 'DORMANT_OR_METADATA': 71,
             'SPAWNED_ENTITY_RECORD': 27})   # 0.30.2: the seven DUPLICATE weapons; 0.31.0: 40 firing charge and beam pulse fields, +2 beam references (Trident, Dagger), 27 missile fields (P-33 18, P-92 9; research/wasp-rocket); 0.31.1: +34 Peacemaker and Redeemer ammunition-row fields; 0.31.2: +518 status slots (every empty slot of a row, not only the first)
         self.assertNotIn('OVERRIDDEN', self.summary['editableFieldInstances'])
         magazine = self.fields[('MA5C Assault Rifle', 'magazine.capacity')]['effect']

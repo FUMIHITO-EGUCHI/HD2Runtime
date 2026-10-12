@@ -867,6 +867,29 @@
     },
     {
       "kind": "player",
+      "weapon": "LAS-22 Shear",
+      "traits": [
+        "light_armor_penetrating",
+        "beam",
+        "heat"
+      ],
+      "labels": [
+        "LIGHT ARMOR PENETRATING",
+        "BEAM",
+        "HEAT"
+      ],
+      "armorPenetration": "light",
+      "writable": {
+        "traits": true,
+        "armorPenetration": true
+      },
+      "reason": {
+        "traits": null,
+        "armorPenetration": null
+      }
+    },
+    {
+      "kind": "player",
       "weapon": "LAS-5 Scythe",
       "traits": [
         "light_armor_penetrating",
@@ -2621,16 +2644,16 @@
     }
   ],
   "summary": {
-    "weapons": 115,
-    "traitsWritable": 108,
-    "armorPenetrationWritable": 105,
+    "weapons": 116,
+    "traitsWritable": 109,
+    "armorPenetrationWritable": 106,
     "namedTraits": 24,
     "unnamedTraits": 2,
     "byPenetration": {
       "None": 7,
       "anti_tank": 10,
       "heavy": 4,
-      "light": 32,
+      "light": 33,
       "light_anti_tank": 4,
       "medium": 38,
       "none": 20

@@ -7,11 +7,11 @@
   },
   "sourceSnapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
   "summary": {
-    "weapons": 80,
+    "weapons": 81,
     "effectiveCapacityResolved": 67,
     "effectiveCapacityNativeResolved": 47,
     "customizationCorrelated": 19,
-    "notApplicable": 13,
+    "notApplicable": 14,
     "roundsFeedWeapons": 15,
     "directMagazineWeapons": 33,
     "defaultMagazineOptions": 19,
@@ -1927,6 +1927,26 @@
       "slot": "primary",
       "resources": [
         "0x295BEB26DC4F8FF1"
+      ],
+      "ordinaryWritesBlocked": false,
+      "backingDomain": "none",
+      "effectiveCapacity": {
+        "status": "NOT_APPLICABLE"
+      },
+      "alternateMagazineOptions": {
+        "status": "NONE_PROVEN",
+        "options": []
+      },
+      "fields": {},
+      "shared": false,
+      "writable": false,
+      "diagnostics": []
+    },
+    {
+      "name": "LAS-22 Shear",
+      "slot": "primary",
+      "resources": [
+        "0x7E3145A5BAA4B948"
       ],
       "ordinaryWritesBlocked": false,
       "backingDomain": "none",

@@ -1739,6 +1739,177 @@
    "field": "magazine.starting_magazines",
    "apiFieldConstant": "hd2.fields.magazine.starting_magazines",
    "reason": "Own spares of a team-reload weapon. Its reload uses them first (one magazine per reload, by the wearer alone, no backpack needed) and the backpack only when they are spent; a teammate reload still uses the backpack. Proven from game code (research/team-reload-ammo-F5FEE03DCFDB.json); not yet shown in game. Spare magazines the weapon itself carries when it spawns, clamped to magazine.spare_magazines (0 natively, so this has no effect until that is raised)."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "beam.length",
+   "apiFieldConstant": "hd2.fields.beam.length",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_settings): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "beam.radius",
+   "apiFieldConstant": "hd2.fields.beam.radius",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_settings): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.ap_direct",
+   "apiFieldConstant": "hd2.fields.damage.ap_direct",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.ap_extreme",
+   "apiFieldConstant": "hd2.fields.damage.ap_extreme",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.ap_large",
+   "apiFieldConstant": "hd2.fields.damage.ap_large",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.ap_slight",
+   "apiFieldConstant": "hd2.fields.damage.ap_slight",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.demolition",
+   "apiFieldConstant": "hd2.fields.damage.demolition",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.durable_damage",
+   "apiFieldConstant": "hd2.fields.damage.player_durable_damage",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.push_force",
+   "apiFieldConstant": "hd2.fields.damage.push_force",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.stagger",
+   "apiFieldConstant": "hd2.fields.damage.stagger",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.standard_damage",
+   "apiFieldConstant": "hd2.fields.damage.player_standard_damage",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.status_1_strength",
+   "apiFieldConstant": "hd2.fields.damage.status_1_strength",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.status_1_type",
+   "apiFieldConstant": "hd2.fields.damage.status_1_type",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.status_2_strength",
+   "apiFieldConstant": "hd2.fields.damage.status_2_strength",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.status_2_type",
+   "apiFieldConstant": "hd2.fields.damage.status_2_type",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.status_3_strength",
+   "apiFieldConstant": "hd2.fields.damage.status_3_strength",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.status_3_type",
+   "apiFieldConstant": "hd2.fields.damage.status_3_type",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.status_4_strength",
+   "apiFieldConstant": "hd2.fields.damage.status_4_strength",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
+  },
+  {
+   "since": "0.31.3",
+   "acknowledgement": "allow_shared",
+   "resource": "player_weapon",
+   "target": "LAS-5 Scythe",
+   "field": "damage.status_4_type",
+   "apiFieldConstant": "hd2.fields.damage.status_4_type",
+   "reason": "Shared since 0.31.3 with LAS-22 Shear (shared_damage): the same native row, catalogued since then."
   }
  ],
  "description": "Acknowledgements a field gained in a later SDK. A mod that declares an SDK older than `since` wrote the field without the acknowledgement and was valid then; Runtime accepts it as a legacy operation and logs it (docs/legacy-sdk-compatibility.md). Generated by scripts/generate_legacy_acknowledgements.py --research; reviewed.",
@@ -6635,6 +6806,14 @@
    "networkField": "magazines_remaining",
    "apiFieldConstant": "hd2.fields.attachment.starting_magazines",
    "reason": "the live spare-magazine count is the network field magazines_remaining (5 bits): the game clamps it to 31 on every write"
+  }
+ ],
+ "sharedReleases": [
+  {
+   "since": "0.31.3",
+   "comparedWith": "v0.31.2",
+   "comparedWithCommit": "d519c1805e51371d092d8cbc8cd61cf4c1219368",
+   "rule": "editable without allow_shared in the SDK published at v0.31.2, editable and shared with another catalogued weapon (requiring it) in 0.31.3"
   }
  ]
 }

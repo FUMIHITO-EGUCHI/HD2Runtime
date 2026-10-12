@@ -113,6 +113,24 @@ Why: the live round count is the network field rounds (11 bits): ...
 
 `hd2.diagnostics.operations()` lists such a use with `limit = {value, max}` in its `legacy` entry.
 
+## Fields that became shared in 0.31.3 (`allow_shared`)
+
+0.31.3 catalogues the LAS-22 Shear (docs/player-weapon-authoring.md). The Shear fires the LAS-5 Scythe's BeamSettings
+and DamageInfo rows, so the Scythe's 19 writable row fields are now shared with it and need `allow_shared`:
+`beam.length` and `beam.radius`, and every editable `damage.*` field and status slot. The game shared these rows
+before too, but Runtime did not know it. The same version rule applies, for `allow_shared` on these fields only:
+
+| Mod declares | The Scythe's beam and damage row fields, without `allow_shared` |
+| --- | --- |
+| SDK older than 0.31.3 | applied, logged as a legacy operation (the write also changes the Shear, as it always did) |
+| SDK 0.31.3 or later, or unknown | refused: `shared field requires allow_shared=true` |
+
+The entries are the `allow_shared` ones in `schemas/legacy_acknowledgements.json`. They are produced by
+`scripts/generate_legacy_acknowledgements.py --shared v0.31.2 0.31.3`: every player weapon field the SDK at v0.31.2
+let mods write without `allow_shared` that is shared now. The Shear's own fields are new, so they have no entry. The
+log line reads `... LAS-5 Scythe damage.standard_damage needs allow_shared=true since SDK 0.31.3 and is applied
+without it, as SDK 0.31.2 allowed. ... Why it is needed: shared with LAS-22 Shear`.
+
 ## How Runtime reads the declared SDK version
 
 Mods do not pass their SDK version to Runtime. Every published addon wrapper keeps the version its mod was built

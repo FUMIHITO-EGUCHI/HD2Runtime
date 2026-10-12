@@ -87,6 +87,19 @@ def apply_root_corrections(value):
         entry['rootCorrection']={'source':WEAPON_ROOTS.name,'evidence':item['evidence']['kind'],
             'droppedRoots':item['droppedRoots']}
     assert not corrections,'root corrections for weapons not in the catalog: %r'%sorted(corrections)
+    # 0.31.3: armory player weapons the catalogue never named (research/weapon-roots additions: the LAS-22 Shear, the
+    # Scythe's dropped root). Their candidate data is already in the catalogue (the same reference snapshot).
+    names={entry['name'] for entry in value['weapons']}
+    for item in json.loads(WEAPON_ROOTS.read_text()).get('additions',[]):
+        assert item['root'] in value['candidates'],item['weapon']
+        entry={'name':item['weapon'],'slot':item['slot'],'category':item['category'],'resolution':'UNIQUE',
+            'resources':[item['root']],'rootAddition':{'source':WEAPON_ROOTS.name,'evidence':item['evidence']['kind'],
+                'candidateOf':item['candidateOf']}}
+        if item['weapon'] in names:
+            index=next(i for i,e in enumerate(value['weapons']) if e['name']==item['weapon'])
+            value['weapons'][index]=entry
+        else:value['weapons'].append(entry)
+    value['weapons'].sort(key=lambda e:e['name'])
     return value
 
 
@@ -114,7 +127,22 @@ def apply_root_corrections_ammo(ammo):
         for field in entry['fields'].values():
             if field.get('direct')and'reason'not in field:field['writable']=True
         entry['writable']=any(f.get('writable')for f in entry['fields'].values())
+    # 0.31.3: the additions (heat weapons with no magazine or feed component: NOT_APPLICABLE, as every heat weapon).
+    names={entry['name'] for entry in ammo['weapons']}
+    candidates=json.loads(CATALOG.read_text())['candidates']
+    for item in json.loads(WEAPON_ROOTS.read_text()).get('additions',[]):
+        if item['weapon'] in names:continue
+        candidate=candidates[item['root']]
+        assert candidate['capacity']['status']=='UNMAPPED' and 'WeaponHeatComponentData' in candidate['ownership'],            item['weapon']
+        ammo['weapons'].append({'name':item['weapon'],'slot':item['slot'],'resources':[item['root']],
+            'ordinaryWritesBlocked':False,'backingDomain':'none','effectiveCapacity':{'status':'NOT_APPLICABLE'},
+            'alternateMagazineOptions':{'status':'NONE_PROVEN','options':[]},'fields':{},'shared':False,
+            'writable':False,'diagnostics':[]})
+    ammo['weapons'].sort(key=lambda e:e['name'])
+    ammo['catalogWeapons']=len(ammo['weapons'])
     weapons=ammo['weapons']
+    ammo['summary']['weapons']=len(weapons)
+    ammo['summary']['notApplicable']=sum(1 for w in weapons if w['effectiveCapacity'].get('status')=='NOT_APPLICABLE')
     ammo['summary']['effectiveCapacityResolved']=sum(1 for w in weapons
         if w['effectiveCapacity'].get('status')in('RESOLVED','CORRELATED_CUSTOMIZATION'))
     ammo['summary']['weaponsWithWritableAmmoFields']=sum(1 for w in weapons if w['writable'])
@@ -165,8 +193,8 @@ def build(catalog_path=CATALOG):
         reviewed=composition_source['weapons'][entry['name']]
         assert not reviewed['attacks'],entry['name']+': the reviewed composition now has an attack'
         reviewed['attacks']=[ammunition_attacks.composition_attack(entry['name'])]
-    assert len(ammo_by_name)==80 and set(ammo_by_name)=={item['name'] for item in source['weapons']}, \
-        'ammo capability catalog must cover the same 80 player weapons'
+    assert len(ammo_by_name)==81 and set(ammo_by_name)=={item['name'] for item in source['weapons']}, \
+        'ammo capability catalog must cover the same 81 player weapons (0.31.3: the LAS-22 Shear)'
     report={'gameFingerprints':source['gameFingerprints']};identities={};candidates=source['candidates']
     for entry in source['weapons']:
         resources=entry['resources']
@@ -492,9 +520,15 @@ def build(catalog_path=CATALOG):
                 if item.get('offset') is not None and 'WeaponHeatComponentData' in ownership:
                     backend = component_backend(candidate,'WeaponHeatComponentData',
                         item['offset'],item['storage'])
-                fields.append(make_field(field_id,item.get('value'),backend,
+                field=make_field(field_id,item.get('value'),backend,
                     editable=unique and item['writable'],reason=blocked or item.get('reason'),
-                    derived=item.get('derived',False)))
+                    derived=item.get('derived',False))
+                # 0.31.3: a weapon with no published heat data (the LAS-22 Shear) writes its heat behind
+                # allow_unverified_effect (scripts/research_weapon_composition.py UNPUBLISHED_HEAT_REASON).
+                if item.get('acknowledgement')and field['editable']:
+                    field['acknowledgement']=item['acknowledgement']
+                    field['acknowledgementReason']=item['acknowledgementReason']
+                fields.append(field)
         if name==equipment_fields.DOUBLE_EDGE and 'WeaponHeatComponentData' in ownership:
             # Heat levels (research/equipment-coverage): threshold, the status each level applies to the wielder,
             # and the lock-at-maximum-heat flag.
@@ -888,8 +922,15 @@ def block_overridden(value):
             if(field.get('editable')and(field.get('backing')or{}).get('kind')=='component'and row
                     and row['status']=='OVERRIDDEN'):
                 field['editable']=field['acceptedForWrites']=False
+                # 0.31.3: the value the game builds the weapon with (the item's delta), where the base differs
+                # (the LAS-22 Shear's heat per second: base 30, its default heatsink 25).
+                effective=row['owner'].get('effectiveValue')
+                shown=(' (to '+format(effective,'g')+'; the base value here is '+format(field['currentDefault'],'g')+')'
+                    if isinstance(effective,(int,float))and not isinstance(effective,bool)
+                    and isinstance(field['currentDefault'],(int,float))and float(effective)!=float(field['currentDefault'])
+                    else'')
                 field['reason']=('A default customization item ('+str(row['owner']['item'])+') overwrites this '
-                    'member when the weapon is built, so a write here would not show.')
+                    'member when the weapon is built'+shown+', so a write here would not show.')
 
 
 def annotate_effects(value,rows):

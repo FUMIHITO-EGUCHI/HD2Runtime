@@ -140,7 +140,7 @@ class WeaponModeCatalogTests(unittest.TestCase):
         presentation = load('sdk/WeaponPresentationCapabilities.json')
         self.assertEqual([c['value'] for c in presentation['penetrationChoices']],
             ['none', 'light', 'medium', 'heavy', 'light_anti_tank', 'anti_tank'])
-        self.assertEqual(presentation['summary']['armorPenetrationWritable'], 105)   # 0.30.2 roots
+        self.assertEqual(presentation['summary']['armorPenetrationWritable'], 106)   # 0.30.2 roots; 0.31.3: + the LAS-22 Shear
         composition = load('sdk/OutputCompositionCapabilities.json')
         self.assertFalse(composition['beamAction']['available'])
 

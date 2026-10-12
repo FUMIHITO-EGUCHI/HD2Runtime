@@ -369,7 +369,16 @@ class LegacyTableTests(unittest.TestCase):
         legacy_table.generate(check=True)
         history = json.loads(legacy_table.HISTORY.read_text(encoding='utf-8'))
         counts = {}
+        # 0.31.3: allow_shared entries (the LAS-5 Scythe's rows, shared with the newly catalogued LAS-22 Shear).
+        shared = [entry for entry in history['entries'] if entry['acknowledgement'] == 'allow_shared']
+        self.assertEqual({(e['since'], e['resource'], e['target']) for e in shared},
+            {('0.31.3', 'player_weapon', 'LAS-5 Scythe')})
+        self.assertEqual(len(shared), 19)
+        self.assertEqual({e['field'].split('.')[0] for e in shared}, {'damage', 'beam'})
+        self.assertEqual([item['since'] for item in history['sharedReleases']], ['0.31.3'])
         for entry in history['entries']:
+            if entry['acknowledgement'] == 'allow_shared':
+                continue
             self.assertEqual(entry['acknowledgement'], 'allow_unverified_effect')
             self.assertIn(entry['since'], ('0.28.0', '0.30.0', '0.31.0'))
             counts.setdefault(entry['since'], {})
@@ -416,7 +425,10 @@ class LegacyTableTests(unittest.TestCase):
         current = legacy_table.fields(legacy_table.current_catalogs())
         for entry in history['entries']:
             field = current[(entry['resource'], entry['target'], entry['field'])]
-            self.assertTrue(legacy_table.needs(field), entry)
+            if entry['acknowledgement'] == 'allow_shared':
+                self.assertTrue(field['editable'] and field['affectsMultipleWeapons'], entry)
+            else:
+                self.assertTrue(legacy_table.needs(field), entry)
 
     @unittest.skipUnless(all(subprocess.run(['git', 'rev-parse', '-q', '--verify', tag + '^{commit}'], cwd=ROOT,
         capture_output=True).returncode == 0 for tag in ('v0.27.0', 'v0.28.1')), 'the v0.27.0 / v0.28.1 tags are not '
@@ -435,7 +447,75 @@ class LegacyTableTests(unittest.TestCase):
                 and previous[key].get('editable') and previous[key].get('acknowledgement') != 'allow_unverified_effect'
                 and key in current and legacy_table.needs(current[key])}
             self.assertEqual({(e['resource'], e['target'], e['field']) for e in history['entries']
-                if e['since'] == release['since']}, expected, release['since'])
+                if e['since'] == release['since'] and e['acknowledgement'] == 'allow_unverified_effect'}, expected,
+                release['since'])
+
+    @unittest.skipUnless(subprocess.run(['git', 'rev-parse', '-q', '--verify', 'v0.31.2^{commit}'], cwd=ROOT,
+        capture_output=True).returncode == 0, 'the v0.31.2 tag is not available')
+    def test_shared_entries_are_exactly_the_fields_that_became_shared(self):
+        # 0.31.3: every player weapon field the SDK at v0.31.2 let mods write without allow_shared that is shared now.
+        history = json.loads(legacy_table.HISTORY.read_text(encoding='utf-8'))
+        (release,) = history['sharedReleases']
+        previous = legacy_table.fields(legacy_table.git_catalogs(release['comparedWith']))
+        current = legacy_table.fields(legacy_table.current_catalogs())
+        expected = {key for key, field in current.items() if key[0] == 'player_weapon' and key in previous
+            and field.get('editable') and field.get('affectsMultipleWeapons') and previous[key].get('editable')
+            and not previous[key].get('affectsMultipleWeapons')}
+        self.assertEqual({(e['resource'], e['target'], e['field']) for e in history['entries']
+            if e['acknowledgement'] == 'allow_shared'}, expected)
+
+
+SCYTHE_DAMAGE = ("hd2.ensure({patch={id='scythe-damage',target=hd2.weapon('LAS-5 Scythe'),"
+    "field=hd2.fields.damage.player_standard_damage,expect=350,value=500}})")
+
+
+class SharedLegacyTests(unittest.TestCase):
+    """0.31.3: the LAS-5 Scythe's beam and damage rows are shared with the newly catalogued LAS-22 Shear. A mod that
+    declares an older SDK wrote them without allow_shared and keeps working (logged); newer mods need it."""
+    @classmethod
+    def setUpClass(cls):
+        cls.results = run_mods([
+            ('scythe-0312', modbuilder_wrap('mods/test/scythe_0312', '0.31.2', SCYTHE_DAMAGE)),
+            ('scythe-0312-shared', modbuilder_wrap('mods/test/scythe_0312_shared', '0.31.2',
+                SCYTHE_DAMAGE.replace("id='scythe-damage',", "id='scythe-damage',allow_shared=true,"))),
+            ('scythe-bare', REQUIRE + SCYTHE_DAMAGE.replace("'scythe-damage'", "'scythe-bare'")),
+        ])
+
+    def test_an_older_sdk_writes_the_newly_shared_row_as_legacy(self):
+        result = self.results['scythe-0312']
+        op = only(result)
+        self.assertNotEqual(op['status'], 'rejected', op.get('error'))
+        self.assertEqual([(i['acknowledgement'], i['target'], i['field'], i['since']) for i in op['legacy']],
+            [('allow_shared', 'LAS-5 Scythe', 'damage.standard_damage', '0.31.3')])
+        line, = legacy_lines(result)
+        self.assertIn('LAS-5 Scythe damage.standard_damage needs allow_shared=true since SDK 0.31.3', line)
+        self.assertIn('shared with LAS-22 Shear', line)
+
+    def test_the_current_sdk_and_an_unreadable_declaration_need_allow_shared(self):
+        op = only(self.results['scythe-bare'])
+        self.assertEqual(op['status'], 'rejected')
+        self.assertIn('shared field requires allow_shared=true: damage.standard_damage', op['error'])
+        self.assertIn('Runtime could not read the SDK version of', op['error'])
+        self.assertEqual(legacy_lines(self.results['scythe-bare']), [])
+        # With allow_shared the write applies with no legacy note.
+        op = only(self.results['scythe-0312-shared'])
+        self.assertNotEqual(op['status'], 'rejected', op.get('error'))
+        self.assertEqual(op['legacy'] or [], [])
+        # A mod declaring 0.31.3 (not loadable before the bump: the dependency check) keeps the rule.
+        self.assertEqual(run(r'''
+local c=require('hd2runtime/core/sdk_compatibility')
+local function check(sdk)
+ return c.with_origin({mod='mods/test/x',sdk=sdk,source='wrapper',pending={},logged={}},function()
+  return c.legacy('allow_shared','player_weapon','LAS-5 Scythe','damage.standard_damage','shared with LAS-22 Shear')end)
+end
+local ok,why=check('0.31.3')
+assert(ok==false and why=='required since SDK 0.31.3; mods/test/x declares SDK 0.31.3',tostring(why))
+assert(check('0.31.2')==true)
+-- The Shear's own fields were never published without allow_shared: no legacy entry.
+assert(c.with_origin({mod='m',sdk='0.27.0',source='wrapper',pending={},logged={}},function()
+ return c.legacy('allow_shared','player_weapon','LAS-22 Shear','damage.standard_damage')end)==false)
+return 'ok'
+'''), b'ok')
 
 
 if __name__ == '__main__':

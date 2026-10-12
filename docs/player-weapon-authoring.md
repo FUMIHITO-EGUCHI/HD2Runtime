@@ -158,13 +158,57 @@ Seven weapons tie on every compared stat with a second root: CQC-42 Machete, CQC
 |---|---|---|---|
 | GP-31 Grenade Pistol | `0x52E4334E6A128CAF` | the AR/GL-21 One-Two underbarrel | underbarrel host |
 | P-72 Crisper | `0x3F92BA65EF65CCA9` | the SMG/FLAM-34 Stoker underbarrel | underbarrel host |
-| LAS-5 Scythe | `0x27EE1ED8F6FB6356` | `laser_rifle_charge` | equipped snapshot |
+| LAS-5 Scythe | `0x27EE1ED8F6FB6356` | `laser_rifle_charge`, the LAS-22 Shear (catalogued since 0.31.3, below) | equipped snapshot |
 | LAS-7 Dagger | `0x7B06196E90154C88` | a non-loadout beam entity | equipped snapshot |
 | SMG-37 Defender | `0x4E4A613EB9BF5C24` | the SEAF SMG | equipped snapshot |
 | CQC-73 Entrenchment Tool | `0x7E1F76163C667E4B` | the CQC-72 support shovel | equipped snapshot |
 | CQC-42 Machete | `0x792D5D2A340FD6E6` | the CQC-20 Breaching Hammer | its call-in rack attaches the other |
 
-Each catalog entry keeps both `candidateRoots` and a `rootCorrection` (the proof kind). The GP-31 and the Dagger read different values than before, because the first-listed root was the wrong weapon. A field that a default customization item overwrites at every build stays read-only, whatever its own research says.
+Each catalog entry keeps both `candidateRoots` and a `rootCorrection` (the proof kind). The GP-31 and the Dagger read different values than before, because the first-listed root was the wrong weapon. A field that a default customization item overwrites at every build stays read-only, whatever its own research says. Since 0.31.3 its reason also gives the value the item builds the weapon with, where it differs from the base value shown.
+
+## LAS-22 Shear (0.31.3, offline only)
+
+`hd2.weapon('LAS-22 Shear')` is a primary (Energy-Based) laser rifle: a beam weapon that winds up a charge before it
+fires and resets it after each shot. Until 0.31.3 it was missing from every weapon catalogue and from the editor.
+
+**Why it was missing.** The catalogue's 80 identities come from a published-stat dataset, and that dataset has no
+Shear. The snapshot mapper had captured the Shear's root (`laser_rifle_charge`), but only as the LAS-5 Scythe's second
+candidate: the two roots tie on every compared stat. 0.30.2 proved the Scythe's own root and dropped this one as
+"another beam entity".
+
+**How it is identified.** The game's armory names the root. The loadout weapon table entry of armory item `7DE53646`
+(the primary category) holds it, and its EncyclopediaEntry composes "LAS-22 Shear". The same path gives each of the 80
+catalogued weapons its catalogue root, in its slot's category. Its LoadoutPackage slot is primary.
+`research/weapon-roots-F5FEE03DCFDB.json` (`additions`) records this, and `scripts/generate_weapon_authoring.py
+--apply-root-corrections` catalogues it on that root.
+
+**Its fields** are the Scythe's 64, on the Shear's own records: WeaponData, WeaponHeat, BeamWeapon, LoadoutPackage
+and WeaponCustomization, each owned by the Shear alone. It also fires the Scythe's BeamSettings and DamageInfo rows.
+38 of the fields are writable:
+
+| Fields | Vanilla | Writes |
+|---|---|---|
+| `weapon.ergonomics`, `sway`, spreads, the four recoil inputs, `suppressed`, `stationary_while_firing`, `third_person_reticle` | 65, 1, 10 / 10, 0, false | weapon-local |
+| `heat.capacity`, `heat.heat_per_shot` | 100, 2 | `allow_unverified_effect`: no published heat data cross-checks this weapon's values. The members are the same as on the published heat weapons. |
+| `heat.heat_per_second`, `cool_per_second`, the three heatsink counts, the four firing-charge fields | base 30, 15, 4 / 6 / 6, 100 / 300 / 500 / reset | read-only: its default **Laser Heatsink (Charge). Standard Heatsink** overwrites them when the weapon is built. In game it uses 25 heat/s and a charge loss of 100/s; the reason says so. |
+| `beam.fire_mode`, `fire_rate`, `pulse_beams`, `pulse_seconds` | continuous (4), 60, 1, 0 | its own BeamWeapon record (`allow_unverified_effect`, as on every beam weapon) |
+| `beam.length`, `beam.radius`, every `damage.*` field and status slot | 1000, 0; 350 / 70, AP 2 / 2 / 2 / 0, demolition 10, fire 1 | `allow_shared`: the Scythe's rows (below) |
+| `presentation.traits`, `presentation.armor_penetration` | light armor penetrating, beam, heat | its own LoadoutEntry |
+| beam swaps: `weapon:beam_source()` | BeamType 8 | its own default muzzle **Laser. Charge Standard** delta row (`attachment`); `attack.beam` on the weapon itself is dormant |
+
+`hd2.attack_output('LAS-22 Shear')` is a beam donor of BeamType 8 through the Shear's own package (laser_rifle_charge).
+Kill events name it (`LAS-22 Shear`). It has no ProjectileWeapon record, so it has no firing sound field and no
+fire-mode or rate selector; it is not a beam conversion host (it is already a beam).
+
+**Shared with the Scythe.** Both weapons fire the same beam and damage rows. Since 0.31.3, the Scythe's `beam.*` and
+`damage.*` row fields are marked shared too (`sharedWithWeapons`) and need `allow_shared`. A mod that declares SDK
+0.31.2 or older keeps writing them without it, as a logged legacy operation (docs/legacy-sdk-compatibility.md;
+`schemas/legacy_acknowledgements.json`, `scripts/generate_legacy_acknowledgements.py --shared`).
+
+**Not covered.** The game's description says the Shear releases an explosive energy burst when it fully overheats.
+Runtime catalogues no field for that burst; no member is proven for it. Nothing about the Shear is live-tested: the
+values are its records on the reference snapshot, and every writable field resolves there
+(`scripts/validate_weapon_authoring_snapshot.py`, `tests/test_shear.py`).
 
 ## Firing sound (`weapon.sound`, offline only)
 
@@ -379,6 +423,6 @@ laser bolts through projectile swaps (the Talon, Sickle, Sai and Quasar outputs;
 pulses through a solo-only [beam conversion](beam-conversion.md) (`weapon:beam_conversion()`).
 
 The LAS-5 Scythe resolves to `laser_rifle` since 0.30.2: an equipped snapshot holds that root, and the published
-Scythe heat data (12.5 heat/s, cooling 12.8 - 8.5 - 6.4) matches it only (`laser_rifle_charge` is another weapon).
+Scythe heat data (12.5 heat/s, cooling 12.8 - 8.5 - 6.4) matches it only (`laser_rifle_charge` is the LAS-22 Shear).
 Its heat rates are writable. Its heat capacity and heatsinks stay read-only: its default Laser Heatsink overwrites
 them every time the weapon is built, so a write there would never show.

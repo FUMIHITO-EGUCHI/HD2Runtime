@@ -51,7 +51,8 @@ return 'ok'
 class MetadataTests(unittest.TestCase):
     def test_player_weapons(self):
         fields = player_fields()
-        self.assertEqual(len(fields), 80)
+        self.assertEqual(len(fields), 81)   # 0.31.3: + the LAS-22 Shear (a beam: no ProjectileWeapon record, read-only)
+        self.assertFalse(fields['LAS-22 Shear']['editable'])
         editable = {name for name, f in fields.items() if f['editable']}
         self.assertEqual(len(editable), 55)   # + the SMG-37 Defender and P-72 Crisper (0.30.2: the seven DUPLICATE weapons resolved to their proven roots, research/weapon-roots)
         sounds = generate_weapon_sounds.build()['sounds']

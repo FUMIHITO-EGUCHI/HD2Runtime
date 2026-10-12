@@ -76,7 +76,7 @@ class NameRecordTests(unittest.TestCase):
             self.assertEqual(norm(composed) != norm(item['key']), (kind, item['key']) in MISMATCHES, item['key'])
             self.assertEqual(record['keyMismatch'], (kind, item['key']) in MISMATCHES, item['key'])
             checked += 1
-        self.assertEqual(checked, 170)
+        self.assertEqual(checked, 171)   # 0.31.3: + the LAS-22 Shear
         self.assertEqual({k for k, r in self.records.items() if r and r['keyMismatch']}, MISMATCHES)
         # Underbarrels have no record: their name falls back to the key (NO_NAME).
         self.assertEqual({k for (kind, k), r in self.records.items() if r is None}, UNDERBARRELS)

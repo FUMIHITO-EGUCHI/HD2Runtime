@@ -285,17 +285,17 @@
     "research": "research/docs/beam-rows-borrowed-F5FEE03DCFDB.md"
   },
   "summary": {
-    "weapons": 115,
+    "weapons": 116,
     "verdicts": {
       "supported_with_caveats": 65,
-      "out_of_scope": 24,
+      "out_of_scope": 25,
       "refused": 25,
       "supported": 1
     },
     "layouts": {
       "add": 42,
       "swap": 24,
-      "None": 49
+      "None": 50
     },
     "emptyBeamRows": 23,
     "maxSimultaneous": 22
@@ -1080,6 +1080,32 @@
       "restartAfterUse": false,
       "chamberFix": false,
       "heatPerPulse": 1.15
+    },
+    {
+      "name": "LAS-22 Shear",
+      "kind": "primary",
+      "supported": false,
+      "layout": null,
+      "verdict": "out_of_scope",
+      "reasonCode": "ALREADY_BEAM",
+      "reason": "already a BeamWeapon weapon",
+      "caveats": [],
+      "liveProven": false,
+      "liveProvenLayout": null,
+      "multiplayer": null,
+      "add": {
+        "supported": false,
+        "verdict": "out_of_scope",
+        "reasonCode": "ALREADY_BEAM",
+        "reason": "already a BeamWeapon weapon"
+      },
+      "swap": {
+        "supported": false,
+        "verdict": "out_of_scope",
+        "reasonCode": "ALREADY_BEAM",
+        "reason": "already a BeamWeapon weapon"
+      },
+      "target": "hd2.weapon(\"LAS-22 Shear\"):beam_conversion()"
     },
     {
       "name": "LAS-5 Scythe",

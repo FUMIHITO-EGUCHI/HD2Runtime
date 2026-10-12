@@ -176,6 +176,10 @@
         },
         {
           "domain": "player_weapon_authoring",
+          "object": "LAS-22 Shear"
+        },
+        {
+          "domain": "player_weapon_authoring",
           "object": "LAS-5 Scythe"
         },
         {

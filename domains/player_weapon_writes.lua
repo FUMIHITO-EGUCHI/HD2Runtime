@@ -635,8 +635,15 @@ local function validate_change(weapon,item,allow_shared,role,path,phase,allow_un
     -- acknowledgement and range it always had, while it writes its canonical id's bytes.
     local contract=requested.aliasOf and requested.legacyContract and requested or field
     assert(field.editable and field.backing,'field is read-only: '..item.field..' ('..tostring(field.reason)..')')
-    assert(not field.affectsMultipleWeapons or allow_shared,
-        'shared field requires allow_shared=true: '..item.field)
+    -- 0.31.3: a field that became shared when another weapon firing the same row was catalogued (the LAS-5 Scythe's
+    -- damage and beam row, the LAS-22 Shear's too) keeps its earlier rule for a mod that declares an older SDK.
+    local shared_legacy,shared_detail
+    if field.affectsMultipleWeapons and not allow_shared then
+        shared_legacy,shared_detail=sdk_compatibility.legacy('allow_shared',host_resource(weapon),weapon.name,
+            field.semanticFieldId,'shared with '..table.concat(field.sharedWithWeapons or{},', '))
+    end
+    assert(not field.affectsMultipleWeapons or allow_shared or shared_legacy,
+        'shared field requires allow_shared=true: '..item.field..(shared_detail and' ['..shared_detail..']'or''))
     -- A value a user test proved on exactly this target (liveProvenValues, from the provenTargets of
     -- schemas/live_evidence.json) needs no acknowledgement, nor does restoring that field's reviewed baseline;
     -- every other value of the field keeps it.

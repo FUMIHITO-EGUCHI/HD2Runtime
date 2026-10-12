@@ -6,7 +6,7 @@
     "dll": "2E2C3B7C2500646DADD5F2B4C6E0504DBB7E7896139F64CDDC0D1813C718F51E",
     "exe": "F5FEE03DCFDB2E553A4752C283590950AC13316B376D8196AA556FF0400D5F06"
   },
-  "catalogWeapons": 80,
+  "catalogWeapons": 81,
   "safety": {
     "writes": 0,
     "protectionChanges": 0,
@@ -15,12 +15,12 @@
   },
   "feature": "player_weapon_heat_capabilities",
   "summary": {
-    "weapons": 80,
-    "weaponsWithHeatMechanism": 7,
-    "weaponsWithHeatsinkMechanism": 7,
-    "directSemanticFieldsResolved": 49,
-    "writableFieldInstances": 42,
-    "weaponsWithWritableHeatFields": 7,
+    "weapons": 81,
+    "weaponsWithHeatMechanism": 8,
+    "weaponsWithHeatsinkMechanism": 8,
+    "directSemanticFieldsResolved": 56,
+    "writableFieldInstances": 49,
+    "weaponsWithWritableHeatFields": 8,
     "sharedComponentGroups": 0,
     "heatsinkOptionIdentities": 9,
     "writableHeatsinkOptionOverrides": 0
@@ -1131,6 +1131,207 @@
           "derived": false,
           "writable": false,
           "reason": "Never overheats: this weapon's record (heat.overheat_lock off) never sets the overheated state, so there is no lockout."
+        }
+      ],
+      "reason": null
+    },
+    {
+      "weapon": "LAS-22 Shear",
+      "resources": [
+        "0x7E3145A5BAA4B948"
+      ],
+      "heatMechanismPresent": true,
+      "heatsinkMechanismPresent": true,
+      "componentIdentity": {
+        "component": "WeaponHeatComponentData",
+        "componentIndex": 266,
+        "componentType": "0x4C981CD9",
+        "indexRow": 4,
+        "ownerCount": 1,
+        "recordIndex": 19,
+        "uniqueOwner": true
+      },
+      "wikiHeatData": {},
+      "fields": [
+        {
+          "id": "heat.capacity",
+          "value": 100.0,
+          "wikiValue": null,
+          "correlationMatches": null,
+          "offset": 96,
+          "storage": "f32",
+          "owner": {
+            "component": "WeaponHeatComponentData",
+            "recordIndex": 19,
+            "indexRow": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true
+          },
+          "writable": true,
+          "writeScope": "weapon_local",
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "No published heat data exists for this weapon, so its value is not cross-checked as on the published heat weapons (the WeaponHeat member itself is the same as theirs); the effect of a write is not shown in game.",
+          "reason": null
+        },
+        {
+          "id": "heat.heat_per_shot",
+          "value": 2.0,
+          "wikiValue": null,
+          "correlationMatches": null,
+          "offset": 116,
+          "storage": "f32",
+          "owner": {
+            "component": "WeaponHeatComponentData",
+            "recordIndex": 19,
+            "indexRow": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true
+          },
+          "writable": true,
+          "writeScope": "weapon_local",
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "No published heat data exists for this weapon, so its value is not cross-checked as on the published heat weapons (the WeaponHeat member itself is the same as theirs); the effect of a write is not shown in game.",
+          "reason": null
+        },
+        {
+          "id": "heat.heat_per_second",
+          "value": 30.0,
+          "wikiValue": null,
+          "correlationMatches": null,
+          "offset": 120,
+          "storage": "f32",
+          "owner": {
+            "component": "WeaponHeatComponentData",
+            "recordIndex": 19,
+            "indexRow": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true
+          },
+          "writable": true,
+          "writeScope": "weapon_local",
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "No published heat data exists for this weapon, so its value is not cross-checked as on the published heat weapons (the WeaponHeat member itself is the same as theirs); the effect of a write is not shown in game.",
+          "reason": null
+        },
+        {
+          "id": "heat.cool_per_second",
+          "value": 15.0,
+          "wikiValue": null,
+          "correlationMatches": null,
+          "offset": 128,
+          "storage": "f32",
+          "owner": {
+            "component": "WeaponHeatComponentData",
+            "recordIndex": 19,
+            "indexRow": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true
+          },
+          "writable": true,
+          "writeScope": "weapon_local",
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "No published heat data exists for this weapon, so its value is not cross-checked as on the published heat weapons (the WeaponHeat member itself is the same as theirs); the effect of a write is not shown in game.",
+          "reason": null
+        },
+        {
+          "id": "heatsink.starting",
+          "value": 4,
+          "wikiValue": null,
+          "correlationMatches": null,
+          "offset": 84,
+          "storage": "u32",
+          "owner": {
+            "component": "WeaponHeatComponentData",
+            "recordIndex": 19,
+            "indexRow": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true
+          },
+          "writable": true,
+          "writeScope": "weapon_local",
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "No published heat data exists for this weapon, so its value is not cross-checked as on the published heat weapons (the WeaponHeat member itself is the same as theirs); the effect of a write is not shown in game.",
+          "reason": null
+        },
+        {
+          "id": "heatsink.from_supply",
+          "value": 6,
+          "wikiValue": null,
+          "correlationMatches": null,
+          "offset": 88,
+          "storage": "u32",
+          "owner": {
+            "component": "WeaponHeatComponentData",
+            "recordIndex": 19,
+            "indexRow": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true
+          },
+          "writable": true,
+          "writeScope": "weapon_local",
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "No published heat data exists for this weapon, so its value is not cross-checked as on the published heat weapons (the WeaponHeat member itself is the same as theirs); the effect of a write is not shown in game.",
+          "reason": null
+        },
+        {
+          "id": "heatsink.spare",
+          "value": 6,
+          "wikiValue": null,
+          "correlationMatches": null,
+          "offset": 92,
+          "storage": "u32",
+          "owner": {
+            "component": "WeaponHeatComponentData",
+            "recordIndex": 19,
+            "indexRow": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true
+          },
+          "writable": true,
+          "writeScope": "weapon_local",
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "No published heat data exists for this weapon, so its value is not cross-checked as on the published heat weapons (the WeaponHeat member itself is the same as theirs); the effect of a write is not shown in game.",
+          "reason": null
+        },
+        {
+          "id": "heat.cool_per_second_cold",
+          "value": 22.5,
+          "wikiValue": null,
+          "derived": true,
+          "writable": false,
+          "reason": "Derived from cool_per_second and the native 1.5 cold multiplier."
+        },
+        {
+          "id": "heat.cool_per_second_hot",
+          "value": 11.25,
+          "wikiValue": null,
+          "derived": true,
+          "writable": false,
+          "reason": "Derived from cool_per_second and the native 0.75 hot multiplier."
+        },
+        {
+          "id": "heatsink.from_ammo_box",
+          "value": 3,
+          "wikiValue": null,
+          "derived": true,
+          "writable": false,
+          "reason": "Derived from heatsink.from_supply."
+        },
+        {
+          "id": "heat.warmup",
+          "value": 0.3333333333333333,
+          "wikiValue": null,
+          "derived": true,
+          "writable": false,
+          "reason": "Derived: heat.firing_charge / heat.charge_gain_per_second (the charge built before the first shot, at the charge gained per second); edit heat.firing_charge or heat.charge_gain_per_second."
+        },
+        {
+          "id": "heat.overheat_cooldown",
+          "value": null,
+          "wikiValue": null,
+          "derived": false,
+          "writable": false,
+          "reason": "No passive cooling after an overheat: this weapon's record (WeaponHeat +144 set) neither cools nor releases an overheated weapon, so it stays overheated until the heatsink is changed (a reload). heat.cool_per_second applies only while the weapon is not overheated."
         }
       ],
       "reason": null

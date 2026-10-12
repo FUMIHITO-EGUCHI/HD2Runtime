@@ -10,8 +10,18 @@ order. This research proves which root is the weapon a player carries, from thre
   * call_in_rack: the other root is the one a support weapon's call-in rack attaches (research/support-weapon-coverage
     deliveredRoot), and the kept root's resource path names the weapon. CQC-42 Machete.
 
+0.31.3: player weapons the reviewed catalogue never named (`additions`). The catalogue's identities come from a
+published-stat dataset; a weapon it has no entry for is not catalogued even when the snapshot mapper already captured
+its root as another weapon's candidate. The game's own armory names it: the loadout weapon table entry of an armory item
+holds the entity resource (+8), and the armory title is that resource's EncyclopediaEntry prefix + name
+(research/weapon-name-text-ids, research_weapon_name_text.py; the same path resolves all 80 catalogued weapons to their
+catalogue roots, the seven proven roots included). An addition must be such an armory entry of the primary (1) or
+secondary (3) category, its root a catalogued candidate no weapon uses, and its LoadoutPackage slot the same as the
+armory category. LAS-22 Shear (laser_rifle_charge), the LAS-5 Scythe's dropped root.
+
 Writes research/weapon-roots-F5FEE03DCFDB.json; scripts/generate_weapon_authoring.py applies it to the catalogue
-(resources = [the proven root], resolution UNIQUE). Read-only on the snapshots.
+(resources = [the proven root], resolution UNIQUE; additions become their own UNIQUE entries). Read-only on the
+snapshots.
 """
 import argparse
 import json
@@ -22,6 +32,16 @@ OUTPUT = ROOT / 'research/weapon-roots-F5FEE03DCFDB.json'
 UNDERBARREL = ROOT / 'research/underbarrel-weapons-F5FEE03DCFDB.json'
 SUPPORT_COVERAGE = ROOT / 'research/support-weapon-coverage-F5FEE03DCFDB.json'
 CATALOG = ROOT / 'schemas/player_weapon_authoring_catalog.json'
+GAME_NAMES = ROOT / 'research/weapon-name-text-ids-F5FEE03DCFDB.json'
+# Armory (loadout weapon table) categories of the two player weapon slots: every catalogued primary is in category 1,
+# every catalogued secondary in category 3 (checked below).
+ARMORY_SLOT = {1: 'primary', 3: 'secondary'}
+# Reviewed additions: the armory's name of the weapon -> its catalogue grouping. The grouping is the published-stat
+# dataset's category; a weapon it has no entry for takes the one of its designation family and implementation family
+# in the catalogue (every LAS primary: the LAS-5 Scythe, LAS-12 Sai, LAS-13 Trident, LAS-16 Sickle are Energy-Based).
+ADDITIONS = {'LAS-22 Shear': {'category': 'Energy-Based', 'categoryBasis': 'no published-stat entry; the grouping of '
+    'every LAS primary in the catalogue (LAS-5 Scythe, LAS-12 Sai, LAS-13 Trident, LAS-16 Sickle, LAS-17 '
+    'Double-Edge Sickle: Energy-Based)'}}
 
 # Snapshot -> {slot: weapon}: what the user equipped for the capture.
 SNAPSHOTS = {
@@ -32,7 +52,8 @@ SNAPSHOTS = {
 }
 # What each dropped root is (the reviewed identification, for the record).
 DROPPED_IS = {
-    'LAS-5 Scythe': 'laser_rifle_charge: another beam entity (its heat matches no published Scythe value)',
+    'LAS-5 Scythe': ('laser_rifle_charge: the LAS-22 Shear (its armory entry; its heat matches no published Scythe '
+        'value), catalogued on its own since 0.31.3 (additions)'),
     'LAS-7 Dagger': 'a non-loadout beam entity (its 2000 heat is the source of the old 2000-vs-100 disagreement)',
     'SMG-37 Defender': 'the SEAF SMG (seaf_smg package, foley_seafs banks)',
     'CQC-73 Entrenchment Tool': 'the world/support shovel (survival_shovel, the CQC-72 support weapon)',
@@ -91,10 +112,52 @@ def machete():
         'evidence': {'kind': 'call_in_rack', 'source': SUPPORT_COVERAGE.name, 'paths': hammer}}]
 
 
+def additions(source):
+    """The armory's player weapons the catalogue never named, whose root the catalogue holds as a candidate."""
+    names = json.loads(GAME_NAMES.read_text(encoding='utf-8'))
+    armory = {}
+    for item in names['armory']:
+        armory.setdefault(item['resource'], []).append(item)
+    weapons = [w for w in source['weapons'] if w['name'] not in ADDITIONS]
+    # The method: the armory entry of every catalogued weapon holds its catalogue root, in its slot's category.
+    for weapon in weapons:
+        (root,) = weapon['resources']
+        entries = armory.get(root) or []
+        if not entries or any(ARMORY_SLOT.get(e['category']) != weapon['slot'] for e in entries):
+            raise ValueError('%s: the armory does not hold %s in the %s category' % (weapon['name'], root,
+                weapon['slot']))
+    used = {r for w in weapons for r in w['resources']}
+    found = []
+    for root, candidate in sorted(source['candidates'].items()):
+        if root in used:
+            continue
+        for entry in armory.get(root) or []:
+            slot = ARMORY_SLOT.get(entry['category'])
+            if not slot or not entry.get('composedName'):
+                continue
+            seen = candidate['resolvedFields'].get('weapon_slot')
+            if seen != slot:
+                raise ValueError('%s: LoadoutPackage slot %r, armory category %s' % (root, seen, entry['category']))
+            found.append({'weapon': entry['composedName'], 'root': root, 'slot': slot,
+                **ADDITIONS.get(entry['composedName'], {}),
+                'candidateOf': sorted(w['name'] for w in weapons if root in (w.get('candidateRoots') or [])),
+                'evidence': {'kind': 'armory_entry', 'source': GAME_NAMES.name, 'armoryCategory': entry['category'],
+                    'itemId': entry['itemId'], 'encyclopediaRecord': entry['record'],
+                    'entityPath': entry['entityPath'], 'composedName': entry['composedName'],
+                    'loadoutSlot': seen,
+                    'methodCheck': 'the armory entry of each of the %d catalogued weapons holds its catalogue root '
+                        'in its slot\'s category (the seven proven roots included)' % len(weapons)}})
+    if sorted(item['weapon'] for item in found) != sorted(ADDITIONS):
+        raise ValueError('reviewed additions %r, armory candidates %r' % (sorted(ADDITIONS),
+            sorted(item['weapon'] for item in found)))
+    return found
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.parse_args()
-    catalog = {w['name']: w for w in json.loads(CATALOG.read_text(encoding='utf-8'))['weapons']}
+    source = json.loads(CATALOG.read_text(encoding='utf-8'))
+    catalog = {w['name']: w for w in source['weapons']}
     rows = underbarrel() + equipped() + machete()
     for row in rows:
         entry = catalog[row['weapon']]
@@ -108,10 +171,11 @@ def main():
     rows.sort(key=lambda r: r['weapon'])
     value = {'schemaVersion': 1, 'gameFingerprint': 'F5FEE03DCFDB',
         'scope': 'The real root of each player weapon the stat-fingerprint mapper resolves to two roots (DUPLICATE). '
-            'Applied by scripts/generate_weapon_authoring.py: resources = [provenRoot], resolution UNIQUE.',
-        'corrections': rows}
+            'Applied by scripts/generate_weapon_authoring.py: resources = [provenRoot], resolution UNIQUE. '
+            'additions (0.31.3): armory player weapons the catalogue never named, catalogued on their own root.',
+        'corrections': rows, 'additions': additions(source)}
     OUTPUT.write_text(json.dumps(value, indent=2) + '\n', newline='\n')
-    print('wrote %s (%d weapons)' % (OUTPUT.relative_to(ROOT), len(rows)))
+    print('wrote %s (%d weapons, %d additions)' % (OUTPUT.relative_to(ROOT), len(rows), len(value['additions'])))
 
 
 if __name__ == '__main__':

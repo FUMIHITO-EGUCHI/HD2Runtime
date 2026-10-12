@@ -1574,6 +1574,25 @@
    "write": "beam_source() (hd2.fields.attack.beam on the weapon itself)"
   },
   {
+   "weapon": "LAS-22 Shear",
+   "kind": "player_weapon",
+   "stratagem": null,
+   "status": "INDIRECT",
+   "mechanism": "attachment",
+   "member": "Laser. Charge Standard delta (BeamWeapon +0)",
+   "reason": "The default customization item Laser. Charge Standard (slot 4) patches BeamWeapon +0 (to BeamType 8) when the weapon is built, so the base member is dormant; that delta row is the active beam source.",
+   "writable": true,
+   "beamClass": "continuous",
+   "fires": "output/v1/beam/las-22-shear",
+   "sharedWithWeapons": [],
+   "acknowledgements": [
+    "allow_shared",
+    "allow_unverified_reference",
+    "allow_unverified_effect"
+   ],
+   "write": "beam_source() (the muzzle definition: hd2.fields.attack.beam)"
+  },
+  {
    "weapon": "LAS-5 Scythe",
    "kind": "player_weapon",
    "stratagem": null,
@@ -1701,9 +1720,9 @@
   "counts": {
    "records": 24,
    "owners": 23,
-   "donors": 6,
-   "hosts": 7,
-   "writableHosts": 6
+   "donors": 7,
+   "hosts": 8,
+   "writableHosts": 7
   }
  },
  "ammunitionSources": [
@@ -2261,10 +2280,10 @@
   ]
  },
  "summary": {
-  "outputs": 169,
+  "outputs": 170,
   "byFamily": {
    "projectile": 139,
-   "beam": 12,
+   "beam": 13,
    "arc": 3,
    "spray": 8,
    "melee": 7
@@ -2295,8 +2314,8 @@
    "TD-220 Bastion MK XVI"
   ],
   "selectable": 111,
-  "beamDonors": 6,
-  "beamHosts": 6,
+  "beamDonors": 7,
+  "beamHosts": 7,
   "projectileHosts": 61,
   "componentHosts": 55,
   "ammunitionHosts": 6,
@@ -14476,6 +14495,52 @@
    "ownerFiresThisBeam": "ACTIVE_DIRECT",
    "package": {
     "name": "laser_shotgun",
+    "known": true,
+    "autoLoad": true,
+    "listsBeamResources": true
+   },
+   "acknowledgements": {
+    "donor": [
+     "allow_unverified_reference",
+     "allow_unverified_effect"
+    ],
+    "restoreOwn": []
+   },
+   "liveProof": null
+  },
+  {
+   "semanticId": "output/v1/beam/las-22-shear",
+   "family": "beam",
+   "kind": "continuous_beam",
+   "beamClass": "continuous",
+   "owner": {
+    "kind": "player_weapon",
+    "name": "LAS-22 Shear"
+   },
+   "emitter": "BeamWeapon",
+   "beamType": 8,
+   "compatibilityClass": null,
+   "selectableAsProjectileReference": false,
+   "selectableAsBeamReference": true,
+   "compatibleHostFamilies": [
+    "beam"
+   ],
+   "requiredCoordinatedReferences": [],
+   "blockedReason": "A projectile host references only ProjectileType. Beam outputs are fired by their own BeamWeaponComponent (which also owns their cadence, beam fire mode and heat buildup); no projectile or explosion member can reference them, and adding the component to another weapon entity changes its composition, which Runtime does not do.",
+   "row": {
+    "length": 1000,
+    "radius": 0,
+    "explosion": false,
+    "pulseRow": false
+   },
+   "ownerFireResource": [
+    "WeaponData",
+    "WeaponHeat",
+    "WeaponReload"
+   ],
+   "ownerFiresThisBeam": "INDIRECT",
+   "package": {
+    "name": "laser_rifle_charge",
     "known": true,
     "autoLoad": true,
     "listsBeamResources": true

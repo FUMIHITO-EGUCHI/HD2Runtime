@@ -206,7 +206,7 @@ class DomainTests(unittest.TestCase):
         self.assertEqual(generate_beam_conversion.generate(check=True), [])
         domain = generate_beam_conversion.build()
         by = {w['name']: w for w in domain['weapons']}
-        self.assertEqual(len(domain['weapons']), 115)
+        self.assertEqual(len(domain['weapons']), 116)   # 0.31.3: + the LAS-22 Shear (out of scope: already a beam)
         # The projectile LAS weapons: the swap verdict, and the add layout where it takes them.
         for name, layout, verdict, code, swap_code in (
                 ('LAS-16 Sickle', 'add', 'supported_with_caveats', 'ADD_LAYOUT', 'HEAT_PULSE'),
@@ -227,7 +227,7 @@ class DomainTests(unittest.TestCase):
         layouts = {}
         for w in domain['weapons']:
             layouts[w['layout']] = layouts.get(w['layout'], 0) + 1
-        self.assertEqual(layouts, {'add': 42, 'swap': 24, None: 49})
+        self.assertEqual(layouts, {'add': 42, 'swap': 24, None: 50})   # 0.31.3: + the LAS-22 Shear (already a beam)
         add_refusals = {}
         for w in domain['weapons']:
             if w['layout'] == 'swap':
@@ -297,7 +297,9 @@ class DomainTests(unittest.TestCase):
 
     def test_capabilities_list_every_weapon_with_its_target(self):
         caps = json.loads((ROOT / 'sdk/BeamConversionCapabilities.json').read_text(encoding='utf-8'))
-        self.assertEqual(caps['summary']['weapons'], 115)
+        self.assertEqual(caps['summary']['weapons'], 116)
+        shear = next(w for w in caps['weapons'] if w['name'] == 'LAS-22 Shear')
+        self.assertEqual(shear['verdict'], 'out_of_scope')
         sickle = next(w for w in caps['weapons'] if w['name'] == 'LAS-16 Sickle')
         self.assertEqual(sickle['target'], 'hd2.weapon("LAS-16 Sickle"):beam_conversion()')
         quasar = next(w for w in caps['weapons'] if w['name'] == 'LAS-99 Quasar Cannon')

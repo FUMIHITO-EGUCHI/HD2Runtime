@@ -20877,9 +20877,13 @@
           "blocker": "Native owner known; effect semantics are not reviewed."
         }
       ],
-      "compatibleWeapons": [],
+      "compatibleWeapons": [
+        "LAS-22 Shear"
+      ],
       "consumers": {
-        "nativeDefaultOf": [],
+        "nativeDefaultOf": [
+          "LAS-22 Shear"
+        ],
         "unlockListedFor": [],
         "scopeComplete": false
       },
@@ -26382,9 +26386,13 @@
           "blocker": "Resource reference; replacing it is not reviewed as safe."
         }
       ],
-      "compatibleWeapons": [],
+      "compatibleWeapons": [
+        "LAS-22 Shear"
+      ],
       "consumers": {
-        "nativeDefaultOf": [],
+        "nativeDefaultOf": [
+          "LAS-22 Shear"
+        ],
         "unlockListedFor": [],
         "scopeComplete": false
       },
@@ -27371,6 +27379,7 @@
         "LAS-13 Trident",
         "LAS-16 Sickle",
         "LAS-17 Double-Edge Sickle",
+        "LAS-22 Shear",
         "LAS-5 Scythe",
         "MP-98 Knight",
         "PLAS-1 Scorcher",
@@ -27397,6 +27406,7 @@
           "LAS-12 Sai",
           "LAS-16 Sickle",
           "LAS-17 Double-Edge Sickle",
+          "LAS-22 Shear",
           "LAS-5 Scythe",
           "VG-70 Variable"
         ],
@@ -28578,6 +28588,7 @@
         "LAS-13 Trident",
         "LAS-16 Sickle",
         "LAS-17 Double-Edge Sickle",
+        "LAS-22 Shear",
         "LAS-5 Scythe",
         "MP-98 Knight",
         "PLAS-1 Scorcher",
@@ -28629,6 +28640,7 @@
           "LAS-13 Trident",
           "LAS-16 Sickle",
           "LAS-17 Double-Edge Sickle",
+          "LAS-22 Shear",
           "LAS-5 Scythe",
           "MP-98 Knight",
           "PLAS-1 Scorcher",
@@ -33816,6 +33828,7 @@
         "DBS-2 Double Freedom",
         "JAR-5 Dominator",
         "LAS-13 Trident",
+        "LAS-22 Shear",
         "LAS-5 Scythe",
         "MP-98 Knight",
         "P-113 Verdict",
@@ -33845,6 +33858,7 @@
           "AR-61 Tenderizer",
           "JAR-5 Dominator",
           "LAS-13 Trident",
+          "LAS-22 Shear",
           "LAS-5 Scythe",
           "MP-98 Knight",
           "P-113 Verdict",
@@ -39278,6 +39292,66 @@
               "name": "Venus Solid",
               "default": false,
               "unlockListed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "weapon": "LAS-22 Shear",
+      "slots": [
+        {
+          "slot": "Magazine",
+          "options": [
+            {
+              "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+              "name": "Laser Heatsink (Charge). Standard Heatsink",
+              "default": true,
+              "unlockListed": false
+            }
+          ]
+        },
+        {
+          "slot": "Muzzle",
+          "options": [
+            {
+              "attachment": "weapon-attachment/v1/muzzle/laser-charge-standard/999bbb1342467088",
+              "name": "Laser. Charge Standard",
+              "default": true,
+              "unlockListed": false
+            }
+          ]
+        },
+        {
+          "slot": "Optics",
+          "options": [
+            {
+              "attachment": "weapon-attachment/v1/optics/tube-reddot-2x/184551d23defaf96",
+              "name": "TUBE REDDOT 2x",
+              "default": true,
+              "unlockListed": false
+            }
+          ]
+        },
+        {
+          "slot": "PaintScheme",
+          "options": [
+            {
+              "attachment": "weapon-attachment/v1/paintscheme/default/130bcbe4af666b12",
+              "name": "Default",
+              "default": true,
+              "unlockListed": false
+            }
+          ]
+        },
+        {
+          "slot": "Underbarrel",
+          "options": [
+            {
+              "attachment": "weapon-attachment/v1/underbarrel/laser-sight-flashlight/25c6efee394ddfa0",
+              "name": "Laser Sight Flashlight",
+              "default": true,
+              "unlockListed": false
             }
           ]
         }
@@ -45293,9 +45367,9 @@
       "Underbarrel": 19
     },
     "withEntityDelta": 237,
-    "withKnownConsumers": 214,
+    "withKnownConsumers": 216,
     "withStatModifiers": 166,
-    "weapons": 69,
+    "weapons": 70,
     "writableEffects": 0
   },
   "safety": {

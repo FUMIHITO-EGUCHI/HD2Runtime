@@ -14,9 +14,13 @@ def load(relative):
     return json.loads((ROOT / relative).read_text(encoding='utf-8'))
 
 
+# 0.31.3: + the LAS-22 Shear (research/weapon-roots additions): its own default muzzle Laser. Charge Standard patches
+# BeamWeapon +0 to the Scythe's BeamType 8 in its own delta row; it is a donor of the same row through its own package.
 HOSTS = {'LAS-13 Trident': 'component', 'LAS-7 Dagger': 'component', 'LAS-5 Scythe': 'attachment',
+    'LAS-22 Shear': 'attachment',
     '40-K Meltagun': 'component', 'LAS-98 Laser Cannon': 'component', 'A/LAS-98 Laser Sentry / weapon': 'component'}
-DONORS = {'LAS-13 Trident': 6, 'LAS-7 Dagger': 11, 'LAS-5 Scythe': 8, '40-K Meltagun': 18, 'LAS-98 Laser Cannon': 1,
+DONORS = {'LAS-13 Trident': 6, 'LAS-7 Dagger': 11, 'LAS-5 Scythe': 8, 'LAS-22 Shear': 8, '40-K Meltagun': 18,
+    'LAS-98 Laser Cannon': 1,
     'A/LAS-98 Laser Sentry': 10}
 
 
@@ -27,8 +31,9 @@ class ResearchTests(unittest.TestCase):
         summary = research['summary']
         # 24 records: 23 owned (one entity each) and the unowned default record.
         self.assertEqual((summary['records'], summary['owners']), (24, 23))
-        self.assertEqual(summary['byKind'], {'dropped_root': 2, 'enemy': 5, 'enemy_structure': 2, 'other_root': 1,
-            'player_weapon': 3, 'sentry': 1, 'support_weapon': 2, 'unnamed': 6, 'vehicle_weapon': 1})
+        # 0.31.3: the LAS-22 Shear (laser_rifle_charge) is a catalogued player weapon, no longer a dropped root.
+        self.assertEqual(summary['byKind'], {'dropped_root': 1, 'enemy': 5, 'enemy_structure': 2, 'other_root': 1,
+            'player_weapon': 4, 'sentry': 1, 'support_weapon': 2, 'unnamed': 6, 'vehicle_weapon': 1})
         owners = {o['name']: (r, o) for r in research['records'] for o in r['owners'] if o['name']}
         for name, beam in (('LAS-13 Trident', 6), ('LAS-7 Dagger', 11), ('40-K Meltagun', 18),
                 ('LAS-98 Laser Cannon', 1), ('A/LAS-98 Laser Sentry', 10)):
@@ -39,6 +44,11 @@ class ResearchTests(unittest.TestCase):
         record, scythe = owners['LAS-5 Scythe']
         self.assertEqual((scythe['status'], scythe['activeSource']['item'], scythe['activeSource']['value'],
             scythe['activeSource']['baseAgrees']), ('INDIRECT', 'Laser. Standard Prism', 8, True))
+        # The LAS-22 Shear: its own record (17), its own default muzzle delta (Laser. Charge Standard), the same BeamType.
+        record, shear = owners['LAS-22 Shear']
+        self.assertEqual((record['record'], record['beamType'], shear['kind'], shear['status'],
+            shear['activeSource']['item'], shear['activeSource']['value']),
+            (17, 8, 'player_weapon', 'INDIRECT', 'Laser. Charge Standard', 8))
         # The Rover drone gun defaults to the same muzzle, whose BeamType (8) differs from its record's (25): which one
         # a drone fires is not proven (the delta application is live-proven for player weapons only).
         record, rover = owners['AX/LAS-5 Rover / gun']
@@ -69,8 +79,12 @@ class CatalogTests(unittest.TestCase):
         hosts = {h['weapon']: h for h in catalog['beamSources']}
         self.assertEqual({k: h['mechanism'] for k, h in hosts.items() if h['writable']}, HOSTS)
         self.assertEqual(hosts['LAS-5 Scythe']['sharedWithWeapons'], ['AX/LAS-5 Rover / gun'])
+        # Two donors fire BeamType 8: each host fires its own output, and the Rover's candidate stays the Scythe's.
+        self.assertEqual((hosts['LAS-5 Scythe']['fires'], hosts['LAS-22 Shear']['fires'], hosts['LAS-22 Shear']
+            ['sharedWithWeapons']), ('output/v1/beam/las-5-scythe', 'output/v1/beam/las-22-shear', []))
+        self.assertEqual(beams['AX/LAS-5 Rover / gun']['candidateOutput'], 'output/v1/beam/las-5-scythe')
         self.assertFalse(hosts['AX/LAS-5 Rover / gun']['writable'])
-        self.assertEqual((catalog['summary']['beamDonors'], catalog['summary']['beamHosts']), (6, 6))
+        self.assertEqual((catalog['summary']['beamDonors'], catalog['summary']['beamHosts']), (7, 7))
         public = load('sdk/VehicleWeaponCapabilities.json')
         self.assertEqual([h['stratagem'] for h in public['stratagemBeamHosts']], ['A/LAS-98 Laser Sentry'])
 
@@ -220,7 +234,9 @@ local n=0
 for _ in pairs(overlay)do n=n+1 end
 check(n==2,'exactly two members written: '..n)
 -- After the swap the Scythe's own beam row fields follow its active source: a plain edit of its old row is refused.
-local ok,why=pcall(resolve,'patch',{id='l',target=hd2.weapon('LAS-5 Scythe'),field=F.beam.length,expect=1000,value=500})
+-- (0.31.3: the row is shared with the LAS-22 Shear, so the edit carries allow_shared; the refusal is the stale target.)
+local ok,why=pcall(resolve,'patch',{id='l',target=hd2.weapon('LAS-5 Scythe'),field=F.beam.length,expect=1000,value=500,
+ allow_shared=true})
 check(not ok and tostring(why):find('COMPOSITION_TARGET_CHANGED',1,true),'stale beam row edit: '..tostring(why))
 return json.encode({ok=true})
 ''')

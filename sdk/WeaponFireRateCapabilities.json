@@ -1220,6 +1220,24 @@
     },
     {
       "kind": "player",
+      "weapon": "LAS-22 Shear",
+      "state": "absent",
+      "modes": null,
+      "defaultRpm": null,
+      "slots": null,
+      "expect": null,
+      "selectorOrder": null,
+      "maxModes": null,
+      "selector": null,
+      "overriddenWhenEquipped": [],
+      "writable": false,
+      "reason": "The weapon owns no ProjectileWeaponComponentData rate slots.",
+      "fields": null,
+      "acknowledgements": null,
+      "liveEvidence": null
+    },
+    {
+      "kind": "player",
       "weapon": "LAS-5 Scythe",
       "state": "absent",
       "modes": null,
@@ -4956,9 +4974,9 @@
     }
   ],
   "summary": {
-    "weapons": 115,
+    "weapons": 116,
     "byState": {
-      "player:absent": 12,
+      "player:absent": 13,
       "player:addable": 50,
       "player:blocked": 17,
       "player:selectable": 1,

@@ -11874,6 +11874,22 @@
       ]
     },
     {
+      "name": "LAS-22 Shear",
+      "slot": "primary",
+      "category": "Energy-Based",
+      "resolution": "UNIQUE",
+      "resources": [
+        "0x7E3145A5BAA4B948"
+      ],
+      "rootAddition": {
+        "source": "weapon-roots-F5FEE03DCFDB.json",
+        "evidence": "armory_entry",
+        "candidateOf": [
+          "LAS-5 Scythe"
+        ]
+      }
+    },
+    {
       "name": "LAS-5 Scythe",
       "slot": "primary",
       "category": "Energy-Based",

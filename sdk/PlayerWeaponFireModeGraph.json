@@ -6,7 +6,7 @@
     "dll": "2E2C3B7C2500646DADD5F2B4C6E0504DBB7E7896139F64CDDC0D1813C718F51E",
     "exe": "F5FEE03DCFDB2E553A4752C283590950AC13316B376D8196AA556FF0400D5F06"
   },
-  "catalogWeapons": 80,
+  "catalogWeapons": 81,
   "safety": {
     "writes": 0,
     "protectionChanges": 0,
@@ -15,9 +15,9 @@
   },
   "feature": "fire_mode_graph",
   "summary": {
-    "weapons": 80,
-    "nativePrimaryValueReadable": 80,
-    "allowedModeListsProven": 80,
+    "weapons": 81,
+    "nativePrimaryValueReadable": 81,
+    "allowedModeListsProven": 81,
     "writableWeapons": 22
   },
   "nativeValueGroups": {
@@ -46,6 +46,7 @@
       "LAS-13 Trident",
       "LAS-16 Sickle",
       "LAS-17 Double-Edge Sickle",
+      "LAS-22 Shear",
       "LAS-5 Scythe",
       "LAS-7 Dagger",
       "M7S SMG",
@@ -125,6 +126,7 @@
       "LAS-13 Trident",
       "LAS-16 Sickle",
       "LAS-17 Double-Edge Sickle",
+      "LAS-22 Shear",
       "LAS-5 Scythe",
       "LAS-7 Dagger",
       "SG-97 Sweeper",
@@ -1126,6 +1128,35 @@
         1
       ],
       "defaultModeSemantics": "full_auto",
+      "selectedRuntimeMode": null,
+      "writable": false,
+      "writeKind": null,
+      "reason": "Only conventional, uniquely resolved weapons with both native 1 and 2 in their three-slot vector are writable."
+    },
+    {
+      "weapon": "LAS-22 Shear",
+      "resources": [
+        "0x7E3145A5BAA4B948"
+      ],
+      "implementationFamilies": [
+        "beam"
+      ],
+      "primaryFireModeNativeValue": 1,
+      "backing": {
+        "component": "WeaponDataComponentData",
+        "offset": 144,
+        "width": 4,
+        "storage": "u32",
+        "recordIndex": 293,
+        "indexRow": 446
+      },
+      "nativeModeVector": [
+        1,
+        0,
+        0
+      ],
+      "allowedModes": [],
+      "defaultModeSemantics": "family_specific_or_unresolved",
       "selectedRuntimeMode": null,
       "writable": false,
       "writeKind": null,

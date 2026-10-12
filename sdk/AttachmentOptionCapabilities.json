@@ -6,7 +6,7 @@
     "dll": "2E2C3B7C2500646DADD5F2B4C6E0504DBB7E7896139F64CDDC0D1813C718F51E",
     "exe": "F5FEE03DCFDB2E553A4752C283590950AC13316B376D8196AA556FF0400D5F06"
   },
-  "catalogWeapons": 80,
+  "catalogWeapons": 81,
   "safety": {
     "writes": 0,
     "protectionChanges": 0,
@@ -20,7 +20,7 @@
     "source": "https://helldivers.wiki.gg/wiki/Weapons"
   },
   "summary": {
-    "weapons": 80,
+    "weapons": 81,
     "primaryWeaponsWithAttachments": 37,
     "attachmentOptionsMapped": 419,
     "attachmentOptionsTotal": 419,
@@ -41,7 +41,7 @@
     "writableOptionFields": 0,
     "writableAttachmentSelections": 0,
     "alternateAllowedRelationshipsProven": 0,
-    "completeCustomizationRecordsCompared": 80,
+    "completeCustomizationRecordsCompared": 81,
     "simpleMagazineWeapons": 33,
     "roundsFeedWeapons": 15
   },
@@ -5561,6 +5561,37 @@
           ]
         }
       ]
+    },
+    {
+      "weapon": "LAS-22 Shear",
+      "resources": [
+        "0x7E3145A5BAA4B948"
+      ],
+      "ordinaryWritesBlocked": false,
+      "backingDomain": "none",
+      "simpleMagazineApi": true,
+      "defaultOption": null,
+      "observedCustomizationOptions": [
+        {
+          "optionId": "0x5672E4B7",
+          "name": "Laser Heatsink (Charge). Standard Heatsink",
+          "addPath": "0xB889C472C393E06B",
+          "optionIdOffsets": [
+            28
+          ],
+          "addPathOffsets": []
+        }
+      ],
+      "alternateOptions": {
+        "status": "NONE_PROVEN",
+        "options": []
+      },
+      "effectiveCapacity": {
+        "status": "NOT_APPLICABLE"
+      },
+      "fields": {},
+      "attachmentCount": 0,
+      "categories": []
     },
     {
       "weapon": "LAS-5 Scythe",

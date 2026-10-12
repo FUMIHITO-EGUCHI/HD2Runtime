@@ -444,7 +444,9 @@ def beam_outputs(runtime_outputs, aliases, public, assets):
     for record, item in owners:
         if item['kind'] in BEAM_HOST_KINDS:
             host_name[item['resource']] = item['name'] + (' / weapon' if item['kind'] == 'sentry' else '')
-    donors, by_type = {}, {}
+    # by_type: the output of each fired BeamType, its first owner's (record order). 0.31.3: two donors can fire the
+    # same row (the LAS-5 Scythe and LAS-22 Shear, BeamType 8); each host still fires its own output (own_output).
+    donors, by_type, own_output = {}, {}, {}
     for record, item in owners:
         if item['kind'] not in BEAM_DONOR_KINDS or not item['componentIdentity']['uniqueOwner']:
             continue
@@ -474,7 +476,8 @@ def beam_outputs(runtime_outputs, aliases, public, assets):
                 raise ValueError('duplicate attack output alias ' + alias)
             aliases[alias] = semantic
         donors[semantic] = (record, item, row, package)
-        by_type[record['beamType']] = semantic
+        by_type.setdefault(record['beamType'], semantic)
+        own_output[item['resource']] = semantic
     for semantic, (record, item, row, package) in sorted(donors.items()):
         public.append({'semanticId': semantic, 'family': 'beam',
             'kind': 'pulsed_multi_beam' if record['fireMode'] == 6 else 'continuous_beam',
@@ -564,8 +567,9 @@ def beam_outputs(runtime_outputs, aliases, public, assets):
         hosts[key] = {'kind': kind, 'weapon': name, 'status': item['status'], 'mechanism': mechanism,
             'member': 'BeamWeapon +0' if mechanism != 'attachment' else source['item'] + ' delta (BeamWeapon +0)',
             'reason': item['reason'], 'beamType': fired_type, 'beamClass': beam_fields.CLASSES.get(record['fireMode']),
-            'fires': by_type.get(fired_type), 'stratagem': item['name'] if item['kind'] == 'sentry' else None}
-        beam_aliases[key] = by_type.get(fired_type)
+            'fires': own_output.get(item['resource']) or by_type.get(fired_type),
+            'stratagem': item['name'] if item['kind'] == 'sentry' else None}
+        beam_aliases[key] = hosts[key]['fires']
         if mechanism == 'attachment':
             others = sorted(set(sharers[source['addPath']]) - {name})
             attachments[key] = {'id': 'beam-attachment/v1/' + slug(name) + '/' + slug(source['item']), 'weapon': name,

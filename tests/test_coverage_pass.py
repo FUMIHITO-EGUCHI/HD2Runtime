@@ -275,7 +275,8 @@ class StatusTests(unittest.TestCase):
         self.assertEqual(sum(1 for f in promoted if f.get('liveEvidence')), 129)
         # 0.31.1: + the four status slots of the Peacemaker and Redeemer ammunition rows (gated until a live test).
         # 0.31.2: + every empty slot after a row's first empty one (518 fields, all gated): 77 -> 595.
-        self.assertEqual(sum(1 for f in promoted if f.get('acknowledgement')), 595)
+        # 0.31.3: + the LAS-22 Shear's slots of the Scythe's beam damage row (gated as the Scythe's): 595 -> 602.
+        self.assertEqual(sum(1 for f in promoted if f.get('acknowledgement')), 602)
         explosion = [f for f in promoted if f['semanticFieldId'].startswith('explosion.')]
         self.assertEqual(len(explosion), 104)
         self.assertTrue(all(f.get('acknowledgement') == 'allow_unverified_effect' for f in explosion))

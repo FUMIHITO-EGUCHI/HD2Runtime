@@ -29,15 +29,15 @@ class WeaponMovementTests(unittest.TestCase):
         self.assertEqual(self.catalog['contract'], 'hd2runtime.weapon_movement.v1')
         self.assertNotRegex(json.dumps(self.catalog), re.compile(r'0x[0-9a-fA-F]{8,}'))
         self.assertFalse(self.catalog['liveTested'])
-        self.assertEqual(self.catalog['summary']['weapons'], 114)   # 7 more (0.30.2: the seven DUPLICATE weapons resolved to their proven roots, research/weapon-roots)
-        self.assertEqual(self.catalog['summary']['writable'], 112)
+        self.assertEqual(self.catalog['summary']['weapons'], 115)   # 7 more (0.30.2: the seven DUPLICATE weapons resolved to their proven roots, research/weapon-roots); 0.31.3: + the LAS-22 Shear
+        self.assertEqual(self.catalog['summary']['writable'], 113)
 
     def test_native_model(self):
         summary = self.research['summary']
         self.assertEqual(summary['stationaryWhileFiring'], ['M-1000 Maxigun'])
         self.assertEqual(summary['braceEvents'], ['GL-28 Belt-Fed Grenade Launcher', 'M-1000 Maxigun'])
-        self.assertEqual(summary['withWeaponData'], 112)
-        self.assertEqual(summary['uniqueWeaponDataOwners'], 112)
+        self.assertEqual(summary['withWeaponData'], 113)   # 0.31.3: + the LAS-22 Shear
+        self.assertEqual(summary['uniqueWeaponDataOwners'], 113)
         fingerprint = {(m['offset'], m['size'], m['storage'], m['nameLength'])
             for m in self.research['model']['fingerprint']}
         self.assertIn((387, 1, 'UINT8', 23), fingerprint)
@@ -94,7 +94,7 @@ return 'ok'
         player = json.loads((ROOT / 'sdk/PlayerWeaponAuthoringCapabilities.json').read_text())
         fields = [f for w in player['weapons'] for f in w['fields']
             if f['semanticFieldId'] == 'weapon.stationary_while_firing']
-        self.assertEqual(len(fields), 80)
+        self.assertEqual(len(fields), 81)   # 0.31.3: + the LAS-22 Shear
         self.assertTrue(all(f['writeScope'] == 'weapon_local' and f['acknowledgement'] == 'allow_unverified_effect'
             for f in fields))
         support = json.loads((ROOT / 'sdk/SupportWeaponAuthoringCapabilities.json').read_text())
@@ -243,10 +243,13 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual({link['component'] for link in mines}, {'MinefieldComponentData'})
         # The other component values guard ammunition sources: each weapon's default customization must still name
         # the ammunition whose delta owns its fired projectile. 0.31.0: and the LAS-5 Scythe's beam attachment source
-        # (its default muzzle Laser. Standard Prism, whose delta owns its fired beam).
+        # (its default muzzle Laser. Standard Prism, whose delta owns its fired beam). 0.31.3: and the LAS-22 Shear's
+        # (Laser. Charge Standard).
         beams = [link for link in links if link['key'].startswith('beam-attachment-default:')]
-        self.assertEqual([link['key'] for link in beams], ['beam-attachment-default:player_weapon:LAS-5 Scythe'])
-        self.assertEqual(beams[0]['component'], 'WeaponCustomizationComponentData')
+        self.assertEqual([link['key'] for link in beams], ['beam-attachment-default:player_weapon:LAS-22 Shear',
+            'beam-attachment-default:player_weapon:LAS-5 Scythe'])
+        self.assertTrue(all(link['component'] == 'WeaponCustomizationComponentData' for link in beams))
+        self.assertEqual((beams[0]['offset'], beams[0]['expect']), (4, 0xD65DC159))
         ammunition = [link for link in links if link not in mines and link not in beams]
         self.assertEqual(len(ammunition), 6)
         self.assertTrue(all(link['key'].startswith('ammunition-default:')

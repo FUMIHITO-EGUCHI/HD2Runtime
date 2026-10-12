@@ -72,8 +72,8 @@ class CatalogueTests(unittest.TestCase):
         # Every other weapon keeps the projectile and damage fields it had; only these two gained them.
         with_damage = [item['name'] for item in PLAYER['weapons'] if any(f['editable'] and
             f['semanticFieldId'].startswith(('projectile.', 'damage.')) for f in item['fields'])]
-        self.assertEqual(len(with_damage), 80)
-        self.assertEqual(PLAYER['summary']['weaponsWithProjectileDamageWrites'], 80)
+        self.assertEqual(len(with_damage), 81)   # 0.31.3: + the LAS-22 Shear (its beam's damage row)
+        self.assertEqual(PLAYER['summary']['weaponsWithProjectileDamageWrites'], 81)
 
 
 class ApiTests(unittest.TestCase):

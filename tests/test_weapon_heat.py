@@ -11,14 +11,16 @@ CAPABILITIES = json.loads((ROOT / 'sdk/PlayerWeaponAuthoringCapabilities.json').
 class WeaponHeatAuthoringTests(unittest.TestCase):
     def test_snapshot_heat_matrix_and_disagreements(self):
         summary = HEAT['summary']
-        self.assertEqual(summary['weapons'], 80)
-        self.assertEqual(summary['weaponsWithHeatMechanism'], 7)
-        self.assertEqual(summary['weaponsWithHeatsinkMechanism'], 7)
+        self.assertEqual(summary['weapons'], 81)   # 0.31.3: + the LAS-22 Shear
+        self.assertEqual(summary['weaponsWithHeatMechanism'], 8)
+        self.assertEqual(summary['weaponsWithHeatsinkMechanism'], 8)
         # 0.30.2: the LAS-5 Scythe and LAS-7 Dagger read from their proven roots (research/weapon-roots). The
         # research counts their members; the SDK then keeps the Scythe's four members its default Laser Heatsink
         # overwrites read-only (test_public_fields_and_duplicate_identities_fail_closed).
-        self.assertEqual(summary['writableFieldInstances'], 42)
-        self.assertEqual(summary['weaponsWithWritableHeatFields'], 7)
+        # 0.31.3: + the Shear's seven members (no published values: allow_unverified_effect; the SDK then keeps the
+        # five its default Laser Heatsink (Charge) overwrites read-only, tests/test_shear.py).
+        self.assertEqual(summary['writableFieldInstances'], 49)
+        self.assertEqual(summary['weaponsWithWritableHeatFields'], 8)
         self.assertEqual(summary['sharedComponentGroups'], 0)
         self.assertEqual(summary['heatsinkOptionIdentities'], 9)
         self.assertEqual(HEAT['safety'], {

@@ -785,6 +785,27 @@
     },
     {
       "kind": "player",
+      "weapon": "LAS-22 Shear",
+      "state": "blocked",
+      "modes": [
+        "automatic"
+      ],
+      "defaultMode": "automatic",
+      "selector": {
+        "left": "None",
+        "right": "None"
+      },
+      "selectorBound": false,
+      "maxModes": null,
+      "bindableInputs": [],
+      "binding": null,
+      "burstRounds": 3,
+      "writable": false,
+      "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through beam.",
+      "fields": null
+    },
+    {
+      "kind": "player",
       "weapon": "LAS-5 Scythe",
       "state": "blocked",
       "modes": [
@@ -2982,19 +3003,19 @@
     }
   ],
   "summary": {
-    "weapons": 115,
+    "weapons": 116,
     "byState": {
       "player:addable": 20,
-      "player:blocked": 29,
+      "player:blocked": 30,
       "player:selectable": 31,
       "support:absent": 2,
       "support:addable": 10,
       "support:blocked": 20,
       "support:selectable": 3
     },
-    "resolvedModeSets": 112,
+    "resolvedModeSets": 113,
     "writable": 64,
     "fullAutoPossible": 64,
-    "fullAutoAlreadyPresent": 60
+    "fullAutoAlreadyPresent": 61
   }
 }

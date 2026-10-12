@@ -503,6 +503,22 @@
       "movementRestriction": "none"
     },
     {
+      "weapon": "LAS-22 Shear",
+      "kind": "player",
+      "accessor": "hd2.weapon",
+      "stationaryWhileFiring": {
+        "field": "hd2.fields.weapon.stationary_while_firing",
+        "baseline": false,
+        "writable": true,
+        "acknowledgement": "allow_unverified_effect",
+        "reason": null
+      },
+      "firingStance": null,
+      "firingStanceEvents": null,
+      "perShotWielderAnimation": null,
+      "movementRestriction": "none"
+    },
+    {
       "weapon": "LAS-5 Scythe",
       "kind": "player",
       "accessor": "hd2.weapon",
@@ -1870,8 +1886,8 @@
     }
   ],
   "summary": {
-    "weapons": 114,
-    "writable": 112,
+    "weapons": 115,
+    "writable": 113,
     "stationaryWhileFiring": [
       "M-1000 Maxigun"
     ],

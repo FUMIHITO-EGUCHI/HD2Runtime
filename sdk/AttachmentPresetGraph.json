@@ -2283,6 +2283,14 @@
       ]
     },
     {
+      "weapon": "LAS-22 Shear",
+      "resources": [
+        "0x7E3145A5BAA4B948"
+      ],
+      "componentDefault": null,
+      "categories": []
+    },
+    {
       "weapon": "LAS-5 Scythe",
       "resources": [
         "0x27EE1ED8F6FB6356"

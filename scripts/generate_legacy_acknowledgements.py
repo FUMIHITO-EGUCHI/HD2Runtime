@@ -20,6 +20,10 @@ keeps working: its larger value is clamped to the maximum and logged as a legacy
   py scripts/generate_legacy_acknowledgements.py --limits v0.31.1 0.31.2
       Compare the same way and record, in its "limits" list, every field the SDK at the tag let mods write with no
       maximum (or a larger one) that now carries a network ceiling (a field's networkLimit), as introduced in 0.31.2.
+  py scripts/generate_legacy_acknowledgements.py --shared v0.31.2 0.31.3
+      Record, as allow_shared entries, every player weapon field the SDK at the tag let mods write without allow_shared
+      that now affects more than one weapon (0.31.3: the LAS-5 Scythe's damage and beam row, shared with the newly
+      catalogued LAS-22 Shear). A mod that declares an older SDK writes them without it as a legacy operation.
   py scripts/generate_legacy_acknowledgements.py [--check]
       Write (or check) domains/legacy_acknowledgements.lua, the runtime lookup, from that reviewed file. Every entry
       must still name an existing field.
@@ -208,7 +212,42 @@ def research(tag, since):
         + [{'since': since, 'comparedWith': tag, 'comparedWithCommit': commit,
             'rule': 'editable without ' + ACKNOWLEDGEMENT + ' in the SDK published at ' + tag + ', editable and '
             'requiring it in ' + since}], key=lambda item: [int(part) for part in item['since'].split('.')])
-    history['entries'] = [item for item in history['entries'] if item['since'] != since] + entries
+    history['entries'] = [item for item in history['entries'] if item['since'] != since
+        or item['acknowledgement'] != ACKNOWLEDGEMENT] + entries
+    HISTORY.write_text(json.dumps(history, indent=1, ensure_ascii=False) + '\n', encoding='utf-8', newline='\n')
+    return entries
+
+
+SHARED = 'allow_shared'
+
+
+def research_shared(tag, since):
+    """Record the player weapon fields `since` made shared (affectsMultipleWeapons), compared with the SDK at `tag`:
+    editable in both, not shared at the tag. The player weapon write domain accepts them without allow_shared from a
+    mod that declares an older SDK (0.31.3: a newly catalogued weapon fires another one's settings rows)."""
+    previous = fields(git_catalogs(tag))
+    entries = []
+    for key, field in sorted(fields(current_catalogs()).items()):
+        old = previous.get(key)
+        if key[0] != 'player_weapon' or old is None or not field.get('editable') or not old.get('editable'):
+            continue
+        if not field.get('affectsMultipleWeapons') or old.get('affectsMultipleWeapons'):
+            continue
+        resource, target, field_key = key
+        entries.append({'since': since, 'acknowledgement': SHARED, 'resource': resource, 'target': target,
+            'field': field_key, 'apiFieldConstant': field.get('apiFieldConstant'),
+            'reason': 'Shared since ' + since + ' with ' + ', '.join(field.get('sharedWithWeapons') or []) + ' ('
+                + str(field.get('writeScope')) + '): the same native row, catalogued since then.'})
+    history = json.loads(HISTORY.read_text(encoding='utf-8'))
+    commit = subprocess.run(['git', 'rev-list', '-n', '1', tag], cwd=ROOT, capture_output=True, text=True,
+        check=True).stdout.strip()
+    history['sharedReleases'] = sorted([item for item in history.get('sharedReleases', []) if item['since'] != since]
+        + [{'since': since, 'comparedWith': tag, 'comparedWithCommit': commit,
+            'rule': 'editable without ' + SHARED + ' in the SDK published at ' + tag + ', editable and shared with '
+            'another catalogued weapon (requiring it) in ' + since}],
+        key=lambda item: [int(part) for part in item['since'].split('.')])
+    history['entries'] = [item for item in history['entries'] if item['since'] != since
+        or item['acknowledgement'] != SHARED] + entries
     HISTORY.write_text(json.dumps(history, indent=1, ensure_ascii=False) + '\n', encoding='utf-8', newline='\n')
     return entries
 
@@ -261,7 +300,11 @@ if __name__ == '__main__':
         help='compare the SDK catalogs at TAG with the current ones and record them as introduced in SINCE')
     parser.add_argument('--limits', nargs=2, metavar=('TAG', 'SINCE'),
         help='compare the SDK catalogs at TAG with the current ones and record the maxima introduced in SINCE')
+    parser.add_argument('--shared', nargs=2, metavar=('TAG', 'SINCE'),
+        help='compare the SDK catalogs at TAG with the current ones and record the player weapon fields shared in SINCE')
     args = parser.parse_args()
+    if args.shared:
+        print(len(research_shared(*args.shared)), 'fields gained', SHARED, 'in', args.shared[1])
     if args.research:
         print(len(research(*args.research)), 'fields gained', ACKNOWLEDGEMENT, 'in', args.research[1])
     if args.limits:

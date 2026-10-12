@@ -29,7 +29,7 @@ class WeaponReticleTests(unittest.TestCase):
 
     def test_coverage_is_derived_from_native_values(self):
         states = Counter((row['kind'], row['reticle']) for row in self.research['weapons'])
-        self.assertEqual(states[('player', 'shown')], 75)   # 0.30.2: the seven DUPLICATE weapons resolved to their proven roots
+        self.assertEqual(states[('player', 'shown')], 76)   # 0.30.2: the seven DUPLICATE weapons resolved to their proven roots; 0.31.3: + the LAS-22 Shear
         self.assertEqual(states[('player', 'read_only')], 5)
         self.assertEqual(states[('support', 'hidden')], 1)
         self.assertEqual(states[('support', 'shown')], 14)
@@ -43,9 +43,9 @@ class WeaponReticleTests(unittest.TestCase):
     def test_player_catalog_fields(self):
         fields = [field for weapon in self.player['weapons'] for field in weapon['fields']
             if field['semanticFieldId'] == FIELD]
-        self.assertEqual(len(fields), 80)
+        self.assertEqual(len(fields), 81)   # 0.31.3: + the LAS-22 Shear
         writable = [field for field in fields if field['editable']]
-        self.assertEqual(len(writable), 75)   # 0.30.2: the seven DUPLICATE weapons resolved to their proven roots
+        self.assertEqual(len(writable), 76)   # 0.30.2: the seven DUPLICATE weapons resolved to their proven roots; 0.31.3: + the Shear
         for field in writable:
             self.assertIs(field['currentDefault'], True)
             self.assertEqual(field['encoding']['off'], 3)

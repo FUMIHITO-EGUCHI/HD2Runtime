@@ -6,7 +6,7 @@
     "dll": "2E2C3B7C2500646DADD5F2B4C6E0504DBB7E7896139F64CDDC0D1813C718F51E",
     "exe": "F5FEE03DCFDB2E553A4752C283590950AC13316B376D8196AA556FF0400D5F06"
   },
-  "catalogWeapons": 80,
+  "catalogWeapons": 81,
   "safety": {
     "writes": 0,
     "protectionChanges": 0,
@@ -15,7 +15,7 @@
   },
   "feature": "projectile_reference_graph",
   "summary": {
-    "weapons": 80,
+    "weapons": 81,
     "weaponsWithProjectileAttack": 66,
     "projectileAttacks": 67,
     "writableTargetAttacks": 59,
@@ -1965,6 +1965,17 @@
           "reason": null
         }
       ]
+    },
+    {
+      "weapon": "LAS-22 Shear",
+      "resources": [
+        "0x7E3145A5BAA4B948"
+      ],
+      "resolution": "UNIQUE",
+      "implementationFamilies": [
+        "beam"
+      ],
+      "attacks": []
     },
     {
       "weapon": "LAS-5 Scythe",

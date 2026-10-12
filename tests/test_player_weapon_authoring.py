@@ -20,8 +20,8 @@ class PlayerWeaponAuthoringTests(unittest.TestCase):
         generate_weapon_authoring.generate(check=True)
 
     def test_matrix_covers_catalog_without_runtime_addresses(self):
-        self.assertEqual(CAPABILITIES['summary']['weapons'], 80)
-        self.assertEqual(CAPABILITIES['summary']['uniqueWeapons'], 80)   # (0.30.2: the seven DUPLICATE weapons resolved to their proven roots, research/weapon-roots)
+        self.assertEqual(CAPABILITIES['summary']['weapons'], 81)   # 0.31.3: + the LAS-22 Shear (research/weapon-roots additions)
+        self.assertEqual(CAPABILITIES['summary']['uniqueWeapons'], 81)   # (0.30.2: the seven DUPLICATE weapons resolved to their proven roots, research/weapon-roots)
         self.assertEqual(CAPABILITIES['summary']['duplicateWeapons'], 0)
         encoded=json.dumps(CAPABILITIES).lower()
         self.assertNotIn('absoluteaddress', encoded)
@@ -103,13 +103,13 @@ class PlayerWeaponAuthoringTests(unittest.TestCase):
 
     def test_ammo_capability_matrix_covers_all_player_weapons(self):
         summary=AMMO_CAPABILITIES['summary']
-        self.assertEqual(summary['weapons'],80)
+        self.assertEqual(summary['weapons'],81)   # 0.31.3: + the LAS-22 Shear (a heat weapon: NOT_APPLICABLE)
         self.assertEqual(summary['roundsFeedWeapons'],15)
         self.assertEqual(summary['directMagazineWeapons'],33)
         self.assertEqual(summary['defaultMagazineOptions'],19)
         self.assertEqual(summary['nativeMagazineOptionsCataloged'],52)
         self.assertEqual(summary['sharedDefaultOptionGroups'],1)
-        self.assertEqual(len(AMMO_CAPABILITIES['weapons']),80)
+        self.assertEqual(len(AMMO_CAPABILITIES['weapons']),81)
         self.assertEqual(AMMO_CAPABILITIES['safety']['writes'],0)
         self.assertEqual(AMMO_CAPABILITIES['safety']['protectionChanges'],0)
         self.assertEqual(
@@ -165,7 +165,7 @@ class PlayerWeaponAuthoringTests(unittest.TestCase):
         audit=CAPABILITIES['backingCollisionAudit']
         self.assertEqual(audit['fieldInstancesAudited'],CAPABILITIES['summary']['fieldInstances'])
         # weapon.third_person_reticle is a distinct boolean view over the crosshair_type bytes.
-        self.assertEqual(audit['exactBackingCollisionGroups'],291)   # 0.31.1: + the P-2 Peacemaker and P-19 Redeemer ammunition rows, scripts/ammunition_attacks.py
+        self.assertEqual(audit['exactBackingCollisionGroups'],293)   # 0.31.1: + the P-2 Peacemaker and P-19 Redeemer ammunition rows, scripts/ammunition_attacks.py; 0.31.3: + the LAS-22 Shear's
         self.assertEqual(audit['aliasPairInstances'],62)
         self.assertEqual(audit['unclassifiedCollisionPairs'],0)
         jar=next(w for w in CAPABILITIES['weapons'] if w['name']=='JAR-5 Dominator')
