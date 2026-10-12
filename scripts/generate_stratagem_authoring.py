@@ -33,6 +33,21 @@ ENTITY_FIELDS = ROOT / 'schemas/entity_fields.json'
 ENTITY_RESEARCH = ROOT / 'research/entity-authoring-runtime-F5FEE03DCFDB.json'
 ZONE_BASE, ZONE_STRIDE = 520, 552
 ICON_RESEARCH = ROOT / 'research/stratagem-icons-F5FEE03DCFDB.json'
+SHIELD_RECHARGE_RESEARCH = ROOT / 'research/shield-recharge-F5FEE03DCFDB.json'
+SHIELD_RECHARGE_UNVERIFIED = ('Code-proven offline (the shield hit path copies +88 / +92 into the shield timer, the '
+    'frame update adds +96 per second while recharging, both from the type record resolved at that moment) and the '
+    'exact published values of three shields (SH-32, SH-51 barrier, FX-12 relay) sit at these members; not yet '
+    'shown in game.')
+SHIELD_RECHARGE_PROVENANCE = {
+    'shield.recharge_delay': 'ShieldComponent +88: the shield hit path sets the shield timer; exact published '
+        'value on SH-32, SH-51 and FX-12 (research/shield-recharge-F5FEE03DCFDB.json). Applies from the next hit',
+    'shield.broken_recharge_delay': 'ShieldComponent +92: the breaking hit sets the shield timer; exact '
+        'published value on SH-32, SH-51 and FX-12 (research/shield-recharge-F5FEE03DCFDB.json). Applies from the '
+        'next break',
+    'shield.recharge_rate': 'ShieldComponent +96: the frame update adds it while recharging (x frame step, capped at capacity); '
+        'exact published value on SH-32, SH-51 and FX-12 (research/shield-recharge-F5FEE03DCFDB.json). Applies at '
+        'once',
+}
 RESUPPLY_RESEARCH = ROOT / 'research/resupply-F5FEE03DCFDB.json'
 SUPPORT_CATALOG = ROOT / 'data/wiki_support_weapons.json'
 CALLDOWN_RESEARCH = ROOT / 'research/stratagem-calldown-F5FEE03DCFDB.json'
@@ -1496,6 +1511,27 @@ def build():
                          'recordSha256':shield['recordSha256'],
                          'consumers':[{'stratagem':item['name'],'path':'shield'}]},
                         shield_target, provenance='ShieldComponent member gameplay-proven by ShieldRelayImprovements')
+                # 0.31.3: the recharge members. Native readers pinned in research/shield-recharge-F5FEE03DCFDB.json
+                # (hit path sets the timer from +88 / +92, the frame update adds +96 x frame step); exact published
+                # values on three shields. Not yet shown in game, so they keep allow_unverified_effect.
+                recharge = json.loads(SHIELD_RECHARGE_RESEARCH.read_text(encoding='utf-8'))
+                if (recharge['relay']['recordIndex'], recharge['relay']['indexRow']) != \
+                        (shield['recordIndex'], shield['indexRow']):
+                    raise ValueError('shield recharge research disagrees with the relay shield record')
+                for field_id, offset in (('shield.recharge_delay', 88), ('shield.broken_recharge_delay', 92),
+                        ('shield.recharge_rate', 96)):
+                    if recharge['relay']['values'][field_id] != shield['values'][str(offset)]:
+                        raise ValueError('shield recharge research disagrees at +%d' % offset)
+                    add_field(entry, field_id, shield['values'][str(offset)],
+                        {'kind':'ShieldComponentData','component':'ShieldComponentData',
+                         'nativeIdentity':entity['resource'],'recordIndex':shield['recordIndex'],
+                         'indexRow':shield['indexRow'],'offset':offset,'storage':'f32','width':4,
+                         'ownerCount':shield['ownerCount'],'uniqueOwner':shield['uniqueOwner'],
+                         'recordSha256':shield['recordSha256'],
+                         'consumers':[{'stratagem':item['name'],'path':'shield'}]},
+                        shield_target, provenance=SHIELD_RECHARGE_PROVENANCE[field_id],
+                        extra={'min': 0, 'max': 100000, 'acknowledgement': 'allow_unverified_effect',
+                            'acknowledgementReason': SHIELD_RECHARGE_UNVERIFIED})
                 add_field(entry, 'payload.lifetime', payload['values']['4'],
                     {'kind':'HellpodPayloadComponentData','component':'HellpodPayloadComponentData',
                      'nativeIdentity':entity['resource'],'recordIndex':payload['recordIndex'],
@@ -1508,8 +1544,9 @@ def build():
                     'component': 'ShieldComponent', 'sameEntityAsBase': True,
                     'runtimeShieldInstance': 'unresolved',
                     'blockedFields': [
-                        {'field': 'shield recharge delay / broken delay / recharge rate / restart charge',
-                         'reason': 'Labels come from an external export only; no reference mod wrote them.'},
+                        {'field': 'shield restart charge (+100)',
+                         'reason': 'Label comes from an external export only; no reader found in the shield '
+                             'update or hit path.'},
                         {'field': 'zone explosive damage percentage',
                          'reason': 'The reference gameplay test did not change grenade damage to the emitter.'}]}
 

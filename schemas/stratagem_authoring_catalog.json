@@ -155851,6 +155851,171 @@
           "provenance": "ShieldComponent member gameplay-proven by ShieldRelayImprovements"
         },
         {
+          "instanceKey": "stratagem:fx_12_shield_generator_relay:fx_12_shield_generator_relay_shield_main:shield.recharge_delay",
+          "semanticFieldId": "shield.recharge_delay",
+          "displayName": "Shield recharge delay (after damage)",
+          "type": "number",
+          "unit": "seconds",
+          "currentDefault": 0.01,
+          "editable": true,
+          "reason": null,
+          "target": {
+            "resource": "stratagem",
+            "stratagem": "FX-12 Shield Generator Relay",
+            "path": "shield",
+            "entity": "main"
+          },
+          "backing": {
+            "kind": "ShieldComponentData",
+            "component": "ShieldComponentData",
+            "nativeIdentity": "0xED13DDC480EC6910",
+            "recordIndex": 12,
+            "indexRow": 18,
+            "offset": 88,
+            "storage": "f32",
+            "width": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true,
+            "recordSha256": "2222EA6D617007215EA779D52C90522DD5FA4E5B8BC664443C71922AEF646AFA",
+            "consumers": [
+              {
+                "stratagem": "FX-12 Shield Generator Relay",
+                "path": "shield"
+              }
+            ]
+          },
+          "backingObjectId": "backing:3e3fca0ad66846bb",
+          "operationGroup": "operation:d7f39ed62eaab918",
+          "planGroup": "plan:stratagem:fx_12_shield_generator_relay",
+          "requires": "patch_or_transaction",
+          "allowSharedRequired": false,
+          "shared": false,
+          "sharedConsumers": [
+            {
+              "stratagem": "FX-12 Shield Generator Relay",
+              "path": "shield"
+            }
+          ],
+          "sharedScopeKey": "shared-scope:b9118f7a90510ce4",
+          "reviewedScopeComplete": true,
+          "dynamicConsumersPossible": false,
+          "provenance": "ShieldComponent +88: the shield hit path sets the shield timer; exact published value on SH-32, SH-51 and FX-12 (research/shield-recharge-F5FEE03DCFDB.json). Applies from the next hit",
+          "min": 0,
+          "max": 100000,
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "Code-proven offline (the shield hit path copies +88 / +92 into the shield timer, the frame update adds +96 per second while recharging, both from the type record resolved at that moment) and the exact published values of three shields (SH-32, SH-51 barrier, FX-12 relay) sit at these members; not yet shown in game."
+        },
+        {
+          "instanceKey": "stratagem:fx_12_shield_generator_relay:fx_12_shield_generator_relay_shield_main:shield.broken_recharge_delay",
+          "semanticFieldId": "shield.broken_recharge_delay",
+          "displayName": "Shield restart delay (after breaking)",
+          "type": "number",
+          "unit": "seconds",
+          "currentDefault": 45.0,
+          "editable": true,
+          "reason": null,
+          "target": {
+            "resource": "stratagem",
+            "stratagem": "FX-12 Shield Generator Relay",
+            "path": "shield",
+            "entity": "main"
+          },
+          "backing": {
+            "kind": "ShieldComponentData",
+            "component": "ShieldComponentData",
+            "nativeIdentity": "0xED13DDC480EC6910",
+            "recordIndex": 12,
+            "indexRow": 18,
+            "offset": 92,
+            "storage": "f32",
+            "width": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true,
+            "recordSha256": "2222EA6D617007215EA779D52C90522DD5FA4E5B8BC664443C71922AEF646AFA",
+            "consumers": [
+              {
+                "stratagem": "FX-12 Shield Generator Relay",
+                "path": "shield"
+              }
+            ]
+          },
+          "backingObjectId": "backing:3e3fca0ad66846bb",
+          "operationGroup": "operation:d7f39ed62eaab918",
+          "planGroup": "plan:stratagem:fx_12_shield_generator_relay",
+          "requires": "patch_or_transaction",
+          "allowSharedRequired": false,
+          "shared": false,
+          "sharedConsumers": [
+            {
+              "stratagem": "FX-12 Shield Generator Relay",
+              "path": "shield"
+            }
+          ],
+          "sharedScopeKey": "shared-scope:b9118f7a90510ce4",
+          "reviewedScopeComplete": true,
+          "dynamicConsumersPossible": false,
+          "provenance": "ShieldComponent +92: the breaking hit sets the shield timer; exact published value on SH-32, SH-51 and FX-12 (research/shield-recharge-F5FEE03DCFDB.json). Applies from the next break",
+          "min": 0,
+          "max": 100000,
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "Code-proven offline (the shield hit path copies +88 / +92 into the shield timer, the frame update adds +96 per second while recharging, both from the type record resolved at that moment) and the exact published values of three shields (SH-32, SH-51 barrier, FX-12 relay) sit at these members; not yet shown in game."
+        },
+        {
+          "instanceKey": "stratagem:fx_12_shield_generator_relay:fx_12_shield_generator_relay_shield_main:shield.recharge_rate",
+          "semanticFieldId": "shield.recharge_rate",
+          "displayName": "Shield recharge rate",
+          "type": "number",
+          "unit": "health_per_second",
+          "currentDefault": 400.0,
+          "editable": true,
+          "reason": null,
+          "target": {
+            "resource": "stratagem",
+            "stratagem": "FX-12 Shield Generator Relay",
+            "path": "shield",
+            "entity": "main"
+          },
+          "backing": {
+            "kind": "ShieldComponentData",
+            "component": "ShieldComponentData",
+            "nativeIdentity": "0xED13DDC480EC6910",
+            "recordIndex": 12,
+            "indexRow": 18,
+            "offset": 96,
+            "storage": "f32",
+            "width": 4,
+            "ownerCount": 1,
+            "uniqueOwner": true,
+            "recordSha256": "2222EA6D617007215EA779D52C90522DD5FA4E5B8BC664443C71922AEF646AFA",
+            "consumers": [
+              {
+                "stratagem": "FX-12 Shield Generator Relay",
+                "path": "shield"
+              }
+            ]
+          },
+          "backingObjectId": "backing:3e3fca0ad66846bb",
+          "operationGroup": "operation:d7f39ed62eaab918",
+          "planGroup": "plan:stratagem:fx_12_shield_generator_relay",
+          "requires": "patch_or_transaction",
+          "allowSharedRequired": false,
+          "shared": false,
+          "sharedConsumers": [
+            {
+              "stratagem": "FX-12 Shield Generator Relay",
+              "path": "shield"
+            }
+          ],
+          "sharedScopeKey": "shared-scope:b9118f7a90510ce4",
+          "reviewedScopeComplete": true,
+          "dynamicConsumersPossible": false,
+          "provenance": "ShieldComponent +96: the frame update adds it while recharging (x frame step, capped at capacity); exact published value on SH-32, SH-51 and FX-12 (research/shield-recharge-F5FEE03DCFDB.json). Applies at once",
+          "min": 0,
+          "max": 100000,
+          "acknowledgement": "allow_unverified_effect",
+          "acknowledgementReason": "Code-proven offline (the shield hit path copies +88 / +92 into the shield timer, the frame update adds +96 per second while recharging, both from the type record resolved at that moment) and the exact published values of three shields (SH-32, SH-51 barrier, FX-12 relay) sit at these members; not yet shown in game."
+        },
+        {
           "instanceKey": "stratagem:fx_12_shield_generator_relay:fx_12_shield_generator_relay_deployed_entity_main:payload.lifetime",
           "semanticFieldId": "payload.lifetime",
           "displayName": "Deployed lifetime",
@@ -156090,8 +156255,8 @@
         "runtimeShieldInstance": "unresolved",
         "blockedFields": [
           {
-            "field": "shield recharge delay / broken delay / recharge rate / restart charge",
-            "reason": "Labels come from an external export only; no reference mod wrote them."
+            "field": "shield restart charge (+100)",
+            "reason": "Label comes from an external export only; no reader found in the shield update or hit path."
           },
           {
             "field": "zone explosive damage percentage",

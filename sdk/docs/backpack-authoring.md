@@ -97,7 +97,10 @@ The ShieldComponent members +88, +92 and +96 hold exact published values on thre
 Their hidden-name lengths (14, 21, 13) fit the names. The SH32 ShieldBoost addon's stated originals (60 s, 12 s)
 are recorded as a lead only. `shield.recharge_delay` is the time after damage before an unbroken shield recharges,
 `shield.broken_recharge_delay` the time before a broken shield restarts, and `shield.recharge_rate` the health
-restored per second. They are authored on the SH-32 and the SH-51 barrier (the relay keeps its existing fields).
+restored per second. They are authored on the SH-32, the SH-51 barrier and, since 0.31.3, the FX-12 relay
+(docs/stratagem-authoring.md). The game code reading them is traced: each hit copies the current recharge delay (or,
+when the hit breaks the shield, the broken delay) into the shield's timer, and the shield update adds the recharge
+rate every frame while recharging, capped at the capacity.
 
 ## SH-51 Directional Shield: body and barrier
 

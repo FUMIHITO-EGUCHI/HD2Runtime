@@ -182,11 +182,30 @@ class EntityAuthoringTests(unittest.TestCase):
         relay = next(item for item in self.stratagems['stratagems'] if item['name'] == 'FX-12 Shield Generator Relay')
         shield = relay['deployedEntity']['shield']
         self.assertEqual(shield['runtimeShieldInstance'], 'unresolved')
-        self.assertEqual(len(shield['fieldInstances']), 2)
+        self.assertEqual(len(shield['fieldInstances']), 5)
         fields = {(item['target']['path'], item['semanticFieldId']): item for item in self.stratagems['fieldInstances']
             if item['target'].get('stratagem') == relay['name']}
         self.assertEqual(fields[('shield', 'shield.radius')]['currentDefault'], 15)
         self.assertEqual(fields[('shield', 'shield.durability')]['currentDefault'], 4000)
+        # 0.31.3: the recharge members (research/shield-recharge): the vanilla relay values are the published ones
+        # (recharge delay 0.01 s, restart delay 45 s, 400 health per second), unique to the relay's own record.
+        for field_id, vanilla in (('shield.recharge_delay', 0.01), ('shield.broken_recharge_delay', 45),
+                ('shield.recharge_rate', 400)):
+            field = fields[('shield', field_id)]
+            self.assertAlmostEqual(field['currentDefault'], vanilla, places=6)
+            self.assertTrue(field['editable'])
+            self.assertFalse(field['shared'])
+            self.assertEqual(field['acknowledgement'], 'allow_unverified_effect')
+            self.assertEqual((field['min'], field['max']), (0, 100000))
+            self.assertEqual(field['apiFieldConstant'], 'hd2.fields.shield.' + field_id.split('.')[1])
+            self.assertEqual(field['backingObjectId'], fields[('shield', 'shield.radius')]['backingObjectId'])
+        self.assertEqual([item['field'] for item in shield['blockedFields']][0], 'shield restart charge (+100)')
+        research = json.loads((ROOT / 'research/shield-recharge-F5FEE03DCFDB.json').read_text())
+        self.assertEqual(research['writes'], 0)
+        self.assertTrue(research['relay']['uniqueOwner'])
+        for consumer in research['consumers']:
+            for member in consumer['members'].values():
+                self.assertAlmostEqual(member['native'], member['published'], places=5)
         self.assertEqual(fields[('deployed_entity', 'entity.health')]['currentDefault'], 450)
         self.assertEqual(fields[('deployed_entity', 'payload.lifetime')]['currentDefault'], 40)
         self.assertEqual(fields[('damage_zone', 'zone.health')]['currentDefault'], 450)
@@ -242,6 +261,14 @@ assert(relay:describe().shield and #relay:damage_zones()==1)
 transactions.validate{id='shield',target=relay:shield(),changes={
  {field=hd2.fields.shield.entity_radius,expect=15,value=8},
  {field=hd2.fields.shield.entity_durability,expect=4000,value=40000}}}
+assert(not pcall(function()patches.validate{id='rate',target=relay:shield(),
+ field=hd2.fields.shield.recharge_rate,expect=400,value=800}end))
+transactions.validate{id='recharge',target=relay:shield(),allow_unverified_effect=true,changes={
+ {field=hd2.fields.shield.recharge_rate,expect=400,value=800},
+ {field=hd2.fields.shield.recharge_delay,expect=0.01,value=2},
+ {field=hd2.fields.shield.broken_recharge_delay,expect=45,value=10}}}
+assert(not pcall(function()patches.validate{id='rate-range',target=relay:shield(),allow_unverified_effect=true,
+ field=hd2.fields.shield.recharge_rate,expect=400,value=-1}end))
 assert(not pcall(function()patches.validate{id='legacy-name',target=relay:shield(),
  field=hd2.fields.shield.radius,expect=15,value=8}end))
 return 'ok'

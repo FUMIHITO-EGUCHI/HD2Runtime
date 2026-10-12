@@ -406,14 +406,37 @@ remains unresolved, so the shield is authored through its typed configuration.
 | --- | --- | --- | --- |
 | `deployed_entity():shield()` | `shield.radius` | `hd2.fields.shield.entity_radius` | 15 |
 | `deployed_entity():shield()` | `shield.durability` | `hd2.fields.shield.entity_durability` | 4000 |
+| `deployed_entity():shield()` | `shield.recharge_delay` (`allow_unverified_effect`) | `hd2.fields.shield.recharge_delay` | 0.01 s |
+| `deployed_entity():shield()` | `shield.broken_recharge_delay` (`allow_unverified_effect`) | `hd2.fields.shield.broken_recharge_delay` | 45 s |
+| `deployed_entity():shield()` | `shield.recharge_rate` (`allow_unverified_effect`) | `hd2.fields.shield.recharge_rate` | 400 /s |
 | `deployed_entity()` | `payload.lifetime` | `hd2.fields.payload.entity_lifetime` | 40 |
 | `deployed_entity()` | `entity.health` / `entity.armor` | `hd2.fields.entity.*` | 450 / 2 |
 | `deployed_entity():damage_zone('body_front')` | `zone.health`, `zone.armor`, `zone.affects_main_health` | `hd2.fields.zone.*` | 450 / 2 / 1 |
 
 The `entity_` prefix avoids a clash with the legacy `hd2.fields.shield.radius` constants, which still
 drive the unchanged 0.4 `ShieldRelay` proof. ShieldRelayImprovements proved radius, shield health,
-lifetime, cooldown, and physical health in gameplay. The recharge delay and rate members are not
-promoted, because their labels come only from an external export.
+lifetime, cooldown, and physical health in gameplay.
+
+Since 0.31.3 the relay also exposes its shield recharge (the same `ShieldComponent` members as the SH-32 and the SH-51
+barrier, on the relay's own record, so no `allow_shared`):
+
+- `shield.recharge_delay`: seconds after a hit before the shield starts recharging. Every hit restarts this timer.
+- `shield.broken_recharge_delay`: seconds after the shield breaks before it restarts.
+- `shield.recharge_rate`: shield health restored per second while recharging, up to `shield.durability`.
+
+Each takes 0 to 100000 and needs `allow_unverified_effect`. The game code that uses them is traced offline: the shield's
+hit handling copies the current delay into the shield's timer at each hit (a changed delay applies from the next hit or
+break), and the shield update adds the recharge rate every frame (a changed rate applies at once). The vanilla values
+are the published ones. No in-game test has confirmed a changed value yet. A write is a type-record write: every relay
+on this machine uses it. The restart charge member stays unexposed (no reader found).
+
+```lua
+local shield = hd2.stratagem('FX-12 Shield Generator Relay'):deployed_entity():shield()
+hd2.transaction{id='relay-recharge', target=shield, allow_unverified_effect=true, changes={
+  {field=hd2.fields.shield.recharge_rate, expect=400, value=800},
+  {field=hd2.fields.shield.broken_recharge_delay, expect=45, value=20},
+}}
+```
 
 Every deployed entity also exposes its populated damage zones through `damage_zones()` and
 `damage_zone(id)`, using the shared `HealthComponent` zone schema described in
