@@ -80,6 +80,29 @@ class VehicleWeaponTests(unittest.TestCase):
         cannon = self.fields[('TD-220 Bastion MK XVI / attach_tank_gun', 'magazine.spare_magazines')]
         self.assertNotIn('reloadComponent', cannon)   # the main cannon reloads
 
+    def test_mounted_weapons_use_the_same_ammunition_fields(self):
+        # 0.31.3 (research/docs/ammo-network-fields-F5FEE03DCFDB.md): a user suspected a wider (10-bit) field for the
+        # Bastion cannon. Every vehicle magazine mount, the cannon included, is its own network type with the same
+        # 5-bit spare magazines and 11-bit rounds as every other magazine weapon; 10 bits is a deposit's width.
+        research = json.loads((ROOT / 'research/ammo-network-fields-F5FEE03DCFDB.json').read_text(encoding='utf-8'))
+        widths = {name: {(w['bits'], w['min'], w['max']) for w in values}
+            for name, values in research['fieldWidths'].items()}
+        self.assertEqual(widths['magazines_remaining'], {(5, 0, 31)})
+        self.assertEqual(widths['rounds'], {(11, 0, 2047)})
+        self.assertEqual(widths['remaining'], {(10, 0, 1023)})
+        self.assertTrue(all(m['ammoFields'] == {'magazines_remaining': 5, 'rounds': 11, 'chamber_empty': 1}
+            for m in research['vehicleMagazineMounts']))
+        bastion = research['bastion']['cannon']
+        self.assertEqual((bastion['capacity'], bastion['startingMagazines'], bastion['magazinesFromSupply'],
+            bastion['maximumSpareMagazines'], bastion['reloadSharedDeposit']), (1, 30, 30, 30, 0))
+        for field_id, baseline, maximum in (('weapon.capacity', 1, 2047), ('magazine.starting_magazines', 30, 31),
+                ('magazine.magazines_from_supply', 30, 31), ('magazine.spare_magazines', 30, 31)):
+            item = self.fields[('TD-220 Bastion MK XVI / attach_tank_gun', field_id)]
+            self.assertEqual((item['baseline'], item['max']), (baseline, maximum), field_id)
+        doc = (ROOT / 'docs/vehicle-weapons.md').read_text(encoding='utf-8')
+        self.assertIn('The TD-220 Bastion cannon (0.31.3 research, offline only)', doc)
+        self.assertIn("id='bastion-shells'", doc)
+
     def test_spread_and_breakthrough_shield(self):
         # 0.31.0 (research/mounted-spread-shield): every projectile mount exposes its WeaponData spread pair (the
         # member the shot reads for every shot and pellet); spray, beam and arc mounts list it as blocked.

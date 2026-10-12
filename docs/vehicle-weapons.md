@@ -86,6 +86,29 @@ attachments. A larger value is refused, with a message naming the network field.
 A mod that declares an SDK older than 0.31.2 had no maximum. Its larger value is applied as the maximum (2047 or 31)
 and logged as a legacy operation; see [legacy SDK compatibility](legacy-sdk-compatibility.md).
 
+**The TD-220 Bastion cannon (0.31.3 research, offline only).** The cannon's magazine holds one shell, and it carries 30
+spare magazines, so a vanilla Bastion has 31 shells. Its spare count is the same 5-bit field: 31 spare magazines
+(32 shells) is the most it can carry. Every mounted weapon, Exosuit arm and sentry uses these same field sizes; there is
+no wider variant for vehicles (`research/docs/ammo-network-fields-F5FEE03DCFDB.md`).
+
+For more shells, raise `weapon.capacity`. The cannon fires `capacity x (spare magazines + 1)` shells: capacity 2 gives
+up to 64 and capacity 10 up to 320. With a capacity above 1 it fires the whole magazine at its fire rate (one shell
+every 5 s) before it reloads.
+
+The 10-bit limit (0 to 1023) belongs to deposits: backpacks and a vehicle's own deposit. The game lets a mounted weapon
+reload from its vehicle's deposit (the M-103 Supply FRV gun does). The Bastion cannon does not, and Runtime does not
+expose that switch.
+
+```lua
+-- TD-220 Bastion cannon: 2 shells per magazine and 31 spare magazines = 64 shells for a Bastion called after this.
+local cannon=hd2.vehicle('TD-220 Bastion MK XVI'):weapon('attach_tank_gun')
+hd2.ensure({transaction={id='bastion-shells',target=cannon,allow_unverified_effect=true,changes={
+    {field=hd2.fields.weapon.capacity,expect=1,value=2},
+    {field=hd2.fields.magazine.starting_magazines,expect=30,value=31},
+    {field=hd2.fields.magazine.magazines_from_supply,expect=30,value=31},
+    {field=hd2.fields.magazine.spare_magazines,expect=30,value=31}}}})
+```
+
 **Mounts without a reload.** The TD-220 Bastion coax (`attach_tank_gun_mg`), the Exosuit arms and the TD-110
 Maelstrom's twin launchers own no `WeaponReload` component. The research checks every mount for one
 (`research/vehicle-weapons-F5FEE03DCFDB.json`). Their spare-magazine fields stay writable, but no reload is known to use
