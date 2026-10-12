@@ -5486,7 +5486,7 @@
       "calls": [
         "ensure"
       ],
-      "minVersion": "0.31.2",
+      "minVersion": "0.31.3",
       "operations": [
         {
           "acknowledgements": {},
@@ -5511,7 +5511,7 @@
       "calls": [
         "ensure"
       ],
-      "minVersion": "0.31.2",
+      "minVersion": "0.31.3",
       "operations": [
         {
           "acknowledgements": [
