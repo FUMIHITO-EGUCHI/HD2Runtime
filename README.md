@@ -94,6 +94,11 @@ HD2Runtime is designed to fail safely when a game structure or ownership relatio
 
 Unsupported or ambiguous values remain read-only rather than being modified speculatively.
 
+Version 0.31.3 is a hotfix release from player reports: picking a custom stratagem no longer fails when the lobby's
+carrier is a stratagem this account does not own, and it adds the LAS-22 Shear to the weapon stats, the EXO-55
+Breakthrough cannon's ammunition fields and the FX-12 Shield Generator Relay's recharge rate and delays. Nothing in it
+is live-tested yet. See `docs/releases/0.31.3.md`.
+
 Version 0.31.2 is a hotfix release from player reports: custom stratagems no longer stutter every 5 seconds, beam
 conversion values can be changed again and reverted, every damage row takes up to four statuses, ammunition maxima
 follow the game's network limits, and it adds the game's own names in the game's language (`hd2.text`), support weapon
