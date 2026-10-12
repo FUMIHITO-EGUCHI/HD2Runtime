@@ -51,6 +51,8 @@ weapon-local records.
 | `hd2.fields.weapon.horizontal_spread`, `vertical_spread` | weapon (projectile mounts) | `WeaponDataComponentData` +84 / +88 (mrad, full width; see Spread) |
 | `hd2.fields.weapon.capacity` | weapon | `WeaponMagazineComponentData` +136 (at most 2047, see Ammunition limits) |
 | `hd2.fields.magazine.starting_magazines`, `magazines_from_supply`, `spare_magazines` | weapon | `WeaponMagazineComponentData` +140 / +144 / +148 (at most 31) |
+| `hd2.fields.rounds.feed_capacity_1` (0.31.3) | weapon (rounds-fed mounts: the EXO-55 Breakthrough cannon) | `WeaponRoundsComponentData` +72 (rounds per magazine; see Exosuit ammunition) |
+| `hd2.fields.rounds.spare_rounds`, `rounds_from_supply`, `starting_rounds` (0.31.3) | weapon (rounds-fed mounts) | `WeaponRoundsComponentData` +80 / +84 / +88 (at most 511) |
 | `hd2.fields.reload.duration` | weapon | `WeaponReloadComponentData` +56 (only where the value is non-zero) |
 | `hd2.fields.entity.health`, `hd2.fields.entity.armor` | weapon | The mount's own `HealthComponentData` +0 / +280 |
 | `hd2.fields.beam.fire_rate` | weapon | `BeamWeaponComponentData` +104 (rpm: how often the beam applies damage) |
@@ -74,6 +76,7 @@ The game sends a weapon's live ammunition to the other players as network fields
 | --- | --- | --- |
 | rounds in the magazine | `rounds`, 11 bits | 0 to 2047 |
 | spare magazines | `magazines_remaining`, 5 bits | 0 to 31 |
+| spare rounds of a rounds-fed weapon (0.31.3) | `spare_rounds`, 9 bits | 0 to 511 |
 
 The engine clamps a larger value at the next shot. A capacity above 2047 therefore shows only until the first shot,
 and teammates see a different count. A player reported a TD-220 Bastion coax capacity of 2500: about 2100 rounds for
@@ -109,11 +112,52 @@ hd2.ensure({transaction={id='bastion-shells',target=cannon,allow_unverified_effe
     {field=hd2.fields.magazine.spare_magazines,expect=30,value=31}}}})
 ```
 
-**Mounts without a reload.** The TD-220 Bastion coax (`attach_tank_gun_mg`), the Exosuit arms and the TD-110
-Maelstrom's twin launchers own no `WeaponReload` component. The research checks every mount for one
+Since 0.31.3 the spare, starting and supply rounds of a rounds-fed mount (the EXO-55 Breakthrough cannon) take at most
+**511**: they are the `spare_rounds` field. The rounds in its feed have no network field, so `rounds.feed_capacity_1`
+has no network maximum (the same as the player and support rounds fields).
+
+**Mounts without a reload.** The TD-220 Bastion coax (`attach_tank_gun_mg`), the magazine Exosuit arms (EXO-45, EXO-49
+and EXO-51) and the TD-110 Maelstrom's twin launchers own no `WeaponReload` component. The research checks every mount for one
 (`research/vehicle-weapons-F5FEE03DCFDB.json`). Their spare-magazine fields stay writable, but no reload is known to use
 them, so they are expected to have no effect. The catalog flags them with `reloadComponent.present = false`. This is
-not proven from game code.
+not proven from game code. On these mounts `weapon.capacity` is the whole supply: raise it for more rounds. The EXO-55
+Breakthrough cannon is different: it owns a `WeaponReload` (1.1 s) and reloads from its spare rounds.
+
+## Exosuit ammunition (0.31.3, offline only)
+
+Every Exosuit weapon arm publishes its own ammunition, on its own records (one owner each: no arm shares one with the
+other arm or with another Exosuit, so no `allow_shared`). Vanilla values from the reference snapshot:
+
+| Exosuit | Arm | Ammunition component | Fields (vanilla) |
+| --- | --- | --- | --- |
+| EXO-45 Patriot | `left_gun` (rocket pod) | WeaponMagazine | `weapon.capacity` 14, `magazine.starting_magazines` 0, `magazines_from_supply` 6, `spare_magazines` 0 |
+| EXO-45 Patriot | `right_gun` (minigun) | WeaponMagazine | `weapon.capacity` 1350, magazines 0 / 6 / 0 |
+| EXO-49 Emancipator | `left_gun`, `right_gun` (autocannons) | WeaponMagazine | `weapon.capacity` 100 each, magazines 0 / 6 / 0 |
+| EXO-51 Lumberer | `left_gun` (flamethrower) | WeaponMagazine | `weapon.capacity` 500, magazines 0 / 6 / 0 |
+| EXO-51 Lumberer | `right_gun` (cannon) | WeaponMagazine | `weapon.capacity` 25, magazines 0 / 6 / 0 |
+| EXO-55 Breakthrough | `right_gun` (flak cannon) | WeaponRounds (+ WeaponReload 1.1 s) | `rounds.feed_capacity_1` 6, `rounds.spare_rounds` 64, `rounds.starting_rounds` 64, `rounds.rounds_from_supply` 0 |
+| EXO-55 Breakthrough | `left_gun` | none | the shield arm (see EXO-55 Breakthrough shield arm) |
+
+- **Magazine arms** (Patriot, Emancipator, Lumberer): the magazine is all the arm carries. `weapon.capacity` (at most
+  2047) is the number of rounds; the magazine counts are writable but no reload is known to use them (Mounts without a
+  reload). `weapon.capacity` on the Patriot, Emancipator and Lumberer arms is confirmed by working reference mods;
+  the magazine counts need `allow_unverified_effect`.
+- **The Breakthrough cannon** is rounds-fed like a shotgun: 6 rounds per magazine, 64 spare rounds, reloaded from the
+  spares. `rounds.feed_capacity_1` sizes the magazine and `rounds.spare_rounds` is the most spare rounds it carries
+  (on player and support weapons the game clamps the starting and supply rounds to it). The three spare-round fields
+  take at most 511; the feed has no network maximum. It has no second feed
+  (`rounds.feed_capacity_2` is listed as blocked) and no `weapon.capacity` or `magazine.*` fields. Every field needs
+  `allow_unverified_effect`; when the game reads them (Exosuit creation or each reload) is not traced, so call in a new
+  Exosuit after the write.
+
+```lua
+-- EXO-55 Breakthrough: 12 rounds per magazine and 128 spare rounds for an Exosuit called in after this.
+local flak=hd2.vehicle('EXO-55 Breakthrough Exosuit'):weapon('right_gun')
+hd2.ensure({transaction={id='breakthrough-ammo',target=flak,allow_unverified_effect=true,changes={
+    {field=hd2.fields.rounds.feed_capacity_1,expect=6,value=12},
+    {field=hd2.fields.rounds.spare_rounds,expect=64,value=128},
+    {field=hd2.fields.rounds.starting_rounds,expect=64,value=128}}}})
+```
 
 ## Turret motion
 

@@ -95,6 +95,11 @@ HEAT = (('heat.capacity', 'capacity', 96, 'Overheat threshold', 'heat_units'),
 NO_RELOAD = ('This mount owns no WeaponReload component (its component list in research/vehicle-weapons, which checks '
     'every mount for one), so no reload is known to draw on its spare magazines: this field is expected to have no '
     'effect (the TD-220 Bastion coax, the Exosuit arms). Not proven from game code; not shown in game.')
+ROUNDS_UNVERIFIED = ("The mount's own WeaponRounds record (one owner), the layout of the player and support rounds "
+    'fields (feed capacity +72, maximum / supply / starting spare rounds +80 / +84 / +88). Unlike the magazine Exosuit '
+    'arms this mount owns a WeaponReload component, so its reload draws on the spare rounds. Not live-tested on a '
+    'mount, and when the game reads it (Exosuit creation or each reload) is not traced: call in a new Exosuit after '
+    'the write.')
 DRONE_MAGAZINES = ('The drone reloads from its backpack: the drone magazines are the backpack DepositComponent (exact '
     'published Max Rounds / Starting Rounds / Mags from Supply), authored through hd2.backpack(name). The drone '
     "weapon's own spare-magazine counts are not what the game publishes and are not exposed.")
@@ -414,6 +419,30 @@ def build(research_path=RESEARCH):
                         # The research checks every mount for a WeaponReload record (research/vehicle-weapons
                         # COMPONENTS); this one owns none, so nothing is known to reload it from its spares.
                         item['reloadComponent'] = {'present': False, 'note': NO_RELOAD}
+            if 'rounds' in values:
+                # 0.31.3: a rounds-fed mount (the EXO-55 Breakthrough cannon: WeaponRounds, no WeaponMagazine). The
+                # player/support WeaponRounds layout on the mount's own record; the spare/starting/supply rounds are
+                # bounded by the 9-bit spare_rounds network field (scripts/ammo_limits.py apply_rounds_feed).
+                rounds = values['rounds']
+                assert rounds['primaryProjectile'] == values.get('projectileType'), \
+                    key + ': WeaponRounds primary projectile differs from ProjectileWeapon +0'
+                assert 'WeaponMagazineComponentData' not in own, key + ': a mount with both ammunition components'
+                for field_id, name, unit, kind, offset, storage, value in (
+                        ('rounds.feed_capacity_1', 'Rounds per magazine', 'rounds', 'number', 72, 'f32',
+                            rounds['feedCapacity1']),
+                        ('rounds.spare_rounds', 'Maximum spare rounds', 'rounds', 'integer', 80, 'u32',
+                            rounds['spareRounds']),
+                        ('rounds.rounds_from_supply', 'Rounds from supply', 'rounds', 'integer', 84, 'u32',
+                            rounds['roundsFromSupply']),
+                        ('rounds.starting_rounds', 'Starting spare rounds', 'rounds', 'integer', 88, 'u32',
+                            rounds['startingRounds'])):
+                    item = ammo_limits.apply_rounds_feed(field(field_id, name, unit, kind, value,
+                        component('WeaponRoundsComponentData', offset, storage), weapon_target, 'weapon_local'))
+                    item['acknowledgementReason'] = ROUNDS_UNVERIFIED
+                if rounds['alternateProjectile'] == 0 and not rounds['feedCapacity2']:
+                    blocked.append({'field': 'rounds.feed_capacity_2', 'reason': 'The mount has no alternate '
+                        'magazine (WeaponRounds +68 names no projectile, feed 2 holds 0): there is no second feed '
+                        'to size.'})
             if values.get('reloadDuration'):
                 field('reload.duration', 'Reload duration', 'seconds', 'number', values['reloadDuration'],
                     component('WeaponReloadComponentData', 56, 'f32'), weapon_target, 'weapon_local',
@@ -616,7 +645,7 @@ def build(research_path=RESEARCH):
             groups = publish(key, semantic, fields)
             public_mounts.append({'slot': slot['slot'], 'label': label, 'weapon': {'key': key, 'semanticId': semantic,
                 'nativePath': slot.get('nativePath'), 'attacks': sorted(attacks), 'fieldGroups': groups,
-                'values': {k: values[k] for k in ('fireRate', 'magazine', 'reloadDuration', 'health', 'armor', 'infiniteAmmo')
+                'values': {k: values[k] for k in ('fireRate', 'magazine', 'rounds', 'reloadDuration', 'health', 'armor', 'infiniteAmmo')
                     if k in values},
                 'ownership': {'weaponLocal': sorted(c for c in own if c != 'MountComponentData'),
                     'alsoMountedAt': co_mounted,

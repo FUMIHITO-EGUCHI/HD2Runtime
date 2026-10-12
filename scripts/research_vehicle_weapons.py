@@ -162,6 +162,16 @@ def main():
                         body_m = native.record('WeaponMagazineComponentData', weapon_own['WeaponMagazineComponentData']['recordIndex'])
                         values['magazine'] = {'capacity': u32(body_m, 136), 'magazines': u32(body_m, 140),
                             'refill': u32(body_m, 144), 'max': u32(body_m, 148), 'reloadThreshold': u32(body_m, 152)}
+                    if 'WeaponRoundsComponentData' in weapon_own:
+                        # 0.31.3: a rounds-fed mount (the EXO-55 Breakthrough cannon). The player/support WeaponRounds
+                        # layout: +64 / +68 primary / alternate projectile, +72 / +76 feed capacities (f32), +80
+                        # maximum spare rounds, +84 rounds from supply, +88 starting rounds.
+                        body_r = native.record('WeaponRoundsComponentData',
+                            weapon_own['WeaponRoundsComponentData']['recordIndex'])
+                        values['rounds'] = {'primaryProjectile': u32(body_r, 64),
+                            'alternateProjectile': u32(body_r, 68), 'feedCapacity1': f32(body_r, 72),
+                            'feedCapacity2': f32(body_r, 76), 'spareRounds': u32(body_r, 80),
+                            'roundsFromSupply': u32(body_r, 84), 'startingRounds': u32(body_r, 88)}
                     if 'WeaponReloadComponentData' in weapon_own:
                         values['reloadDuration'] = f32(native.record('WeaponReloadComponentData',
                             weapon_own['WeaponReloadComponentData']['recordIndex']), 56)

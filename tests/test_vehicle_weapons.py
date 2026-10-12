@@ -103,6 +103,78 @@ class VehicleWeaponTests(unittest.TestCase):
         self.assertIn('The TD-220 Bastion cannon (0.31.3 research, offline only)', doc)
         self.assertIn("id='bastion-shells'", doc)
 
+    def test_every_exosuit_arm_has_its_ammunition_fields(self):
+        # 0.31.3 (a user report: "the Breakthrough's right gun has no magazine/ammo counts, nor do the Emancipator and
+        # Patriot"). Every Exosuit weapon arm publishes its own ammunition with the snapshot's values: the magazine arms
+        # (WeaponMagazine: capacity + three magazine counts, since 0.30) and the Breakthrough cannon (WeaponRounds:
+        # rounds per magazine + spare / supply / starting rounds, new in 0.31.3).
+        research = {(v['name'], s['slot']): s for v in json.loads((ROOT / 'research/vehicle-weapons-F5FEE03DCFDB.json')
+            .read_text(encoding='utf-8'))['vehicles'] for s in v['slots']}
+        magazine_ids = ('weapon.capacity', 'magazine.starting_magazines', 'magazine.magazines_from_supply',
+            'magazine.spare_magazines')
+        expected = {
+            'EXO-45 Patriot Exosuit / left_gun': (14, 0, 6, 0), 'EXO-45 Patriot Exosuit / right_gun': (1350, 0, 6, 0),
+            'EXO-49 Emancipator Exosuit / left_gun': (100, 0, 6, 0),
+            'EXO-49 Emancipator Exosuit / right_gun': (100, 0, 6, 0),
+            'EXO-51 Lumberer Exosuit / left_gun': (500, 0, 6, 0), 'EXO-51 Lumberer Exosuit / right_gun': (25, 0, 6, 0)}
+        exo_arms = sorted(key for key in self.by_key if key.startswith('EXO-'))
+        self.assertEqual(exo_arms, sorted(expected) + ['EXO-55 Breakthrough Exosuit / right_gun'])
+        for key, values in expected.items():
+            slot = research[(key.split(' / ')[0], 0 if key.endswith('left_gun') else 1)]
+            magazine = slot['values']['magazine']
+            self.assertEqual(values, (magazine['capacity'], magazine['magazines'], magazine['refill'], magazine['max']))
+            for field_id, value in zip(magazine_ids, values):
+                item = self.fields[(key, field_id)]
+                self.assertEqual((item['baseline'], item['writable'], item['scope']), (value, True, 'weapon_local'),
+                    key + ' ' + field_id)
+                self.assertEqual(item['backingComponent'], 'WeaponMagazineComponentData')
+                self.assertEqual(item['max'], 2047 if field_id == 'weapon.capacity' else 31)
+                if field_id != 'weapon.capacity':
+                    # No WeaponReload on a magazine arm: the spare counts are expected to have no effect.
+                    self.assertFalse(item['reloadComponent']['present'], key)
+            self.assertNotIn((key, 'rounds.spare_rounds'), self.fields)
+        # Each arm owns its magazine record (one owner): no Exosuit shares one with another arm or mech.
+        owners = [research[(key.split(' / ')[0], 0 if key.endswith('left_gun') else 1)]['ownership']
+            ['WeaponMagazineComponentData'] for key in expected]
+        self.assertTrue(all(o['uniqueOwner'] and o['ownerCount'] == 1 for o in owners))
+        self.assertEqual(len({o['recordIndex'] for o in owners}), len(owners))
+        key = 'EXO-55 Breakthrough Exosuit / right_gun'
+        rounds = research[('EXO-55 Breakthrough Exosuit', 1)]['values']['rounds']
+        self.assertEqual((rounds['feedCapacity1'], rounds['spareRounds'], rounds['roundsFromSupply'],
+            rounds['startingRounds']), (6.0, 64, 0, 64))
+        for field_id, value, maximum in (('rounds.feed_capacity_1', 6.0, None), ('rounds.spare_rounds', 64, 511),
+                ('rounds.rounds_from_supply', 0, 511), ('rounds.starting_rounds', 64, 511)):
+            item = self.fields[(key, field_id)]
+            self.assertEqual((item['baseline'], item['writable'], item['scope'], item.get('max'), item['acknowledgement'],
+                item['backingComponent']), (value, True, 'weapon_local', maximum, 'allow_unverified_effect',
+                'WeaponRoundsComponentData'), field_id)
+            self.assertEqual(item.get('networkLimit'), {'max': 511, 'networkField': 'spare_rounds'} if maximum else None)
+        self.assertEqual(self.fields[(key, 'reload.duration')]['baseline'], 1.1)
+        for field_id in magazine_ids:
+            self.assertNotIn((key, field_id), self.fields)
+        self.assertIn('rounds.feed_capacity_2', [b['field'] for b in self.by_key[key]['blocked']])
+        run(r'''
+local hd2=require('hd2runtime/api/hd2')
+local patches=require('hd2runtime/domains/patches')
+local cannon=hd2.vehicle('EXO-55 Breakthrough Exosuit'):weapon('right_gun')
+local ok,why=pcall(patches.validate,{id='feed',target=cannon,field=hd2.fields.rounds.feed_capacity_1,expect=6,value=12})
+assert(not ok and tostring(why):find('allow_unverified_effect',1,true),tostring(why))
+patches.validate{id='feed',allow_unverified_effect=true,target=cannon,field=hd2.fields.rounds.feed_capacity_1,
+ expect=6,value=12}
+patches.validate{id='spare',allow_unverified_effect=true,target=cannon,field=hd2.fields.rounds.spare_rounds,
+ expect=64,value=511}
+ok,why=pcall(patches.validate,{id='spare',allow_unverified_effect=true,target=cannon,
+ field=hd2.fields.rounds.spare_rounds,expect=64,value=512})
+assert(not ok and tostring(why):find('above the reviewed maximum 511',1,true),tostring(why))
+patches.validate{id='start',allow_unverified_effect=true,target=cannon,field=hd2.fields.rounds.starting_rounds,
+ expect=64,value=128}
+patches.validate{id='supply',allow_unverified_effect=true,target=cannon,field=hd2.fields.rounds.rounds_from_supply,
+ expect=0,value=32}
+assert(not pcall(patches.validate,{id='mag',allow_unverified_effect=true,target=cannon,
+ field=hd2.fields.weapon.capacity,expect=6,value=12}),'the rounds-fed cannon has no WeaponMagazine capacity')
+return 'ok'
+''')
+
     def test_spread_and_breakthrough_shield(self):
         # 0.31.0 (research/mounted-spread-shield): every projectile mount exposes its WeaponData spread pair (the
         # member the shot reads for every shot and pellet); spray, beam and arc mounts list it as blocked.

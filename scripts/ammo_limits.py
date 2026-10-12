@@ -79,3 +79,40 @@ def apply(field: dict, field_id: str | None = None) -> dict:
         raise ValueError(f'{field_id}: the reviewed value {field["currentDefault"]} is above the network ceiling')
     field['networkLimit'] = {'max': maximum, 'networkField': network_field}
     return field
+
+
+# 0.31.3: a rounds-fed weapon (WeaponRounds) replicates its spare rounds as spare_rounds, an int of 9 bits (0..511),
+# and the chamber flag; the rounds in the feed have no network field (research/ammo-network-fields-F5FEE03DCFDB.json
+# fieldSets, the 25 WeaponRounds types). Starting and supply rounds are written into the spare count, so 511 bounds
+# them too. Used by the mounted-weapon generator only (the EXO-55 Breakthrough cannon): the player and support rounds
+# fields keep their published ranges (team reload: TEAM_ROUNDS_MAX, the same 511).
+FEED_RESEARCH = ROOT / 'research/ammo-network-fields-F5FEE03DCFDB.json'
+ROUNDS_FEED_FIELDS = ('rounds.spare_rounds', 'rounds.rounds_from_supply', 'rounds.starting_rounds')
+
+
+def spare_rounds() -> int:
+    """511, from the research's spare_rounds width, checked to be one 9-bit int field in the rounds-feed set."""
+    if 'spareRounds' not in _CACHE:
+        research = json.loads(FEED_RESEARCH.read_text(encoding='utf-8'))
+        (field,) = research['fieldWidths']['spare_rounds']
+        if field['kind'] != 1 or field['min'] != 0 or field['max'] != (1 << field['bits']) - 1 \
+                or 'chamber_empty+spare_rounds' not in research['fieldSets'] or not research['checks']['spareRounds9Bits']:
+            raise ValueError(f'ammo network field spare_rounds changed: {field!r}')
+        _CACHE['spareRounds'] = field['max']
+    return _CACHE['spareRounds']
+
+
+def apply_rounds_feed(field: dict) -> dict:
+    """Bound a rounds-feed spare/starting/supply field by the 9-bit spare_rounds ceiling (like apply)."""
+    field_id = field.get('semanticFieldId') or field.get('id')
+    if field_id not in ROUNDS_FEED_FIELDS:
+        return field
+    maximum = spare_rounds()
+    if field.get('max') is None or field['max'] > maximum:
+        field['max'] = maximum
+        field['rangeReason'] = ('the live spare-round count is the network field spare_rounds (9 bits): the game clamps '
+            f'it to {maximum} on every write')
+    if isinstance(field.get('currentDefault'), (int, float)) and field['currentDefault'] > maximum:
+        raise ValueError(f'{field_id}: the reviewed value {field["currentDefault"]} is above the network ceiling')
+    field['networkLimit'] = {'max': maximum, 'networkField': 'spare_rounds'}
+    return field
