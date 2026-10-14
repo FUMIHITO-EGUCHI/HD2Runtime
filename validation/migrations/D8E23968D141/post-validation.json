@@ -22,8 +22,8 @@
    "ok": true,
    "tail": [
     "checked generate_sdk",
-    "[HD2Runtime] HD2Runtime 0.31.3 initialized (API 1)",
-    "[HD2Runtime] log unavailable: offline-resource-fixture:41484: Bingus logging unavailable"
+    "[HD2Runtime] HD2Runtime 0.40.0 initialized (API 1)",
+    "[HD2Runtime] log unavailable: offline-resource-fixture:42472: Bingus logging unavailable"
    ]
   },
   {
@@ -49,7 +49,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] shared records index built in 255.0 ms CPU (1610 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 1070.0 ms CPU (1718 keys, 12 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -84,8 +84,8 @@
    "name": "validate_options_binding_snapshot",
    "ok": true,
    "tail": [
-    "[HD2Runtime] HD2Runtime 0.31.3 initialized (API 1)",
-    "[HD2Runtime] shared records index built in 156.0 ms CPU (1610 keys, 11 catalogues)",
+    "[HD2Runtime] HD2Runtime 0.40.0 initialized (API 1)",
+    "[HD2Runtime] shared records index built in 843.0 ms CPU (1718 keys, 12 catalogues)",
     "[HD2Runtime] patch one-shot rejected: option-bound values require hd2.ensure"
    ]
   },
@@ -94,7 +94,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] shared records index built in 268.0 ms CPU (1610 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 1135.0 ms CPU (1718 keys, 12 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -139,7 +139,7 @@
    "ok": true,
    "tail": [
     "  \"throwables\": 23,",
-    "  \"writes\": 1246",
+    "  \"writes\": 2114",
     "}"
    ]
   },
@@ -148,7 +148,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] HD2Runtime 0.31.3 initialized (API 1)",
+    "[HD2Runtime] HD2Runtime 0.40.0 initialized (API 1)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -166,7 +166,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] shared records index built in 183.0 ms CPU (1610 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 882.0 ms CPU (1718 keys, 12 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -193,7 +193,7 @@
    "ok": true,
    "tail": [
     "}",
-    "[HD2Runtime] HD2Runtime 0.31.3 initialized (API 1)",
+    "[HD2Runtime] HD2Runtime 0.40.0 initialized (API 1)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable"
    ]
   },
@@ -201,7 +201,7 @@
    "name": "validate_weapon_sound_snapshot",
    "ok": true,
    "tail": [
-    "[HD2Runtime] shared records index built in 241.0 ms CPU (1610 keys, 11 catalogues)",
+    "[HD2Runtime] shared records index built in 532.0 ms CPU (1718 keys, 12 catalogues)",
     "[HD2Runtime] log unavailable: [string \"hd2runtime/runtime/log\"]:24: Bingus logging unavailable",
     "[HD2Runtime] FOREIGN VALUE: support_weapon MG-43 Machine Gun weapon.sound is 0x00000000000000007856341201, not HD2Runtime's reviewed support/mg43: owner unknown mod (a mod outside HD2Runtime: a data-file mod or another program writing game memory). HD2Runtime leaves it as it is and refuses writes to this value only; every other value is unaffected"
    ]
@@ -210,9 +210,9 @@
    "name": "examples",
    "ok": true,
    "tail": [
-    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_fire: its main file ([string \"IncendiaryFire\"]) took 21.2 ms in one call",
-    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/incendiary_hellpods: its main file ([string \"IncendiaryHellpods\"]) took 14.3 ms in one call",
-    "[HD2Runtime] PERFORMANCE: mod mods/hd2runtime_examples/minefield_tuning: its main file ([string \"MinefieldTuning\"]) took 25.0 ms in one call"
+    "[HD2Runtime] [mods/hd2runtime_examples/status_action_test] loaded: hit an enemy in a mission (as host); it should catch fire",
+    "[HD2Runtime] [mods/hd2runtime_examples/eagle_fields_test] EAGLE FIELDS 0.1.0 BUILD: Airstrike pattern 0 -> 2, Napalm drop interval 0.2 -> 0.6 s, Strafing Run attack 1.5 -> 3.0 s, 110mm target radius 20 -> 60 m (MODS page \"Eagle Fields Test\"; APPLIED lines follow)",
+    "[HD2Runtime] [mods/hd2runtime_examples/player_kill_credited_example] loaded: kill enemies with different weapons and stratagems; each credit is logged per source"
    ]
   },
   {
@@ -228,7 +228,16 @@
    "name": "migration tests",
    "ok": true,
    "tail": [
-    "Ran 29 tests",
+    "Ran 30 tests",
+    "",
+    "OK"
+   ]
+  },
+  {
+   "name": "full test suite",
+   "ok": true,
+   "tail": [
+    "Ran 2419 tests in 229.780s",
     "",
     "OK"
    ]
