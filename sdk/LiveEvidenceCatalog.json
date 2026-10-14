@@ -1,7 +1,7 @@
 {
  "contract": "hd2runtime.live_evidence.v1",
  "schemaVersion": 1,
- "hd2RuntimeVersion": "0.31.3",
+ "hd2RuntimeVersion": "0.40.0",
  "build": "F5FEE03DCFDB",
  "statusLevels": {
   "live_proven": "A user-run in-game test showed the intended effect; the acknowledgement requirement is removed for exactly the family scope.",
@@ -19,9 +19,9 @@
   "note": "A failed host is host-path evidence, never evidence against the donor output. null means the test did not establish that part."
  },
  "summary": {
-  "sessions": 54,
-  "tests": 138,
-  "passed": 109,
+  "sessions": 55,
+  "tests": 141,
+  "passed": 112,
   "families": {
    "live_proven": [
     "attack_output_cross_class",
@@ -44,7 +44,10 @@
     "event_player_died_position",
     "event_weapon_in_hand",
     "f10_performance_tab",
+    "input_native_binding_control_0_40_0",
     "minefield_salvos",
+    "mission_duration_definition_0_40_0",
+    "mission_timer_freeze_solo_0_40_0",
     "overlay_game_font_text_0_30_4",
     "player_armor_passive_swap",
     "pod_payload_pair",
@@ -1120,7 +1123,10 @@
     "orbital.salvo_interval",
     "orbital.salvo_interval_random",
     "orbital.scatter",
-    "orbital.salvo_scatter"
+    "orbital.salvo_scatter",
+    "orbital.walking_speed",
+    "orbital.aim_step_min",
+    "orbital.aim_step_max"
    ],
    "scope": "BombardmentComponentData pattern members of each reviewed orbital stratagem's own bombardment record (type record: every call of that orbital on this machine), code-proven offline in research/bombardment-payload-F5FEE03DCFDB.json; the shell types are never written.",
    "tests": [],
@@ -2407,6 +2413,52 @@
    "nextTests": [
     "the same editor session with the HD2Runtime.log sent: beam.fire_rate 300 -> 60 -> 120 -> 300 and the beam pulse, each APPLIED, with no CONFLICT line"
    ]
+  },
+  "mission_duration_definition_0_40_0": {
+   "status": "live_proven",
+   "domain": "mission",
+   "fields": [],
+   "scope": "A mission timer source's authored duration (HiveMindComponentData +116) edited aboard the ship is the definition the launched mission's countdown is created from (terminids/mode_1, solo host), and the host clamps that countdown to 2500 s (the replicated field's range). Only the reach of the definition and the 2500 s ceiling are promoted.",
+   "tests": [
+    "HD2R Editor (Mission Overview)"
+   ],
+   "acknowledgementRemoved": null,
+   "notPromoted": [
+    "every other timer source (offline: the same writer and guards)",
+    "multiplayer (clients' countdowns)",
+    "the gameplay effect of a shorter or longer timer on escalation and objectives"
+   ],
+   "notPromotedNote": "mission.duration_seconds keeps allow_shared and allow_unverified_effect"
+  },
+  "mission_timer_freeze_solo_0_40_0": {
+   "status": "live_proven",
+   "domain": "mission",
+   "fields": [],
+   "scope": "hd2.freeze_mission_timer as a solo host: the game's own timer pause stops and resumes the HUD countdown; the next mission starts unpaused.",
+   "tests": [
+    "HD2R Editor (FREEZE TIMER)"
+   ],
+   "acknowledgementRemoved": null,
+   "notPromoted": [
+    "the multiplayer follow through hd2mt (offline only)",
+    "the gameplay effect of a frozen countdown on escalation, objectives and extraction"
+   ],
+   "notPromotedNote": "hd2.freeze_mission_timer keeps allow_unverified_effect"
+  },
+  "input_native_binding_control_0_40_0": {
+   "status": "live_proven",
+   "domain": "input",
+   "fields": [],
+   "scope": "hd2.input.bind with native = {label, category}: registered with Mod Bindings Menu, pressed by the input bound on the game's keybind page, its own key ignored while a keyboard or mouse input is set there and working again once it is emptied (HD2Runtime settings and the HD2R Editor toggle).",
+   "tests": [
+    "HD2Runtime input bridge (Mod Bindings Menu)"
+   ],
+   "acknowledgementRemoved": null,
+   "notPromoted": [
+    "controller-only bindings",
+    "other mods' native bindings"
+   ],
+   "notPromotedNote": "no field or acknowledgement changes"
   }
  },
  "sessions": [
@@ -5310,6 +5362,42 @@
      "family": "beam_conversion_same_mod_reedit_0_31_2",
      "writes": [],
      "observation": "Before the fix the user's editor applied beam.fire_rate 300 -> 60 on the APW-1, then every later change and the reset to 300 were refused with CONFLICT until a restart. On these builds the user reported that this fix works too: the values are edited again and reverted. Which fields and values were edited, the pulse and the gameplay effect of each value were not reported (no log)."
+    }
+   ]
+  },
+  {
+   "id": "mission-timers-keybinds-0-40-0-2026-10-14",
+   "date": "2026-10-14",
+   "runtime": "HD2Runtime 0.40.0 rc16 to rc22 with the HD2R Editor 1.0.0 rc16 to rc25 (Test Builds/HD2Runtime-0.40.0_Editor-1.0.0-rc*; uncommitted local builds, SHA-256s in each folder's TEST-NOTES.txt). Played 2026-10-13/14, solo host, with the user's logs (HD2Runtime.log rc16 CHECK TIMER, rc22 keybinds).",
+   "logSignals": [
+    "mission timer diagnostic: {\"active\":{\"baseSeconds\":5827,\"effectiveSeconds\":5827,\"privateDefinition\":false,\"remainingSeconds\":2485.31,\"source\":\"terminids/mode_1\"}",
+    "input binding hd2runtime_editor.toggle: its input on the game's keybind page controls it; its own key F8 is ignored while that input is set",
+    "input binding hd2runtime_editor.toggle: no input on the game's keybind page: its own key F8 works"
+   ],
+   "tests": [
+    {
+     "mod": "HD2R Editor (Mission Overview)",
+     "operation": "terminids/mode_1 duration 2400 -> 5827 applied aboard the ship, then CHECK TIMER in a Terminid mission",
+     "result": "PASS",
+     "family": "mission_duration_definition_0_40_0",
+     "writes": [],
+     "observation": "The definition held 5827 in the mission with no private record (the correct source spawned), the countdown read 2485.31 shortly after landing and the HUD showed about 42 minutes: the edit reaches the mission, and the host clamps the countdown to the replicated field's range 0..2500 (static proof in research mission-countdown-static-rc15). Values above 2500 are refused since rc17. A value below 2500 seen in the HUD was reported by the user as working (rc23-rc25 testing), without a log."
+    },
+    {
+     "mod": "HD2R Editor (FREEZE TIMER)",
+     "operation": "hd2.freeze_mission_timer frozen true / false in a mission, solo host",
+     "result": "PASS",
+     "family": "mission_timer_freeze_solo_0_40_0",
+     "writes": [],
+     "observation": "The user reported that timer freezing works (rc19) and, later, that the overview's auto-freeze works (rc23-rc25). The HUD timer stopped and resumed. Gameplay side effects of a frozen countdown (escalation, objectives) were not reported. No multiplayer test."
+    },
+    {
+     "mod": "HD2Runtime input bridge (Mod Bindings Menu)",
+     "operation": "Open / close HD2R Editor and HD2Runtime settings bound and emptied on the game's Controls page, MODS tab",
+     "result": "PASS",
+     "family": "input_native_binding_control_0_40_0",
+     "writes": [],
+     "observation": "Both bindings registered; a key bound there opened and closed the windows and F8 / F10 were ignored, emptying the binding brought F8 / F10 back, over several cycles (rc22 log). The live binding table read is read only."
     }
    ]
   }

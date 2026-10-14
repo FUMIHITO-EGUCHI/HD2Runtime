@@ -63,8 +63,8 @@ class LiveEvidenceTests(unittest.TestCase):
                 'event_action_explosion_named', 'event_action_heal', 'event_action_projectile', 'event_action_status',
                 'event_bughole_destroyed',
                 'event_damage_source_attribution', 'event_player_died_position', 'event_weapon_in_hand',
-                'f10_performance_tab',
-                'minefield_salvos', 'overlay_game_font_text_0_30_4', 'player_armor_passive_swap', 'pod_payload_pair', 'projectile_slot_composition', 'sentry_targeting_range',
+                'f10_performance_tab', 'input_native_binding_control_0_40_0',
+                'minefield_salvos', 'mission_duration_definition_0_40_0', 'mission_timer_freeze_solo_0_40_0', 'overlay_game_font_text_0_30_4', 'player_armor_passive_swap', 'pod_payload_pair', 'projectile_slot_composition', 'sentry_targeting_range',
                 'sentry_turret_turn_speed', 'stratagem_calldown_code', 'stratagem_carrier_bombardment_pattern',
                 'stratagem_carrier_presentation_lifecycle', 'stratagem_carrier_shell_redirect',
                 'stratagem_custom_panel_icon',
@@ -98,7 +98,7 @@ class LiveEvidenceTests(unittest.TestCase):
                 'orbital_pattern_fields', 'projectile_homing', 'projectile_more_donors', 'quasar_overheated_cooling_0_31_2', 'sentry_component_fields', 'stratagem_call_in_time', 'support_charge_level_rows',
                 'support_overcharge_explosion_rows', 'support_payload_0_31_2', 'support_projectile_traced_hosts_0_31_2', 'weapon_fire_rate_wind_up', 'weapon_presentation_traits',
                 'weapon_sound_template']})
-        self.assertEqual((catalog['summary']['tests'], catalog['summary']['passed']), (138, 109))   # + WeaponRootsTest (5), 0.30.4 dev2 (2) and dev3 (1), BugHoleEventTest (1), F10 (1), 0.31.2 dev5 (2)
+        self.assertEqual((catalog['summary']['tests'], catalog['summary']['passed']), (141, 112))   # + WeaponRootsTest (5), 0.30.4 dev2 (2) and dev3 (1), BugHoleEventTest (1), F10 (1), 0.31.2 dev5 (2), 0.40.0 (3)
         for name, entry in self.registry['families'].items():
             if entry['status'] == 'live_proven':
                 self.assertTrue(any(t['result'] == 'PASS' for t in live_evidence.tests(name)), name)
