@@ -30,6 +30,23 @@ assert(D.missing['SG-88 Break-Action Shotgun'])
 return 'ok'
 '''), b'ok')
 
+    def test_silhouette_and_objective_catalog_coverage(self):
+        import json
+        catalog = json.loads((ROOT / 'sdk/HudIconSprites.json').read_text())
+        weapons = json.loads((ROOT / 'sdk/PlayerWeaponAuthoringCapabilities.json').read_text())['weapons']
+        throwables = json.loads((ROOT / 'sdk/ThrowableAuthoringCapabilities.json').read_text())['throwables']
+        self.assertTrue({w['name'] for w in weapons} <= set(catalog['weapons']))
+        self.assertEqual({w['name'] for w in throwables}, set(catalog['throwables']))
+        self.assertEqual(set(catalog['factions']), {'automatons', 'terminids', 'illuminate', 'super_earth'})
+        self.assertIn('cy_destroy_stratagem_blocker', catalog['objectives'])
+        self.assertIn('il_destroy_monolith', catalog['objectives'])
+        self.assertIn('bug_shrieker_nest', catalog['objectives'])
+        for kind in ('weapons', 'throwables', 'factions', 'objectives'):
+            for entry in catalog[kind].values():
+                self.assertIn(entry['mode'], ('mask', 'image'))
+                self.assertGreater(entry['width'], 0)
+                self.assertGreater(entry['height'], 0)
+
     def test_handles(self):
         self.assertEqual(run(r'''
 local hd2=require('hd2runtime/api/hd2')
@@ -38,7 +55,7 @@ local a=assert(hd2.resources.game_icon('stratagem','EXO-45 Patriot Exosuit'))
 assert(hd2.resources.game_icon('stratagem','EXO-45 Patriot Exosuit')==a,'one handle per icon')
 assert(G.issued(a)and G.identity(a).sprite=='396ECA60A6E80E17'and tostring(a)=='game icon stratagem: EXO-45 Patriot Exosuit')
 assert(G.issued(hd2.resources.game_icon('booster','Vitality Enhancement')))
-local h,code,why=hd2.resources.game_icon('weapon','AR-23 Liberator')
+local h,code,why=hd2.resources.game_icon('unsupported','AR-23 Liberator')
 assert(h==nil and code=='UNKNOWN_KIND')
 h,code,why=hd2.resources.game_icon('stratagem','Nope')
 assert(h==nil and code=='UNKNOWN_ICON'and why:find('game_icons',1,true))
@@ -47,6 +64,12 @@ assert(h==nil and code=='UNKNOWN_ICON'and why:find('no HUD icon',1,true),why)
 local names=hd2.resources.game_icons('booster')
 assert(#names==20 and names[1]<names[2])
 assert(#G.carriers()==94)
+local rifle=assert(hd2.resources.game_icon('weapon','AR-23 Liberator'))
+local info=rifle:describe();assert(info.width>info.height and info.mode=='mask')
+info.mode='image';assert(rifle:describe().mode=='mask','description must be a copy')
+assert(hd2.resources.game_icon('throwable','G-109 Urchin'))
+assert(hd2.resources.game_icon('faction','illuminate'))
+assert(hd2.resources.game_icon('objective','cy_destroy_detector_tower'))
 return 'ok'
 '''), b'ok')
 
@@ -98,6 +121,12 @@ assert(math.abs(small[1]-(0.5+4/4096))<1e-12,'256 / 90 samples mip 2 too')
 local tiny=G.uv(spec,4,4)
 assert(math.abs(tiny[1]-(0.5+16/4096))<1e-12,'at most 16 page pixels')
 assert(spec.pool=='icon')
+D.weapons['Test Weapon']={sprite=spec.sprite,mode='mask',width=256,height=256}
+local weapon=assert(G.handle('weapon','Test Weapon'))
+W.icon_resources({textures={PAGE},sprites={{name=V,atlas=PAGE,size={256,256},rect={0.5,0.25,0.0625,0.0625}}}})
+local ws=assert(G.resolve(W.runtime,weapon));assert(ws.pool=='icon'and ws.own==nil,'mask borrows carrier; no own material required')
+D.objectives['Test Objective']={sprite=spec.sprite,mode='image',width=256,height=256}
+local obj=assert(G.handle('objective','Test Objective'));assert(G.resolve(W.runtime,obj).pool=='image')
 W.icon_resources({materials={V},sprites={{name=V,atlas=PAGE,size={256,256},rect={0.5,0.25,0.0625,0.0625}}}})
 local none,nwhy=G.resolve(W.runtime,icon)
 assert(none==nil and nwhy:find('atlas page is not loaded',1,true),nwhy)
@@ -170,6 +199,22 @@ end
 class OverlayGameIconTests(unittest.TestCase):
     def lua(self, body):
         self.assertEqual(run(HARNESS + ICONS + body), b'ok')
+
+    def test_silhouettes_use_a_mask_carrier_and_transparent_background(self):
+        self.lua(r'''
+local rifle=assert(hd2.resources.game_icon('weapon','AR-23 Liberator'))
+SPECS['AR-23 Liberator']={sprite=G.identity(rifle).sprite,page='5207684C3952B0CC',pool='icon',uv={0.1,0.2,0.3,0.4}}
+local ov=hd2.ui.overlay({owner='mods/t/silhouette'})
+ov:draw(function(d)d:image(rifle,100,100,100,30)end)
+frames(1)
+assert(called('bitmap_uv')==1 and #textures()==1)
+local vectors={}
+for _,c in ipairs(calls)do if c.name=='set_vector4'then vectors[c.args[2]]=c.args[3]end end
+assert(vectors.c0[1]==1 and vectors.c1[1]==0 and vectors.c2[1]==0 and vectors.c3[1]==0,
+ 'only the red silhouette mask is painted; opaque atlas alpha must not flood the quad')
+assert(ov:status().state=='drawing')
+return 'ok'
+''')
 
     def test_a_stratagem_icon_draws_its_sprite_through_its_own_material(self):
         self.lua(r'''

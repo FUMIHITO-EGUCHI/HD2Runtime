@@ -22,7 +22,7 @@ Writable means an enabled, reviewed transition for that resource; it does not me
 - `hd2.ensure(...)`: Wrap exactly one patch, transaction, or composition plan. The first run is fully guarded; afterwards only the applied target bytes are re-checked, backing off from interval (default 60 s) to max_interval (default 600 s). Drift triggers the full guarded path again; conflicts are terminal. Each guarded run retries transient not-ready failures up to 6 attempts, 5 s apart. An option handle as a field value, or an enabled toggle, makes the ensure follow in-game options. It waits until the options are settled (status waiting_for_options). Without Mod Options Menu it runs with the options' declared defaults, or, when the options page was declared with fallback='disable', stays inactive (status unavailable); each applied change re-runs the full guarded validation and write for the same operation; disabling restores the reviewed baseline through the same guards.
 - `hd2.metrics(...)`: Process-wide counters (scans, lookups, hashes, writes, verifications, scheduler ticks) and worst durations for performance audits.
 - `hd2.options(...)`: Declare an in-game options page (a MODS tab category). CowboyBingus Mod Options Menu v1+ (needs Bingus Shared Loader v18+) is an optional enhancement of mods that use this: without it, or if it is incompatible or rejects an option, one warning is logged per page and every hd2.ensure bound to those options runs normally with the options' declared defaults (fallback='default', the default). Declare the page with fallback='disable' to keep those operations inactive for the session instead. Defaults are validated with the operation when it is declared. Mods that do not call hd2.options are unaffected.
-- `hd2.require_assets(...)`: Make the game load the packages that one to 16 typed handles (hd2.pickup, hd2.weapon, hd2.support_weapon, hd2.throwable, hd2.vehicle, hd2.backpack, a mounted-weapon candidate, a projectile handle) need, through the same reference-counted package system the game uses for loadouts. Status waiting_for_assets until every package is resident, then complete (result.status RESIDENT), or rejected with code ASSET_UNAVAILABLE. Never blocks; times out after 90 s. Package identities come only from the generated catalog; mods never pass package IDs. patch, transaction, plan and ensure already do this automatically for reference swaps, so most mods never call it.
+- `hd2.require_assets(...)`: Make the game load the packages that one to 16 typed handles (hd2.pickup, hd2.weapon, hd2.support_weapon, hd2.throwable, hd2.vehicle, hd2.backpack, hd2.stratagem, a mounted-weapon candidate, a projectile handle, a HUD icon handle) need, through the same reference-counted package system the game uses for loadouts. Status waiting_for_assets until every package is resident, then complete (result.status RESIDENT), or rejected with code ASSET_UNAVAILABLE. UI-only HUD icon requests stay local. Never blocks; times out after 90 s. Package identities come only from the generated catalog; mods never pass package IDs. patch, transaction, plan and ensure already do this automatically for reference swaps, so most mods never call it.
 - `hd2.asset_dependency(...)`: Offline: whether a typed handle's package dependency is known and auto-loadable, and how it was derived. No IDs.
 - `hd2.inspect(...)`: Read only (HD2Runtime 0.31.0+): who owns the live value of one to 64 fields of a typed target, through the same guarded resolution a patch runs; nothing is written. request = {target, fields = {id | {field, expect}}, on_result?}. When complete, result.fields (request order) and result.by_field[id] hold {field, state, owner, operation, value, vanilla, bytes, reason}: state 'vanilla' (the reviewed value), 'runtime' (an HD2Runtime operation applied it; owner = its mod), 'foreign' (owned by an unknown mod outside HD2Runtime, owner 'unknown': writes to it are refused, show it read-only), 'changed' (a link or slot it depends on is not as reviewed), 'unavailable' or 'invalid' (reason). docs/diagnostics.md.
 
@@ -58,60 +58,60 @@ Offline metadata; no payload write is live-tested. See `explosions.md` ("Payload
 
 ## HD2Weapon
 
-- `:projectile()` → `HD2Projectile` (only where mapped).
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:projectile()` â†’ `HD2Projectile` (only where mapped).
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2Projectile
 
-- `:damage()` → `HD2DamageProfile` (only where mapped).
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:damage()` â†’ `HD2DamageProfile` (only where mapped).
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2DamageProfile
 
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2Vehicle
 
-- `:health()` → `HD2HealthComponent` (only where mapped).
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:health()` â†’ `HD2HealthComponent` (only where mapped).
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2HealthComponent
 
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2Stratagem
 
-- `:shield()` → `HD2Shield` (only where mapped).
-- `:payload()` → `HD2Payload` (only where mapped).
-- `:damage()` → `HD2DamageProfile` (only where mapped).
-- `:orbital()` → `HD2OrbitalAbility` (only where mapped).
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:shield()` â†’ `HD2Shield` (only where mapped).
+- `:payload()` â†’ `HD2Payload` (only where mapped).
+- `:damage()` â†’ `HD2DamageProfile` (only where mapped).
+- `:orbital()` â†’ `HD2OrbitalAbility` (only where mapped).
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2Shield
 
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2Payload
 
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2Equipment
 
-- `:recharge()` → `HD2RechargeComponent` (only where mapped).
-- `:jumppack()` → `HD2JumppackComponent` (only where mapped).
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:recharge()` â†’ `HD2RechargeComponent` (only where mapped).
+- `:jumppack()` â†’ `HD2JumppackComponent` (only where mapped).
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2RechargeComponent
 
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2JumppackComponent
 
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## HD2OrbitalAbility
 
-- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.
+- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.
 
 ## APW-1 Anti-Materiel Rifle
 

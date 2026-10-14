@@ -174,7 +174,7 @@ function M.capture_many(runtime,reader,specs)
 end
 function M.capture(runtime,reader,spec)return M.capture_many(runtime,reader,{spec})[1]end
 
-local COMPONENT_NAMES={[5]='WeaponMagazineComponentData',[113]='WeaponReloadComponentData',
+local COMPONENT_NAMES={[266]='WeaponHeatComponentData',[5]='WeaponMagazineComponentData',[113]='WeaponReloadComponentData',
     [236]='WeaponDataComponentData'}
 function M.prepare(resolved,reader,spec)
     local plan={changes={},snapshots=reader.snapshots}

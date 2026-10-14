@@ -104,6 +104,15 @@ def avatar_component(identity):
 
 def research_field(research, definition, zone=None):
     """The research entry for one schema definition (and zone), checked against the schema's offset and storage."""
+    if definition['record'] == 'inventory':
+        supply = json.loads((ROOT / 'research/supply-pack-F5FEE03DCFDB.json').read_text())
+        refill = supply['stimRefill']
+        assert supply['gameDllSha256'] == research['source']['gameDllSha256']
+        assert definition['id'] == 'helldiver.supply.stims_from_supply' and zone is None
+        assert (definition['offset'], definition['storage']) == (refill['offset'], refill['storage'])
+        return {**refill, 'member': definition['member'], 'grade': 'CONFIRMED',
+            'verdict': 'WRITABLE_TYPE_LIVE', 'lifecycle': 'Read on each refill; a private Inventory definition can '
+                'shadow this type setting. Shared with ordinary supplies, capped by carrying capacity.'}
     record = AVATAR_RECORD if definition['record'] == 'avatar' else HEALTH_RECORD
     matches = []
     for item in research['fields']:
@@ -197,7 +206,9 @@ def build():
             **({'allowedValues': sorted(enums[definition['enum']], key=enums[definition['enum']].get)}
                if definition['type'] == 'enum' else {'min': low, 'max': high}),
             'currentDefault': vanilla, 'grade': item['grade'], 'lifecycle': entry['lifecycle'],
-            'reads': item['lifecycle'], 'shadowedByPrivateCopy': entry['copyReader'], 'semantics': item['semantics'],
+            'reads': item['lifecycle'],
+            'shadowedByPrivateCopy': 'inventory' if definition['record'] == 'inventory' else entry['copyReader'],
+            'semantics': item['semantics'],
             'shared': True, 'allowSharedRequired': True, 'acknowledgements': ['allow_shared', 'allow_unverified_effect'],
             'liveTested': False})
 
@@ -218,6 +229,9 @@ def build():
         'zones': zones, 'enums': enums, 'multipliers': multipliers, 'speedCap': research['constants']['0x23C7554'],
         'fields': fields, 'privateCopies': private_copy_layout(research),
         'sharedReason': SHARED_REASON, 'unverifiedReason': UNVERIFIED_REASON}
+    supply = json.loads((ROOT / 'research/supply-pack-F5FEE03DCFDB.json').read_text())
+    assert supply['inventory']['resource'] == HELLDIVER and supply['inventory']['ownerCount'] == 1
+    runtime['inventory'] = supply['inventory']
     runtime = migration_overlay.apply('helldiver_fields', runtime)
     catalog = {'contract': CONTRACT, 'schemaVersion': 1, 'source': {'research': RESEARCH.name,
             'build': research['source']['build']},

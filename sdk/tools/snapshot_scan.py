@@ -17,6 +17,8 @@ MODULE_PATHS={
     'hd2runtime/core/snapshot_format':'core/snapshot_format.lua','hd2runtime/runtime/reader':'runtime/reader.lua',
     'hd2runtime/core/page_protection':'core/page_protection.lua',
     'hd2runtime/runtime/metrics':'runtime/metrics.lua',
+    'hd2runtime/runtime/application_mode':'runtime/application_mode.lua',
+    'hd2runtime/runtime/memory_watch':'runtime/memory_watch.lua',
     'hd2runtime/runtime/discover':'runtime/discover.lua','hd2runtime/runtime/snapshot_memory_reader':'runtime/snapshot_memory_reader.lua',
     'hd2runtime/schemas/current':'schemas/current.lua','hd2runtime/schemas/weapon_mapper':'schemas/weapon_mapper.lua',
     'hd2runtime/api/weapon_mapper':'api/weapon_mapper.lua',

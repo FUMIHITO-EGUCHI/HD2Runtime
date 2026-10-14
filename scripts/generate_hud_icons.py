@@ -72,7 +72,7 @@ def build() -> dict:
     names = [v['sprite'] for v in list(stratagems.values()) + list(boosters.values())]
     if len(names) != len(set(names)):
         raise ValueError('two items name one HUD sprite')
-    return {'schemaVersion': 1, 'contract': 'hd2runtime.hud_icon_sprites.v1',
+    result = {'schemaVersion': 1, 'contract': 'hd2runtime.hud_icon_sprites.v1',
         'build': calldown['build'], 'gameDllSha256': calldown['gameDll']['sha256'],
         'note': ('Sprite names of the HUD icons: lookup keys of records in the game\'s texture_atlas resources. '
             'sdk/tools/hd2_hud_icons.py extracts the artwork locally from the installed game; none is published. '
@@ -81,6 +81,20 @@ def build() -> dict:
             'booster': 'native Booster table row +0x20 (' + BOOSTER_NATIVE.name + ')'},
         'stratagems': dict(sorted(stratagems.items())), 'boosters': dict(sorted(boosters.items())),
         'missing': dict(sorted(missing.items()))}
+    extended = json.loads((ROOT / 'research/hud-silhouettes-F5FEE03DCFDB.json').read_text())
+    assert extended['build'] == result['build']
+    for key in ('weapons', 'throwables', 'factions', 'objectives'):
+        result[key] = dict(sorted(extended[key].items()))
+    difficulties=json.loads((ROOT/'research/hud-difficulties-F5FEE03DCFDB.json').read_text())
+    assert difficulties['gameDllSha256']==result['gameDllSha256']
+    result['difficulties']={key:{k:entry[k] for k in ('sprite','width','height','mode')}
+        for key,entry in difficulties['difficulty'].items()}
+    result['extendedMissing'] = extended['missing']
+    perks=json.loads((ROOT/'research/armor-perk-icons-F5FEE03DCFDB.json').read_text(encoding='utf8'))
+    assert perks['build']==result['build']
+    result['passives']={name:{k:e[k] for k in ('sprite','width','height','mode')} for name,e in perks['perks'].items()}
+    result['sources']['silhouettes'] = 'Reviewed encyclopedia HUD sprites and atlas symbols (hud-silhouettes-F5FEE03DCFDB.json)'
+    return result
 
 
 def generate(check=False):

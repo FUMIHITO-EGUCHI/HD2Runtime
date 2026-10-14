@@ -3,8 +3,14 @@
 local b=require('hd2runtime/core/bytes')
 local metrics=require('hd2runtime/runtime/metrics')
 local M={}
+local memory=require('hd2runtime/runtime/memory_watch')
 local ZERO='0x0000000000000000'
 local logged_strays={}
+-- Decode only: keys include the freshly read bytes and allocation/schema identity. Never cache record values,
+-- native table checks, or reader snapshots. Owned membership lists are independently mutable, so bypass reuse.
+local decoded=setmetatable({},{__mode='k'})
+local application_mode=require('hd2runtime/runtime/application_mode')
+application_mode.on_change('entity_decode',function()decoded=setmetatable({},{__mode='k'})end)
 
 local function sorted_keys(values)
     local out={};for key in pairs(values)do out[#out+1]=key end
@@ -15,7 +21,7 @@ end
 -- own bytes without the table pointer check. Every write path omits it.
 function M.capture(reader,owner,profile,names,options)
     metrics.count('entity_catalog.captures')
-    local started=metrics.now()
+    local started=metrics.start()
     reader.stage='core/entity_catalog:entity_map'
     local header=reader.read(owner,0,28)
     assert(header==b.unhex(profile.map_header),'entity map framing changed')
@@ -29,7 +35,19 @@ function M.capture(reader,owner,profile,names,options)
     if not(lists_ok and type(owned_lists)=='table'and owned_lists.lists_active and owned_lists.lists_active())then
         owned_lists=nil
     end
+    local cache=application_mode.enabled()and decoded[profile]
+    if not cache or cache.base~=owner.base then
+        cache={base=owner.base,indices={}}
+        memory.fields(cache,'Cache payloads',{'map'})
+        if application_mode.enabled()then decoded[profile]=cache end
+    end
+    local reuse=not owned_lists and cache.map==map
+    if reuse then
+        entities,stray,strays=cache.entities,cache.stray,cache.strays
+        metrics.count('entity_catalog.map_decode_reuses')
+    else
     for row=0,profile.map_rows-1 do
+        if reader.cooperate and row%64==0 then reader.cooperate()end
         local at=28+row*32
         local resource=b.resource(map,at)
         if resource~=ZERO then
@@ -43,6 +61,8 @@ function M.capture(reader,owner,profile,names,options)
             local own=owned_lists and owned_lists.list_accepts(resource,row,b.pointer(map,at+8),b.pointer(map,at+16))
             local ok,offset,count
             if own then
+                -- This protected optional read is at most 2 KiB. Give it a fresh slice so it cannot yield through pcall.
+                if reader.cooperate then reader.checkpoint()end
                 ok,offset=pcall(function()
                     local block={base=own.allocation,size=own.size,type=0x20000,protect=0x2}
                     local bytes=reader.read(block,own.list-own.allocation,own.count*2,true)
@@ -71,6 +91,10 @@ function M.capture(reader,owner,profile,names,options)
             end
         end
     end
+    end
+    if not owned_lists and not reuse then
+        cache.map,cache.entities,cache.stray,cache.strays=map,entities,stray,strays
+    elseif owned_lists then cache.map=nil end
     if #strays>0 then
         metrics.count('entity_catalog.stray_rows',#strays)
         -- One log line per stray row and session: writes to that resource are refused, every other write goes ahead.
@@ -140,18 +164,34 @@ function M.capture(reader,owner,profile,names,options)
                 and c.record_offset+c.records*c.stride<=b.u32(index,20),
                 name..' schema extent mismatch')
         end
-        local by_record={}
-        for row=0,c.indices-1 do
-            local at_row=32+row*16
-            local resource=b.resource(index,at_row)
-            local record=b.u32(index,at_row+8)
-            local flags=b.u32(index,at_row+12)
-            assert(record<records and flags==0,name..' component index bounds/flags')
-            if resource~=ZERO then
-                local owners=by_record[record] or {};owners[#owners+1]=resource;by_record[record]=owners
-                local candidate=candidates[resource] or {resourceHash=resource,ownership={},diagnostics={}}
+        local decoded_index=cache.indices[name]
+        if not(decoded_index and decoded_index.bytes==index and decoded_index.schema==c
+            and decoded_index.records==records)then
+            local by_record,rows={},{}
+            for row=0,c.indices-1 do
+                if reader.cooperate and row%64==0 then reader.cooperate()end
+                local at_row=32+row*16
+                local resource=b.resource(index,at_row)
+                local record=b.u32(index,at_row+8)
+                local flags=b.u32(index,at_row+12)
+                assert(record<records and flags==0,name..' component index bounds/flags')
+                if resource~=ZERO then
+                    local owners=by_record[record]or{};owners[#owners+1]=resource;by_record[record]=owners
+                    rows[#rows+1]={resource=resource,row=row,record=record}
+                end
+            end
+            decoded_index={bytes=index,schema=c,records=records,by_record=by_record,rows=rows}
+            cache.indices[name]=decoded_index
+            memory.fields(decoded_index,'Cache payloads',{'bytes'})
+        else metrics.count('entity_catalog.index_decode_reuses')end
+        local by_record=decoded_index.by_record
+        for i,row in ipairs(decoded_index.rows)do
+            if reader.cooperate and i%64==0 then reader.cooperate()end
+            local resource=row.resource
+            if not(options and options.resources)or options.resources[resource]then
+                local candidate=candidates[resource]or{resourceHash=resource,ownership={},diagnostics={}}
                 candidate.ownership[name]={component=name,componentType=string.format('0x%08X',c.type),
-                    componentIndex=c.index,indexRow=row,recordIndex=record}
+                    componentIndex=c.index,indexRow=row.row,recordIndex=row.record}
                 candidates[resource]=candidate
             end
         end
@@ -177,7 +217,8 @@ function M.capture(reader,owner,profile,names,options)
         return false
     end
     local ordered={}
-    for _,resource in ipairs(sorted_keys(candidates))do
+    for index,resource in ipairs(sorted_keys(candidates))do
+        if reader.cooperate and index%64==0 then reader.cooperate()end
         local candidate=candidates[resource]
         local rows=entities[resource]
         if stray[resource]then

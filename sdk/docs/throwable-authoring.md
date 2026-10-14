@@ -1,5 +1,8 @@
 # Throwable authoring
 
+Local 0.40.0 adds [four status slots and arming delay](throwable-statuses.md) and
+[launch/spin controls](knife-melee.md). Existing targets and saved field keys remain valid.
+
 Throwables are their own authoring domain: `hd2.throwable(name)`. The domain covers all 23 throwable-slot items
 in the armory. The catalog is `sdk/ThrowableAuthoringCapabilities.json`. The evidence is in
 `research/throwable-authoring-F5FEE03DCFDB.json`, produced by `scripts/research_throwable_authoring.py`.
@@ -179,6 +182,43 @@ None of these edits has been observed in game yet:
 - shrapnel and bomblet counts;
 - knife damage;
 - mine health;
-- shield radius and health.
+- shield radius and health, recharge delay, broken-shield delay and recharge rate.
+
+On `hd2.throwable('G/SH-39 Shield'):shield()`, 0.40.0 adds
+`shield.recharge_delay` (20 s), `shield.broken_recharge_delay` (20 s), and
+`shield.recharge_rate` (0 health/s). A positive rate enables recharge; reducing
+the delays alone does not. These require `allow_unverified_effect=true` and
+reuse the reviewed shield member mapping. The grenade's separate deployed
+expiry timer is unchanged. Gameplay testing remains pending.
 
 That is why every write requires `allow_unverified_effect=true`.
+
+## Explosion selection (0.40.0)
+
+All 22 mapped explosive throwables now expose `hd2.fields.throwable.explosion` on
+`:detonation()`. Choose any package-backed catalogue explosion with
+`hd2.explosion(id)`, or `'none'` to clear the native detonation reference.
+`:detonation():payload_options()` returns the same grouped explosion catalogue
+used by projectile payload selectors, with the original payload and None first.
+
+```lua
+local target = hd2.throwable('G-6 Frag'):detonation()
+local options = target:payload_options()
+hd2.patch({id='frag-plasma', target=target,
+    field=hd2.fields.throwable.explosion,
+    expect=options.own.value,
+    value=hd2.explosion('support_weapon/plas45_epoch/impact'),
+    allow_unverified_reference=true, allow_unverified_effect=true})
+```
+
+The donor's required packages are retained before application. Every write proves
+the throwable's component ownership and both ExplosionSettings identities. Reset
+restores the original reference under the normal ownership/conflict checks.
+Damage edits on a selected catalogue explosion remain shared by its other users.
+Separate scripted pulses, status clouds and other behavior are not disabled by
+clearing this reference; the Urchin's repeated pulse selector remains separate.
+
+K-2 Throwing Knife has no ExplosiveComponent and is not a projectile-pool round.
+Its sticky callbacks cannot supply an explosion without an Ability instance,
+which it also lacks. This build does not expose a nonfunctional knife selector.
+An impact observer with proven ownership and multiplayer behavior is still needed.

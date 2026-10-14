@@ -10,6 +10,27 @@ def check(body):
 
 
 class PatchTests(unittest.TestCase):
+    def test_applied_patch_logs_change_metadata_without_top_level_field(self):
+        check(r'''
+local spec=require('hd2runtime/domains/patches').validate(request())
+local label=spec.field
+local writer=require('hd2runtime/core/guarded_write')
+local apply=writer.apply
+writer.apply=function(rt,plan)
+ local result=apply(rt,plan)
+ -- Exercise the reporting boundary with the shape produced by typed domains.
+ spec.changes={{field=spec.field,expect=spec.expect,value=spec.value}}
+ spec.field,spec.expect,spec.value=nil,nil,nil
+ return result
+end
+local w=require('hd2runtime/api/patch').start_spec(runtime,function(s)logs[#logs+1]=s end,spec,0)
+for _=1,1000 do w.tick(0.1);if w.status=='complete'or w.status=='rejected'then break end end
+assert(w.status=='complete',w.error)
+assert(w.result.status=='APPLIED'and w.result.field==label and w.verification)
+assert(#writes==1 and runtime.read(target_address,#desired)==desired)
+assert(table.concat(logs,'\n'):find(label..' ',1,true))
+''')
+
     def test_success_exact_width_non_target_and_restore(self):
         check(r'''
 local before=runtime.read(damage_base,p.settings.damage.size)

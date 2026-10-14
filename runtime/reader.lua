@@ -2,6 +2,8 @@
 local metrics=require('hd2runtime/runtime/metrics')
 local protection=require('hd2runtime/core/page_protection')
 local M={}
+local memory=require('hd2runtime/runtime/memory_watch')
+local application_mode=require('hd2runtime/runtime/application_mode')
 -- Read pacing bounds what one resolution costs a frame; it never changes what is checked: every read re-queries its
 -- region and re-proves ownership and protection right before the read, however many reads share a tick.
 -- A slice (the work between two yields) may always do the base quantum, 64 queries and 64 KiB (the only pacing before
@@ -10,23 +12,46 @@ local M={}
 -- or an already heavy tick therefore falls back to the base quantum; without a clock nothing changes.
 M.QUANTUM_OPERATIONS,M.QUANTUM_BYTES=64,65536
 M.SLICE_SECONDS=0.001
-M.MAX_OPERATIONS,M.MAX_BYTES=1024,1048576
+M.MAX_OPERATIONS,M.MAX_BYTES=1024,2097152
 -- The scheduler only when it is loaded: no update tick can run without it (and offline tools that bundle the reader
 -- alone, such as the SDK snapshot scanner, never load it).
 local function extend(operations,bytes)
-    if operations>=M.MAX_OPERATIONS or bytes>M.MAX_BYTES then return false end
+    local max_bytes=application_mode.enabled()and M.MAX_BYTES or 1048576
+    if operations>=M.MAX_OPERATIONS or bytes>max_bytes then return false end
     local scheduler=package.loaded['hd2runtime/runtime/scheduler']
     local spent=type(scheduler)=='table'and scheduler.tick_seconds and scheduler.tick_seconds()
     return type(spent)=='number'and spent<M.SLICE_SECONDS
 end
 local function safe(n)return type(n)=='number' and n>=0 and n%1==0 and n<=9007199254740991 end
-function M.new(runtime)
+function M.new(runtime,options)
     local self={queries=0,bytes=0,snapshots={}}
     local operations,tick_bytes=0,0
+    -- Read-only UI inspections also yield during CPU parsing. Ordinary patch/transaction pacing is unchanged.
+    local cooperative=options and options.cooperative
+    local slice_started=cooperative and metrics.now()
+    local work=0
+    local function expired()
+        local now=slice_started and metrics.now()
+        return now and now-slice_started>=0.0005
+    end
+    local function suspend()
+        coroutine.yield()
+        operations,tick_bytes,work=0,0,0
+        slice_started=cooperative and metrics.now()
+    end
+    if cooperative then
+        function self.begin_slice()slice_started=metrics.now();operations,tick_bytes,work=0,0,0 end
+        function self.cooperate()
+            work=work+1
+            if expired()or work>=8 then suspend()end
+        end
+    end
     local function pace(n)
-        if (operations>=M.QUANTUM_OPERATIONS or tick_bytes+n>M.QUANTUM_BYTES)
+        if cooperative then
+            if operations>0 and(expired()or operations>=16 or tick_bytes+n>65536)then suspend()end
+        elseif (operations>=M.QUANTUM_OPERATIONS or tick_bytes+n>M.QUANTUM_BYTES)
             and not extend(operations,tick_bytes+n)then
-            coroutine.yield();operations,tick_bytes=0,0
+            suspend()
         end
         operations=operations+1;tick_bytes=tick_bytes+n
     end
@@ -66,7 +91,11 @@ function M.new(runtime)
             parts[#parts+1]=bytes;offset=offset+n;remaining=remaining-n
         end
         local bytes=table.concat(parts)
-        if capture then self.snapshots[#self.snapshots+1]={owner=owner,offset=start,bytes=bytes} end
+        if capture then
+            local snapshot={owner=owner,offset=start,bytes=bytes}
+            memory.fields(snapshot,'Snapshot payloads',{'bytes'})
+            self.snapshots[#self.snapshots+1]=snapshot
+        end
         return bytes
     end
     -- Read-only identity helpers for pinned image reads (core/component_tables.lua): a loaded module's base address

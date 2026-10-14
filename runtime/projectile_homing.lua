@@ -605,7 +605,7 @@ local function step(dt)
 end
 
 local function tick(dt)
-    local started=metrics.now()
+    local started=metrics.start()
     local ok,why=pcall(step,dt)
     if not ok then log('update failed: '..tostring(why))end
     metrics.elapsed('projectile_homing.tick',started)

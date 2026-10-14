@@ -187,19 +187,19 @@ function M.check_gun(gun)
     if out.recoil~=nil and out.recoil~=false then return nil,'gun.recoil can only be false (no aim recoil)'end
     if out.ammo~=nil and out.ammo~=true then return nil,'gun.unlimited_ammo can only be true'end
     if out.face~=nil and out.face~=true then return nil,'gun.face_target can only be true'end
-    if out.face and out.behave_as~='gatling_sentry'then
-        return nil,'gun.face_target follows the Runtime target lock: it needs behave_as = \'gatling_sentry\''
+    if out.face and out.behave_as~='gatling_sentry'and not M.plain(out)then
+        return nil,'gun.face_target needs an untouched native gun or the Gatling AI'
     end
     return out
 end
--- An UNTOUCHED gun: {round = 'native'} and no other option (a normalized gun, M.check_gun's). The Pelican's own chin
+-- An UNTOUCHED gun: {round = 'native'}, optionally face_target for the body only, and no other option (a normalized gun, M.check_gun's). The Pelican's own chin
 -- turret stays exactly as the game spawned it, on every machine: its own round, rate, bursts, spread, recoil,
 -- ammunition, sound and AI; nothing of it is copied or written (live 2026-10-07: the private copy's default 600 RPM gave
 -- the host six-round bursts where the other machines saw the vanilla three). Only its kill credit is set (the no-credit
 -- tag on its own Tag mask, or each round's pool creditor for another player's call).
 function M.plain(gun)
     return type(gun)=='table'and gun.round=='native'and gun.behave_as==nil and(gun.rate or 1)==1 and gun.rpm==nil
-        and gun.casing==nil and gun.spread==nil and gun.recoil==nil and gun.ammo==nil and gun.face==nil
+        and gun.casing==nil and gun.spread==nil and gun.recoil==nil and gun.ammo==nil
         and gun.sound==nil and not gun.impact_set and gun.aim_height==nil
 end
 -- The same for a gun spec as a definition gives it (hd2.pelican.spawn's gun).
@@ -614,7 +614,27 @@ local function step(g,world)
             end
         end
     end
-    if not(g.turret and g.config)or g.config.untouched then return end
+    if not(g.turret and g.config)then return end
+    if g.gun.face then
+        local wt=not g.config.untouched and weapon.watch_of(g.turret)
+        local native=g.config.untouched and weapon.ai_state(world,g.turret)
+        -- Native 645 owns target selection and three-shot burst timing. Only read its target while aiming/firing;
+        -- never install a target lock, weapon copy, rate override, refill, or another AI on this path.
+        local target=wt and wt.lock or(native and native.id==645 and(native.stage==2 or native.stage==3)and native.target)
+        local point
+        if target then
+            local st=world_module.entity_state(world,target)
+            local unit=st and st.descriptor and st.descriptor.unit
+            point=unit and unit~=0 and world_module.unit_position(world,unit)or nil
+        end
+        local ev=heading.face_step(world,g.pelican,point,g.label)
+        if ev and ev.kind=='turned'then g.turns=g.turns+1
+        elseif ev and ev.kind=='refused'and ev.code~=g.heading_refused then
+            g.heading_refused=ev.code
+            log(('%s: BODY FACING REFUSED: %s: %s'):format(g.label,tostring(ev.code),tostring(ev.reason)))
+        end
+    end
+    if g.config.untouched then return end
     -- The firing sound skipped while the turret fired or its bank loaded: on its own copy once it is quiet and the bank
     -- resident (pelican_weapon.apply_sound); a package that failed leaves its own.
     if g.sound_retry then
@@ -645,21 +665,7 @@ local function step(g,world)
     local m=w and w.magazine
     if m and g.mag and g.mag.rounds>m.rounds then g.rounds=g.rounds+(g.mag.rounds-m.rounds)end
     g.mag=m or g.mag
-    if g.gun.face then
-        local wt=weapon.watch_of(g.turret)
-        local point
-        if wt and wt.lock then
-            local st=world_module.entity_state(world,wt.lock)
-            local unit=st and st.descriptor and st.descriptor.unit
-            point=unit and unit~=0 and world_module.unit_position(world,unit)or nil
-        end
-        local ev=heading.face_step(world,g.pelican,point,g.label)
-        if ev and ev.kind=='turned'then g.turns=g.turns+1
-        elseif ev and ev.kind=='refused'and ev.code~=g.heading_refused then
-            g.heading_refused=ev.code
-            log(('%s: BODY FACING REFUSED: %s: %s'):format(g.label,tostring(ev.code),tostring(ev.reason)))
-        end
-    end
+
 end
 
 -- The aim diagnostic (read-only): where the shot crosses the plane through the AI's aim point, against the target's root.

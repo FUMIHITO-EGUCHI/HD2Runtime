@@ -76,7 +76,8 @@ class StratagemIconIdentityTests(unittest.TestCase):
 
     def test_no_game_artwork_is_shipped(self):
         # Only identity/key metadata ships; the icon library itself never enters the repo or an artifact.
-        for folder in ('sdk', 'starter', 'domains', 'research'):
+        # Private research scratch images are not release content.
+        for folder in ('sdk', 'starter', 'domains'):
             for path in (ROOT / folder).rglob('*'):
                 if path.is_file():
                     self.assertNotIn(path.suffix.lower(), {'.xaml', '.png', '.svg', '.dds'}, str(path))

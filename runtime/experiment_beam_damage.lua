@@ -378,7 +378,7 @@ local function ensure_watch()
     watch={status='active',perf_label='experiment beam damage'}
     function watch.tick(dt)
         if watch.status~='active'then return end
-        local started=metrics.now()
+        local started=metrics.start()
         local ok,why=pcall(step,dt)
         if not ok then log('update failed: '..tostring(why))end
         metrics.elapsed('beam_damage.tick',started)

@@ -1,5 +1,5 @@
 {
-  "examples": 122,
+  "examples": 123,
   "failed": [],
   "mode": "snapshot",
   "results": {
@@ -1309,6 +1309,17 @@
       "versionReasons": [
         "typed writes -> 0.23.2"
       ]
+    },
+    "EagleStrafingRunAssets": {
+      "baselineChanges": null,
+      "calls": [],
+      "minVersion": "0.30.3",
+      "operations": {},
+      "problems": [],
+      "requiredMinVersion": "0.1.0",
+      "status": "VALIDATED",
+      "usesOptions": false,
+      "versionReasons": []
     },
     "EatHeavyWarhead": {
       "baselineChanges": 3,
@@ -4292,7 +4303,7 @@
     "RuntimeVersionWarningTest": {
       "baselineChanges": null,
       "calls": [],
-      "minVersion": "0.32.0",
+      "minVersion": "0.41.0",
       "operations": {},
       "problems": [],
       "requiredMinVersion": "0.1.0",
@@ -5486,7 +5497,7 @@
       "calls": [
         "ensure"
       ],
-      "minVersion": "0.31.3",
+      "minVersion": "0.40.0",
       "operations": [
         {
           "acknowledgements": {},
@@ -5511,7 +5522,7 @@
       "calls": [
         "ensure"
       ],
-      "minVersion": "0.31.3",
+      "minVersion": "0.40.0",
       "operations": [
         {
           "acknowledgements": [

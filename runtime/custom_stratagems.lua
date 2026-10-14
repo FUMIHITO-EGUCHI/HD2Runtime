@@ -2160,6 +2160,22 @@ do
         local set=selector.virtual_slots()
         local a=ship.alloc
         if not(game and game.name=='Ship'and set and a)then probe_move.seen={};return end
+        -- A lobby still waiting for a member's value (a new member, or every member's state after a mission) has no
+        -- lobby-wide allocation: this machine's alone, against its saved loadout. A slot moved on it moves back once
+        -- the value arrives, which needs the loadout screen open; launched before that, the slot is locked as desynced
+        -- (report 2026-10-14: the host's Pelican Gatling slot went to Orbital Napalm Barrage after a mission and was
+        -- locked in the next one, shown as the barrage). The slots hold until the lobby agrees again.
+        local v=sync.view()
+        if v and v.status=='waiting'then
+            probe_move.seen={}
+            if probe_move.held~=v.reason then
+                probe_move.held=v.reason
+                log('SHIP: carrier slots hold their carriers while the lobby is waiting ('..tostring(v.reason)..'): '
+                    ..'no slot moves on an allocation without every member\'s picks')
+            end
+            return
+        end
+        probe_move.held=nil
         local list={}
         for slot,e in pairs(set.slots)do if e.carrier then list[#list+1]=slot end end
         table.sort(list)
@@ -5974,7 +5990,7 @@ function M.start()
     loop={status='active'}
     function loop.tick(dt)
         if loop.status~='active'then return end
-        local started=metrics.now()
+        local started=metrics.start()
         -- Never let one failing step end the loop (the scheduler cancels a watch that raises): the custom stratagems
         -- would stop for the rest of the session and every custom slot would silently stay its token.
         local ok,why=pcall(tick,dt)

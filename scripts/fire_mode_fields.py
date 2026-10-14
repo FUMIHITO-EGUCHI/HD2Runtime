@@ -26,7 +26,10 @@ EVIDENCE = {'nativeOwner': 'WeaponDataComponent primary..quaternary_fire_mode (+
 
 def selector_rows():
     research = json.loads(SELECTOR.read_text())
-    return {(row['kind'], row['weapon']): row for row in research['weapons']}, research
+    rows = {(row['kind'], row['weapon']): row for row in research['weapons']}
+    import requested_weapon_controls
+    requested_weapon_controls.selectors(rows)
+    return rows, research
 
 
 def load():
@@ -43,6 +46,11 @@ def load():
         rows[(row['kind'], row['weapon'])] = row
     model = dict(research['model'], selector=selector['model']['selector'], maxModes=selector['model']['maxModes'],
         binding=selector['model']['binding'])
+    import accelerator_fields
+    key=('player',accelerator_fields.NAME)
+    rows[key]=accelerator_fields.mode_row(rows[key])
+    import requested_weapon_controls
+    requested_weapon_controls.modes(rows)
     return rows, dict(research, model=model)
 
 
@@ -55,8 +63,9 @@ def apply_modes(field, row, identity_ok):
     ok = identity_ok and writable(row)
     field['currentDefault'] = list(row['modes']) if writable(row) else None
     field['nativeSlots'] = row.get('slots')
-    field['allowedModes'] = sorted(MODE_VALUES, key=MODE_VALUES.get)
-    field['modeValues'] = dict(MODE_VALUES)
+    values=row.get('allowedModeValues',MODE_VALUES)
+    field['allowedModes'] = sorted(values, key=values.get)
+    field['modeValues'] = dict(values)
     field['maxModes'] = row.get('maxModes')
     field['fireModeState'] = row['state']
     field['selector'] = {'left': row['selector']['left'], 'right': row['selector']['right']} if row.get('selector') else None
@@ -70,17 +79,23 @@ def apply_modes(field, row, identity_ok):
     field['acknowledgement'] = 'allow_unverified_effect'
     field['acknowledgementReason'] = UNVERIFIED
     field['evidence'] = dict(EVIDENCE)
+    if row.get('chargeSelector'):
+        from accelerator_fields import ACK
+        field['acknowledgementReason']=ACK
+        field['evidence']['source']='research/dev4-controls-F5FEE03DCFDB.json'
     if field.get('backing'):
         field['backing']['width'] = MODES_WIDTH
     return field
 
 
 def apply_burst(field, row, identity_ok):
-    ok = identity_ok and writable(row)
+    ok = identity_ok and writable(row) and not row.get('chargeSelector')
     field['currentDefault'] = row['burstRounds'] if writable(row) else None
     field['min'], field['max'] = BURST_RANGE
     field['editable'] = field['acceptedForWrites'] = ok
     field['reason'] = None if ok else row.get('reason') or field.get('reason')
+    if row.get('chargeSelector'):
+        field['reason']='This charge trigger uses charge.burst_shots and charge.burst_interval_seconds.'
     field['acknowledgement'] = 'allow_unverified_effect'
     field['acknowledgementReason'] = UNVERIFIED
     field['evidence'] = dict(EVIDENCE, nativeOwner='WeaponDataComponent.num_burst_rounds (+140)')

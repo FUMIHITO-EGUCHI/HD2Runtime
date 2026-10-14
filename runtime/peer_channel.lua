@@ -6,8 +6,8 @@
 -- service and readable by every member of the lobby. game.dll publishes and reads its own two keys ("platform_lobby",
 -- "crossplay_mode") through two slots of the engine's API table T = [[game+0x3326308]+0xF8]; the Runtime calls the same
 -- two slots for its own keys (M.KEYS): `hd2rt` (the custom stratagem multiplayer state, runtime/custom_mp_sync.lua),
--- `hd2as` (the synced asset set, runtime/asset_sync.lua) and `hd2bc` (the beam conversion set, runtime/beam_conversion_
--- sync.lua):
+-- `hd2as` (the synced asset set, runtime/asset_sync.lua), `hd2bc` (the beam conversion set, runtime/beam_conversion_
+-- sync.lua) and `hd2mt` (the host's mission timer freeze, runtime/mission_timer_sync.lua):
 --   * T+0x120 set_member_data(engine lobby, 1, &key, &value): one PFLobbyPostUpdate of this machine's own property;
 --   * T+0x118 member_data(engine lobby, peer, key): a member's property as the SDK holds it (NULL: none).
 -- Two native calls (runtime/windows_write.lua), each only:
@@ -36,7 +36,7 @@ local D=require('hd2runtime/domains/peer_messaging')
 local M={}
 M.KEY='hd2rt'
 -- The only keys this machine ever publishes or reads (never one of the game's own, domains/peer_messaging gameKeys).
-M.KEYS={hd2rt=true,hd2as=true,hd2bc=true}
+M.KEYS={hd2rt=true,hd2as=true,hd2bc=true,hd2mt=true}
 M.MAX_VALUE=512
 M.MAX_MEMBERS=16
 M.FIRST_POST_DELAY=10

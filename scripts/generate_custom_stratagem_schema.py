@@ -363,7 +363,7 @@ def build(facts: dict | None = None) -> dict:
         'recoil': {'type': 'enum', 'values': [False], 'optional': True, 'doc': 'false: no aim recoil'},
         'unlimited_ammo': {'type': 'enum', 'values': [True], 'optional': True},
         'face_target': {'type': 'enum', 'values': [True], 'optional': True,
-            'doc': 'the Pelican turns its nose to the target (with behave_as)'},
+            'doc': 'the Pelican faces its native target with an untouched native gun, or its target lock with behave_as'},
         'sound': {'type': 'enum', 'values': facts['pelicanSounds'], 'catalog': 'pelicanSounds', 'optional': True,
             'doc': 'a firing sound of the catalogue (docs/weapon-sounds.md); without it the turret\'s own'},
         'impact_explosion': {'type': 'explosion_donor', 'catalog': 'pelicanExplosionDonors', 'reviewedDonor': True,

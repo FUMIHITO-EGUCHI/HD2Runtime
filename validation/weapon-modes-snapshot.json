@@ -1,6 +1,6 @@
 {
-  "acknowledgementRejections": 220,
-  "adversarialRejections": 1610,
+  "acknowledgementRejections": 221,
+  "adversarialRejections": 1620,
   "blockedRejections": 9,
   "concussive": {
     "record": 104,
@@ -12,7 +12,7 @@
       }
     ]
   },
-  "conflictRejections": 249,
+  "conflictRejections": 250,
   "fixtureFallback": "disabled",
   "functions": {
     "checked": 52,
@@ -71,18 +71,18 @@
   },
   "rates": {
     "added": 59,
-    "checked": 63,
-    "edited": 63,
+    "checked": 64,
+    "edited": 64,
     "liveProven": [
       "AR-23 Liberator",
       "MG-206 Heavy Machine Gun"
     ],
-    "noops": 63,
+    "noops": 64,
     "windUp": [
       "M-1000 Maxigun"
     ]
   },
-  "rollbacks": 555,
+  "rollbacks": 556,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
   "speargun": {
     "assetDependency": {
@@ -589,6 +589,7 @@
     {
       "armorPenetration": "light",
       "kind": "player_weapon",
+      "rates": "selectable",
       "weapon": "VG-70 Variable"
     },
     {

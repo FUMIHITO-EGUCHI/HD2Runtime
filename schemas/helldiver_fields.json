@@ -29,7 +29,8 @@
     {"id": "zone.damage_multiplier_dps", "display_name": "Zone damage multiplier for damage over time", "type": "enum", "enum": "damage_multiplier_dps", "unit": null, "storage": "u32", "record": "health", "zoneOffset": 200, "member": "damage_multiplier_dps"},
     {"id": "zone.durable_resistance", "display_name": "Zone durable damage share", "type": "number", "unit": "ratio", "storage": "f32", "record": "health", "zoneOffset": 204, "member": "durable_fraction"},
     {"id": "zone.health", "display_name": "Zone health (from the next spawn)", "type": "integer", "unit": "health", "storage": "i32", "record": "health", "zoneOffset": 232, "member": "health"},
-    {"id": "zone.affects_main_health", "display_name": "Damage forwarded to main health", "type": "number", "unit": "ratio", "storage": "f32", "record": "health", "zoneOffset": 248, "member": "affects_main_health"}
+    {"id": "zone.affects_main_health", "display_name": "Damage forwarded to main health", "type": "number", "unit": "ratio", "storage": "f32", "record": "health", "zoneOffset": 248, "member": "affects_main_health"},
+    {"id": "helldiver.supply.stims_from_supply", "display_name": "Stims from supply", "type": "integer", "unit": "stims", "storage": "u32", "record": "inventory", "offset": 52, "member": "refill_amount_stims"}
   ],
   "enums": {
     "damage_multiplier": {"none": 0, "critical": 1, "normal": 2, "reduced": 3, "symbolic": 4},

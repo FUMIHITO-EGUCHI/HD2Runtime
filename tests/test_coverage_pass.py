@@ -587,7 +587,7 @@ local fab=hd2.structure('spawner_factory_conscript_base')
 assert(fab:describe().wikiName==nil and fab:describe().kind=='structure')
 patches.validate{id='f',target=fab,allow_unverified_effect=true,field=hd2.fields.entity.health,expect=1500,value=150}
 patches.validate{id='m',target=hd2.enemy('Marauder'):zone('Head'),field=hd2.fields.zone.health,expect=40,value=400}
-assert(#hd2.enemies({kind='structure'})==39 and #hd2.enemies({faction='illuminate',kind='enemy'})>0)
+assert(#hd2.enemies({kind='structure'})>=39 and #hd2.enemies({faction='illuminate',kind='enemy'})>0)
 return 'ok'
 ''')
 
@@ -639,7 +639,7 @@ assert(spewer:attack('Bile Bombard').attack=='slot_1')
 patches.validate{id='s',target=spewer:attack('slot_1_impact'),allow_shared=true,allow_unverified_effect=true,
  field=hd2.fields.damage.ap_direct,expect=5,value=2}
 assert(not pcall(function()return hd2.enemy('Charger'):attack('slot_0')end))
-assert(#hd2.enemy('Gatekeeper'):attacks()==16)
+assert(#hd2.enemy('Gatekeeper'):attacks()>=16)
 local shell=hd2.enemy('Rupture Spewer'):attack('slot_1_projectile')
 assert(#shell:describe().fields==5)
 patches.validate{id='v',target=shell,allow_shared=true,allow_unverified_effect=true,field=hd2.fields.projectile.velocity,

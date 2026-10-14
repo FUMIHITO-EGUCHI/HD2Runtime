@@ -19,6 +19,8 @@ local SETTINGS={ArcSettings='arc',BeamSettings='beam',DamageInfo='damage',Status
     ProjectileSettings='projectile',ExplosionSettings='explosion'}
 function M.key(backing)
     if type(backing)~='table'then return nil end
+    if backing.kind=='armor_perk'then return 'armor_perk/'..backing.passive..'/'..backing.part end
+    if backing.kind=='mission_timer'and type(backing.source)=='string'then return 'mission_timer/'..backing.source end
     local row=backing.row
     if backing.kind=='settings'and type(backing.settings)=='string'and row~=nil then
         local kind=backing.settings=='explosion_damage'and'damage'or backing.settings
@@ -34,6 +36,8 @@ function M.key(backing)
     return nil
 end
 local function span(backing)
+    -- A mission source identifies exactly one duration float, including deltas.
+    if backing.kind=='mission_timer'then return 0,4 end
     local offset,width=tonumber(backing.offset),tonumber(backing.width)or 4
     if not offset then return nil end
     return offset,width
@@ -49,6 +53,7 @@ end
 -- handle on that weapon's own row, not another consumer. Enemy fields are completed by their write domain's
 -- descriptor (the shared schema and the class's health record).
 local CATALOGUES={
+    {module='hd2runtime/domains/melee_authoring',root='entries',resource='melee'},
     {module='hd2runtime/domains/player_weapon_authoring',root='weapons',resource='player_weapon'},
     {module='hd2runtime/domains/support_weapon_authoring',root='weapons',resource='support_weapon'},
     {module='hd2runtime/domains/vehicle_weapon_authoring',root='weapons',resource='vehicle_weapon'},
@@ -143,6 +148,9 @@ function build_index()
                         for _,group in ipairs({entry.slotFields,entry.presentationFields})do
                             walk(resource,target,group,1,nil,'output '..tostring(entry.id or name))
                         end
+                    elseif catalogue.resource=='melee'and type(entry.ownerResource)=='string'then
+                        -- A melee target is another handle on the weapon's own component/damage rows.
+                        walk(entry.ownerResource,entry.name or tostring(name),entry,1,nil,'melee')
                     elseif catalogue.resource=='vehicle_weapon'and type(entry.stratagemHost)=='string'then
                         -- A sentry or emplacement host (0.30.2) is another handle on its stratagem's own deployed
                         -- entity record (like an attack output on its owner's row), not another consumer.
@@ -176,6 +184,14 @@ local function own_identity(descriptor)
     if entry then return entry.resource,entry.target end
     local target=type(descriptor.target)=='table'and descriptor.target
     if not target then return nil end
+    if target.resource=='armor_perk'then
+        local entry=require('hd2runtime/domains/armor_perk_writes').entry(target.armor_perk)
+        return target.resource,entry and entry.name or tostring(target.armor_perk)
+    end
+    if target.resource=='mission'then
+        local entry=require('hd2runtime/domains/mission_writes').entry(target.mission)
+        return target.resource,entry and entry.name or tostring(target.mission)
+    end
     for _,name in ipairs(NAME_KEYS)do
         if type(target[name])=='string'then return target.resource,target[name]end
     end

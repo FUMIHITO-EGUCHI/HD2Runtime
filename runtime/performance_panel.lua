@@ -1,7 +1,7 @@
 -- The F10 panel's Performance tab (0.31.1; runtime/runtime_settings.lua draws the window around it): a live stacked
 -- graph of the time HD2Runtime and its mods take per update, and the parts that take the most. The numbers are
 -- runtime/perf_watch.lua's own-time measurements (a callback inside another counts once, as the inner one's), which
--- only record while this tab is shown: each mod is one series (every callback of it), each part of the Runtime another
+-- only record while this tab is shown: each mod has work and overlay series, each part of the Runtime another
 -- (a scheduler watch's module, an event source, the Runtime's own overlays). The game's own work is not in them.
 --
 -- The graph has one column per perf_watch bin (M.BINS of M.BIN seconds, newest on the right) and changes only when a
@@ -13,17 +13,37 @@ local metrics=require('hd2runtime/runtime/metrics')
 local i18n=require('hd2runtime/runtime/i18n')
 local T=i18n.t
 local M={}
-M.PALETTE={{255,199,44,255},{64,196,255,255},{120,220,130,255},{255,110,170,255},{176,140,255,255}}
-M.REST={120,126,134,255}
-M.CLEAR={0,0,0,0}
-M.ROWS=8                   -- rows of the table
+local chart=require('hd2runtime/runtime/performance_chart')
+M.PALETTE,M.REST,M.CLEAR=chart.PALETTE,chart.REST,chart.CLEAR
+M.ROWS=7                   -- rows of the table
 M.RECENT=4                 -- bins of the summary line (one second)
 M.RANK=8                   -- bins the ranking and peaks cover (two seconds)
 M.SCALES={0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000}   -- graph tops, ms
 M.HEIGHT=510               -- the tab's content height at scale 1 (the window keeps room for it)
 
+local NAV_BG,NAV_HOVER={10,13,17,255},{38,44,51,255}
+local mode,page='runtime',1
+local function page_rows()return mode=='global'and 5 or M.ROWS end
 local state={head=-1,colour={},owner={},stats=nil}
-function M.reset()state={head=-1,colour={},owner={},stats=nil}end
+function M.reset()require('hd2runtime/runtime/memory_watch').pause();state={head=-1,colour={},owner={},stats=nil};page=1 end
+function M.mode()return mode end
+function M.select_mode(value)
+    assert(value=='runtime'or value=='global'or value=='memory','unknown performance mode')
+    if value==mode then return end
+    pcall(require('hd2runtime/runtime/log').emit,'[HD2Runtime] settings performance mode requested: '..mode..' -> '..value)
+    -- Both views consume the same history. Changing the filter must not erase samples or an active timing stack.
+    if value~='global'then require('hd2runtime/runtime/global_perf').stop()end
+    mode=value;M.reset()
+end
+function M.controls(box,k)
+    return {
+        {id='global',label=T('Global'),x=box.x,y=box.y,w=100*k,h=28*k},
+        {id='runtime',label=T('Runtime'),x=box.x+106*k,y=box.y,w=100*k,h=28*k},
+        {id='memory',label=T('Memory'),x=box.x+212*k,y=box.y,w=100*k,h=28*k},
+        {id='previous',label='<',x=box.x+148*k,y=box.y+482*k,w=36*k,h=28*k},
+        {id='next',label='>',x=box.x+190*k,y=box.y+482*k,w=36*k,h=28*k},
+    }
+end
 
 local function ms(seconds)
     local v=seconds*1000
@@ -56,16 +76,23 @@ end
 
 -- Everything the tab shows, recomputed once per bin: {rows, total, frame, peak, top (graph max), colours}.
 function M.stats(h)
-    if state.stats and state.head==h.head then return state.stats end
+    if state.stats and state.head==h.head and state.series==h.series then return state.stats end
     local recent,rank=slots(h,M.RECENT),slots(h,M.RANK)
-    local rows,total={},0
-    for _,s in ipairs(h.list)do
+    local rows,total,menu={},0,nil
+    for _,s in ipairs(h.list)do if mode=='global'or s.kind~='external'then
         local row={series=s,id=s.id,name=s.name,kind=s.kind,average=mean(s.values,recent),ranked=mean(s.values,rank),
             peak=largest(s.peaks,rank)}
-        total=total+row.average
-        rows[#rows+1]=row
+        if mode=='global'and s.kind=='menu'then menu=row
+        else total=total+row.average;rows[#rows+1]=row end
+    end end
+    if mode=='global'then
+        for owner in pairs(perf.inventory())do
+            if not h.series[owner]then rows[#rows+1]={id=owner,name=perf.mod_name(owner),
+                kind=perf.runtime_mod(owner)and'mod'or'external',average=0,ranked=0,peak=0,unmeasured=true}end
+        end
     end
     table.sort(rows,function(a,c)
+        if not not a.unmeasured~=not not c.unmeasured then return not a.unmeasured end
         if a.ranked~=c.ranked then return a.ranked>c.ranked end
         return a.id<c.id
     end)
@@ -86,7 +113,7 @@ function M.stats(h)
     local tallest=0
     for _,slot in ipairs(slots(h,perf.BINS))do
         local sum=0
-        for _,s in ipairs(h.list)do sum=sum+(s.values[slot]or 0)end
+        for _,s in ipairs(h.list)do if (mode=='global'and s.kind~='menu')or(mode=='runtime'and s.kind~='external')then sum=sum+(s.values[slot]or 0)end end
         if sum>tallest then tallest=sum end
     end
     local top=M.SCALES[#M.SCALES]
@@ -99,7 +126,7 @@ function M.stats(h)
         if b>=1 then
             local slot=(h.head-filled+b-1)%perf.BINS+1
             local column,shown,sum={},0,0
-            for _,s in ipairs(h.list)do sum=sum+(s.values[slot]or 0)end
+            for _,s in ipairs(h.list)do if (mode=='global'and s.kind~='menu')or(mode=='runtime'and s.kind~='external')then sum=sum+(s.values[slot]or 0)end end
             for index=1,#M.PALETTE do
                 local id=state.owner[index]
                 local s=id and h.series[id]
@@ -110,8 +137,8 @@ function M.stats(h)
             columns[i]=column
         end
     end
-    state.head=h.head
-    state.stats={rows=rows,total=total,frame=mean(h.frames,recent),peak=largest(h.peaks,rank),top=top/1000,
+    state.head=h.head;state.series=h.series
+    state.stats={rows=rows,menu=menu,total=total,frame=mean(h.frames,recent),peak=largest(h.peaks,rank),top=top/1000,
         filled=filled,columns=columns}
     return state.stats
 end
@@ -125,91 +152,113 @@ local function build(d,C,S,box,k,st)
     local ops={}
     local function rect(x,y,w,h,c,z)ops[#ops+1]={rect={x,y,w,h,c,z}}end
     local function text(s,x,cy,size,colour,font,align)ops[#ops+1]={text={s,x,cy,size,colour,font,align}}end
-    local x,y,w=box.x,box.y,box.w
+    local x,y,w=box.x,box.y+38*k,box.w
     -- The summary: the total per update, its share of the frame time and the frame rate.
-    text(T('Runtime and mods: %s per frame',ms(st.total)),x,y+12*k,S.body*k,C.text,'body')
+    text(mode=='global'and T('Observed callbacks: %s per frame',ms(st.total))or T('Runtime and mods: %s per frame',ms(st.total)),x,y+12*k,S.body*k,C.text,'body')
     local share=st.frame>0 and st.total/st.frame*100 or 0
     local fps=st.frame>0 and math.floor(1/st.frame+0.5)or 0
-    text(T('%s of the frame time  |  %d FPS',('%.1f%%'):format(share),fps),x,y+32*k,S.small*k,C.dim,'body')
-    -- The graph: a gutter with the scale on the left, three grid lines, one column per bin.
-    local gutter=62*k
-    local gx,gy,gw,gh=x+gutter,y+52*k,w-gutter,190*k
-    rect(gx,gy,gw,gh,C.header,3)
-    for n=0,2 do
-        local ly=gy+gh-gh*n/2
-        rect(gx,ly-math.max(1,k)/2,gw,math.max(1,k),n==0 and C.line_strong or C.line,4)
-        text(ms(st.top*n/2),gx-8*k,ly,S.tiny*k,C.faint,'body','right')
+    local coverage=''
+    if mode=='global'then
+        local measured,mods=0,0
+        for _,row in ipairs(st.rows)do if row.kind~='runtime'and row.kind~='unattributed'then
+            mods=mods+1;if not row.unmeasured then measured=measured+1 end
+        end end
+        coverage=T(' | %d / %d mods measured',measured,mods)
+        local status=require('hd2runtime/runtime/global_perf').status()
+        if status.limited or status.unavailable then coverage=coverage..T(' (partial coverage)')end
     end
-    local columns=perf.BINS
-    local cw=gw/columns
-    local gap=cw>4*k and math.max(1,k)or 0
-    for i=1,columns do
-        local column=st.columns[i]
-        local cx=gx+(i-1)*cw
-        local base=gy+gh
-        -- the five coloured series in palette order, then the rest in grey: always six rectangles
-        for index=1,#M.PALETTE+1 do
-            local v=column and column[index]or 0
-            local sh=math.min(gh,v/st.top*gh)
-            if sh>=0.5 then
-                base=base-sh
-                rect(cx,base,cw-gap,sh,index<=#M.PALETTE and M.PALETTE[index]or M.REST,5)
-            else
-                rect(cx,gy+gh-1,cw-gap,1,M.CLEAR,5)
-            end
-        end
-    end
+    text(T('%s of the frame time  |  %d FPS',('%.1f%%'):format(share),fps)..coverage,x,y+32*k,S.small*k,C.dim,'body')
+    local colours={unpack(M.PALETTE)};colours[#colours+1]=M.REST
+    local ty=chart.draw(rect,text,C,S,box,k,st.top,ms,st.columns,perf.BINS,colours)
     -- The table: the heaviest series of the last two seconds.
-    local ty=gy+gh+28*k
     text(T('AVERAGE'),x+w-120*k,ty,S.tiny*k,C.gold_dim,'title','right')
     text(T('PEAK'),x+w,ty,S.tiny*k,C.gold_dim,'title','right')
     ty=ty+24*k
     local most=st.rows[1]and st.rows[1].average or 0
-    for i=1,math.min(M.ROWS,#st.rows)do
-        local row=st.rows[i]
+    for i=1,math.min(page_rows(),#st.rows-(page-1)*page_rows())do
+        local row=st.rows[(page-1)*page_rows()+i]
         local ry=ty+(i-1)*26*k
         rect(x,ry-5*k,10*k,10*k,M.colour(row.id),5)
-        local tag=row.kind=='mod'and i18n.upper(T('MOD'))or'HD2R'
+        local tag=row.kind=='unattributed'and'?'or row.kind=='mod'and'[R]'or(row.kind=='external'and i18n.upper(T('MOD'))or'HD2R')
         text(tag,x+18*k,ry,S.tiny*k,row.kind=='mod'and C.faint or C.gold_dim,'title')
-        local lines=d:wrap(row.name,w*0.45,{size=S.small*k,lines=1})
-        text(lines[1]or row.name,x+70*k,ry,S.small*k,C.text,'body')
+        local label=row.kind=='unattributed'and T('Unattributed callback work')or row.name
+        local lines=d:wrap(label,w*0.45,{size=S.small*k,lines=1})
+        text(lines[1]or label,x+70*k,ry,S.small*k,C.text,'body')
         -- a bar for its share of the heaviest
         local bw=most>0 and(w*0.18)*row.average/most or 0
         if bw>=1 then rect(x+w*0.56,ry-3*k,bw,6*k,M.colour(row.id),4)end
-        text(ms(row.average),x+w-120*k,ry,S.small*k,C.dim,'body','right')
-        text(ms(row.peak),x+w,ry,S.small*k,C.faint,'body','right')
+        text(row.unmeasured and T('Not measured')or ms(row.average),x+w-120*k,ry,S.small*k,C.dim,'body','right')
+        text(row.unmeasured and'-'or ms(row.peak),x+w,ry,S.small*k,C.faint,'body','right')
     end
+    if mode=='global'then
+        rect(x,y+382*k,w,math.max(1,k),C.line,4)
+        text(T('F10 menu'),x,y+404*k,S.small*k,C.dim,'body')
+        text(ms(st.menu and st.menu.average or 0),x+w-120*k,y+404*k,S.small*k,C.dim,'body','right')
+        text(ms(st.menu and st.menu.peak or 0),x+w,y+404*k,S.small*k,C.faint,'body','right')
+        text(T('Menu and performance display only; no rendering or profiling while closed.'),
+            x,y+428*k,S.tiny*k,C.faint,'body')
+    end
+    text(T('Page %d / %d',page,math.max(1,math.ceil(#st.rows/page_rows()))),x,y+458*k,S.small*k,C.dim,'body')
+    text(T('[R] Runtime mod | ? Unresolved game/mod work | Exclusive time'),x+w,y+458*k,S.tiny*k,C.faint,'body','right')
     return ops
 end
 
 -- Draws the tab into box {x, y, w, h} at scale k. ctx = {d, text(d, s, x, cy, size, colour, font, align), C, S}.
-function M.draw(ctx,box,k)
+function M.draw(ctx,box,k,mouse,press)
     local d,text,C,S=ctx.d,ctx.text,ctx.C,ctx.S
     local x,y=box.x,box.y
-    perf.record(true)
+    local controls=M.controls(box,k)
+    for _,button in ipairs(controls)do
+        if mode~='memory'or(button.id~='previous'and button.id~='next')then
+        local hover=mouse and mouse.x and mouse.y and mouse.x>=button.x and mouse.x<button.x+button.w
+            and mouse.y>=button.y and mouse.y<button.y+button.h
+        if press and hover then
+            if ctx.sound then ctx.sound('click')end
+            if button.id=='global'or button.id=='runtime'or button.id=='memory'then M.select_mode(button.id)
+            else
+                local count=state.stats and#state.stats.rows or 0
+                page=math.max(1,math.min(math.max(1,math.ceil(count/page_rows())),page+(button.id=='next'and 1 or-1)))
+                state.frame=nil
+            end
+        end
+        local navigation=button.id=='previous'or button.id=='next'
+        local bg=navigation and(hover and NAV_HOVER or NAV_BG)or(mode==button.id and C.header or(hover and C.hover or C.panel))
+        d:rect(button.x,button.y,button.w,button.h,bg,3)
+        if navigation then d:rect(button.x,button.y,button.w,math.max(1,k),C.line_strong,4)end
+        text(d,button.label,button.x+button.w/2,button.y+button.h/2,S.small*k,
+            mode==button.id and C.gold or C.dim,'body','center')
+    end
+    end
+    perf.record(mode~='memory')
+    if mode=='memory'then require('hd2runtime/runtime/memory_panel').draw(ctx,box,k);return end
     if not metrics.now()then
-        text(d,T('No precise clock: nothing can be measured.'),x,y+20*k,S.body*k,C.dim,'body')
+        text(d,T('No precise clock: nothing can be measured.'),x,y+58*k,S.body*k,C.dim,'body')
         return
     end
-    local h=perf.history()
+    if mode=='global'then require('hd2runtime/runtime/global_perf').start()end
+    local h=perf.history(mode)
     if not h or h.head==0 then
-        text(d,T('Measuring...'),x,y+20*k,S.body*k,C.dim,'body')
+        text(d,T('Measuring...'),x,y+58*k,S.body*k,C.dim,'body')
         return
     end
     local st=M.stats(h)
+    page=math.min(page,math.max(1,math.ceil(#st.rows/page_rows())))
     local language=i18n.language()
     local f=state.frame
     if not(f and f.stats==st and f.k==k and f.x==x and f.y==y and f.w==box.w and f.language==language)then
         f={stats=st,k=k,x=x,y=y,w=box.w,language=language,ops=build(d,C,S,box,k,st)}
         state.frame=f
     end
-    for _,op in ipairs(f.ops)do
-        local r=op.rect
-        if r then d:rect(r[1],r[2],r[3],r[4],r[5],r[6])
-        else
-            local t=op.text
-            text(d,t[1],t[2],t[3],t[4],t[5],t[6],t[7])
+    local function replay(builder)
+        for _,op in ipairs(f.ops)do
+            local r=op.rect
+            if r then builder:rect(r[1],r[2],r[3],r[4],r[5],r[6])
+            else
+                local t=op.text
+                text(builder,t[1],t[2],t[3],t[4],t[5],t[6],t[7])
+            end
         end
     end
+    if d._retain then d:_retain('runtime-performance',f,replay)else replay(d)end
 end
 return M

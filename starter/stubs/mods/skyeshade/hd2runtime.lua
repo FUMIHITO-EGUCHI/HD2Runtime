@@ -1,6 +1,6 @@
 ---@meta
 -- Generated authoring definitions. Never package or execute this file.
--- Schema SHA256 45554e8ebb086c9b1ddd90fd65f011dcf56e3460db5aa0d06ab590da49a32b75
+-- Schema SHA256 c69dd987d249e3a15d4d3d7d359855d2ecaa1bbded58c4ad4ff549f71e200424
 
 ---@alias HD2Resource "0x16474112801385B6"|"0x59C5CA839449B379"|"0x80F1A156D9FA1E36"|"0x89C5493E08CA4207"|"0xB0C9FAF4AF8903F9"|"0xEC3575E7A93793BB"|"0xED13DDC480EC6910"|"amr"|"bastion"|"jar5"|"jump_pack"|"maelstrom"|"orbital_laser"|"shield_relay"
 ---@alias HD2PatchField "armor_penetration"
@@ -49,6 +49,8 @@
 ---@field option_defaults? boolean
 ---@field recoveries? integer
 ---@field retry_in? number
+---@field verification_enabled boolean
+---@field set_verification_enabled fun(enabled: boolean)
 
 ---@class HD2ObserveRequest
 ---@field targets HD2ReadTarget[]
@@ -215,6 +217,7 @@
 ---@field key? string
 ---@field derivation? string
 ---@field package? string
+---@field packages? integer
 ---@field retain? string
 ---@field liveTested? boolean
 ---@field blocker? string
@@ -605,7 +608,7 @@ local HD2AttachmentOption = {}
 ---@return table
 function HD2AttachmentOption:describe() end
 
----@alias HD2AuthoringTarget HD2Weapon|HD2DamageProfile|HD2Stratagem|HD2StratagemAttack|HD2EagleRearm|HD2PlayerAttack|HD2WeaponAmmunition|HD2ProjectileReference|HD2TerminalAction|HD2Explosion|HD2SupportWeapon|HD2SupportAttack|HD2SupportProjectile|HD2SupportTerminalAction|HD2SupportExplosion|HD2DeployedEntity|HD2DeployedShield|HD2DeployedZone|HD2MountedWeapon|HD2VehicleEntity|HD2VehicleZone|HD2VehicleMount|HD2VehicleWeapon|HD2VehicleWeaponAttack|HD2Backpack|HD2BackpackZone|HD2BackpackLinked|HD2BackpackLinkedZone|HD2BoosterTarget|HD2WeaponAttachment|HD2PodRack|HD2PodSlot|HD2CatalogueExplosion
+---@alias HD2AuthoringTarget HD2Weapon|HD2DamageProfile|HD2Stratagem|HD2StratagemAttack|HD2EagleRearm|HD2PlayerAttack|HD2WeaponAmmunition|HD2ProjectileReference|HD2TerminalAction|HD2Explosion|HD2SupportWeapon|HD2SupportAttack|HD2SupportProjectile|HD2SupportExplosion|HD2DeployedEntity|HD2DeployedShield|HD2DeployedZone|HD2MountedWeapon|HD2VehicleEntity|HD2VehicleZone|HD2VehicleMount|HD2VehicleWeapon|HD2VehicleWeaponAttack|HD2Backpack|HD2BackpackZone|HD2BackpackLinked|HD2BackpackLinkedZone|HD2BoosterTarget|HD2WeaponAttachment|HD2PodRack|HD2PodSlot|HD2CatalogueExplosion|HD2Throwable|HD2ThrowableTarget|HD2MeleeTarget
 
 ---@param role HD2AttackRole
 ---@return HD2PlayerAttack
@@ -726,7 +729,7 @@ local HD2Subweapon = {}
 ---@return table
 function HD2Subweapon:describe() end
 ---@alias HD2SupportWeaponName "40-K Meltagun"|"AC-8 Autocannon"|"APW-1 Anti-Materiel Rifle"|"ARC-3 Arc Thrower"|"B/FLAM-80 Cremator"|"B/MD C4 Pack"|"CQC-1 One True Flag"|"CQC-20 Breaching Hammer"|"CQC-72 Entrenchment Tool"|"CQC-9 Defoliation Tool"|"EAT-17 Expendable Anti-Tank"|"EAT-411 Leveller"|"EAT-700 Expendable Napalm"|"FAF-14 Spear"|"FLAM-40 Flamethrower"|"GL-21 Grenade Launcher"|"GL-28 Belt-Fed Grenade Launcher"|"GL-52 De-Escalator"|"GR-8 Recoilless Rifle"|"LAS-98 Laser Cannon"|"LAS-99 Quasar Cannon"|"M-1000 Maxigun"|"M-105 Stalwart"|"MG-206 Heavy Machine Gun"|"MG-43 Machine Gun"|"MGX-42 Bullet Storm"|"MLS-4X Commando"|"MS-11 Solo Silo"|"PLAS-45 Epoch"|"RL-77 Airburst Rocket Launcher"|"RS-422 Railgun"|"S-11 Speargun"|"SG-88 Break-Action Shotgun"|"StA-X3 W.A.S.P. Launcher"|"TX-41 Sterilizer"
----@alias HD2SupportAttackName "40-K MELTAGUN B"|"AC-8 P"|"AC-8 P IE"|"AC-8 P1"|"AC-8 P1 IE"|"AC-8 P2"|"APW-1 P"|"AR-23 P"|"ARC-3 ARC THROWER A"|"B/FLAM-80 CREMATOR S"|"B/MD C4 PACK E"|"BurningHeavy"|"CQC-1 ONE TRUE FLAG_dm"|"CQC-20 BREACHING HAMMER IE"|"CQC-20 BREACHING HAMMER_dm"|"CQC-72 ENTRENCHMENT TOOL_dm"|"CQC-9 DEFOLIATION TOOL_dm"|"EAT-17 BACKBLAST E"|"EAT-17 P"|"EAT-17 P IE"|"EAT-411 P"|"EAT-411 P IE"|"EAT-700 P"|"EAT-700 P IE"|"EAT-700 P1"|"EAT-700 P1 IE"|"FAF-14 P"|"FAF-14 P IE"|"FLAM-40 FLAMETHROWER S"|"Fire"|"Fire Panic"|"FlamerSlowed"|"GL-21 P"|"GL-21 P IE"|"GL-28 P"|"GL-28 P IE"|"GL-52 P"|"GL-52 P IE"|"GL-52 P IE A"|"GR-8 BACKBLAST E"|"GR-8 P"|"GR-8 P IE"|"GR-8 P1"|"GR-8 P1 IE"|"Gas"|"Gas Confusion"|"Gas Confusion Var2"|"Gas Var2"|"LAS-98 LASER CANNON B"|"LAS-99 P"|"LAS-99 P IE"|"M-1000 P"|"MG-206 P"|"MG-43 P"|"MGX-42 P"|"MLS-4X BACKBLAST E"|"MLS-4X P"|"MLS-4X P IE"|"P3"|"P3 IE"|"PLAS-45 EPOCH Overcharge E"|"PLAS-45 P"|"PLAS-45 P IE"|"RL-77 P"|"RL-77 P IE"|"RL-77 P1"|"RL-77 P1 IE"|"RL-77 P2"|"RL-77 P2 IE"|"RL-77 P3"|"RS-422 P"|"RS-422 RAILGUN Overcharge E"|"Railgun Max Charge"|"S-11 P"|"S-11 P E"|"SG-88 P"|"SWP SOLO SILO E"|"SWP SOLO SILO EImpact"|"StA-X3 P"|"StA-X3 P IE"|"StA-X3 P1"|"StA-X3 P1 IE"|"Stun Small"|"TX-41 STERILIZER S"|"ability"|"detonation"|"feed_primary"|"full_charge"|"full_charge_impact"|"impact"|"overcharge_explosion"|"primary"|"primary_expiry"|"primary_impact"|"primary_impact_status_32"|"primary_impact_status_5"|"primary_status_37"|"primary_status_42"|"primary_status_43"|"primary_status_44"|"primary_status_45"|"primary_status_5"|"primary_status_6"|"primary_status_67"
+---@alias HD2SupportAttackName "40-K MELTAGUN B"|"AC-8 P"|"AC-8 P IE"|"AC-8 P1"|"AC-8 P1 IE"|"AC-8 P2"|"APW-1 P"|"AR-23 P"|"ARC-3 ARC THROWER A"|"B/FLAM-80 CREMATOR S"|"B/MD C4 PACK E"|"BurningHeavy"|"CQC-1 ONE TRUE FLAG_dm"|"CQC-20 BREACHING HAMMER IE"|"CQC-20 BREACHING HAMMER_dm"|"CQC-72 ENTRENCHMENT TOOL_dm"|"CQC-9 DEFOLIATION TOOL_dm"|"EAT-17 BACKBLAST E"|"EAT-17 P"|"EAT-17 P IE"|"EAT-411 P"|"EAT-411 P IE"|"EAT-700 P"|"EAT-700 P IE"|"EAT-700 P1"|"EAT-700 P1 IE"|"FAF-14 P"|"FAF-14 P IE"|"FLAM-40 FLAMETHROWER S"|"Fire"|"Fire Panic"|"FlamerSlowed"|"GL-21 P"|"GL-21 P IE"|"GL-28 P"|"GL-28 P IE"|"GL-52 P"|"GL-52 P IE"|"GL-52 P IE A"|"GR-8 BACKBLAST E"|"GR-8 P"|"GR-8 P IE"|"GR-8 P1"|"GR-8 P1 IE"|"Gas"|"Gas Confusion"|"Gas Confusion Var2"|"Gas Var2"|"LAS-98 LASER CANNON B"|"LAS-99 P"|"LAS-99 P IE"|"M-1000 P"|"MG-206 P"|"MG-43 P"|"MGX-42 P"|"MLS-4X BACKBLAST E"|"MLS-4X P"|"MLS-4X P IE"|"P3"|"P3 IE"|"PLAS-45 EPOCH Overcharge E"|"PLAS-45 P"|"PLAS-45 P IE"|"RL-77 P"|"RL-77 P IE"|"RL-77 P1"|"RL-77 P1 IE"|"RL-77 P2"|"RL-77 P2 IE"|"RL-77 P3"|"RS-422 P"|"RS-422 RAILGUN Overcharge E"|"Railgun Max Charge"|"S-11 P"|"S-11 P E"|"SG-88 P"|"SWP SOLO SILO E"|"SWP SOLO SILO EImpact"|"StA-X3 P"|"StA-X3 P IE"|"StA-X3 P1"|"StA-X3 P1 IE"|"Stun Small"|"TX-41 STERILIZER S"|"ability"|"detonation"|"feed_primary"|"full_charge"|"full_charge_impact"|"impact"|"overcharge_explosion"|"primary"|"primary_expiry"|"primary_impact"|"primary_impact_arc"|"primary_impact_arc_status_37"|"primary_impact_status_32"|"primary_impact_status_5"|"primary_status_37"|"primary_status_42"|"primary_status_43"|"primary_status_44"|"primary_status_45"|"primary_status_5"|"primary_status_6"|"primary_status_67"
 
 ---@class HD2SupportAttack
 ---@field resource "support_weapon"
@@ -1279,12 +1282,19 @@ function HD2Booster:deployed_entity() end
 
 ---@class HD2ThrowableTarget
 ---@field resource "throwable"
----@field path "detonation"|"explosion"|"status_effect"|"shrapnel"|"bomblets"|"bomblet_explosion"|"damage"|"entity"|"shield"
+---@field path "detonation"|"explosion"|"status_effect"|"shrapnel"|"bomblets"|"bomblet_explosion"|"damage"|"entity"|"shield"|"flight"|"arc"|"pulse"
 ---@field throwable string
 ---@field status? string
 local HD2ThrowableTarget = {}
 ---@return table
 function HD2ThrowableTarget:describe() end
+---On :detonation(): every package-backed explosion payload, its own payload and none.
+---@param filter? table
+---@return table
+function HD2ThrowableTarget:payload_options(filter) end
+---Arc created by this explosion; available only on reviewed arc throwables.
+---@return HD2ThrowableTarget
+function HD2ThrowableTarget:arc() end
 ---Explosion targets: a status effect its DamageInfo applies (label such as "fire", or slot number).
 ---@param identity string|integer
 ---@return HD2ThrowableTarget
@@ -1315,6 +1325,11 @@ function HD2Throwable:detonation() end
 ---The explosion (ExplosionSettings and its DamageInfo).
 ---@return HD2ThrowableTarget
 function HD2Throwable:explosion() end
+---@return HD2ThrowableTarget
+function HD2Throwable:arc() end
+---Reviewed repeating pulse payload override (shared Urchin definition).
+---@return HD2ThrowableTarget
+function HD2Throwable:pulse() end
 ---@param identity string|integer
 ---@return HD2ThrowableTarget
 function HD2Throwable:status_effect(identity) end
@@ -1326,6 +1341,9 @@ function HD2Throwable:shrapnel() end
 ---Bomblet projectile (G-7 Pineapple); :explosion() reaches the explosion of each bomblet.
 ---@return HD2ThrowableTarget
 function HD2Throwable:bomblets() end
+---Per-throwable launch curve, fixed-speed override and spin.
+---@return HD2ThrowableTarget
+function HD2Throwable:flight() end
 ---Direct-hit damage (K-2 Throwing Knife; no explosion).
 ---@return HD2ThrowableTarget
 function HD2Throwable:damage() end
@@ -1335,8 +1353,8 @@ function HD2Throwable:entity() end
 ---Shield of the deployed entity (G/SH-39 Shield).
 ---@return HD2ThrowableTarget
 function HD2Throwable:shield() end
----@alias HD2EnemyName "Bile Titan"|"Charger"|"Crusher"|"Dropship"|"Fleshmob"|"Gatekeeper"|"Gunship"|"Hive Guard"|"Impaler"|"Marauder"|"Predator Hunter"|"Rupture Charger"|"Rupture Spewer"|"Spore Burst Bile Titan"|"Spore Burst Hunter"|"Spore Burst Warrior"|"Spore Charger"|"Stalker"|"Veracitor"|"Watcher"|"assault_walker"|"beamer_champion"|"berserker"|"berserker_iron_fleet"|"berserker_ivory_legion"|"berserker_jumppack"|"big_walker_turret_cannon"|"bodyhorror_bladed"|"bodyhorror_helmetguy"|"boomer"|"boomer_burrower"|"boomer_nurser"|"boomer_nurser_mission"|"boomer_tier_2"|"cha_soldier.cha_soldier_jumppack"|"charger"|"charger_acid"|"charger_bull"|"charger_burrower"|"charger_tier2"|"conscript_backpack_lmg"|"conscript_base"|"conscript_commander"|"conscript_commander_jump"|"conscript_elite"|"conscript_flamer"|"conscript_ivory_legion"|"conscript_ivory_legion_tier_2"|"conscript_jump"|"conscript_jump_melee"|"conscript_jumppack"|"conscript_melee"|"conscript_scout"|"conscript_scout_walker_rider"|"conscript_shotgun"|"conscript_tier_1"|"conscript_tier_2"|"conscript_tier_3"|"corrupted"|"corrupted_v2"|"corrupted_v3"|"cyborg_elite"|"cyborg_elite_female"|"cyborg_elite_rusher"|"cyborg_elite_rusher_female"|"dragon"|"dropship"|"equipment.backpacks.soldier_jumppack.soldier_jumppack"|"exomech_melee"|"exomech_ranged"|"gunship"|"hexagon_shield"|"hive_lord"|"hunter_base"|"hunter_gloom"|"hunter_tier_1"|"hunter_tier_2"|"hunter_tier_3"|"illuminate_attack_ship"|"illuminate_dropship"|"illuminate_guy_staff"|"illuminate_guy_staff_fake"|"illuminate_guy_staff_tier_2"|"illuminate_turret_wm_cannon"|"illuminate_turret_wm_cannon_head_l"|"illuminate_turret_wm_cannon_head_r"|"illuminate_war_machine"|"illuminate_warmachine_bombball"|"impaler"|"impaler_tentacle"|"jet_champion"|"lieutenant_artillery"|"lieutenant_assault"|"lieutenant_base"|"lieutenant_flag"|"lieutenant_flag_ivory_legion"|"lieutenant_ivory_legion"|"lieutenant_ivory_legion_assault"|"lieutenant_jetpack"|"lieutenant_suppressor"|"meatglue"|"observer"|"scavenger_base"|"scavenger_gloom"|"scavenger_predator"|"scavenger_spitter"|"scavenger_tier_1"|"scavenger_tier_1_captive"|"scavenger_tier_2"|"shield_forcefield_outcast"|"shrieker"|"shrieker_gloom"|"siege_engine"|"soldier"|"soldier_iron_fleet"|"soldier_ivory_legion"|"soldier_mg"|"soldier_mg_assassinate"|"soldier_mg_ivory_legion"|"soldier_rpg"|"soldier_rpg_assassinate"|"soldier_rpg_ivory_legion"|"soldier_shield"|"soldier_shield_ivory_legion"|"soldier_shotgun_ivory_legion"|"spawner"|"spawner_jammer"|"stalker"|"strider"|"strider_gloom"|"tank_autocannons"|"tank_base"|"tank_heavycannon"|"tank_hull_mg"|"tank_rocketlauncher"|"tank_turret_autocannons"|"tank_turret_base"|"tank_turret_heavycannon"|"tank_turret_rocketlauncher"|"tripod"|"tripod_tier_2"|"turret_autocannons"|"turret_base"|"turret_command_bunker_hmg"|"turret_heavycannon"|"turret_mortar"|"walker_scout"|"warrior_acid"|"warrior_base"|"warrior_big"|"warrior_big_tier2"|"warrior_burrower"|"warrior_gloom"|"warrior_plus"|"warrior_tier_1"|"warrior_tier_1_captive"|"warrior_tier_2"|"warrior_tier_2_guard"
----@alias HD2StructureName "Gazer"|"ammunition_stockpile"|"blocking_chunk"|"bug_fog_generator"|"bug_fog_generator_large"|"bug_fog_generator_tcs"|"bug_larva_container_backpack"|"bug_spawner_shrieker"|"canister"|"capital_defense_building"|"central_core_drill_01"|"chemicals_backpack"|"colony_spawner_base"|"command_bunker"|"command_bunker_side"|"command_bunker_top"|"embryo_01"|"embryo_01_cluster_x6"|"embryo_01_cluster_x6_destroyed"|"emplacement_hmg"|"emplacement_mg"|"encounter_ship_landed_door_shield"|"fleet_ship_01"|"gen_footage_volume"|"grinder"|"harvester"|"landed_dropship"|"mothership"|"obj_asset_hijack_tech_hub_nexus_machine"|"power_generator"|"spawner_factory_conscript_airborne"|"spawner_factory_conscript_assault"|"spawner_factory_conscript_base"|"spawner_factory_conscript_phalanx"|"spawner_factory_conscript_standard"|"spore_lung"|"tcs_support_damageable"|"tcs_support_damageable_02"|"turret_01"|"turret_tactical_obj"
+---@alias HD2EnemyName "Bile Titan"|"Charger"|"Crusher"|"Dropship"|"Fleshmob"|"Gatekeeper"|"Gazer"|"Gunship"|"Hive Guard"|"Impaler"|"Marauder"|"Predator Hunter"|"Rupture Charger"|"Rupture Spewer"|"Spore Burst Bile Titan"|"Spore Burst Hunter"|"Spore Burst Warrior"|"Spore Charger"|"Stalker"|"Veracitor"|"Watcher"|"activation_codes_cache_button"|"ammo_rack"|"ammunition_stockpile"|"antitank_emplacement"|"armory_generator"|"artifact_sample_01"|"assault_walker"|"assembly_site_clamp"|"assembly_site_control_room_light_01"|"assembly_site_control_room_light_02"|"assembly_site_crank"|"assembly_site_steam_trigger_area"|"auto_night_light"|"automaton_enemy_sample_01"|"automaton_intel_sample_01"|"automaton_sample_01"|"automaton_super_sample_01"|"avatar_helldiver"|"ballistic_shield_backpack"|"ballistic_shield_backpack_mk2"|"ballistic_shield_backpack_small"|"base_light_01_head"|"base_sample_static"|"beamer_champion"|"berserker"|"berserker_iron_fleet"|"berserker_ivory_legion"|"berserker_jumppack"|"big_walker_turret_cannon"|"bio_sample_01"|"black_box_01"|"blacksaffron_sample_01"|"blocking_chunk"|"blue_corp_tool_rack_01"|"bodyhorror_bladed"|"bodyhorror_helmetguy"|"boomer"|"boomer_burrower"|"boomer_nurser"|"boomer_nurser_mission"|"boomer_tier_2"|"bridge_hologram_map_01"|"bridge_ship_video_system"|"briefcase"|"bug_assassinate_chargers"|"bug_assassinate_commander"|"bug_assassinate_striders"|"bug_central_core"|"bug_central_core_hole"|"bug_darkfluid_backpack"|"bug_destroy_stalker_lair"|"bug_destroy_stratagem_blocker"|"bug_egg_super_sample_01"|"bug_enemy_sample_01"|"bug_fog_generator"|"bug_fog_generator_large"|"bug_fog_generator_tcs"|"bug_foggenerator"|"bug_intel_sample_01"|"bug_kill"|"bug_larva_container_backpack"|"bug_purge_hatchery"|"bug_retrieve_larva"|"bug_sample_01"|"bug_shrieker_nest"|"bug_spawner_base"|"bug_spawner_bile_titan"|"bug_spawner_boomer"|"bug_spawner_city_mega_shrieker"|"bug_spawner_hiveguard"|"bug_spawner_hunter"|"bug_spawner_prowler"|"bug_spawner_scavenger"|"bug_spawner_scavenger_captive"|"bug_spawner_shrieker"|"bug_spawner_spitter"|"bug_spawner_stalker"|"bug_spawner_warrior"|"bug_spawner_warrior_captive"|"bug_spawner_warrior_ceiling"|"bug_spawner_warrior_tutorial"|"bug_stratagem_blocker"|"bug_tcs_01"|"bug_tcs_01_terminal"|"bug_tcs_01_terminal_screen"|"bug_tcs_01_terminal_screen_a"|"bug_tcs_01_terminal_screen_b"|"bug_tcs_01_terminal_screen_c"|"bug_tcs_02"|"bug_tcs_02_destroy_eggs"|"bug_tcs_02_terminal"|"bug_tcs_02_terminal_screen"|"bug_tcs_spawner"|"bunker_activation_codes"|"bunker_cache"|"bureau_terminal"|"c4_charge"|"cache_button"|"cache_button_left"|"cache_interactable_box"|"canister"|"cape_dispenser"|"capital_defense_building"|"capital_defense_pillar"|"capital_defense_tower"|"cargo_car"|"cargo_container"|"carry_battery_core"|"carry_data"|"carry_data_stratagem"|"carry_flag"|"cctv_camera"|"central_core_drill_01"|"central_core_hole_plug"|"central_core_hole_plug_nav"|"cha_admiral_m"|"cha_battlefront_seaf"|"cha_battlefront_seaf_2"|"cha_battlefront_seaf_3"|"cha_battlefront_seaf_4"|"cha_battlefront_seaf_leader"|"cha_battlefront_seaf_leader_2"|"cha_battlefront_seaf_medic"|"cha_battlefront_seaf_medic_2"|"cha_battlefront_seaf_medic_3"|"cha_battlefront_seaf_specialist"|"cha_battlefront_seaf_specialist_2"|"cha_deckofficer_f_01"|"cha_deckofficer_m_01"|"cha_deckofficer_spawntask_f_01"|"cha_eaglepilot_f"|"cha_firsup_f_01"|"cha_firsup_m_01"|"cha_helm_f_01"|"cha_helm_m_01"|"cha_logistic_officer_female"|"cha_mec_f_01"|"cha_mec_f_02"|"cha_mec_f_03"|"cha_mec_m_01"|"cha_mec_m_02"|"cha_mec_m_03"|"cha_per_f_01"|"cha_per_f_02"|"cha_per_f_03"|"cha_per_f_04"|"cha_science_officer_female"|"cha_scienceadvisor_f"|"cha_seaf_city_civ"|"cha_seaf_civ"|"cha_servicetech_f_01"|"cha_soldier.cha_soldier_jumppack"|"cha_tutorial_bot_store"|"charger"|"charger_acid"|"charger_bull"|"charger_burrower"|"charger_tier2"|"chemicals_backpack"|"city_cannon_lock"|"city_car"|"civilian_spawner"|"collect_data_drop_off"|"colony_sign_01"|"colony_spawner_base"|"combat_walker"|"combat_walker_anti_tank_cannon"|"combat_walker_autocannon_left"|"combat_walker_autocannon_right"|"combat_walker_breacher"|"combat_walker_flak_cannon"|"combat_walker_flamethrower"|"combat_walker_lumberer"|"combat_walker_missle_launcher"|"combat_walker_obsidian"|"combat_walker_shield"|"combat_walker_turret"|"command_bunker"|"command_bunker_side"|"command_bunker_top"|"communications_relay"|"computer_tablet"|"conscript_backpack_lmg"|"conscript_base"|"conscript_commander"|"conscript_commander_jump"|"conscript_elite"|"conscript_flamer"|"conscript_ivory_legion"|"conscript_ivory_legion_tier_2"|"conscript_jump"|"conscript_jump_melee"|"conscript_jumppack"|"conscript_melee"|"conscript_scout"|"conscript_scout_walker_rider"|"conscript_shotgun"|"conscript_tier_1"|"conscript_tier_2"|"conscript_tier_3"|"content/fac_helldivers/cha_avatar/helldiver_dummy"|"content/fac_helldivers/hellpod/landingzone_beacon/sos_beacon"|"content/fac_helldivers/hellpod/sos_beacon/sos_beacon"|"content/fac_super_earth/tutorial/helldiver_dummy"|"content/objectives/obj_cyborgs/cyborg_orbital_cannon/cy_orbital_cannon"|"content/objectives/obj_cyborgs/entities/cy_orbital_cannon/cy_orbital_cannon"|"control_tower_delivery_drop_off"|"corrupted"|"corrupted_v2"|"corrupted_v3"|"cryo_chamber"|"cryo_pod"|"cryo_rocket"|"crystal_sample_01"|"crystalized_e710_sample_01"|"cy_aa_emplacement"|"cy_assassinate_devastator"|"cy_assassinate_fabricator"|"cy_assassinate_lt"|"cy_assembly_site_speakers"|"cy_assembly_site_terminal"|"cy_assembly_site_terminal_small"|"cy_carry_data"|"cy_chemicals"|"cy_control_tower"|"cy_convoy_end_marker"|"cy_coordinates"|"cy_core_production_button"|"cy_destroy_airbase"|"cy_destroy_ammo"|"cy_destroy_command_bunker"|"cy_destroy_communication"|"cy_destroy_control_tower"|"cy_destroy_detector_tower"|"cy_destroy_factories"|"cy_destroy_fuel"|"cy_destroy_gunship"|"cy_destroy_stratagem_blocker"|"cy_detector_tower"|"cy_energy_core_station"|"cy_extract_organic_soup_terminal"|"cy_factory_world_access_point_icon"|"cy_factory_world_gate_icon"|"cy_filling_station"|"cy_filling_station_barrel"|"cy_kill"|"cy_mortar_emplacement"|"cy_neutralize_cannon"|"cy_obj_asset_cooling_pipe"|"cy_obj_asset_cooling_pipe_assembly_site"|"cy_obj_asset_cooling_pipe_large"|"cy_obj_asset_cooling_pipe_medium"|"cy_obj_asset_cooling_valve"|"cy_obj_asset_hack_turrets_dropoff"|"cy_obj_asset_hack_turrets_terminal"|"cy_obj_asset_infiltration_package"|"cy_objective_destroy_factory_terminal"|"cy_orbital_cannon_ammo_carry"|"cy_orbital_cannon_ammo_dispenser"|"cy_refinery_speakers"|"cy_samsite"|"cy_shutdown_grinder"|"cy_statue"|"cy_stratagem_blocker"|"cyborg_alarmlight"|"cyborg_carry_data"|"cyborg_command_bunker_spawner"|"cyborg_cooling_structure"|"cyborg_elite"|"cyborg_elite_female"|"cyborg_elite_rusher"|"cyborg_elite_rusher_female"|"cyborg_gunship_spawner"|"cyborg_turret_small_autocannon"|"damage_test"|"debug_store_screen"|"defend_horde_rocket"|"defend_horde_silo"|"defend_horde_terminal"|"delivery_drop_off_upload"|"deploy_flag_area_marker"|"deploy_flag_area_marker_bot_base"|"deploy_flag_area_marker_bug_hive"|"deploy_flag_area_marker_tut_intro"|"directional_energy_shield"|"directional_energy_shield_backpack"|"door_01"|"door_light"|"dragon"|"drilling_charge"|"drone_assault_rifle"|"drone_base"|"drone_camera"|"drone_flamethrower"|"drone_gas_projector"|"drone_laser_rifle"|"drone_mg"|"drone_stun"|"dropship"|"eagle_airstrike"|"eagle_airstrike_smoke"|"eagle_base"|"eagle_bomb"|"eagle_gunpods"|"eagle_missile"|"eagle_napalm"|"eagle_rocket"|"embryo_01"|"embryo_01_cluster_x6"|"embryo_01_cluster_x6_destroyed"|"emplacement_hmg"|"emplacement_mg"|"encounter_ship_landed_door_shield"|"energy_shield"|"energy_shield_backpack"|"energy_shield_grenade"|"equipment.backpacks.soldier_jumppack.soldier_jumppack"|"escape_pod"|"exomech_melee"|"exomech_ranged"|"expandable_cover"|"expandable_cover_grenade_launcher"|"exploration_reward_generic"|"explosive_gas_chimney"|"extract_civilians_rescue_point"|"flag_hanging_01"|"flag_hanging_02"|"flag_wall_01"|"flamethrower_turret"|"fleet_ship_01"|"frv"|"frv_flamer"|"frv_superearth"|"frv_supply"|"frv_supply_rack"|"galactic_campaign_interact_point"|"game_mode"|"gate_01"|"gate_02"|"gate_light_01"|"gatling_turret"|"gen_armory_button"|"gen_button"|"gen_collect_data"|"gen_colony_relay"|"gen_delivery_drop_off"|"gen_delivery_location"|"gen_destroy_research_station"|"gen_evacuate_button"|"gen_evacuate_civilians"|"gen_extract_civilians"|"gen_find_escape_pod"|"gen_footage_volume"|"gen_horde_collect"|"gen_icbm"|"gen_investigate_research_station"|"gen_military_uplink"|"gen_oil_pickup"|"gen_oilpump"|"gen_prospecting_drill"|"gen_radar_station"|"gen_radar_terminal"|"gen_raise_flag"|"gen_refueling_station"|"gen_restore_power"|"gen_retrieve_codes"|"gen_seaf_gun"|"gen_seismic_probe"|"gen_truth_transmitter"|"gen_upload_data"|"generator"|"generic_human"|"generic_intel"|"generic_intel_bunker"|"grinder"|"gunship"|"habs_barrel_fuel"|"habs_forklift_01"|"habs_lamp_wall_01"|"hangar_basic_customisation"|"hangar_diagonal_elevator_01"|"harvester"|"hazard_vent_01"|"headstone_01"|"health_pack_rack"|"hellbomb"|"helldiver_dummy_hatch_adjusted"|"helldiver_dummy_rts"|"helldiver_dummy_shouting"|"hellpod_delivery_system"|"hellpod_delivery_system_hellpod"|"hellpod_flag"|"hellpod_launcher"|"hellpod_warning_light"|"hexagon_shield"|"hive_lord"|"hunter_base"|"hunter_gloom"|"hunter_tier_1"|"hunter_tier_2"|"hunter_tier_3"|"icbm_lock"|"icbm_rocket"|"icbm_silo"|"icbm_silo_tutorial"|"icbm_silo_wide"|"icbm_terminal"|"idle_sam_site"|"il_artifact_01"|"il_black_box"|"il_cannon_crank_vertical"|"il_city_cannon"|"il_city_cannon_terminal"|"il_collect_black_box_terminal"|"il_crashed_harvester"|"il_delivery_dropoff_blackbox"|"il_flesh_labs"|"il_investigate_crashed_harvester"|"il_module_shield_small"|"il_monolith"|"il_mothership_shield"|"il_mothership_tentacles"|"il_mothership_tentacles_vista"|"il_mothership_vista"|"il_obj_asset_corrupted_growth"|"il_obj_asset_incubation_tank"|"il_obj_asset_orbital_cannon"|"il_obj_asset_water_plane"|"il_obj_asset_water_temple_well"|"il_obj_asset_water_temple_well_lid"|"il_obj_asset_waterfall"|"il_obj_asset_weather_device_core"|"il_obj_asset_weather_device_generic_shield"|"il_prevent_invasion_foothold_landing_zone"|"il_raise_flag"|"il_retrieve_artifact"|"il_sarcophagus"|"il_scrambler_battery"|"il_spawner_guy_staff"|"il_spawner_portal"|"il_spawner_ship"|"il_turret"|"il_upload_data"|"il_weather_device_battery"|"il_weather_device_tower"|"illuminate_attack_ship"|"illuminate_dropship"|"illuminate_enemy_sample_01"|"illuminate_guy_staff"|"illuminate_guy_staff_fake"|"illuminate_guy_staff_tier_2"|"illuminate_invasionship"|"illuminate_turret_wm_cannon"|"illuminate_turret_wm_cannon_head_l"|"illuminate_turret_wm_cannon_head_r"|"illuminate_war_machine"|"illuminate_warmachine_bombball"|"impaler"|"impaler_tentacle"|"infiltration_hellpod"|"investigate_point_upload_data_common"|"jet_champion"|"kit_outerwall_gate"|"landed_dropship"|"landing_zone"|"landing_zone_no_lights"|"laser_cannon_turret"|"lav_autocannon"|"legendarium_sample_01"|"liberty_day_poster_01"|"lieutenant_artillery"|"lieutenant_assault"|"lieutenant_base"|"lieutenant_flag"|"lieutenant_flag_ivory_legion"|"lieutenant_ivory_legion"|"lieutenant_ivory_legion_assault"|"lieutenant_jetpack"|"lieutenant_suppressor"|"luring_mine"|"manned_turret"|"manned_turret_discoverable"|"marker_enemy_target"|"meatglue"|"mechanical_bughole"|"mechanical_bughole_scavenger"|"media_drone"|"military_uplink_drop_off"|"mine_launcher"|"mine_launcher_gas"|"mine_launcher_incendiary"|"mine_shark"|"mineral_sample_01"|"mini_missile_silo"|"mortar_turret"|"mortar_turret_staticfield"|"mothership"|"non_objective_oil_pump_animated"|"obj_asset_hijack_tech_hub_nexus_machine"|"objective"|"objective_collect_data_terminal"|"objective_colony_relay"|"objective_colony_relay_alarm_light"|"objective_colony_relay_terminal"|"objective_colony_relay_tower_light"|"objective_colony_relay_tower_terminal"|"objective_control_tower_terminal"|"objective_destroy_communication_terminal"|"objective_evacuate_civilians_main_terminal"|"objective_extract_oil_hive_world_terminal"|"objective_extract_oil_hive_world_valve"|"objective_filling_station_terminal"|"objective_grinder_terminal"|"objective_hive_world_oil_pump_valve"|"objective_military_uplink_terminal"|"objective_oil_pickup_terminal"|"objective_oil_pump_terminal"|"objective_oil_pump_valve"|"objective_orbital_cannon_terminal"|"objective_radar_station_terminal"|"objective_refueling_terminal"|"objective_stratagem_blocker_terminal"|"objective_tut_intro_mission_terminal"|"objective_unclog_pipe_hive_world_valve"|"objective_upload_data_main_terminal"|"observer"|"oil_field_plane"|"oil_pickup_hose_connection"|"oil_pickup_tank"|"oil_pump"|"oil_pump_active"|"oil_rig"|"oil_tank"|"oilrig_tank"|"organic_soup_hose_connection"|"pa_speaker"|"pa_speaker_npc"|"plant_sample_01"|"platinum_bar"|"poi_text_battlefield_medium_01"|"poi_text_botremains_01_01"|"poi_text_bug_research_01_01"|"poi_text_colony_sign_01"|"poi_text_crashedbomb_01_01"|"poi_text_crashedbomb_01_02"|"poi_text_cy_explosive_battery_01"|"poi_text_cy_robot_arm_01"|"poi_text_driving_accident_01_01"|"poi_text_grave_01_01"|"poi_text_grave_01_02"|"poi_text_habs_plantationbox_6m_01"|"poi_text_helldiver_statue_01"|"poi_text_hidden_storage_01"|"poi_text_hidden_storage_01_02"|"poi_text_mine_01"|"poi_text_moor_crashed_ship_01"|"poi_text_moor_crashed_ship_01_02"|"poi_text_moor_crashed_ship_01_03"|"poi_text_search_light_ground"|"poi_text_smugglers_01"|"poi_text_smugglers_02"|"poi_text_tablet_advertandpropaganda_01"|"poi_text_tablet_family_01"|"poi_text_tablet_mail_01"|"poi_text_tablet_overseer_01"|"poi_text_tablet_permit_01"|"poi_text_tablet_seaf_retreat_01"|"power_generated_gate"|"power_generated_gatling_turret"|"power_generator"|"power_generator_button"|"power_station"|"power_station_prime"|"radar_wagon"|"radar_wagon_button"|"refinery"|"refinery_alarmlight"|"refinery_terminal"|"relay_alignment_switch"|"research_artifact_sample_01"|"research_bio_sample_01"|"research_sample_01"|"research_station_destroy"|"research_station_upload"|"research_tech_sample_01"|"respawn_point_hellpod"|"restore_power_terminal"|"retracting_pole"|"robotics_module_hellpods"|"rocket_turret"|"rocket_walkway"|"sam_site"|"sam_site_foundation"|"sam_site_launcher_terminal"|"scavenger_base"|"scavenger_gloom"|"scavenger_predator"|"scavenger_spitter"|"scavenger_tier_1"|"scavenger_tier_1_captive"|"scavenger_tier_2"|"se_destroyer_supportcannon_missile_launcher"|"se_intel_sample_01"|"se_pa_speaker_01"|"seaf_drop_off"|"seaf_gun"|"seaf_gun_ammo"|"seaf_gun_terminal"|"seaf_shell"|"shield_forcefield_outcast"|"ship_destroyer"|"ship_hub_arcade_terminal"|"ship_hub_character_customization"|"ship_hub_stratagem_armory"|"shoulder_mounted_camera"|"shrieker"|"shrieker_gloom"|"shuttle"|"shuttle_dropship"|"shuttle_escape_entrance"|"shuttle_escape_hatch"|"shuttle_gunship_turret_hmg"|"shuttle_transport"|"siege_engine"|"sign_welcome_cape"|"smuggler_cache"|"soldier"|"soldier_iron_fleet"|"soldier_ivory_legion"|"soldier_mg"|"soldier_mg_assassinate"|"soldier_mg_ivory_legion"|"soldier_rpg"|"soldier_rpg_assassinate"|"soldier_rpg_ivory_legion"|"soldier_shield"|"soldier_shield_ivory_legion"|"soldier_shotgun_ivory_legion"|"spawner"|"spawner_factory_conscript_airborne"|"spawner_factory_conscript_assault"|"spawner_factory_conscript_base"|"spawner_factory_conscript_phalanx"|"spawner_factory_conscript_standard"|"spawner_jammer"|"spore_lung"|"spring_rocker"|"sprint_room_terminal"|"stalker"|"strider"|"strider_gloom"|"super_earth_cache"|"super_earth_cache_lid"|"super_uranium_sample_01"|"tank"|"tank_autocannons"|"tank_base"|"tank_heavycannon"|"tank_hull_mg"|"tank_rocketlauncher"|"tank_storm"|"tank_turret_autocannons"|"tank_turret_base"|"tank_turret_heavycannon"|"tank_turret_rocketlauncher"|"target_turret"|"tcs_02_button"|"tcs_button"|"tcs_main_tower"|"tcs_main_tower_02"|"tcs_support_damageable"|"tcs_support_damageable_02"|"tcs_support_pillar"|"tcs_support_pillar_01_static"|"tech_sample_01"|"teleporter"|"tesla_turret"|"trigger_box"|"tripod"|"tripod_tier_2"|"truth_transmitter_tower_screen_03"|"truth_transmitter_tower_speakers"|"truth_transmitter_tower_terminal"|"turret_01"|"turret_autocannons"|"turret_base"|"turret_command_bunker_hmg"|"turret_heavycannon"|"turret_machinegun_gpmg"|"turret_mortar"|"turret_tactical_obj"|"tut_intro_mission"|"tut_intro_mission_end_sequence"|"tut_intro_mission_segment_bug_pit"|"tut_intro_mission_segment_fake_objective"|"tut_intro_mission_segment_loadout_room"|"tut_intro_mission_segment_obstacle_course"|"tut_intro_mission_segment_resupply_area"|"tut_intro_mission_segment_sprint_corridor"|"tut_intro_mission_segment_stim"|"tut_intro_mission_segment_template"|"tut_intro_mission_segment_zoo_1"|"tut_intro_mission_segment_zoo_2"|"tut_intro_mission_segment_zoo_3"|"tut_intro_mission_vo"|"tutorial_trigger_area"|"tutorial_turret"|"unnamed_entity_0002"|"unnamed_entity_0003"|"unnamed_entity_0004"|"unnamed_entity_0006"|"unnamed_entity_0007"|"unnamed_entity_0010"|"unnamed_entity_0012"|"unnamed_entity_0019"|"unnamed_entity_0026"|"unnamed_entity_0027"|"unnamed_entity_0029"|"unnamed_entity_0031"|"unnamed_entity_0034"|"unnamed_entity_0035"|"unnamed_entity_0040"|"unnamed_entity_0043"|"unnamed_entity_0045"|"unnamed_entity_0058"|"unnamed_entity_0060"|"unnamed_entity_0061"|"unnamed_entity_0063"|"unnamed_entity_0065"|"unnamed_entity_0068"|"unnamed_entity_0069"|"unnamed_entity_0070"|"unnamed_entity_0074"|"unnamed_entity_0075"|"unnamed_entity_0081"|"unnamed_entity_0082"|"unnamed_entity_0085"|"unnamed_entity_0095"|"unnamed_entity_0096"|"unnamed_entity_0101"|"unnamed_entity_0105"|"unnamed_entity_0108"|"unnamed_entity_0110"|"unnamed_entity_0111"|"unnamed_entity_0112"|"unnamed_entity_0114"|"unnamed_entity_0116"|"unnamed_entity_0119"|"unnamed_entity_0121"|"unnamed_entity_0124"|"unnamed_entity_0126"|"unnamed_entity_0127"|"unnamed_entity_0133"|"unnamed_entity_0134"|"unnamed_entity_0135"|"unnamed_entity_0139"|"unnamed_entity_0141"|"unnamed_entity_0148"|"unnamed_entity_0149"|"unnamed_entity_0150"|"unnamed_entity_0159"|"unnamed_entity_0162"|"unnamed_entity_0165"|"unnamed_entity_0169"|"unnamed_entity_0170"|"unnamed_entity_0173"|"unnamed_entity_0182"|"unnamed_entity_0183"|"unnamed_entity_0185"|"unnamed_entity_0186"|"unnamed_entity_0187"|"unnamed_entity_0191"|"unnamed_entity_0192"|"unnamed_entity_0193"|"unnamed_entity_0198"|"unnamed_entity_0201"|"unnamed_entity_0202"|"unnamed_entity_0204"|"unnamed_entity_0207"|"unnamed_entity_0210"|"unnamed_entity_0214"|"unnamed_entity_0216"|"unnamed_entity_0217"|"unnamed_entity_0220"|"unnamed_entity_0222"|"unnamed_entity_0230"|"unnamed_entity_0231"|"unnamed_entity_0234"|"unnamed_entity_0235"|"unnamed_entity_0236"|"unnamed_entity_0237"|"unnamed_entity_0238"|"unnamed_entity_0242"|"unnamed_entity_0244"|"unnamed_entity_0245"|"unnamed_entity_0246"|"unnamed_entity_0247"|"unnamed_entity_0248"|"unnamed_entity_0249"|"unnamed_entity_0251"|"unnamed_entity_0255"|"unnamed_entity_0256"|"unnamed_entity_0259"|"unnamed_entity_0263"|"unnamed_entity_0266"|"unnamed_entity_0267"|"unnamed_entity_0268"|"unnamed_entity_0269"|"unnamed_entity_0272"|"unnamed_entity_0274"|"unnamed_entity_0279"|"unnamed_entity_0280"|"unnamed_entity_0281"|"unnamed_entity_0289"|"unnamed_entity_0293"|"unnamed_entity_0294"|"unnamed_entity_0295"|"unnamed_entity_0296"|"unnamed_entity_0298"|"unnamed_entity_0299"|"unnamed_entity_0300"|"unnamed_entity_0303"|"unnamed_entity_0313"|"unnamed_entity_0314"|"unnamed_entity_0318"|"unnamed_entity_0322"|"unnamed_entity_0325"|"unnamed_entity_0329"|"unnamed_entity_0333"|"unnamed_entity_0338"|"unnamed_entity_0340"|"unnamed_entity_0341"|"unnamed_entity_0343"|"unnamed_entity_0346"|"unnamed_entity_0347"|"unnamed_entity_0350"|"unnamed_entity_0354"|"unnamed_entity_0355"|"unnamed_entity_0360"|"unnamed_entity_0362"|"unnamed_entity_0363"|"unnamed_entity_0365"|"unnamed_entity_0367"|"unnamed_entity_0371"|"unnamed_entity_0376"|"unnamed_entity_0381"|"unnamed_entity_0387"|"unnamed_entity_0388"|"unnamed_entity_0389"|"unnamed_entity_0392"|"unnamed_entity_0394"|"unnamed_entity_0396"|"unnamed_entity_0399"|"unnamed_entity_0404"|"unnamed_entity_0407"|"unnamed_entity_0409"|"unnamed_entity_0414"|"unnamed_entity_0416"|"unnamed_entity_0418"|"unnamed_entity_0420"|"unnamed_entity_0426"|"unnamed_entity_0432"|"unnamed_entity_0436"|"unnamed_entity_0441"|"unnamed_entity_0456"|"unnamed_entity_0457"|"unnamed_entity_0458"|"unnamed_entity_0459"|"unnamed_entity_0471"|"unnamed_entity_0478"|"unnamed_entity_0480"|"unnamed_entity_0486"|"unnamed_entity_0490"|"unnamed_entity_0492"|"unnamed_entity_0494"|"unnamed_entity_0495"|"unnamed_entity_0496"|"unnamed_entity_0501"|"unnamed_entity_0502"|"unnamed_entity_0504"|"unnamed_entity_0505"|"unnamed_entity_0506"|"unnamed_entity_0514"|"unnamed_entity_0517"|"unnamed_entity_0523"|"unnamed_entity_0527"|"unnamed_entity_0530"|"unnamed_entity_0532"|"unnamed_entity_0533"|"unnamed_entity_0535"|"unnamed_entity_0537"|"unnamed_entity_0539"|"unnamed_entity_0546"|"unnamed_entity_0549"|"unnamed_entity_0552"|"unnamed_entity_0553"|"unnamed_entity_0556"|"unnamed_entity_0557"|"unnamed_entity_0560"|"unnamed_entity_0565"|"unnamed_entity_0566"|"unnamed_entity_0571"|"unnamed_entity_0575"|"unnamed_entity_0576"|"unnamed_entity_0577"|"unnamed_entity_0581"|"unnamed_entity_0587"|"unnamed_entity_0589"|"unnamed_entity_0590"|"unnamed_entity_0594"|"unnamed_entity_0596"|"unnamed_entity_0597"|"unnamed_entity_0600"|"unnamed_entity_0602"|"unnamed_entity_0603"|"unnamed_entity_0606"|"unnamed_entity_0607"|"unnamed_entity_0608"|"unnamed_entity_0609"|"unnamed_entity_0611"|"unnamed_entity_0613"|"unnamed_entity_0615"|"unnamed_entity_0616"|"unnamed_entity_0617"|"unnamed_entity_0618"|"unnamed_entity_0628"|"unnamed_entity_0631"|"unnamed_entity_0634"|"unnamed_entity_0640"|"unnamed_entity_0643"|"unnamed_entity_0644"|"unnamed_entity_0648"|"unnamed_entity_0651"|"unnamed_entity_0653"|"unnamed_entity_0654"|"unnamed_entity_0658"|"unnamed_entity_0661"|"unnamed_entity_0663"|"unnamed_entity_0664"|"unnamed_entity_0665"|"unnamed_entity_0666"|"unnamed_entity_0669"|"unnamed_entity_0673"|"unnamed_entity_0680"|"unnamed_entity_0684"|"unnamed_entity_0686"|"unnamed_entity_0688"|"unnamed_entity_0689"|"unnamed_entity_0693"|"unnamed_entity_0696"|"unnamed_entity_0698"|"unnamed_entity_0703"|"unnamed_entity_0704"|"unnamed_entity_0709"|"unnamed_entity_0710"|"unnamed_entity_0713"|"unnamed_entity_0718"|"unnamed_entity_0722"|"unnamed_entity_0738"|"unnamed_entity_0740"|"unnamed_entity_0743"|"unnamed_entity_0746"|"unnamed_entity_0747"|"unnamed_entity_0748"|"unnamed_entity_0751"|"unnamed_entity_0756"|"unnamed_entity_0757"|"unnamed_entity_0760"|"unnamed_entity_0761"|"unnamed_entity_0764"|"unnamed_entity_0773"|"unnamed_entity_0777"|"unnamed_entity_0781"|"unnamed_entity_0782"|"unnamed_entity_0790"|"unnamed_entity_0796"|"unnamed_entity_0797"|"unnamed_entity_0805"|"unnamed_entity_0806"|"unnamed_entity_0807"|"unnamed_entity_0808"|"unnamed_entity_0809"|"unnamed_entity_0811"|"unnamed_entity_0812"|"unnamed_entity_0818"|"unnamed_entity_0823"|"unnamed_entity_0825"|"unnamed_entity_0827"|"unnamed_entity_0828"|"unnamed_entity_0831"|"unnamed_entity_0832"|"unnamed_entity_0836"|"unnamed_entity_0837"|"unnamed_entity_0840"|"unnamed_entity_0853"|"unnamed_entity_0855"|"unnamed_entity_0858"|"unnamed_entity_0862"|"unnamed_entity_0868"|"unnamed_entity_0869"|"unnamed_entity_0881"|"unnamed_entity_0887"|"unnamed_entity_0897"|"unnamed_entity_0901"|"unnamed_entity_0913"|"unnamed_entity_0914"|"unnamed_entity_0917"|"unnamed_entity_0918"|"unnamed_entity_0920"|"unnamed_entity_0921"|"unnamed_entity_0930"|"unnamed_entity_0931"|"unnamed_entity_0934"|"unnamed_entity_0942"|"unnamed_entity_0943"|"unnamed_entity_0946"|"unnamed_entity_0948"|"unnamed_entity_0949"|"unnamed_entity_0953"|"unnamed_entity_0954"|"unnamed_entity_0956"|"unnamed_entity_0957"|"unnamed_entity_0958"|"unnamed_entity_0959"|"unnamed_entity_0961"|"unnamed_entity_0962"|"unnamed_entity_0963"|"unnamed_entity_0965"|"unnamed_entity_0969"|"unnamed_entity_0974"|"unnamed_entity_0981"|"unnamed_entity_0982"|"unnamed_entity_0989"|"unnamed_entity_0990"|"unnamed_entity_0991"|"unnamed_entity_0992"|"unnamed_entity_0993"|"unnamed_entity_1002"|"unnamed_entity_1006"|"unnamed_entity_1008"|"unnamed_entity_1013"|"unnamed_entity_1016"|"unnamed_entity_1023"|"unnamed_entity_1024"|"unnamed_entity_1025"|"unnamed_entity_1030"|"unnamed_entity_1031"|"unnamed_entity_1033"|"unnamed_entity_1046"|"unnamed_entity_1047"|"unnamed_entity_1048"|"unnamed_entity_1053"|"unnamed_entity_1059"|"unnamed_entity_1062"|"unnamed_entity_1063"|"unnamed_entity_1065"|"unnamed_entity_1067"|"unnamed_entity_1072"|"unnamed_entity_1075"|"unnamed_entity_1077"|"unnamed_entity_1078"|"unnamed_entity_1081"|"unnamed_entity_1083"|"unnamed_entity_1084"|"unnamed_entity_1087"|"unnamed_entity_1090"|"unnamed_entity_1092"|"unnamed_entity_1093"|"unnamed_entity_1094"|"unnamed_entity_1095"|"unnamed_entity_1097"|"unnamed_entity_1099"|"unnamed_entity_1100"|"unnamed_entity_1107"|"unnamed_entity_1110"|"unnamed_entity_1116"|"unnamed_entity_1119"|"unnamed_entity_1121"|"unnamed_entity_1123"|"unnamed_entity_1124"|"unnamed_entity_1127"|"unnamed_entity_1129"|"unnamed_entity_1131"|"unnamed_entity_1132"|"unnamed_entity_1133"|"unnamed_entity_1138"|"unnamed_entity_1139"|"unnamed_entity_1143"|"unnamed_entity_1145"|"unnamed_entity_1146"|"unnamed_entity_1152"|"unnamed_entity_1156"|"unnamed_entity_1159"|"unnamed_entity_1161"|"unnamed_entity_1166"|"unnamed_entity_1167"|"unnamed_entity_1169"|"unnamed_entity_1174"|"upload_data_interact_common"|"utilities_speakers_01"|"vending_machine_democracy_01"|"vending_machine_freedom_01"|"walker_scout"|"warhead_01"|"warning_lamp_01"|"warrior_acid"|"warrior_base"|"warrior_big"|"warrior_big_tier2"|"warrior_burrower"|"warrior_gloom"|"warrior_plus"|"warrior_tier_1"|"warrior_tier_1_captive"|"warrior_tier_2"|"warrior_tier_2_guard"|"weapon_dispenser"|"weapon_rack"|"weapon_rack_air_burst_rocket_launcher"|"weapon_rack_ammo_backpack"|"weapon_rack_arc_thrower"|"weapon_rack_automatic_cannon"|"weapon_rack_ballistic_shield"|"weapon_rack_ballistic_shield_small"|"weapon_rack_belt_fed_grenade_launcher"|"weapon_rack_c4_charge_backpack"|"weapon_rack_carry_data"|"weapon_rack_chem_gun"|"weapon_rack_cover"|"weapon_rack_cover_small_cube"|"weapon_rack_darkfluid_backpack"|"weapon_rack_directional_energy_shield"|"weapon_rack_displacement_backpack"|"weapon_rack_drone_assault_rifle"|"weapon_rack_drone_flamethrower"|"weapon_rack_drone_gas_projector"|"weapon_rack_drone_laser_rifle"|"weapon_rack_drone_mg"|"weapon_rack_drone_stun"|"weapon_rack_energy_shield"|"weapon_rack_energy_weapon_shark"|"weapon_rack_expendable_machinegun"|"weapon_rack_expendable_massive_rocket_launcher"|"weapon_rack_expendable_napalm_launcher"|"weapon_rack_faf_missile_launcher"|"weapon_rack_faf_missile_launcher_helghast"|"weapon_rack_flamethrower"|"weapon_rack_grenade_launcher"|"weapon_rack_grenade_launcher_tactical"|"weapon_rack_harpoon_gun"|"weapon_rack_heavy_flamethrower"|"weapon_rack_heavy_mg"|"weapon_rack_hellbomb_backpack"|"weapon_rack_hoverpack_backpack"|"weapon_rack_jammed_pinata"|"weapon_rack_jammed_pinata_empty"|"weapon_rack_jammed_pinata_tutorial"|"weapon_rack_jumppack_backpack"|"weapon_rack_laser_cannon"|"weapon_rack_laser_guided_missile_launcher"|"weapon_rack_laser_pulse_cannon"|"weapon_rack_lat_oneshot"|"weapon_rack_lightmachinegun"|"weapon_rack_machinegun"|"weapon_rack_medic_backpack"|"weapon_rack_melee_chainsaw_greatsword"|"weapon_rack_melee_flag"|"weapon_rack_melee_sledge_hammer"|"weapon_rack_mini_missile_silo"|"weapon_rack_minigun"|"weapon_rack_plasma_blaster"|"weapon_rack_railgun"|"weapon_rack_recoilless_rifle"|"weapon_rack_remote_explosives"|"weapon_rack_shoulder_mounted_camera"|"weapon_rack_sniper_rifle"|"weapon_rack_spire_sterilizer"|"weapon_rack_support_backpack"
+---@alias HD2StructureName "Gazer"|"activation_codes_cache_button"|"ammunition_stockpile"|"armory_generator"|"artifact_sample_01"|"assembly_site_clamp"|"assembly_site_control_room_light_01"|"assembly_site_control_room_light_02"|"assembly_site_crank"|"assembly_site_steam_trigger_area"|"auto_night_light"|"automaton_enemy_sample_01"|"automaton_intel_sample_01"|"automaton_sample_01"|"automaton_super_sample_01"|"base_light_01_head"|"bio_sample_01"|"black_box_01"|"blacksaffron_sample_01"|"blocking_chunk"|"blue_corp_tool_rack_01"|"bridge_hologram_map_01"|"bridge_ship_video_system"|"briefcase"|"bug_assassinate_chargers"|"bug_assassinate_commander"|"bug_assassinate_striders"|"bug_central_core"|"bug_central_core_hole"|"bug_darkfluid_backpack"|"bug_destroy_stalker_lair"|"bug_destroy_stratagem_blocker"|"bug_egg_super_sample_01"|"bug_enemy_sample_01"|"bug_fog_generator"|"bug_fog_generator_large"|"bug_fog_generator_tcs"|"bug_foggenerator"|"bug_intel_sample_01"|"bug_kill"|"bug_larva_container_backpack"|"bug_purge_hatchery"|"bug_retrieve_larva"|"bug_sample_01"|"bug_shrieker_nest"|"bug_spawner_base"|"bug_spawner_bile_titan"|"bug_spawner_boomer"|"bug_spawner_city_mega_shrieker"|"bug_spawner_hiveguard"|"bug_spawner_hunter"|"bug_spawner_prowler"|"bug_spawner_scavenger"|"bug_spawner_scavenger_captive"|"bug_spawner_shrieker"|"bug_spawner_spitter"|"bug_spawner_stalker"|"bug_spawner_warrior"|"bug_spawner_warrior_captive"|"bug_spawner_warrior_ceiling"|"bug_spawner_warrior_tutorial"|"bug_stratagem_blocker"|"bug_tcs_01"|"bug_tcs_01_terminal"|"bug_tcs_01_terminal_screen"|"bug_tcs_01_terminal_screen_a"|"bug_tcs_01_terminal_screen_b"|"bug_tcs_01_terminal_screen_c"|"bug_tcs_02"|"bug_tcs_02_destroy_eggs"|"bug_tcs_02_terminal"|"bug_tcs_02_terminal_screen"|"bug_tcs_spawner"|"bunker_activation_codes"|"bunker_cache"|"bureau_terminal"|"cache_button"|"cache_button_left"|"cache_interactable_box"|"canister"|"cape_dispenser"|"capital_defense_building"|"capital_defense_pillar"|"capital_defense_tower"|"cargo_container"|"carry_battery_core"|"carry_data"|"carry_data_stratagem"|"carry_flag"|"cctv_camera"|"central_core_drill_01"|"central_core_hole_plug"|"central_core_hole_plug_nav"|"chemicals_backpack"|"city_cannon_lock"|"city_car"|"civilian_spawner"|"collect_data_drop_off"|"colony_sign_01"|"colony_spawner_base"|"command_bunker"|"command_bunker_side"|"command_bunker_top"|"communications_relay"|"computer_tablet"|"content/objectives/obj_cyborgs/cyborg_orbital_cannon/cy_orbital_cannon"|"content/objectives/obj_cyborgs/entities/cy_orbital_cannon/cy_orbital_cannon"|"control_tower_delivery_drop_off"|"cryo_chamber"|"cryo_pod"|"cryo_rocket"|"crystal_sample_01"|"crystalized_e710_sample_01"|"cy_aa_emplacement"|"cy_assassinate_devastator"|"cy_assassinate_fabricator"|"cy_assassinate_lt"|"cy_assembly_site_speakers"|"cy_assembly_site_terminal"|"cy_assembly_site_terminal_small"|"cy_carry_data"|"cy_chemicals"|"cy_control_tower"|"cy_convoy_end_marker"|"cy_coordinates"|"cy_core_production_button"|"cy_destroy_airbase"|"cy_destroy_ammo"|"cy_destroy_command_bunker"|"cy_destroy_communication"|"cy_destroy_control_tower"|"cy_destroy_detector_tower"|"cy_destroy_factories"|"cy_destroy_fuel"|"cy_destroy_gunship"|"cy_destroy_stratagem_blocker"|"cy_detector_tower"|"cy_energy_core_station"|"cy_extract_organic_soup_terminal"|"cy_factory_world_access_point_icon"|"cy_factory_world_gate_icon"|"cy_filling_station"|"cy_filling_station_barrel"|"cy_kill"|"cy_mortar_emplacement"|"cy_neutralize_cannon"|"cy_obj_asset_cooling_pipe"|"cy_obj_asset_cooling_pipe_assembly_site"|"cy_obj_asset_cooling_pipe_large"|"cy_obj_asset_cooling_pipe_medium"|"cy_obj_asset_cooling_valve"|"cy_obj_asset_hack_turrets_dropoff"|"cy_obj_asset_hack_turrets_terminal"|"cy_obj_asset_infiltration_package"|"cy_objective_destroy_factory_terminal"|"cy_orbital_cannon_ammo_carry"|"cy_orbital_cannon_ammo_dispenser"|"cy_refinery_speakers"|"cy_samsite"|"cy_shutdown_grinder"|"cy_statue"|"cy_stratagem_blocker"|"cyborg_alarmlight"|"cyborg_carry_data"|"cyborg_command_bunker_spawner"|"cyborg_cooling_structure"|"cyborg_gunship_spawner"|"debug_store_screen"|"defend_horde_rocket"|"defend_horde_silo"|"defend_horde_terminal"|"delivery_drop_off_upload"|"deploy_flag_area_marker"|"deploy_flag_area_marker_bot_base"|"deploy_flag_area_marker_bug_hive"|"deploy_flag_area_marker_tut_intro"|"door_01"|"door_light"|"drone_camera"|"embryo_01"|"embryo_01_cluster_x6"|"embryo_01_cluster_x6_destroyed"|"emplacement_hmg"|"emplacement_mg"|"encounter_ship_landed_door_shield"|"escape_pod"|"exploration_reward_generic"|"extract_civilians_rescue_point"|"flag_hanging_01"|"flag_hanging_02"|"flag_wall_01"|"fleet_ship_01"|"galactic_campaign_interact_point"|"gate_01"|"gate_02"|"gate_light_01"|"gen_armory_button"|"gen_button"|"gen_collect_data"|"gen_colony_relay"|"gen_delivery_drop_off"|"gen_delivery_location"|"gen_destroy_research_station"|"gen_evacuate_button"|"gen_evacuate_civilians"|"gen_extract_civilians"|"gen_find_escape_pod"|"gen_footage_volume"|"gen_horde_collect"|"gen_icbm"|"gen_investigate_research_station"|"gen_military_uplink"|"gen_oil_pickup"|"gen_oilpump"|"gen_prospecting_drill"|"gen_radar_station"|"gen_radar_terminal"|"gen_raise_flag"|"gen_refueling_station"|"gen_restore_power"|"gen_retrieve_codes"|"gen_seaf_gun"|"gen_seismic_probe"|"gen_truth_transmitter"|"gen_upload_data"|"generator"|"generic_intel"|"generic_intel_bunker"|"grinder"|"habs_barrel_fuel"|"habs_forklift_01"|"habs_lamp_wall_01"|"hangar_basic_customisation"|"hangar_diagonal_elevator_01"|"harvester"|"hazard_vent_01"|"headstone_01"|"hellpod_delivery_system"|"hellpod_delivery_system_hellpod"|"hellpod_flag"|"hellpod_launcher"|"hellpod_warning_light"|"icbm_lock"|"icbm_rocket"|"icbm_silo"|"icbm_silo_tutorial"|"icbm_silo_wide"|"icbm_terminal"|"idle_sam_site"|"il_artifact_01"|"il_black_box"|"il_cannon_crank_vertical"|"il_city_cannon"|"il_city_cannon_terminal"|"il_collect_black_box_terminal"|"il_crashed_harvester"|"il_delivery_dropoff_blackbox"|"il_flesh_labs"|"il_investigate_crashed_harvester"|"il_module_shield_small"|"il_monolith"|"il_mothership_shield"|"il_mothership_tentacles"|"il_mothership_tentacles_vista"|"il_mothership_vista"|"il_obj_asset_corrupted_growth"|"il_obj_asset_incubation_tank"|"il_obj_asset_water_plane"|"il_obj_asset_water_temple_well"|"il_obj_asset_water_temple_well_lid"|"il_obj_asset_waterfall"|"il_obj_asset_weather_device_core"|"il_obj_asset_weather_device_generic_shield"|"il_prevent_invasion_foothold_landing_zone"|"il_raise_flag"|"il_retrieve_artifact"|"il_sarcophagus"|"il_scrambler_battery"|"il_spawner_guy_staff"|"il_spawner_portal"|"il_spawner_ship"|"il_turret"|"il_upload_data"|"il_weather_device_battery"|"il_weather_device_tower"|"illuminate_enemy_sample_01"|"illuminate_invasionship"|"infiltration_hellpod"|"investigate_point_upload_data_common"|"kit_outerwall_gate"|"landed_dropship"|"landing_zone"|"landing_zone_no_lights"|"legendarium_sample_01"|"liberty_day_poster_01"|"mechanical_bughole"|"mechanical_bughole_scavenger"|"media_drone"|"military_uplink_drop_off"|"mineral_sample_01"|"mothership"|"non_objective_oil_pump_animated"|"obj_asset_hijack_tech_hub_nexus_machine"|"objective_collect_data_terminal"|"objective_colony_relay"|"objective_colony_relay_alarm_light"|"objective_colony_relay_terminal"|"objective_colony_relay_tower_light"|"objective_colony_relay_tower_terminal"|"objective_control_tower_terminal"|"objective_destroy_communication_terminal"|"objective_evacuate_civilians_main_terminal"|"objective_extract_oil_hive_world_terminal"|"objective_extract_oil_hive_world_valve"|"objective_filling_station_terminal"|"objective_grinder_terminal"|"objective_hive_world_oil_pump_valve"|"objective_military_uplink_terminal"|"objective_oil_pickup_terminal"|"objective_oil_pump_terminal"|"objective_oil_pump_valve"|"objective_orbital_cannon_terminal"|"objective_radar_station_terminal"|"objective_refueling_terminal"|"objective_stratagem_blocker_terminal"|"objective_tut_intro_mission_terminal"|"objective_unclog_pipe_hive_world_valve"|"objective_upload_data_main_terminal"|"oil_field_plane"|"oil_pickup_hose_connection"|"oil_pickup_tank"|"oil_pump"|"oil_pump_active"|"oil_tank"|"organic_soup_hose_connection"|"pa_speaker"|"pa_speaker_npc"|"plant_sample_01"|"platinum_bar"|"power_generated_gate"|"power_generator"|"power_generator_button"|"power_station"|"power_station_prime"|"radar_wagon"|"radar_wagon_button"|"refinery"|"refinery_alarmlight"|"refinery_terminal"|"relay_alignment_switch"|"research_artifact_sample_01"|"research_bio_sample_01"|"research_sample_01"|"research_station_destroy"|"research_station_upload"|"research_tech_sample_01"|"respawn_point_hellpod"|"restore_power_terminal"|"retracting_pole"|"robotics_module_hellpods"|"rocket_walkway"|"sam_site"|"sam_site_foundation"|"sam_site_launcher_terminal"|"se_destroyer_supportcannon_missile_launcher"|"se_intel_sample_01"|"se_pa_speaker_01"|"seaf_drop_off"|"seaf_gun"|"seaf_gun_ammo"|"seaf_gun_terminal"|"seaf_shell"|"ship_destroyer"|"ship_hub_arcade_terminal"|"ship_hub_character_customization"|"ship_hub_stratagem_armory"|"shoulder_mounted_camera"|"shuttle_escape_entrance"|"shuttle_escape_hatch"|"sign_welcome_cape"|"smuggler_cache"|"spawner_factory_conscript_airborne"|"spawner_factory_conscript_assault"|"spawner_factory_conscript_base"|"spawner_factory_conscript_phalanx"|"spawner_factory_conscript_standard"|"spore_lung"|"spring_rocker"|"sprint_room_terminal"|"super_earth_cache"|"super_earth_cache_lid"|"super_uranium_sample_01"|"tcs_02_button"|"tcs_button"|"tcs_main_tower"|"tcs_main_tower_02"|"tcs_support_damageable"|"tcs_support_damageable_02"|"tcs_support_pillar"|"tcs_support_pillar_01_static"|"tech_sample_01"|"teleporter"|"trigger_box"|"truth_transmitter_tower_screen_03"|"truth_transmitter_tower_speakers"|"truth_transmitter_tower_terminal"|"turret_01"|"turret_tactical_obj"|"tut_intro_mission"|"tut_intro_mission_end_sequence"|"tut_intro_mission_segment_bug_pit"|"tut_intro_mission_segment_fake_objective"|"tut_intro_mission_segment_loadout_room"|"tut_intro_mission_segment_obstacle_course"|"tut_intro_mission_segment_resupply_area"|"tut_intro_mission_segment_sprint_corridor"|"tut_intro_mission_segment_stim"|"tut_intro_mission_segment_template"|"tut_intro_mission_segment_zoo_1"|"tut_intro_mission_segment_zoo_2"|"tut_intro_mission_segment_zoo_3"|"tut_intro_mission_vo"|"tutorial_trigger_area"|"upload_data_interact_common"|"utilities_speakers_01"|"vending_machine_democracy_01"|"vending_machine_freedom_01"|"warhead_01"|"warning_lamp_01"|"weapon_dispenser"
 
 ---@class HD2EnemyZone
 ---@field resource "enemy"
@@ -1384,6 +1402,14 @@ function HD2EnemyAttack:describe() end
 function HD2Enemy:attack(identity) end
 ---@return HD2EnemyAttack[]
 function HD2Enemy:attacks() end
+
+---@class HD2EnemyDirectorTarget
+---@field resource "enemy_director"
+---@field path string
+---@field key string
+local HD2EnemyDirectorTarget = {}
+---@return table
+function HD2EnemyDirectorTarget:describe() end
 ---@alias HD2HelldiverZoneName "arm_left"|"arm_right"|"body"|"head"|"leg_left"|"leg_right"
 ---@alias HD2DamageMultiplierName "critical"|"none"|"normal"|"reduced"|"symbolic"
 
@@ -1489,11 +1515,12 @@ function HD2AttackOutputSlot:describe() end
 ---@alias HD2CatalogueExplosionName "backpack/b100_portable_hellbomb/behavior"|"backpack/lift182_warp_pack/displacement"|"enemy/assault_walker/impact"|"enemy/assault_walker/impact_2"|"enemy/assault_walker/inventory_detonation"|"enemy/big_walker_turret_cannon/impact"|"enemy/bile_titan/ability"|"enemy/bile_titan/ragdoll_crash"|"enemy/bile_titan/spray_impact"|"enemy/boomer/ability"|"enemy/boomer/impact"|"enemy/bug_larva_container_backpack/behavior"|"enemy/canister/detonation"|"enemy/conscript_backpack_lmg/detonation"|"enemy/conscript_jumppack/detonation"|"enemy/conscript_shotgun/detonation"|"enemy/crusher/ability"|"enemy/cyborg_elite/impact"|"enemy/cyborg_elite_female/inventory_detonation"|"enemy/cyborg_elite_rusher/inventory_detonation"|"enemy/dropship/behavior"|"enemy/dropship/vehicle_crash"|"enemy/dropship/vehicle_crash_2"|"enemy/gatekeeper/impact"|"enemy/gatekeeper/impact_2"|"enemy/gazer/behavior"|"enemy/gunship/behavior"|"enemy/gunship/behavior_2"|"enemy/gunship/vehicle_crash"|"enemy/gunship/vehicle_crash_2"|"enemy/hive_lord/ability"|"enemy/hive_lord/ability/shrapnel_impact"|"enemy/hive_lord/ability_10"|"enemy/hive_lord/ability_2"|"enemy/hive_lord/ability_3"|"enemy/hive_lord/ability_4"|"enemy/hive_lord/ability_5"|"enemy/hive_lord/ability_6"|"enemy/hive_lord/ability_7"|"enemy/hive_lord/ability_8"|"enemy/hive_lord/ability_9"|"enemy/hive_lord/impact"|"enemy/illuminate_attack_ship/impact"|"enemy/illuminate_attack_ship/vehicle_crash"|"enemy/illuminate_attack_ship/vehicle_crash_2"|"enemy/illuminate_war_machine/ragdoll_crash"|"enemy/illuminate_war_machine/ragdoll_crash_2"|"enemy/illuminate_warmachine_bombball/detonation"|"enemy/impaler_tentacle/ability"|"enemy/impaler_tentacle/ability_2"|"enemy/jet_champion/behavior"|"enemy/lieutenant_artillery/behavior"|"enemy/lieutenant_ivory_legion/impact"|"enemy/lieutenant_jetpack/detonation"|"enemy/obj_asset_hijack_tech_hub_nexus_machine/ability"|"enemy/power_generator/behavior"|"enemy/rupture_charger/ability"|"enemy/rupture_charger/ability_2"|"enemy/rupture_charger/ability_3"|"enemy/rupture_charger/ability_4"|"enemy/rupture_charger/ability_5"|"enemy/rupture_charger/ability_6"|"enemy/rupture_spewer/inventory_detonation"|"enemy/scavenger_gloom/behavior"|"enemy/scavenger_spitter/behavior"|"enemy/siege_engine/ability"|"enemy/siege_engine/ability_2"|"enemy/siege_engine/ability_3"|"enemy/siege_engine/ability_4"|"enemy/siege_engine/ability_5"|"enemy/siege_engine/impact"|"enemy/siege_engine/impact_2"|"enemy/soldier_rpg/behavior"|"enemy/soldier_rpg/impact"|"enemy/spawner/ragdoll_crash"|"enemy/spore_burst_bile_titan/behavior"|"enemy/spore_burst_bile_titan/spray_impact"|"enemy/spore_burst_hunter/behavior"|"enemy/spore_burst_warrior/behavior"|"enemy/tank_rocketlauncher/behavior"|"enemy/tank_turret_base/impact"|"enemy/tank_turret_rocketlauncher/backblast"|"enemy/tank_turret_rocketlauncher/impact"|"enemy/turret_autocannons/ability"|"enemy/turret_autocannons/ability_2"|"enemy/turret_autocannons/ability_3"|"enemy/turret_autocannons/ability_4"|"enemy/turret_autocannons/ability_5"|"enemy/turret_autocannons/ability_6"|"enemy/turret_autocannons/ability_7"|"enemy/turret_autocannons/behavior"|"enemy/turret_autocannons/behavior_2"|"enemy/turret_mortar/impact"|"enemy/warrior_acid/behavior"|"enemy/watcher/ability"|"enemy/watcher/vehicle_crash"|"entity/avatar_helldiver/behavior"|"entity/beamer_champion_gun/impact"|"entity/beamer_champion_gun_direct/impact"|"entity/caltrops_grenade/detonation"|"entity/caltrops_mine/detonation"|"entity/cha_battlefront_seaf_medic/inventory_detonation"|"entity/cha_hive_lord_back_shell/gib"|"entity/conscript_grenade_incendiary/detonation"|"entity/cyborg_production_unit/ability"|"entity/cyborg_siege_engine_sarcophagus/gib"|"entity/cyborg_siege_engine_sarcophagus_left_door/gib"|"entity/eagle_missile/missile_impact"|"entity/explosive_gas_chimney/ability"|"entity/habs_barrel_fuel/detonation"|"entity/helldiver_dummy/behavior"|"entity/idle_sam_site/impact"|"entity/il_city_cannon/impact"|"entity/illuminate_adept_circle/detonation"|"entity/jet_champion_grenade_he/detonation"|"entity/pathfinder_lightspear/impact"|"entity/seaf_gun/impact"|"entity/soldier_riotgun/impact"|"stratagem/aac8_autocannon_sentry/impact"|"stratagem/agm17_gas_mortar_sentry/impact"|"stratagem/am12_mortar_sentry/impact"|"stratagem/am23_ems_mortar_sentry/expiry"|"stratagem/am23_ems_mortar_sentry/impact"|"stratagem/amls4x_rocket_sentry/impact"|"stratagem/eagle_110mm_rocket_pods/impact"|"stratagem/eagle_110mm_rocket_pods/magazine_impact"|"stratagem/eagle_110mm_rocket_pods/magazine_impact_2"|"stratagem/eagle_110mm_rocket_pods/payload_impact"|"stratagem/eagle_500kg_bomb/payload_expiry"|"stratagem/eagle_500kg_bomb/payload_impact"|"stratagem/eagle_airstrike/payload_impact"|"stratagem/eagle_cluster_bomb/payload_expiry"|"stratagem/eagle_cluster_bomb/payload_expiry/shrapnel_impact"|"stratagem/eagle_gas_airstrike/payload_impact"|"stratagem/eagle_napalm_airstrike/payload_impact"|"stratagem/eagle_smoke_strike/payload_impact"|"stratagem/eat12_antitank_emplacement/impact"|"stratagem/exo45_patriot_exosuit/vehicle_crash"|"stratagem/exo45_patriot_exosuit/vehicle_crash_2"|"stratagem/m102_gunner_frv/ability"|"stratagem/m104_incinerator_frv/ability"|"stratagem/m104_incinerator_frv/ability_2"|"stratagem/md17_antitank_mines/mine"|"stratagem/md6_antipersonnel_minefield/mine"|"stratagem/md8_gas_mines/mine"|"stratagem/mdi4_incendiary_mines/mine"|"stratagem/nux223_hellbomb/behavior"|"stratagem/orbital_120mm_he_barrage/shell_impact"|"stratagem/orbital_120mm_he_barrage/shell_impact_2"|"stratagem/orbital_380mm_he_barrage/shell_impact"|"stratagem/orbital_380mm_he_barrage/shell_impact_2"|"stratagem/orbital_airburst_strike/shell_expiry"|"stratagem/orbital_airburst_strike/shell_expiry/shrapnel_impact"|"stratagem/orbital_ems_strike/shell_impact"|"stratagem/orbital_gas_strike/shell_impact"|"stratagem/orbital_gatling_barrage/shell_impact"|"stratagem/orbital_napalm_barrage/shell_impact"|"stratagem/orbital_napalm_barrage/shell_impact_2"|"stratagem/orbital_precision_strike/shell_impact"|"stratagem/orbital_railcannon_strike/orbital_expiry"|"support_weapon/40k_meltagun/overcharge"|"support_weapon/ac8_autocannon/function_impact"|"support_weapon/ac8_autocannon/impact"|"support_weapon/bflam80_cremator/ability"|"support_weapon/bmd_c4_pack/detonation"|"support_weapon/cqc20_breaching_hammer/ability"|"support_weapon/eat17_expendable_antitank/backblast"|"support_weapon/eat17_expendable_antitank/impact"|"support_weapon/eat411_leveller/impact"|"support_weapon/eat700_expendable_napalm/impact"|"support_weapon/eat700_expendable_napalm/impact/shrapnel_impact"|"support_weapon/faf14_spear/impact"|"support_weapon/gl21_grenade_launcher/impact"|"support_weapon/gl28_beltfed_grenade_launcher/impact"|"support_weapon/gl52_deescalator/impact"|"support_weapon/gr8_recoilless_rifle/backblast"|"support_weapon/gr8_recoilless_rifle/function_impact"|"support_weapon/gr8_recoilless_rifle/impact"|"support_weapon/las98_laser_cannon/ability"|"support_weapon/las99_quasar_cannon/impact"|"support_weapon/mls4x_commando/backblast"|"support_weapon/mls4x_commando/impact"|"support_weapon/ms11_solo_silo/ability"|"support_weapon/ms11_solo_silo/detonation"|"support_weapon/ms11_solo_silo/explosive_40"|"support_weapon/plas45_epoch/charge_2_expiry"|"support_weapon/plas45_epoch/impact"|"support_weapon/rl77_airburst_rocket_launcher/bomblet"|"support_weapon/rl77_airburst_rocket_launcher/function_expiry"|"support_weapon/rl77_airburst_rocket_launcher/function_expiry/shrapnel_expiry"|"support_weapon/rl77_airburst_rocket_launcher/impact"|"support_weapon/s11_speargun/expiry"|"support_weapon/stax3_wasp_launcher/function_impact"|"support_weapon/stax3_wasp_launcher/impact"|"throwable/g109_urchin/detonation"|"throwable/g10_incendiary/detonation"|"throwable/g123_thermite/detonation"|"throwable/g12_high_explosive/detonation"|"throwable/g13_incendiary_impact/detonation"|"throwable/g142_pyrotech/detonation"|"throwable/g16_impact/detonation"|"throwable/g23_stun/detonation"|"throwable/g31_arc/detonation"|"throwable/g3_smoke/detonation"|"throwable/g40k_melta_mine/detonation"|"throwable/g48_giga_grenade/detonation"|"throwable/g4_gas/detonation"|"throwable/g50_seeker/detonation"|"throwable/g60_antitank_seeker/detonation"|"throwable/g6_frag/detonation"|"throwable/g7_pineapple/detonation"|"throwable/g7_pineapple/detonation/shrapnel_expiry"|"throwable/g89_smokescreen/detonation"|"throwable/g8_immolation/detonation"|"throwable/gsh39_shield/detonation"|"throwable/ted63_dynamite/detonation"|"throwable/tm1_lure_mine/detonation"|"vehicle/exo45_patriot_exosuit_slot_0/impact"|"vehicle/exo49_emancipator_exosuit_attach_turret_l/impact"|"vehicle/td110_maelstrom_slot_2/ability"|"vehicle/td110_maelstrom_slot_3/fired_ability"|"vehicle/td110_maelstrom_slot_3/fired_explosive_40"|"vehicle/td220_bastion_mk_xvi_attach_tank_gun/impact"|"weapon/argl21_onetwo_underbarrel/impact"|"weapon/cb9_exploding_crossbow/impact"|"weapon/gl15_evictor/impact"|"weapon/gp20_ultimatum/impact"|"weapon/p33_missile_pistol/impact"|"weapon/p34_breacher/fired_detonation"|"weapon/p34_breacher/impact"|"weapon/p40k_bolt_pistol/impact"|"weapon/plas101_purifier/charge_1_impact"|"weapon/plas101_purifier/impact"|"weapon/plas101_purifier/overcharge"|"weapon/plas15_loyalist/charge_1_impact"|"weapon/plas15_loyalist/charge_2_impact"|"weapon/plas15_loyalist/impact"|"weapon/plas1_scorcher/impact"|"weapon/plas39_accelerator_rifle/impact"|"weapon/plas39_accelerator_rifle/overcharge"|"weapon/r36_eruptor/impact"|"weapon/sg8p_punisher_plasma/impact"
 ---@alias HD2ExplosionName "B-100 Portable Hellbomb"|"Cyborg Production Unit"|"Hellbomb"|"NUX-223 Hellbomb"|"Portable Hellbomb"
 ---@alias HD2StatusId "burning_heavy"|"fire"|"fire_panic"|"flamer_slowed"|"gas"|"gas_2"|"gas_confusion"|"gas_confusion_2"|"stun_large"|"stun_medium"|"stun_small"
+---@alias HD2HeatsinkAttachmentId "Laser Heatsink (Blaster). Improved Cooldown"|"Laser Heatsink (Blaster). Improved Heatcapacity"|"Laser Heatsink (Blaster). Standard"|"Laser Heatsink (Charge). Extended Heatsink"|"Laser Heatsink (Charge). Rapid Heatsink"|"Laser Heatsink (Charge). Standard Heatsink"|"Laser Heatsink. Medium Improved Cooldown"|"Laser Heatsink. Medium Improved Heatcapacity"|"Laser Heatsink. Medium Standard"|"weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873"|"weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807"|"weapon-attachment/v1/magazine/laser-heatsink-blaster-standard/94f719641f659898"|"weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7"|"weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578"|"weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de"|"weapon-attachment/v1/magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee"|"weapon-attachment/v1/magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87"|"weapon-attachment/v1/magazine/laser-heatsink-medium-standard/2df091d9af2eab4c"
 ---@alias HD2MagazineAttachmentId "Jet Assisted Rifle 15mm. Drum Standard"|"Karbin Rifle Standard"|"Pistol 12x20mm. Standard"|"Pistol 9x20mm. Extended"|"Plasma Medium. Canister Extended"|"Plasma Medium. Canister Standard"|"Plasma Pistol. Canister Extended"|"Plasma Pistol. Canister Pistol"|"RIFLE 9x70mm. Extended"|"RIFLE 9x70mm. Standard"|"RIFLE Drake. Short"|"RIFLE Drake. Standard"|"RIFLE Justice. Extended"|"RIFLE Justice. Short"|"RIFLE Justice. Standard"|"Rifle 5,5x50mm. Drum"|"Rifle 5,5x50mm. Drum Carbine"|"Rifle 5,5x50mm. Extended"|"Rifle 5,5x50mm. Extended Fastreload"|"Rifle 5,5x50mm. Standard"|"Rifle 5,5x50mm. Standard Fastreload"|"Rifle 8x40mm Rifle Standard"|"SHOTGUN 12g. Drum"|"SHOTGUN 12g. Drum Light"|"SHOTGUN 12g. Magazine Extended"|"SHOTGUN 12g. Magazine Extended Light"|"SMG 12x25mm. Drum"|"SMG 12x25mm. Drum Pummeler"|"SMG 12x25mm. Extended"|"SMG 12x25mm. Extended Pummeler"|"SMG 12x25mm. Standard"|"SMG 12x25mm. Standard Pummeler"|"SMG 9x20mm. Top Mounted Extended"|"SMG 9x20mm. Top Mounted Extended Solvent"|"SMG 9x20mm. Top Mounted Standard"|"SMG 9x20mm. Top Mounted Standard Solvent"|"SMG Flamer Drum Magazine"|"SMG Flamer Extended Magazine"|"SMG Flamer Standard Magazine"|"Shotgun 12g. Magazine Standard"|"Shotgun 12g. Magazine Standard Light"|"Whisper Rifle 5,5x50mm. Drum"|"Whisper Rifle 5,5x50mm. Standard"|"weapon-attachment/v1/magazine/jet-assisted-rifle-15mm-drum-standard/d973eb6ff9b6c804"|"weapon-attachment/v1/magazine/karbin-rifle-standard/e2f9b6b1f2e8fddb"|"weapon-attachment/v1/magazine/pistol-12x20mm-standard/874261a0d16e5e00"|"weapon-attachment/v1/magazine/pistol-9x20mm-extended/98939255db31bed4"|"weapon-attachment/v1/magazine/plasma-medium-canister-extended/09729aaa96113627"|"weapon-attachment/v1/magazine/plasma-medium-canister-standard/f4fa14d4afd3ea71"|"weapon-attachment/v1/magazine/plasma-pistol-canister-extended/6ec0d8e8516cbc07"|"weapon-attachment/v1/magazine/plasma-pistol-canister-pistol/b427e5ddcd7ebe62"|"weapon-attachment/v1/magazine/rifle-5-5x50mm-drum-carbine/00618531fc7a3692"|"weapon-attachment/v1/magazine/rifle-5-5x50mm-drum/fa499a29b375c6cf"|"weapon-attachment/v1/magazine/rifle-5-5x50mm-extended-fastreload/b9d2c29a3b15b591"|"weapon-attachment/v1/magazine/rifle-5-5x50mm-extended/bfc7127000978692"|"weapon-attachment/v1/magazine/rifle-5-5x50mm-standard-fastreload/b46fd3d0a10576b9"|"weapon-attachment/v1/magazine/rifle-5-5x50mm-standard/272e4c5f18bbd39e"|"weapon-attachment/v1/magazine/rifle-8x40mm-rifle-standard/892779ea0d77aeb3"|"weapon-attachment/v1/magazine/rifle-9x70mm-extended/ac5002ad314cd5a3"|"weapon-attachment/v1/magazine/rifle-9x70mm-standard/cda05894170c4de9"|"weapon-attachment/v1/magazine/rifle-drake-short/a04c9bf6b8f34a03"|"weapon-attachment/v1/magazine/rifle-drake-standard/30c524ee2906dec4"|"weapon-attachment/v1/magazine/rifle-justice-extended/621a26851cfd19a2"|"weapon-attachment/v1/magazine/rifle-justice-short/9deab1113f78adfa"|"weapon-attachment/v1/magazine/rifle-justice-standard/c52443137e402fe8"|"weapon-attachment/v1/magazine/shotgun-12g-drum-light/6848f4e70d10b9a7"|"weapon-attachment/v1/magazine/shotgun-12g-drum/c1aeebcaa7c23988"|"weapon-attachment/v1/magazine/shotgun-12g-magazine-extended-light/ce3ad89a45cec7a2"|"weapon-attachment/v1/magazine/shotgun-12g-magazine-extended/95b6103970039345"|"weapon-attachment/v1/magazine/shotgun-12g-magazine-standard-light/6304622136df620c"|"weapon-attachment/v1/magazine/shotgun-12g-magazine-standard/f9f877be8deda58d"|"weapon-attachment/v1/magazine/smg-12x25mm-drum-pummeler/4fded5f56e190410"|"weapon-attachment/v1/magazine/smg-12x25mm-drum/568bc4a451110ca0"|"weapon-attachment/v1/magazine/smg-12x25mm-extended-pummeler/946ef6b4fae7c0de"|"weapon-attachment/v1/magazine/smg-12x25mm-extended/73a27ec123b6d632"|"weapon-attachment/v1/magazine/smg-12x25mm-standard-pummeler/ea054f1cc567db3b"|"weapon-attachment/v1/magazine/smg-12x25mm-standard/6c63bd137af2da1e"|"weapon-attachment/v1/magazine/smg-9x20mm-top-mounted-extended-solvent/11156cef840b147a"|"weapon-attachment/v1/magazine/smg-9x20mm-top-mounted-extended/176c9113b2833712"|"weapon-attachment/v1/magazine/smg-9x20mm-top-mounted-standard-solvent/80bf5c7ef57ea0e0"|"weapon-attachment/v1/magazine/smg-9x20mm-top-mounted-standard/fc9cc6afc9155eb2"|"weapon-attachment/v1/magazine/smg-flamer-drum-magazine/edd0b384b4ec7242"|"weapon-attachment/v1/magazine/smg-flamer-extended-magazine/a7609a0fd1736a11"|"weapon-attachment/v1/magazine/smg-flamer-standard-magazine/e68347c558fb8b96"|"weapon-attachment/v1/magazine/whisper-rifle-5-5x50mm-drum/dc2b49810b002079"|"weapon-attachment/v1/magazine/whisper-rifle-5-5x50mm-standard/16af29c8d0590809"
 ---@alias HD2ModifierAttachmentId "10g. Duckbill"|"10g. Full Choke"|"10g. Half Choke"|"10g. Standard Choke"|"12g. Duckbill"|"12g. Full Choke"|"12g. Half Choke"|"12g. Standard Choke"|"12mm. Compensator"|"12mm. Flash Hider"|"12mm. Muzzle break"|"12mm. Naked"|"5,5mm. Compensator"|"5,5mm. Flash Hider"|"5,5mm. Muzzle brake Custom Penetrator"|"5,5mm. Muzzle break"|"5.5mm. Naked"|"5mm. Muzzle brake Custom Karbin"|"8mm. Compensator"|"8mm. Flash Hider"|"8mm. Muzzle brake Custom Adjudicator"|"8mm. Muzzle brake Custom Assault Rifle Large Calibre"|"8mm. Muzzle brake Custom Tenderdizer"|"8mm. Muzzle break"|"8mm. Naked"|"9mm. Compensator"|"9mm. Flash Hider"|"9mm. Muzzle brake Custom Diligence Counter Sniper"|"9mm. Muzzle break"|"9mm. Naked"|"Angled Foregrip"|"Angled Foregrip Advanced"|"Angled Foregrip With Laser"|"Bayonet"|"COMBAT SCOPE 4x"|"DUNE WALKER SNIPER SCOPE 10x"|"Empty Flashlight"|"Empty Laser"|"Empty Laser Flashlight"|"FAF SPEAR SCOPE"|"Flamerthrower SMG Flamer"|"Flashlight"|"Grenade Launcher Grenadier"|"HOLOGRAPHIC SIGHT"|"Iron Sights"|"Laser Sight"|"Laser Sight Flashlight"|"Laser. Blaster Focus"|"Laser. Blaster Standard"|"Laser. Charge Standard"|"Laser. Standard Prism"|"MORGUNSON HOLO-SIGHT"|"Muzzle brake Custom Drake"|"No Muzzle"|"No Optics"|"No Underbarrel"|"PISTOL REFLEX SIGHT"|"REFLEX SIGHT"|"REFLEX SIGHT MKII"|"Railgun Scope"|"Revolver. Medium Barrel"|"SNIPER SCOPE 10x"|"SNIPER SCOPE 10x HELGHAST"|"SNIPER SCOPE 10x SHARK"|"Support Scope"|"TUBE REDDOT 1,5x"|"TUBE REDDOT 2x"|"Trenchgun Bayonet"|"Vertical Grip"|"Vertical Grip 45 Degree"|"Vertical Grip Advanced"|"Vertical Grip Flashlight"|"shotgun risk"|"weapon-attachment/v1/muzzle/10g-duckbill/412d31cf7c892657"|"weapon-attachment/v1/muzzle/10g-full-choke/df6e05b18c5bf733"|"weapon-attachment/v1/muzzle/10g-half-choke/26a1b11d420c9e0e"|"weapon-attachment/v1/muzzle/10g-standard-choke/e0c46031c6d99d88"|"weapon-attachment/v1/muzzle/12g-duckbill/88ac4db624cc7cd5"|"weapon-attachment/v1/muzzle/12g-full-choke/d90b64b1f815ed6a"|"weapon-attachment/v1/muzzle/12g-half-choke/500e8e282a42ea8b"|"weapon-attachment/v1/muzzle/12g-standard-choke/82080b2b4f18985a"|"weapon-attachment/v1/muzzle/12mm-compensator/1dc5e77d04dc6075"|"weapon-attachment/v1/muzzle/12mm-flash-hider/ab06e26961a0b74b"|"weapon-attachment/v1/muzzle/12mm-muzzle-break/a74cd729cb78bd66"|"weapon-attachment/v1/muzzle/12mm-naked/1095cb7881a4694a"|"weapon-attachment/v1/muzzle/5-5mm-compensator/4ec5d2257a90f4d2"|"weapon-attachment/v1/muzzle/5-5mm-flash-hider/3d6e793c78a01b06"|"weapon-attachment/v1/muzzle/5-5mm-muzzle-brake-custom-penetrator/7bf12048e90c4eb1"|"weapon-attachment/v1/muzzle/5-5mm-muzzle-break/5514c8d6d01da45c"|"weapon-attachment/v1/muzzle/5-5mm-naked/d21a607950b1d906"|"weapon-attachment/v1/muzzle/5mm-muzzle-brake-custom-karbin/5e6b1feddde8631a"|"weapon-attachment/v1/muzzle/8mm-compensator/c2eeadc4475287e6"|"weapon-attachment/v1/muzzle/8mm-flash-hider/9b8b8d87e77430dc"|"weapon-attachment/v1/muzzle/8mm-muzzle-brake-custom-adjudicator/6ecb2d389d4c40db"|"weapon-attachment/v1/muzzle/8mm-muzzle-brake-custom-assault-rifle-large-calibre/2a9594ff0c252e42"|"weapon-attachment/v1/muzzle/8mm-muzzle-brake-custom-tenderdizer/0dba21162292a318"|"weapon-attachment/v1/muzzle/8mm-muzzle-break/10170c032e91884a"|"weapon-attachment/v1/muzzle/8mm-naked/97ccfadba9738d80"|"weapon-attachment/v1/muzzle/9mm-compensator/16e4625033b594cb"|"weapon-attachment/v1/muzzle/9mm-flash-hider/7422f0065407a775"|"weapon-attachment/v1/muzzle/9mm-muzzle-brake-custom-diligence-counter-sniper/a7607ba6e4fed01b"|"weapon-attachment/v1/muzzle/9mm-muzzle-break/0d5f7ca4346eda0f"|"weapon-attachment/v1/muzzle/9mm-naked/ecad2a628cad83a7"|"weapon-attachment/v1/muzzle/laser-blaster-focus/6103d062b831b110"|"weapon-attachment/v1/muzzle/laser-blaster-standard/910f99340b319620"|"weapon-attachment/v1/muzzle/laser-charge-standard/999bbb1342467088"|"weapon-attachment/v1/muzzle/laser-standard-prism/46d19d5c80239703"|"weapon-attachment/v1/muzzle/muzzle-brake-custom-drake/fdce6eb68b7ae8fd"|"weapon-attachment/v1/muzzle/no-muzzle/d1d7fb00a8ed4495"|"weapon-attachment/v1/muzzle/revolver-medium-barrel/b6f19fd0696bf145"|"weapon-attachment/v1/optics/combat-scope-4x/8fe8dedca12e8f87"|"weapon-attachment/v1/optics/dune-walker-sniper-scope-10x/cb57c44bb274b8e7"|"weapon-attachment/v1/optics/faf-spear-scope/937147287eecd60b"|"weapon-attachment/v1/optics/holographic-sight/052c05dfd1d8bb3c"|"weapon-attachment/v1/optics/iron-sights/5c0e0df266cafbb8"|"weapon-attachment/v1/optics/morgunson-holo-sight/5280a97eb66d420a"|"weapon-attachment/v1/optics/no-optics/d1d7fb00a8ed4495"|"weapon-attachment/v1/optics/pistol-reflex-sight/1e5ccd1b7e828d3d"|"weapon-attachment/v1/optics/railgun-scope/b32a146f741b3a48"|"weapon-attachment/v1/optics/reflex-sight-mkii/161a5f1f49e18552"|"weapon-attachment/v1/optics/reflex-sight/39b63d47c41165c3"|"weapon-attachment/v1/optics/sniper-scope-10x-helghast/12d1df5b4e3c311e"|"weapon-attachment/v1/optics/sniper-scope-10x-shark/2dd987af8f7b12a6"|"weapon-attachment/v1/optics/sniper-scope-10x/07f1a4f0021dcf2a"|"weapon-attachment/v1/optics/support-scope/b02b888256e41fa1"|"weapon-attachment/v1/optics/tube-reddot-1-5x/fbbe744b87a20507"|"weapon-attachment/v1/optics/tube-reddot-2x/184551d23defaf96"|"weapon-attachment/v1/underbarrel/angled-foregrip-advanced/a0bc2ffdf4139c59"|"weapon-attachment/v1/underbarrel/angled-foregrip-with-laser/69abc1d6fa03d593"|"weapon-attachment/v1/underbarrel/angled-foregrip/d22931feed28dbe6"|"weapon-attachment/v1/underbarrel/bayonet/199e45755aadc700"|"weapon-attachment/v1/underbarrel/empty-flashlight/53e0295561a4de67"|"weapon-attachment/v1/underbarrel/empty-laser-flashlight/a0642056ab8e4eba"|"weapon-attachment/v1/underbarrel/empty-laser/3ef03725020223ce"|"weapon-attachment/v1/underbarrel/flamerthrower-smg-flamer/07949e1674b5dddd"|"weapon-attachment/v1/underbarrel/flashlight/38587c188903ebc0"|"weapon-attachment/v1/underbarrel/grenade-launcher-grenadier/0a551758e788cdbd"|"weapon-attachment/v1/underbarrel/laser-sight-flashlight/25c6efee394ddfa0"|"weapon-attachment/v1/underbarrel/laser-sight/72fb7b94663086fe"|"weapon-attachment/v1/underbarrel/no-underbarrel/d1d7fb00a8ed4495"|"weapon-attachment/v1/underbarrel/shotgun-risk/d8182ddebef78288"|"weapon-attachment/v1/underbarrel/trenchgun-bayonet/61f8422733cbcb53"|"weapon-attachment/v1/underbarrel/vertical-grip-45-degree/549dd72a320448e9"|"weapon-attachment/v1/underbarrel/vertical-grip-advanced/e3aa6f7576c06858"|"weapon-attachment/v1/underbarrel/vertical-grip-flashlight/fb1ed26d82df104f"|"weapon-attachment/v1/underbarrel/vertical-grip/0222918bcbe339ba"
 
 ---@alias HD2AttachmentSlot "magazine"|"muzzle"|"optics"|"underbarrel"
----@alias HD2WeaponAttachmentId HD2MagazineAttachmentId|HD2ModifierAttachmentId
+---@alias HD2WeaponAttachmentId HD2MagazineAttachmentId|HD2ModifierAttachmentId|HD2HeatsinkAttachmentId
 
 ---@class HD2WeaponAttachment
 ---@field resource "weapon_attachment"
@@ -1709,6 +1736,11 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@field recharge_delay "shield.recharge_delay"
 ---@field broken_recharge_delay "shield.broken_recharge_delay"
 ---@field recharge_rate "shield.recharge_rate"
+---@field health "shield.health"
+---@field armor "shield.armor"
+---@field recharge_cooldown_after_hit "shield.recharge_cooldown_after_hit"
+---@field recharge_cooldown_when_broken "shield.recharge_cooldown_when_broken"
+---@field recharge_per_second "shield.recharge_per_second"
 
 ---@class HD2Fields_payload
 ---@field lifetime "lifetime" Legacy fixed-resource field (original short-name catalog only). Shield Relay: reviewed writable, number
@@ -1729,6 +1761,9 @@ function HD2Weapon:attachment_definition(slot, identity) end
 
 ---@class HD2Fields_orbital
 ---@field interval "interval" Legacy fixed-resource field (original short-name catalog only). Orbital Laser: read-only, number
+---@field walking_speed "orbital.walking_speed"
+---@field aim_step_min "orbital.aim_step_min"
+---@field aim_step_max "orbital.aim_step_max"
 ---@field duration "orbital.duration"
 ---@field movement_speed "orbital.movement_speed"
 ---@field search_radius "orbital.search_radius"
@@ -1867,17 +1902,101 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@field cool_per_second_cold "heat.cool_per_second_cold"
 ---@field cool_per_second_hot "heat.cool_per_second_hot"
 ---@field cool_per_second_overheated "heat.cool_per_second_overheated"
+---@field cooling_multiplier_cold "heat.cooling_multiplier_cold"
+---@field cooling_multiplier_hot "heat.cooling_multiplier_hot"
+---@field fire_rate_curve_exponent "heat.fire_rate_curve_exponent"
+---@field fire_rate_multiplier_max "heat.fire_rate_multiplier_max"
 ---@field firing_charge "heat.firing_charge"
 ---@field heat_per_second "heat.heat_per_second"
 ---@field heat_per_shot "heat.heat_per_shot"
+---@field level_1_damage_ap_direct "heat.level_1.damage.ap_direct"
+---@field level_1_damage_ap_extreme "heat.level_1.damage.ap_extreme"
+---@field level_1_damage_ap_large "heat.level_1.damage.ap_large"
+---@field level_1_damage_ap_slight "heat.level_1.damage.ap_slight"
+---@field level_1_damage_demolition "heat.level_1.damage.demolition"
+---@field level_1_damage_durable_damage "heat.level_1.damage.durable_damage"
+---@field level_1_damage_push_force "heat.level_1.damage.push_force"
+---@field level_1_damage_stagger "heat.level_1.damage.stagger"
+---@field level_1_damage_standard_damage "heat.level_1.damage.standard_damage"
+---@field level_1_projectile_drag "heat.level_1.projectile.drag"
+---@field level_1_projectile_gravity "heat.level_1.projectile.gravity"
+---@field level_1_projectile_lifetime "heat.level_1.projectile.lifetime"
+---@field level_1_projectile_mass "heat.level_1.projectile.mass"
+---@field level_1_projectile_pellet_count "heat.level_1.projectile.pellet_count"
+---@field level_1_projectile_penetration_slowdown "heat.level_1.projectile.penetration_slowdown"
+---@field level_1_projectile_velocity "heat.level_1.projectile.velocity"
+---@field level_1_self_damage_ap_direct "heat.level_1.self_damage.ap_direct"
+---@field level_1_self_damage_ap_extreme "heat.level_1.self_damage.ap_extreme"
+---@field level_1_self_damage_ap_large "heat.level_1.self_damage.ap_large"
+---@field level_1_self_damage_ap_slight "heat.level_1.self_damage.ap_slight"
+---@field level_1_self_damage_demolition "heat.level_1.self_damage.demolition"
+---@field level_1_self_damage_durable_damage "heat.level_1.self_damage.durable_damage"
+---@field level_1_self_damage_push_force "heat.level_1.self_damage.push_force"
+---@field level_1_self_damage_stagger "heat.level_1.self_damage.stagger"
+---@field level_1_self_damage_standard_damage "heat.level_1.self_damage.standard_damage"
+---@field level_1_self_status_duration "heat.level_1.self_status_duration"
 ---@field level_1_self_status "heat.level_1_self_status"
 ---@field level_1_threshold "heat.level_1_threshold"
+---@field level_2_damage_ap_direct "heat.level_2.damage.ap_direct"
+---@field level_2_damage_ap_extreme "heat.level_2.damage.ap_extreme"
+---@field level_2_damage_ap_large "heat.level_2.damage.ap_large"
+---@field level_2_damage_ap_slight "heat.level_2.damage.ap_slight"
+---@field level_2_damage_demolition "heat.level_2.damage.demolition"
+---@field level_2_damage_durable_damage "heat.level_2.damage.durable_damage"
+---@field level_2_damage_push_force "heat.level_2.damage.push_force"
+---@field level_2_damage_stagger "heat.level_2.damage.stagger"
+---@field level_2_damage_standard_damage "heat.level_2.damage.standard_damage"
+---@field level_2_projectile_drag "heat.level_2.projectile.drag"
+---@field level_2_projectile_gravity "heat.level_2.projectile.gravity"
+---@field level_2_projectile_lifetime "heat.level_2.projectile.lifetime"
+---@field level_2_projectile_mass "heat.level_2.projectile.mass"
+---@field level_2_projectile_pellet_count "heat.level_2.projectile.pellet_count"
+---@field level_2_projectile_penetration_slowdown "heat.level_2.projectile.penetration_slowdown"
+---@field level_2_projectile_velocity "heat.level_2.projectile.velocity"
+---@field level_2_self_damage_ap_direct "heat.level_2.self_damage.ap_direct"
+---@field level_2_self_damage_ap_extreme "heat.level_2.self_damage.ap_extreme"
+---@field level_2_self_damage_ap_large "heat.level_2.self_damage.ap_large"
+---@field level_2_self_damage_ap_slight "heat.level_2.self_damage.ap_slight"
+---@field level_2_self_damage_demolition "heat.level_2.self_damage.demolition"
+---@field level_2_self_damage_durable_damage "heat.level_2.self_damage.durable_damage"
+---@field level_2_self_damage_push_force "heat.level_2.self_damage.push_force"
+---@field level_2_self_damage_stagger "heat.level_2.self_damage.stagger"
+---@field level_2_self_damage_standard_damage "heat.level_2.self_damage.standard_damage"
+---@field level_2_self_status_duration "heat.level_2.self_status_duration"
 ---@field level_2_self_status "heat.level_2_self_status"
 ---@field level_2_threshold "heat.level_2_threshold"
+---@field level_3_damage_ap_direct "heat.level_3.damage.ap_direct"
+---@field level_3_damage_ap_extreme "heat.level_3.damage.ap_extreme"
+---@field level_3_damage_ap_large "heat.level_3.damage.ap_large"
+---@field level_3_damage_ap_slight "heat.level_3.damage.ap_slight"
+---@field level_3_damage_demolition "heat.level_3.damage.demolition"
+---@field level_3_damage_durable_damage "heat.level_3.damage.durable_damage"
+---@field level_3_damage_push_force "heat.level_3.damage.push_force"
+---@field level_3_damage_stagger "heat.level_3.damage.stagger"
+---@field level_3_damage_standard_damage "heat.level_3.damage.standard_damage"
+---@field level_3_projectile_drag "heat.level_3.projectile.drag"
+---@field level_3_projectile_gravity "heat.level_3.projectile.gravity"
+---@field level_3_projectile_lifetime "heat.level_3.projectile.lifetime"
+---@field level_3_projectile_mass "heat.level_3.projectile.mass"
+---@field level_3_projectile_pellet_count "heat.level_3.projectile.pellet_count"
+---@field level_3_projectile_penetration_slowdown "heat.level_3.projectile.penetration_slowdown"
+---@field level_3_projectile_velocity "heat.level_3.projectile.velocity"
+---@field level_3_self_damage_ap_direct "heat.level_3.self_damage.ap_direct"
+---@field level_3_self_damage_ap_extreme "heat.level_3.self_damage.ap_extreme"
+---@field level_3_self_damage_ap_large "heat.level_3.self_damage.ap_large"
+---@field level_3_self_damage_ap_slight "heat.level_3.self_damage.ap_slight"
+---@field level_3_self_damage_demolition "heat.level_3.self_damage.demolition"
+---@field level_3_self_damage_durable_damage "heat.level_3.self_damage.durable_damage"
+---@field level_3_self_damage_push_force "heat.level_3.self_damage.push_force"
+---@field level_3_self_damage_stagger "heat.level_3.self_damage.stagger"
+---@field level_3_self_damage_standard_damage "heat.level_3.self_damage.standard_damage"
+---@field level_3_self_status_duration "heat.level_3.self_status_duration"
 ---@field level_3_self_status "heat.level_3_self_status"
 ---@field level_3_threshold "heat.level_3_threshold"
 ---@field overheat_cooldown "heat.overheat_cooldown"
 ---@field overheat_lock "heat.overheat_lock"
+---@field overheat_release_threshold "heat.overheat_release_threshold"
+---@field prevent_overheat_cooling "heat.prevent_overheat_cooling"
 ---@field reset_charge_after_shot "heat.reset_charge_after_shot"
 ---@field warmup "heat.warmup"
 
@@ -1952,6 +2071,21 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@field constitution_rate "entity.constitution_rate"
 ---@field durable_resistance "entity.durable_resistance"
 ---@field explosive_damage_percentage "entity.explosive_damage_percentage"
+---@field health_change_rate "entity.health_change_rate"
+---@field health_change_rate_disabled "entity.health_change_rate_disabled"
+---@field regeneration_cooldown "entity.regeneration_cooldown"
+---@field regeneration_segments "entity.regeneration_segments"
+---@field regeneration_change_rate "entity.regeneration_change_rate"
+---@field zone_bleedout_change_rate "entity.zone_bleedout_change_rate"
+---@field constitution_disables_interactions "entity.constitution_disables_interactions"
+---@field unit_size_enum "entity.unit_size_enum"
+---@field mass "entity.mass"
+---@field kill_score "entity.kill_score"
+---@field require_demolition "entity.require_demolition"
+---@field death_destruction_hash "entity.death_destruction_hash"
+---@field on_death_destruction_template "entity.on_death_destruction_template"
+---@field can_die_naturally "entity.can_die_naturally"
+---@field death_propagation_enum "entity.death_propagation_enum"
 
 ---@class HD2Fields_eagle
 ---@field uses_per_rearm "eagle.uses_per_rearm"
@@ -1991,6 +2125,29 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@field constitution "zone.constitution"
 ---@field durable_resistance "zone.durable_resistance"
 ---@field explosive_damage_percentage "zone.explosive_damage_percentage"
+---@field downs_on_death "zone.downs_on_death"
+---@field fatal "zone.fatal"
+---@field main_health_capped "zone.main_health_capped"
+---@field damage_multiplier_enum "zone.damage_multiplier_enum"
+---@field dps_damage_multiplier_enum "zone.dps_damage_multiplier_enum"
+---@field unknown_float_d0 "zone.unknown_float_d0"
+---@field unknown_float_d4 "zone.unknown_float_d4"
+---@field armor_angle_check "zone.armor_angle_check"
+---@field max_armor "zone.max_armor"
+---@field ignore_armor_on_self "zone.ignore_armor_on_self"
+---@field immortal "zone.immortal"
+---@field causes_downed_on_downed "zone.causes_downed_on_downed"
+---@field causes_death_on_downed "zone.causes_death_on_downed"
+---@field unknown_float_f_c "zone.unknown_float_f_c"
+---@field kill_children_on_death "zone.kill_children_on_death"
+---@field regeneration_enabled "zone.regeneration_enabled"
+---@field bleedout_enabled "zone.bleedout_enabled"
+---@field affected_by_explosions "zone.affected_by_explosions"
+---@field unknown_float148 "zone.unknown_float148"
+---@field on_dead_disable_all_actors "zone.on_dead_disable_all_actors"
+---@field explosion_verification_mode_enum "zone.explosion_verification_mode_enum"
+---@field hit_effect_receiver_type_enum "zone.hit_effect_receiver_type_enum"
+---@field use_surface_effect "zone.use_surface_effect"
 ---@field damage_multiplier "zone.damage_multiplier"
 ---@field damage_multiplier_dps "zone.damage_multiplier_dps"
 
@@ -2080,6 +2237,227 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@class HD2Fields_gore
 ---@field whole_body_gib_damage "gore.whole_body_gib_damage"
 
+---@class HD2Fields_unit
+---@field scale_min "unit.scale_min"
+---@field scale_max "unit.scale_max"
+---@field radius "unit.radius"
+
+---@class HD2Fields_behavior
+---@field id "behavior.id"
+---@field task_cooldown "behavior.task_cooldown"
+---@field task_user "behavior.task_user"
+
+---@class HD2Fields_spawner
+---@field primary_group "spawner.primary_group"
+---@field fallback_group "spawner.fallback_group"
+---@field initial_release_delay "spawner.initial_release_delay"
+---@field queue_limit "spawner.queue_limit"
+---@field batch_size "spawner.batch_size"
+---@field minimum_batch_size "spawner.minimum_batch_size"
+---@field refill_delay "spawner.refill_delay"
+---@field release_delay "spawner.release_delay"
+---@field serialized_release_delay "spawner.serialized_release_delay"
+---@field delay_variance "spawner.delay_variance"
+---@field alternate_roster "spawner.alternate_roster"
+
+---@class HD2Fields_hive
+---@field queue_limit_progress_1 "hive.queue_limit_progress_1"
+---@field queue_limit_progress_2 "hive.queue_limit_progress_2"
+---@field queue_limit_progress_3 "hive.queue_limit_progress_3"
+---@field queue_limit_progress_4 "hive.queue_limit_progress_4"
+---@field queue_limit_progress_5 "hive.queue_limit_progress_5"
+---@field queue_limit_players_1 "hive.queue_limit_players_1"
+---@field queue_limit_players_2 "hive.queue_limit_players_2"
+---@field queue_limit_players_3 "hive.queue_limit_players_3"
+---@field queue_limit_players_4 "hive.queue_limit_players_4"
+---@field queue_limit_conditional_state "hive.queue_limit_conditional_state"
+---@field queue_limit_secondary_progress_1 "hive.queue_limit_secondary_progress_1"
+---@field queue_limit_secondary_progress_2 "hive.queue_limit_secondary_progress_2"
+---@field queue_limit_secondary_progress_3 "hive.queue_limit_secondary_progress_3"
+---@field queue_limit_secondary_progress_4 "hive.queue_limit_secondary_progress_4"
+---@field queue_limit_secondary_progress_5 "hive.queue_limit_secondary_progress_5"
+---@field refill_clock_rate_progress_1 "hive.refill_clock_rate_progress_1"
+---@field refill_clock_rate_progress_2 "hive.refill_clock_rate_progress_2"
+---@field refill_clock_rate_progress_3 "hive.refill_clock_rate_progress_3"
+---@field refill_clock_rate_progress_4 "hive.refill_clock_rate_progress_4"
+---@field refill_clock_rate_progress_5 "hive.refill_clock_rate_progress_5"
+---@field refill_clock_rate_players_1 "hive.refill_clock_rate_players_1"
+---@field refill_clock_rate_players_2 "hive.refill_clock_rate_players_2"
+---@field refill_clock_rate_players_3 "hive.refill_clock_rate_players_3"
+---@field refill_clock_rate_players_4 "hive.refill_clock_rate_players_4"
+---@field refill_clock_rate_conditional_state "hive.refill_clock_rate_conditional_state"
+---@field refill_clock_rate_secondary_progress_1 "hive.refill_clock_rate_secondary_progress_1"
+---@field refill_clock_rate_secondary_progress_2 "hive.refill_clock_rate_secondary_progress_2"
+---@field refill_clock_rate_secondary_progress_3 "hive.refill_clock_rate_secondary_progress_3"
+---@field refill_clock_rate_secondary_progress_4 "hive.refill_clock_rate_secondary_progress_4"
+---@field refill_clock_rate_secondary_progress_5 "hive.refill_clock_rate_secondary_progress_5"
+---@field batch_size_progress_1 "hive.batch_size_progress_1"
+---@field batch_size_progress_2 "hive.batch_size_progress_2"
+---@field batch_size_progress_3 "hive.batch_size_progress_3"
+---@field batch_size_progress_4 "hive.batch_size_progress_4"
+---@field batch_size_progress_5 "hive.batch_size_progress_5"
+---@field batch_size_players_1 "hive.batch_size_players_1"
+---@field batch_size_players_2 "hive.batch_size_players_2"
+---@field batch_size_players_3 "hive.batch_size_players_3"
+---@field batch_size_players_4 "hive.batch_size_players_4"
+---@field batch_size_conditional_state "hive.batch_size_conditional_state"
+---@field batch_size_secondary_progress_1 "hive.batch_size_secondary_progress_1"
+---@field batch_size_secondary_progress_2 "hive.batch_size_secondary_progress_2"
+---@field batch_size_secondary_progress_3 "hive.batch_size_secondary_progress_3"
+---@field batch_size_secondary_progress_4 "hive.batch_size_secondary_progress_4"
+---@field batch_size_secondary_progress_5 "hive.batch_size_secondary_progress_5"
+---@field minimum_batch_size_progress_1 "hive.minimum_batch_size_progress_1"
+---@field minimum_batch_size_progress_2 "hive.minimum_batch_size_progress_2"
+---@field minimum_batch_size_progress_3 "hive.minimum_batch_size_progress_3"
+---@field minimum_batch_size_progress_4 "hive.minimum_batch_size_progress_4"
+---@field minimum_batch_size_progress_5 "hive.minimum_batch_size_progress_5"
+---@field minimum_batch_size_players_1 "hive.minimum_batch_size_players_1"
+---@field minimum_batch_size_players_2 "hive.minimum_batch_size_players_2"
+---@field minimum_batch_size_players_3 "hive.minimum_batch_size_players_3"
+---@field minimum_batch_size_players_4 "hive.minimum_batch_size_players_4"
+---@field minimum_batch_size_conditional_state "hive.minimum_batch_size_conditional_state"
+---@field minimum_batch_size_secondary_progress_1 "hive.minimum_batch_size_secondary_progress_1"
+---@field minimum_batch_size_secondary_progress_2 "hive.minimum_batch_size_secondary_progress_2"
+---@field minimum_batch_size_secondary_progress_3 "hive.minimum_batch_size_secondary_progress_3"
+---@field minimum_batch_size_secondary_progress_4 "hive.minimum_batch_size_secondary_progress_4"
+---@field minimum_batch_size_secondary_progress_5 "hive.minimum_batch_size_secondary_progress_5"
+---@field release_clock_rate_progress_1 "hive.release_clock_rate_progress_1"
+---@field release_clock_rate_progress_2 "hive.release_clock_rate_progress_2"
+---@field release_clock_rate_progress_3 "hive.release_clock_rate_progress_3"
+---@field release_clock_rate_progress_4 "hive.release_clock_rate_progress_4"
+---@field release_clock_rate_progress_5 "hive.release_clock_rate_progress_5"
+---@field release_clock_rate_players_1 "hive.release_clock_rate_players_1"
+---@field release_clock_rate_players_2 "hive.release_clock_rate_players_2"
+---@field release_clock_rate_players_3 "hive.release_clock_rate_players_3"
+---@field release_clock_rate_players_4 "hive.release_clock_rate_players_4"
+---@field release_clock_rate_conditional_state "hive.release_clock_rate_conditional_state"
+---@field release_clock_rate_secondary_progress_1 "hive.release_clock_rate_secondary_progress_1"
+---@field release_clock_rate_secondary_progress_2 "hive.release_clock_rate_secondary_progress_2"
+---@field release_clock_rate_secondary_progress_3 "hive.release_clock_rate_secondary_progress_3"
+---@field release_clock_rate_secondary_progress_4 "hive.release_clock_rate_secondary_progress_4"
+---@field release_clock_rate_secondary_progress_5 "hive.release_clock_rate_secondary_progress_5"
+---@field shared_cooldown_duration_progress_1 "hive.shared_cooldown_duration_progress_1"
+---@field shared_cooldown_duration_progress_2 "hive.shared_cooldown_duration_progress_2"
+---@field shared_cooldown_duration_progress_3 "hive.shared_cooldown_duration_progress_3"
+---@field shared_cooldown_duration_progress_4 "hive.shared_cooldown_duration_progress_4"
+---@field shared_cooldown_duration_progress_5 "hive.shared_cooldown_duration_progress_5"
+---@field shared_cooldown_duration_players_1 "hive.shared_cooldown_duration_players_1"
+---@field shared_cooldown_duration_players_2 "hive.shared_cooldown_duration_players_2"
+---@field shared_cooldown_duration_players_3 "hive.shared_cooldown_duration_players_3"
+---@field shared_cooldown_duration_players_4 "hive.shared_cooldown_duration_players_4"
+---@field shared_cooldown_duration_conditional_state "hive.shared_cooldown_duration_conditional_state"
+---@field shared_cooldown_duration_secondary_progress_1 "hive.shared_cooldown_duration_secondary_progress_1"
+---@field shared_cooldown_duration_secondary_progress_2 "hive.shared_cooldown_duration_secondary_progress_2"
+---@field shared_cooldown_duration_secondary_progress_3 "hive.shared_cooldown_duration_secondary_progress_3"
+---@field shared_cooldown_duration_secondary_progress_4 "hive.shared_cooldown_duration_secondary_progress_4"
+---@field shared_cooldown_duration_secondary_progress_5 "hive.shared_cooldown_duration_secondary_progress_5"
+---@field patrol_clock_rate_players_1 "hive.patrol_clock_rate_players_1"
+---@field patrol_clock_rate_players_2 "hive.patrol_clock_rate_players_2"
+---@field patrol_clock_rate_players_3 "hive.patrol_clock_rate_players_3"
+---@field patrol_clock_rate_players_4 "hive.patrol_clock_rate_players_4"
+
+---@class HD2Fields_transport
+---@field grid_dimension_0 "transport.grid_dimension_0"
+---@field grid_dimension_1 "transport.grid_dimension_1"
+---@field formation_id "transport.formation_id"
+---@field passenger_formation_0_dimension_0 "transport.passenger_formation_0_dimension_0"
+---@field passenger_formation_0_dimension_1 "transport.passenger_formation_0_dimension_1"
+---@field passenger_formation_1_dimension_0 "transport.passenger_formation_1_dimension_0"
+---@field passenger_formation_1_dimension_1 "transport.passenger_formation_1_dimension_1"
+
+---@class HD2Fields_breach
+---@field emission_radius "breach.emission_radius"
+
+---@class HD2Fields_jammer
+---@field radius "jammer.radius"
+---@field initially_enabled "jammer.initially_enabled"
+
+---@class HD2Fields_difficulty
+---@field encounter_points "difficulty.encounter_points"
+---@field guardforce_points "difficulty.guardforce_points"
+---@field shared_spawner_cooldown "difficulty.shared_spawner_cooldown"
+
+---@class HD2Fields_composition
+---@field weight "composition.weight"
+---@field cost_multiplier "composition.cost_multiplier"
+---@field post_schedule_duration "composition.post_schedule_duration"
+---@field minimum_tech_level "composition.minimum_tech_level"
+---@field maximum_tech_level "composition.maximum_tech_level"
+---@field minimum_players "composition.minimum_players"
+---@field maximum_players "composition.maximum_players"
+---@field group_0_count "composition.group_0_count"
+---@field group_0_emission_time "composition.group_0_emission_time"
+---@field group_1_count "composition.group_1_count"
+---@field group_1_emission_time "composition.group_1_emission_time"
+---@field group_2_count "composition.group_2_count"
+---@field group_2_emission_time "composition.group_2_emission_time"
+---@field group_3_count "composition.group_3_count"
+---@field group_3_emission_time "composition.group_3_emission_time"
+---@field group_4_count "composition.group_4_count"
+---@field group_4_emission_time "composition.group_4_emission_time"
+
+---@class HD2Fields_spawn
+---@field weight_1 "spawn.weight_1"
+---@field weight_2 "spawn.weight_2"
+---@field weight_3 "spawn.weight_3"
+---@field weight_4 "spawn.weight_4"
+---@field weight_5 "spawn.weight_5"
+---@field weight_6 "spawn.weight_6"
+---@field weight_7 "spawn.weight_7"
+---@field weight_8 "spawn.weight_8"
+---@field weight_9 "spawn.weight_9"
+---@field weight_10 "spawn.weight_10"
+
+---@class HD2Fields_demolition
+---@field force "demolition.force"
+
+---@class HD2Fields_mission
+---@field duration_seconds "mission.duration_seconds"
+
+---@class HD2Fields_perk
+---@field armor_rating "perk.armor_rating"
+---@field radar_scan_interval "perk.radar_scan_interval"
+---@field enemy_detection_range "perk.enemy_detection_range"
+---@field crouch_prone_recoil "perk.crouch_prone_recoil"
+---@field explosive_resistance "perk.explosive_resistance"
+---@field arc_resistance "perk.arc_resistance"
+---@field unknown_8933e7f4 "perk.unknown_8933e7f4"
+---@field grenade_capacity "perk.grenade_capacity"
+---@field stim_capacity "perk.stim_capacity"
+---@field stim_duration "perk.stim_duration"
+---@field throw_range "perk.throw_range"
+---@field limb_health "perk.limb_health"
+---@field lethal_damage_survival "perk.lethal_damage_survival"
+---@field limb_injury_avoidance "perk.limb_injury_avoidance"
+---@field melee_damage "perk.melee_damage"
+---@field stat_13_add "perk.stat_13.add"
+---@field stat_13_mul "perk.stat_13.mul"
+---@field fire_resistance "perk.fire_resistance"
+---@field weapon_ergonomics "perk.weapon_ergonomics"
+---@field gas_resistance "perk.gas_resistance"
+---@field stat_11_add "perk.stat_11.add"
+---@field stat_11_mul "perk.stat_11.mul"
+---@field elemental_resistance "perk.elemental_resistance"
+---@field stat_12_add "perk.stat_12.add"
+---@field stat_12_mul "perk.stat_12.mul"
+---@field stat_15_add "perk.stat_15.add"
+---@field stat_15_mul "perk.stat_15.mul"
+---@field stat_16_add "perk.stat_16.add"
+---@field stat_16_mul "perk.stat_16.mul"
+---@field stat_17_add "perk.stat_17.add"
+---@field stat_17_mul "perk.stat_17.mul"
+---@field chest_damage_resistance "perk.chest_damage_resistance"
+---@field movement_noise "perk.movement_noise"
+---@field poi_identification_range "perk.poi_identification_range"
+---@field leg_injury_immunity "perk.leg_injury_immunity"
+---@field knock_prone_resistance "perk.knock_prone_resistance"
+---@field stamina_when_damaged "perk.stamina_when_damaged"
+---@field movement_speed "perk.movement_speed"
+---@field unknown_f6d67313 "perk.unknown_f6d67313"
+---@field impact_resistance "perk.impact_resistance"
+---@field stat_14_add "perk.stat_14.add"
+---@field stat_14_mul "perk.stat_14.mul"
+
 ---@class HD2Fields_helldiver
 ---@field speed_direction_factor "helldiver.speed.direction_factor"
 ---@field speed_aim "helldiver.speed.aim"
@@ -2102,6 +2480,7 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@field stamina_cost_dodge "helldiver.stamina.cost_dodge"
 ---@field stamina_cost_climb "helldiver.stamina.cost_climb"
 ---@field stamina_cost_slide "helldiver.stamina.cost_slide"
+---@field supply_stims_from_supply "helldiver.supply.stims_from_supply"
 
 ---@class HD2Fields_armor_kit
 ---@field piece_weight_cape "armor_kit.piece_weight.cape"
@@ -2131,6 +2510,30 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@field max_count "throwable.max_count"
 ---@field count_from_supply "throwable.count_from_supply"
 ---@field explosion_delay "throwable.explosion_delay"
+---@field launch_distance_min "throwable.launch_distance_min"
+---@field launch_distance_max "throwable.launch_distance_max"
+---@field launch_speed_override "throwable.launch_speed_override"
+---@field forward_strength_bonus "throwable.forward_strength_bonus"
+---@field backward_strength_penalty "throwable.backward_strength_penalty"
+---@field spin_min_x "throwable.spin_min_x"
+---@field spin_min_y "throwable.spin_min_y"
+---@field spin_min_z "throwable.spin_min_z"
+---@field spin_max_x "throwable.spin_max_x"
+---@field spin_max_y "throwable.spin_max_y"
+---@field spin_max_z "throwable.spin_max_z"
+---@field arming_delay "throwable.arming_delay"
+---@field pulse_explosion "throwable.pulse_explosion"
+---@field explosion "throwable.explosion"
+
+---@class HD2Fields_melee
+---@field volume_x "melee.volume_x"
+---@field volume_y "melee.volume_y"
+---@field volume_z "melee.volume_z"
+---@field offset_x "melee.offset_x"
+---@field offset_y "melee.offset_y"
+---@field offset_z "melee.offset_z"
+---@field repeat_hit_interval "melee.repeat_hit_interval"
+---@field stamina_cost "melee.stamina_cost"
 
 ---@class HD2Fields_beam_conversion
 ---@field enabled "beam_conversion.enabled"
@@ -2186,11 +2589,25 @@ function HD2Weapon:attachment_definition(slot, identity) end
 ---@field attachment HD2Fields_attachment
 ---@field booster HD2Fields_booster
 ---@field gore HD2Fields_gore
+---@field unit HD2Fields_unit
+---@field behavior HD2Fields_behavior
+---@field spawner HD2Fields_spawner
+---@field hive HD2Fields_hive
+---@field transport HD2Fields_transport
+---@field breach HD2Fields_breach
+---@field jammer HD2Fields_jammer
+---@field difficulty HD2Fields_difficulty
+---@field composition HD2Fields_composition
+---@field spawn HD2Fields_spawn
+---@field demolition HD2Fields_demolition
+---@field mission HD2Fields_mission
+---@field perk HD2Fields_perk
 ---@field helldiver HD2Fields_helldiver
 ---@field armor_kit HD2Fields_armor_kit
 ---@field armor_class HD2Fields_armor_class
 ---@field armor_damage_curve HD2Fields_armor_damage_curve
 ---@field throwable HD2Fields_throwable
+---@field melee HD2Fields_melee
 ---@field beam_conversion HD2Fields_beam_conversion
 ---@field ammunition HD2Fields_ammunition
 
@@ -2251,22 +2668,26 @@ function HD2Resources.image(id) end
 function HD2Resources.model(id) end
 
 ---@class HD2GameIcon
----@field kind "stratagem"|"booster"
+---@field kind "stratagem"|"booster"|"weapon"|"throwable"|"faction"|"objective"|"difficulty"|"passive"
 ---@field name string
----The game's own HUD icon of a stratagem or booster, for d:image (docs/game-icons.md): drawn from the game's
+local HD2GameIcon = {}
+---The game's own atlas icon (weapon, throwable, faction, objective, stratagem or booster), for d:image (docs/game-icons.md): drawn from the game's
 ---own atlas page with the game's own icon material; nothing shipped, nothing written. Drawn only while its
 ---atlas page is loaded (booster icons are not during a mission). nil, code ("UNKNOWN_KIND" | "UNKNOWN_ICON")
 ---and reason for an unknown name.
----@param kind "stratagem"|"booster"
+---@param kind "stratagem"|"booster"|"weapon"|"throwable"|"faction"|"objective"|"difficulty"|"passive"
 ---@param name string the name the Runtime's catalogues use
 ---@return HD2GameIcon|nil
 ---@return string? code
 ---@return string? reason
 function HD2Resources.game_icon(kind, name) end
 ---Every game icon name of a kind, sorted.
----@param kind "stratagem"|"booster"
+---@param kind "stratagem"|"booster"|"weapon"|"throwable"|"faction"|"objective"|"difficulty"|"passive"
 ---@return string[]
 function HD2Resources.game_icons(kind) end
+---Sprite geometry and render mode; width/height may be nil for legacy icons.
+---@return table info kind, name, width, height, mode
+function HD2GameIcon:describe() end
 
 ---@alias HD2EventName "mission_started"|"mission_ended"|"player_spawned"|"player_died"|"entity_spawned"|"entity_died"|"entity_killed"|"entity_damaged"|"player_damaged"|"player_healed"|"player_fired"|"player_kill_credited"|"player_hit"|"player_damage_dealt"|"weapon_equipped"|"weapon_unequipped"|"weapon_changed"|"explosion"|"bughole_destroyed"|"entity_damage_pre"|"key_down"|"key_up"
 
@@ -3030,7 +3451,7 @@ function HD2Pelicans.status() end
 ---@field recoil false|nil false: no aim recoil.
 ---@field unlimited_ammo true|nil Its own magazine at the safe maximum (2047), refilled below 1500.
 ---@field sound string|nil A firing sound of the catalogue (hd2.sounds.list(): a name of kind shot or loop, for example 'vehicle/maelstrom/main_gun', 'sentry/gatling', 'vehicle/bastion/hmg'; 'maelstrom_main_gun' still works) on its own weapon copy; nil or 'pelican/chin_autocannon': its own. The package of the stratagem that provides its bank is loaded first (a resident-only sound only while its package is resident); other machines apply it on their own copies. See docs/weapon-sounds.md.
----@field face_target true|nil The body turns toward the locked target (needs behave_as).
+---@field face_target true|nil The body follows the native target with an untouched native gun, or the Runtime target lock with behave_as.
 local HD2PelicanGun = {}
 
 ---A Runtime Pelican circling its anchor (hd2.pelican.spawn orbit).
@@ -4424,6 +4845,26 @@ function hd2.stratagem(name) end
 ---@param name HD2EquipmentName
 ---@return HD2Equipment
 function hd2.equipment(name) end
+---@alias HD2MeleeName "40-K Meltagun"|"AC-8 Autocannon"|"APW-1 Anti-Materiel Rifle"|"AR-11 Arbitrator"|"AR-2 Coyote"|"AR-23 Liberator"|"AR-23A Liberator Carbine"|"AR-23C Liberator Concussive"|"AR-23P Liberator Penetrator"|"AR-32 Pacifier"|"AR-59 Suppressor"|"AR-61 Tenderizer"|"AR/GL-21 One-Two"|"ARC-12 Blitzer"|"ARC-3 Arc Thrower"|"B/FLAM-80 Cremator"|"BR-14 Adjudicator"|"CB-9 Exploding Crossbow"|"CQC-1 One True Flag"|"CQC-19 Stun Lance"|"CQC-2 Saber"|"CQC-20 Breaching Hammer"|"CQC-30 Stun Baton"|"CQC-42 Machete"|"CQC-5 Combat Hatchet"|"CQC-73 Entrenchment Tool"|"CQC-9 Defoliation Tool"|"DBS-2 Double Freedom"|"EAT-17 Expendable Anti-Tank"|"EAT-411 Leveller"|"EAT-700 Expendable Napalm"|"FAF-14 Spear"|"FLAM-40 Flamethrower"|"FLAM-66 Torcher"|"GL-15 Evictor"|"GL-21 Grenade Launcher"|"GL-28 Belt-Fed Grenade Launcher"|"GL-52 De-Escalator"|"GP-20 Ultimatum"|"GP-31 Grenade Pistol"|"GR-8 Recoilless Rifle"|"JAR-5 Dominator"|"LAS-12 Sai"|"LAS-13 Trident"|"LAS-16 Sickle"|"LAS-17 Double-Edge Sickle"|"LAS-5 Scythe"|"LAS-58 Talon"|"LAS-7 Dagger"|"LAS-98 Laser Cannon"|"LAS-99 Quasar Cannon"|"M-1000 Maxigun"|"M-105 Stalwart"|"M6C/SOCOM Pistol"|"M7S SMG"|"M90A Shotgun"|"MA5C Assault Rifle"|"MG-206 Heavy Machine Gun"|"MG-43 Machine Gun"|"MGX-42 Bullet Storm"|"MLS-4X Commando"|"MP-98 Knight"|"P-11 Stim Pistol"|"P-113 Verdict"|"P-19 Redeemer"|"P-2 Peacemaker"|"P-33 Missile Pistol"|"P-34 Breacher"|"P-35 Re-Educator"|"P-4 Senator"|"P-69 Veto"|"P-72 Crisper"|"P-92 Warrant"|"P/40-K Bolt Pistol"|"PLAS-1 Scorcher"|"PLAS-101 Purifier"|"PLAS-15 Loyalist"|"PLAS-39 Accelerator Rifle"|"PLAS-45 Epoch"|"R-2 Amendment"|"R-2124 Constitution"|"R-36 Eruptor"|"R-4 Hyena"|"R-6 Deadeye"|"R-63 Diligence"|"R-63CS Diligence Counter Sniper"|"R-72 Censor"|"R/40-K Hot-Shot Marksman Rifle"|"RL-77 Airburst Rocket Launcher"|"RS-422 Railgun"|"S-11 Speargun"|"SG-20 Halt"|"SG-22 Bushwhacker"|"SG-225 Breaker"|"SG-225IE Breaker Incendiary"|"SG-225SP Breaker Spray&Pray"|"SG-451 Cookout"|"SG-8 Punisher"|"SG-88 Break-Action Shotgun"|"SG-8P Punisher Plasma"|"SG-8S Slugger"|"SG-97 Sweeper"|"SMG-203 Gallant"|"SMG-32 Reprimand"|"SMG-37 Defender"|"SMG-72 Pummeler"|"SMG/FLAM-34 Stoker"|"StA-11 SMG"|"StA-52 Assault Rifle"|"StA-X3 W.A.S.P. Launcher"|"TX-41 Sterilizer"|"VG-70 Variable"
+---@class HD2MeleeTarget
+---@field resource "melee"
+---@field melee HD2MeleeName
+---@field path string
+local HD2MeleeTarget = {}
+---@return table
+function HD2MeleeTarget:describe() end
+---@param identity string|integer
+---@return HD2MeleeTarget
+function HD2MeleeTarget:zone(identity) end
+---@return HD2MeleeTarget[]
+function HD2MeleeTarget:zones() end
+---Melee stamina and named hit volumes. Geometry is local to animated bones; shared records require allow_shared.
+---@class HD2MeleeAPI
+---@overload fun(name: HD2MeleeName): HD2MeleeTarget
+---@type HD2MeleeAPI
+hd2.melee = {}
+---@return string[]
+function hd2.melee.names() end
 ---@param name HD2SupportWeaponName
 ---@return HD2SupportWeapon
 function hd2.support_weapon(name) end
@@ -4453,16 +4894,16 @@ function hd2.pickup(identity) end
 ---@return HD2Pickup[]
 function hd2.pickups(category) end
 ---An enemy class by wiki name (when proven) or native class name (see sdk/EnemyAuthoringCapabilities.json).
----@param name HD2EnemyName
+---@param name HD2EnemyName|string
 ---@return HD2Enemy
 function hd2.enemy(name) end
 ---An enemy structure (fabricators, emplacements, objectives) by wiki or native class name.
----@param name HD2StructureName
+---@param name HD2StructureName|string
 ---@return HD2Enemy
 function hd2.structure(name) end
 ---Reviewed enemy / structure names (call it: hd2.enemies(filter), optionally filtered by kind and faction),
 ---and how often each enemy type spawns (hd2.enemies.spawn_weight; docs/enemy-spawns.md).
----@type HD2Enemies|fun(filter?: {kind?: "enemy"|"structure", faction?: "terminids"|"automatons"|"illuminate"|"neutral"}): string[]
+---@type HD2Enemies|fun(filter?: {kind?: "enemy"|"structure"|"entity", faction?: "terminids"|"automatons"|"illuminate"|"neutral"|"unknown", component?: string}): string[]
 hd2.enemies = {}
 ---The Helldiver type (avatar_helldiver; docs/helldiver-fields.md): movement speeds, stamina and body zones of every
 ---Helldiver this machine simulates. Every write needs allow_shared=true and allow_unverified_effect=true.
@@ -4545,6 +4986,11 @@ function HD2Diagnostics.telemetry(options) end
 ---in the operation's window): {operation, target, externalChanges, warnings, windowSeconds}[], most first.
 ---@return table[]
 function HD2Diagnostics.write_conflicts() end
+---Runtime-wide diagnostic: false disables shared discovery/decode caches and restores the older read limit.
+---Both modes retain buffers and write guards. Not a third-party scanner crash fix.
+---@param enabled? boolean
+---@return boolean enabled
+function HD2Diagnostics.application_optimizations(enabled) end
 ---Every operation registered this session, refused ones included (HD2Runtime 0.28.1+): {kind, id, mod, sdk,
 ---sdk_source, status, result, code, error, runs, legacy}[], in registration order. `legacy` lists the fields an
 ---operation of a mod declaring an older SDK wrote without an acknowledgement a later SDK added
@@ -4562,6 +5008,10 @@ function HD2Diagnostics.performance() end
 ---them. {target, field, observed, expected, owner = "unknown", seen}[], in the order found (docs/diagnostics.md).
 ---@return table[]
 function HD2Diagnostics.foreign_values() end
+---One explicit read of mission definitions and the active countdown. No polling or writes.
+---@return table? report
+---@return string? reason
+function HD2Diagnostics.mission_timer() end
 ---@type HD2Diagnostics
 hd2.diagnostics = {}
 ---Run once after a delay in game seconds (fractions work; 0 = the next update tick; math.random(1, 10) gives a random delay). The timer belongs to the calling mod; scope=mission cancels it when the mission ends.
@@ -4645,6 +5095,98 @@ function HD2Booster:display_name() end
 ---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).
 ---@return string|nil, HD2GameName|string|nil, string?
 function HD2Stratagem:display_name() end
+
+---@class HD2ArmorPerkTarget
+---@field resource "armor_perk"
+---@field armor_perk integer
+local HD2ArmorPerkTarget = {}
+---@return table
+function HD2ArmorPerkTarget:describe() end
+---@return table[]
+function HD2ArmorPerkTarget:fields() end
+---Shared numeric perk definitions. Spawn-time stats require a respawn wearing the original perk.
+---@param identity HD2PassiveName|integer
+---@return HD2ArmorPerkTarget
+function HD2Passives.perk(identity) end
+
+---@class HD2MissionTarget
+---@field resource "mission"
+---@field mission string
+local HD2MissionTarget = {}
+---@return table
+function HD2MissionTarget:describe() end
+---Launch-time duration in seconds; missions sharing a timerGroup share edits. Ship state required.
+---@param id string From hd2.missions().
+---@return HD2MissionTarget
+function hd2.mission(id) end
+---@param filter? table faction: terminids, automatons, or illuminate.
+---@return table[]
+function hd2.missions(filter) end
+
+---EXPERIMENTAL, the host only, in a mission: freezes or resumes the countdown with the game's own timer pause
+---(the next mission starts unpaused). Other Runtimes in the lobby follow the host's freeze.
+---@param request {frozen: boolean, allow_unverified_effect: true}
+---@return {status: "APPLIED"|"UNCHANGED", frozen: boolean, remainingSeconds: number, source: string, verified?: boolean}? result
+---@return string? code "ACKNOWLEDGEMENT_REQUIRED" | "TARGET_UNAVAILABLE" | "HOST_ONLY" | "NOT_APPLICABLE" | "NOT_PRIVATE" | "UNAVAILABLE" | "GUARD_REJECTED"
+---@return string? reason
+function hd2.freeze_mission_timer(request) end
+
+---0.40.0 enemy director controls. Source spawn writes require Ship state and both acknowledgements.
+---@param level integer Difficulty 1 through 10.
+---@return HD2EnemyDirectorTarget
+function hd2.enemies.difficulty(level) end
+---@param id string From hd2.enemies.compositions().
+---@return HD2EnemyDirectorTarget
+function hd2.enemies.composition(id) end
+---@param filter? table faction and/or family (1 through 8).
+---@return table[]
+function hd2.enemies.compositions(filter) end
+---Preview faction composition counts scaled from defaults. Does not write; submit transactions via ensure or patch.
+---Patrol/reinforcement/all scale whole counts; map divides guard cost, retaining native fill limits.
+---Budgets, transport capacity and scripted spawns still apply; map is not an exact count multiplier.
+---@param faction "terminids"|"automatons"|"illuminate"
+---@param multiplier number 0.1 through 5
+---@return table recipe scope, transactions, fields, clamped, authoredCount, desiredCount, lifecycle
+---@param channel? "all"|"patrol"|"reinforcement"|"map" Default all retains every composition family.
+function hd2.enemies.spawn_multiplier(faction, multiplier, channel) end
+---Loaded spawn-picker ownership; overlapping Runtime writes are refused, including prepared plans.
+---@return table status blocked, owner, reason, code, foreign_status
+function hd2.enemies.spawn_compatibility() end
+---@param target table Canonical descriptor target
+---@param field string
+---@return string? reason
+---@return string? code
+function hd2.enemies.spawn_control_reason(target, field) end
+---Open the loaded picker UI through its own opening path. User action only.
+---@param before_open? function Close the caller menu after the bridge is found.
+---@return boolean opened
+---@return string? reason
+function hd2.enemies.open_spawn_picker(before_open) end
+
+---Preview patrol-clock factors for all authored faction modes; no continuous update loop.
+---@param faction "terminids"|"automatons"|"illuminate"
+---@param multiplier number 0.1 through 5
+---@return table recipe
+function hd2.enemies.patrol_frequency(faction, multiplier) end
+---Preview native per-difficulty budgets or inverse shared-spawner cooldown. Budgets are not exact counts.
+---@param level integer 1 through 10
+---@param channel "encounter_budget"|"map_budget"|"spawner_frequency"
+---@param multiplier number 0.1 through 5
+---@return table recipe
+function hd2.enemies.difficulty_multiplier(level, channel, multiplier) end
+---@param id string From hd2.enemies.rosters().
+---@return HD2EnemyDirectorTarget
+function hd2.enemies.roster(id) end
+---@param filter? table roster name.
+---@return table[]
+function hd2.enemies.rosters(filter) end
+---@param name string Shared demolition template name.
+---@return HD2EnemyDirectorTarget
+function hd2.enemies.demolition_template(name) end
+---@return table[]
+function hd2.enemies.demolition_templates() end
+---@return table[]
+function hd2.enemies.destruction_models() end
 ---Describe schema and prior evidence without reading memory.
 ---@param resource HD2Resource
 ---@return table
@@ -4700,7 +5242,7 @@ function hd2.metrics() end
 ---@param spec HD2OptionsRequest
 ---@return HD2Options
 function hd2.options(spec) end
----Make the game load the packages that one to 16 typed handles (hd2.pickup, hd2.weapon, hd2.support_weapon, hd2.throwable, hd2.vehicle, hd2.backpack, a mounted-weapon candidate, a projectile handle) need, through the same reference-counted package system the game uses for loadouts. Status waiting_for_assets until every package is resident, then complete (result.status RESIDENT), or rejected with code ASSET_UNAVAILABLE. Never blocks; times out after 90 s. Package identities come only from the generated catalog; mods never pass package IDs. patch, transaction, plan and ensure already do this automatically for reference swaps, so most mods never call it.
+---Make the game load the packages that one to 16 typed handles (hd2.pickup, hd2.weapon, hd2.support_weapon, hd2.throwable, hd2.vehicle, hd2.backpack, hd2.stratagem, a mounted-weapon candidate, a projectile handle, a HUD icon handle) need, through the same reference-counted package system the game uses for loadouts. Status waiting_for_assets until every package is resident, then complete (result.status RESIDENT), or rejected with code ASSET_UNAVAILABLE. UI-only HUD icon requests stay local. Never blocks; times out after 90 s. Package identities come only from the generated catalog; mods never pass package IDs. patch, transaction, plan and ensure already do this automatically for reference swaps, so most mods never call it.
 ---@param request HD2AssetRequest
 ---@return HD2Watch
 function hd2.require_assets(request) end

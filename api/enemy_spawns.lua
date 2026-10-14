@@ -6,9 +6,10 @@
 --
 -- An enemy is named as the spawn rosters name it (hd2.enemies.spawn_list(); a display name such as 'Charger', a native
 -- name such as 'warrior_tier_1', a catalogue id or the 16-hex entity type). The multiplier scales that type's weight in
--- every spawn group it is in, at every difficulty (or only opts.difficulties): 0 = it never spawns from a group,
+-- every primary-roster group it is in, at every difficulty (or only opts.difficulties): 0 excludes normal picks,
 -- 2 = twice its vanilla weight. It changes the mix of what spawns, not how many enemies a spawn makes. A refusal never
--- raises: the handle's status is 'refused' with a code and a reason.
+-- raises: the handle's status is 'refused' with a code and a reason. Native bypasses and direct authored squads
+-- can still spawn a zero-weight type; this is not a global blacklist. The director API lists all five rosters.
 local events=require('hd2runtime/runtime/events')
 local weights=require('hd2runtime/runtime/enemy_spawn_weights')
 local world_module=require('hd2runtime/runtime/event_world')

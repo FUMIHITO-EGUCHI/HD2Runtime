@@ -83,8 +83,8 @@
   }
  ],
  "summary": {
-  "fields": 27,
-  "instances": 52,
+  "fields": 28,
+  "instances": 53,
   "zones": 6
  },
  "fieldInstances": [
@@ -1522,6 +1522,32 @@
    "reads": "per_hit",
    "shadowedByPrivateCopy": "health",
    "semantics": "Share of the hit forwarded to main health: main loss = round(D x this) after the zone pass (0x923D2E), only when > 0 (reader CONFIRMED; the exact D is STRONG). Override-aware record (0x507920).",
+   "shared": true,
+   "allowSharedRequired": true,
+   "acknowledgements": [
+    "allow_shared",
+    "allow_unverified_effect"
+   ],
+   "liveTested": false
+  },
+  {
+   "semanticFieldId": "helldiver.supply.stims_from_supply",
+   "displayName": "Stims from supply",
+   "target": {
+    "resource": "helldiver",
+    "path": "entity"
+   },
+   "type": "integer",
+   "unit": "stims",
+   "storage": "u32",
+   "min": 0,
+   "max": 100,
+   "currentDefault": 2,
+   "grade": "CONFIRMED",
+   "lifecycle": "live",
+   "reads": "Read on each refill; a private Inventory definition can shadow this type setting. Shared with ordinary supplies, capped by carrying capacity.",
+   "shadowedByPrivateCopy": "inventory",
+   "semantics": "Base stims restored per refill, including Supply Pack use and ordinary supply pickups. Shared by Helldivers; armor modifiers can adjust the result and the effective carrying capacity caps it. This is not exclusive to the Supply Pack. A private Inventory definition can shadow the type setting.",
    "shared": true,
    "allowSharedRequired": true,
    "acknowledgements": [

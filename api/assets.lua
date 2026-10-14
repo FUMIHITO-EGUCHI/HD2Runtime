@@ -1,16 +1,23 @@
 -- Semantic asset requirements: hd2.require_assets(target) / hd2.asset_dependency(target).
 -- Targets are the typed handles Runtime already hands out (hd2.pickup, hd2.weapon, hd2.support_weapon,
--- hd2.throwable, hd2.vehicle, hd2.backpack, mounted-weapon candidates, projectile handles, and a sound's bank through
+-- hd2.throwable, hd2.vehicle, hd2.backpack, hd2.stratagem, mounted-weapon candidates, projectile handles, and a sound's bank through
 -- hd2.sounds.asset(name): a firing sound or a sound event of the full catalogue). Package IDs never appear in requests or results.
 local assets=require('hd2runtime/core/assets')
 local database=require('hd2runtime/domains/package_residency')
+local stratagems=require('hd2runtime/domains/stratagem_authoring').stratagems
 local weapon_sounds=require('hd2runtime/runtime/weapon_sounds')
 local M={}
 
 -- Semantic catalog key for a typed handle, or nil with a reason.
 function M.key_for(target)
     if type(target)~='table'then return nil,'asset requirements take a typed Runtime handle'end
+    local icons=require('hd2runtime/runtime/game_icons')
+    if icons.issued(target)then
+        local identity=icons.identity(target)
+        return 'game_icon/'..identity.kind..'/'..identity.name
+    end
     local resource=rawget(target,'resource')
+    if resource=='stratagem'and target.path=='stratagem'then return'stratagem/'..tostring(target.stratagem)end
     if resource=='pickup'then return'pickup/'..tostring(target.semanticId)end
     if resource=='throwable'then return'throwable/'..tostring(target.throwable)end
     if resource=='explosion'then
@@ -40,10 +47,28 @@ function M.key_for(target)
     return nil,'no asset catalog entry for this handle ('..tostring(resource)..')'
 end
 
+-- Use every package the mission loader requests, including a support weapon's package.
+local function stratagem_dependencies(name)
+    local entry=stratagems[name]
+    if not(entry and entry.root)then return nil,'no catalogued stratagem '..tostring(name)end
+    if not assets.call_in_complete(name)then
+        return nil,'the complete call-in package set is not known for '..name
+    end
+    local list=assets.dependencies_for_stratagem(entry.root.id,name)
+    if not list then return nil,'no call-in package is known for '..name end
+    return list
+end
+
 -- Offline metadata for tools: known / auto-loadable / derivation. No IDs.
 function M.describe(target)
     local key,why=M.key_for(target)
     if not key then return {known=false,autoLoadSupported=false,blocker=why}end
+    if key:match('^stratagem/')then
+        local list,swhy=stratagem_dependencies(target.stratagem)
+        if not list then return {key=key,known=false,autoLoadSupported=false,liveTested=false,blocker=swhy}end
+        return {key=key,known=true,autoLoadSupported=true,derivation='stratagem_call_in_packages',
+            liveTested=false,packages=#list,retain=database.policy.retain}
+    end
     if key:match('^sound/')then
         local list,swhy=M.sound_dependencies(target.sound)
         if not list then return {key=key,known=false,autoLoadSupported=false,liveTested=false,blocker=swhy}end
@@ -121,7 +146,11 @@ local function dependencies_for(request)
     for _,target in ipairs(targets)do
         local key,why=M.key_for(target)
         assert(key,why)
-        if key:match('^sound/')then
+        if key:match('^stratagem/')then
+            local list,swhy=stratagem_dependencies(target.stratagem)
+            assert(list,'ASSET_UNAVAILABLE: '..tostring(swhy))
+            for _,dependency in ipairs(list)do found[#found+1]=dependency end
+        elseif key:match('^sound/')then
             local list,swhy=M.sound_dependencies(target.sound)
             assert(list,'ASSET_UNAVAILABLE: '..tostring(swhy))
             for _,dependency in ipairs(list)do found[#found+1]=dependency end
@@ -141,7 +170,10 @@ function M.start(runtime,emit,request)
     for key in pairs(request)do assert(key=='id'or key=='target'or key=='targets',
         'unsupported require_assets option: '..tostring(key))end
     -- shared: a mod's request; its packages are synced to the lobby's compatible Runtimes (runtime/asset_sync.lua).
-    local spec={id=request.id,asset_dependencies=dependencies_for(request),shared=true}
+    local dependencies=dependencies_for(request)
+    local shared=false
+    for _,dependency in ipairs(dependencies)do if dependency.via~='hud_atlas_package'then shared=true end end
+    local spec={id=request.id,asset_dependencies=dependencies,shared=shared}
     local gate=assets.gate(runtime,spec,emit)
     local watch={status='waiting_for_assets',asset_dependencies=spec.asset_dependencies}
     function watch.cancel()

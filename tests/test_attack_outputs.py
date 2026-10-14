@@ -152,7 +152,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn('A/M-23 EMS Mortar Sentry', summary['stratagemDonors'])
         self.assertIn('Eagle 500kg Bomb', summary['stratagemDonors'])
         self.assertEqual((summary['selectable'], summary['projectileHosts'], summary['componentHosts'],
-            summary['ammunitionHosts'], summary['directWritableAttackFields']), (111, 61, 55, 6, 63))   # +7 sentry hosts; -1 the retired Defender donor; 0.31.2: +2 the Quasar and the Railgun (fired-type trace)
+            summary['ammunitionHosts'], summary['directWritableAttackFields']), (111, 63, 57, 6, 65))   # +7 sentry hosts; -1 the retired Defender donor; 0.31.2: +2 the Quasar and the Railgun (fired-type trace); 0.40.0 RC7: +1 the W.A.S.P.'s carried hit projectile
         # Every selectable projectile output carries its weapon-function mode label and icon (native values only).
         presentation = self.catalog['modePresentation']
         icons = {i['value']: i for i in presentation['icons']}
@@ -260,8 +260,8 @@ class CatalogTests(unittest.TestCase):
         support = sorted(n for n in hosts['componentHosts'] if kinds[n] == 'support_weapon')
         # 0.31.2: + the LAS-99 Quasar and the RS-422 Railgun, admitted by the fired-type trace (hostProof).
         self.assertEqual(support, ['APW-1 Anti-Materiel Rifle', 'EAT-17 Expendable Anti-Tank', 'EAT-411 Leveller',
-            'EAT-700 Expendable Napalm', 'GL-21 Grenade Launcher', 'LAS-99 Quasar Cannon', 'M-105 Stalwart',
-            'MG-206 Heavy Machine Gun', 'RS-422 Railgun', 'S-11 Speargun'])
+            'EAT-700 Expendable Napalm', 'GL-21 Grenade Launcher', 'GL-28 Belt-Fed Grenade Launcher', 'LAS-99 Quasar Cannon', 'M-105 Stalwart',
+            'MG-206 Heavy Machine Gun', 'RS-422 Railgun', 'S-11 Speargun', 'StA-X3 W.A.S.P. Launcher'])
         self.assertTrue(all(kinds[n] == 'player_weapon' for n in hosts['ammunitionHosts']))
         mounted = sorted(n for n in hosts['componentHosts'] if kinds[n] == 'vehicle_weapon' and n not in sentries)
         self.assertEqual(mounted, ['AX/AR-23 Guard Dog / gun', 'EXO-45 Patriot Exosuit / right_gun',
@@ -270,9 +270,9 @@ class CatalogTests(unittest.TestCase):
             'M-102 Gunner FRV / gun', 'M-103 Supply FRV / gun'])
         support_sources = {s['weapon']: s for s in self.catalog['projectileSources'] if s.get('kind') == 'support_weapon'}
         self.assertEqual(sorted(n for n, s in support_sources.items() if s['directWritable']), support)
-        # ACTIVE_DIRECT but not magazine-fed: read-only with the reason; other selectors: their own reason.
-        self.assertIn('not magazine-fed', support_sources['GL-28 Belt-Fed Grenade Launcher']['reason'])
-        self.assertFalse(support_sources['GL-28 Belt-Fed Grenade Launcher']['directWritable'])
+        # The reviewed backpack-linked host supplies ammunition without replacing the projectile selector.
+        self.assertIn('backpack-linked', support_sources['GL-28 Belt-Fed Grenade Launcher']['reason'])
+        self.assertTrue(support_sources['GL-28 Belt-Fed Grenade Launcher']['directWritable'])
         self.assertIn('WeaponRounds', support_sources['AC-8 Autocannon']['reason'])
         self.assertEqual(support_sources['FAF-14 Spear']['status'], 'BLOCKED')
         live = hosts['hostLiveProof']
@@ -474,9 +474,8 @@ rejects(function()swap(hmg:attack('primary'),eat:attack('primary'):projectile(),
 rejects(function()swap(hmg:attack('primary'),hd2.weapon('SMG-32 Reprimand'):attack('primary'):projectile(),
  hd2.attack_output('M-105 Stalwart'))end,'expect must be the target attack current projectile handle')
 local gl28=hd2.support_weapon('GL-28 Belt-Fed Grenade Launcher')
-assert(not gl28:projectile_source().writable and gl28:projectile_source().reason:find('not magazine-fed',1,true))
-rejects(function()swap(gl28:attack('primary'),gl28:attack('primary'):projectile(),hd2.attack_output('AR-2 Coyote'))end,
- 'field is not exposed')
+assert(gl28:projectile_source().writable)
+assert(swap(gl28:attack('primary'),gl28:attack('primary'):projectile(),hd2.attack_output('SG-225 Breaker')).changes[1].cross_class)
 rejects(function()swap(source.target,source.expect,hd2.attack_output('S-11 Speargun (spare twin)'))end,'OUTPUT_SCOPE')
 rejects(function()swap(source.target,source.expect,hd2.attack_output('A/M-23 EMS Mortar Sentry'))end,'OUTPUT_SCOPE')
 return 'ok'
@@ -498,7 +497,9 @@ return 'ok'
             self.assertTrue(sources[name]['directWritable'], name)
             self.assertIn('fired-type trace', sources[name]['reason'])
             self.assertNotRegex(sources[name]['reason'], r'0x[0-9A-Fa-f]{5,}')
-        for name in ('M-1000 Maxigun', 'GL-28 Belt-Fed Grenade Launcher'):
+        # GL-28 now has its separate belt-feed ownership proof in belt_urchin_fields.py.
+        self.assertTrue(sources['GL-28 Belt-Fed Grenade Launcher']['directWritable'])
+        for name in ('M-1000 Maxigun',):
             self.assertFalse(sources[name]['directWritable'], name)
             self.assertIn('linked ammunition source', sources[name]['reason'])
         run('''
@@ -530,7 +531,7 @@ for _,name in ipairs({'LAS-99 Quasar Cannon','RS-422 Railgun'})do
  -- Restoring its own projectile needs nothing.
  assert(swap(source.expect,{allow_unverified_effect=false,allow_unverified_reference=false}).changes[1].self_reference)
 end
-for _,name in ipairs({'M-1000 Maxigun','GL-28 Belt-Fed Grenade Launcher'})do
+for _,name in ipairs({'M-1000 Maxigun'})do
  local s=hd2.support_weapon(name):projectile_source()
  assert(not s.writable and s.reason:find('linked ammunition source',1,true),name)
 end

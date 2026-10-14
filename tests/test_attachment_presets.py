@@ -116,7 +116,13 @@ class AttachmentPresetResearchTests(unittest.TestCase):
     def test_generated_artifacts_are_current(self):
         reports = self.censor_reports
         for name, path in research.OUTPUTS.items():
-            self.assertEqual(json.loads(path.read_text()), reports[name])
+            saved = json.loads(path.read_text())
+            expected = copy.deepcopy(reports[name])
+            if path.is_relative_to(ROOT / 'research'):
+                # Retained evidence records the Runtime that produced it; a release bump
+                # must not rewrite private historical research just to update its label.
+                expected['hd2RuntimeVersion'] = saved['hd2RuntimeVersion']
+            self.assertEqual(saved, expected)
 
 
 if __name__ == '__main__':

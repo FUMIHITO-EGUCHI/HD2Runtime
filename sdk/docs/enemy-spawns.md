@@ -1,7 +1,7 @@
 # Enemy spawn weights
 
 `hd2.enemies.spawn_weight(enemy, multiplier, opts)` changes how often an enemy type is picked when the game spawns
-enemies: more Hive Guards among the warriors, no Bile Titans, no Watchers.
+enemies: for example, more Hive Guards among the warriors or suppressed ordinary Bile Titan picks.
 
 ```lua
 local guards = hd2.enemies.spawn_weight('Hive Guard', 5, {allow_unverified_effect = true})
@@ -21,13 +21,14 @@ row is one enemy type in one **spawn group**, with ten **weights**, one per diff
 When a spawn needs an enemy from a group, the game's own pick (`PickEnemy`, 0x953150, used by all 14 spawn call sites)
 does the following:
 1. It keeps that group's rows whose subfaction is active.
-2. It drops the rows whose weight at the mission's difficulty is 0.
+2. On the normal path, it drops rows whose weight at the mission's difficulty is 0.
 3. It picks one of the rest with probability **weight / sum of the group's weights**.
 
 A multiplier writes, in every row of that enemy type, each weight as its vanilla value × the multiplier:
 
-- **× 0**: the type is never picked. A group made only of that type (the Bile Titan's, the Watcher's) then produces
-  nothing; a group of several types (both Hunter tiers share one) needs each of them at 0.
+- **× 0**: excludes the type from normal positive-weight selection. Native callers can bypass this filter;
+  an all-zero admitted group can then select its first row. Directly authored squads and pending requests
+  are separate paths. This is not a global blacklist.
 - **× k > 1**: the type is picked more often *within the groups it shares* with other types. For example, Hive Guards
   with ×5 replace more of the warriors in the warrior groups. In a group where it is the only type, it is already
   picked every time, so nothing changes.
@@ -36,8 +37,11 @@ A multiplier writes, in every row of that enemy type, each weight as its vanilla
   0 (the game uses `charger_tier2` instead). `hd2.enemies.spawn_list({enemy = ...})` shows every row's ten weights.
 
 It changes **which** enemy types spawn, not **how many** enemies a spawn makes. Counts come from the spawn systems'
-own templates (each template entry is a group and a count) and from their budgets; those are not written. More of a
+own templates (each template entry is a group and a count) and from their budgets; this multiplier does not write them. More of a
 type means the others in its groups get less.
+
+0.40.0 adds [enemy controls](enemy-controls.md): source compositions, budgets, all five rosters, spawner queues,
+ship capacity and breach schedules. The existing multiplier API continues to cover the three primary rosters.
 
 The pick model on the retained Terminid mission snapshot (`validation/enemy-spawn-weights-snapshot.json`):
 

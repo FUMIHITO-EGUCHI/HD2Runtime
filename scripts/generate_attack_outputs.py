@@ -27,6 +27,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from migration import overlay as migration_overlay  # noqa: E402  build-migration hook
 import live_evidence  # noqa: E402
 import beam_fields  # noqa: E402
+import belt_urchin_fields
+import wasp_projectile_fields
 
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / 'research/attack-outputs-F5FEE03DCFDB.json'
@@ -844,7 +846,7 @@ def outputs():
     # Mounted weapons join the same rule and pool (kind vehicle_weapon; sharedEntity: another mount carries the same
     # weapon entity, so a write there changes both mounts).
     linked = {entry['weapon']: entry.get('components', []) for entry in active['weapons']}
-    host_items = ([(item, 'support_weapon') for item in builder['supportHosts']]
+    host_items = ([(item, 'support_weapon') for item in wasp_projectile_fields.hosts(belt_urchin_fields.hosts(builder['supportHosts']))]
         + [(item, 'vehicle_weapon') for item in builder.get('mountedHosts', [])])
     # Sentry and emplacement hosts (0.30.2; research/sentry-projectile-hosts-F5FEE03DCFDB.json): their deployed entity's
     # own ProjectileWeapon +0, keyed '<stratagem> / weapon' like a mount. The same rule: ACTIVE_DIRECT and magazine-fed.
@@ -861,7 +863,7 @@ def outputs():
             if item.get('sharedEntity'):
                 hosts[item['weapon']]['sharedEntity'] = item['sharedEntity']
         reason = item['reason']
-        if item['weapon'] in spawned and only_spawned_entity(item):
+        if not host and item['weapon'] in spawned and only_spawned_entity(item):
             reason = spawned[item['weapon']][0]
         proof = item.get('hostProof')
         if host and proof:

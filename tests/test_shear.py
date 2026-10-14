@@ -120,10 +120,10 @@ class FieldTests(unittest.TestCase):
 
     def test_writability_and_acknowledgements(self):
         writable = sorted(f for f, item in FIELDS.items() if item['editable'])
-        # The Scythe's field set exactly; 38 writable (the Scythe 42: its heatsink overwrites fewer heat members).
+        # The Scythe's field set, including the new reload-duration control.
         self.assertEqual(set(FIELDS), set(SCYTHE))
-        self.assertEqual(len(FIELDS), 64)
-        self.assertEqual(len(writable), 38)
+        self.assertEqual(len(FIELDS), 65)
+        self.assertEqual(len(writable), 39)
         for field_id in ('weapon.ergonomics', 'weapon.sway', 'weapon.horizontal_spread', 'weapon.suppressed',
                 'weapon.recoil_climb_vertical'):
             self.assertTrue(FIELDS[field_id]['editable'] and FIELDS[field_id]['writeScope'] == 'weapon_local')

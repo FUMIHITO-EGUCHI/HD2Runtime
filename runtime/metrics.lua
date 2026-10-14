@@ -3,14 +3,18 @@
 local M={}
 local counters,worst,total_time={},{},{}
 local clock,sampler
+local profiling=false
 -- Opt-in telemetry (runtime/diagnostics.lua) receives every measured duration; nil when disabled.
 function M.set_sampler(fn)sampler=fn end
 function M.set_clock(fn)if type(fn)=='function'then clock=fn end end
 function M.count(name,n)counters[name]=(counters[name]or 0)+(n or 1)end
 function M.now()return clock and clock()or nil end
+function M.profiling(on)profiling=on==true end
+-- Timing for diagnostics only. now() remains available for real scheduling/time budgets.
+function M.start()return (profiling or sampler~=nil)and M.now()or nil end
 -- Record a duration measured by the caller between two M.now() samples.
 function M.elapsed(name,started)
-    if not started or not clock then return end
+    if not started or not clock or not(profiling or sampler)then return end
     local duration=clock()-started
     total_time[name]=(total_time[name]or 0)+duration
     if duration>(worst[name]or 0)then worst[name]=duration end

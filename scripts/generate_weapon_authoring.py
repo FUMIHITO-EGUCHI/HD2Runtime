@@ -25,6 +25,8 @@ import beam_fields
 import missile_fields
 import ammunition_attacks
 import game_names  # noqa: E402  the game's own name text ids (0.31.2)
+import weapon_reload_heat_fields
+import accelerator_fields
 
 ROOT=Path(__file__).resolve().parents[1]
 DEFAULT_REPORT=ROOT/'build/snapshot-results-authoring/PlayerWeaponRuntimeMap.json'
@@ -352,6 +354,7 @@ def build(catalog_path=CATALOG):
         blocked=None if unique else(misattributed.get(name)
             or 'Ambiguous runtime identity; ordinary hd2.weapon(name) writes fail closed.')
         fields=[];resolved=candidate['resolvedFields']
+        fields+=accelerator_fields.fields(name,make_field)
         ownership=candidate['ownership']
         composition=composition_source['weapons'][name]
 
@@ -544,6 +547,11 @@ def build(catalog_path=CATALOG):
             fields+=equipment_fields.firing_charge_fields(charge_make,
                 ownership['WeaponHeatComponentData']['recordIndex'],
                 lambda offset,storage:component_backend(candidate,'WeaponHeatComponentData',offset,storage))
+        # Keep the release's wind-up descriptors; add only newly researched reload/heat members.
+        existing_fields={field['semanticFieldId'] for field in fields}
+        fields+=[field for field in weapon_reload_heat_fields.fields(name,
+            lambda field_id,value,backend:make_field(field_id,value,backend,editable=unique,reason=blocked),definitions)
+            if field['semanticFieldId'] not in existing_fields]
         # 0.31.0 (research/wasp-rocket): the missile the weapon spawns per shot (ProjectileWeapon +40: P-33, P-92) and
         # that of its ProgrammableAmmo function (+584: P-33), their own SeekingMissile records through the link.
         if unique and 'ProjectileWeaponComponentData' in ownership:
@@ -946,7 +954,7 @@ def annotate_effects(value,rows):
             if promoted and field.get('editable')and not field.get('liveEvidence'):
                 field['liveEvidence']=promoted
             backing=field.get('backing')or{}
-            if(field['semanticFieldId'] in OWN_EFFECT_FIELDS or field.get('spawnedEntity'))and field.get('effect'):
+            if(field['semanticFieldId'] in OWN_EFFECT_FIELDS or field.get('spawnedEntity') or field.get('reviewedReloadHeat') or field.get('reviewedAcceleratorCharge'))and field.get('effect'):
                 # Fields whose own research established the effect (rate slots, bindings, function projectile,
                 # presentation) keep it; only the write and live-proof flags are refreshed below.
                 effect=dict(field['effect'])
@@ -988,12 +996,19 @@ def underbarrel_subweapons(definition,provenance,hosts):
     """Nested underbarrel targets ('<host> / underbarrel'): the entity's own component members only."""
     research=json.loads(UNDERBARREL.read_text(encoding='utf-8'))
     members={item['field']:item for item in research['members']}
+    import requested_weapon_controls
+    reloads=requested_weapon_controls.evidence()['underbarrels']
     result=[]
     for item in research['underbarrels']:
         entity=item['underbarrel']
         owners=[host for host in item['hosts'] if host in hosts]
         if len(owners)!=1:continue
         host=owners[0];fields=[]
+        reload=reloads[host]
+        assert reload['resource']==entity['resource']
+        assert reload['identity']==entity['components']['WeaponReloadComponentData']
+        entity['values']['reload.duration']=reload['duration']
+        members['reload.duration']={'component':'WeaponReloadComponentData','offset':56,'storage':'f32'}
         for field_id,value in entity['values'].items():
             member=members[field_id];identity=entity['components'].get(member['component'])
             if not identity:continue
@@ -1016,6 +1031,13 @@ def underbarrel_subweapons(definition,provenance,hosts):
                 'effect':{'activeSource':'AMBIGUOUS','appliesWhen':'weapon_build','instantiationOnly':True,
                     'activeSourceProven':False,'reason':UNDERBARREL_UNVERIFIED,'writeVerifiedOnApply':local,
                     'gameplayEffectProven':False,'unverifiedEffect':True}})
+        for f in fields:
+            if f['semanticFieldId']=='reload.duration':
+                f.update(min=0,max=120,reviewedReloadHeat=True,
+                    reloadTiming={'zeroUsesNative':True,'nativeAbilitySeconds':reload['nativeSeconds'],
+                        'note':'0 uses native timing. Positive seconds rescale this underbarrel reload ability; repeated stages and partial reloads can differ. Rebuild the weapon after applying.'})
+                f['effect'].update(activeSource='ACTIVE_AT_INSTANTIATION',activeSourceProven=True)
+                f['provenance']['source']=requested_weapon_controls.SOURCE
         projectile=entity.get('projectile')or{}
         result.append({'name':host+' / underbarrel','subweaponOf':host,'kind':'underbarrel',
             'slot':'underbarrel','resolution':'UNIQUE','ordinaryWritesBlocked':False,'blockReason':None,
@@ -1028,8 +1050,7 @@ def underbarrel_subweapons(definition,provenance,hosts):
                 'allow_shared on the weapon that owns them in the catalog.'),
                 'firedMember':'unproven (ProjectileWeapon +0 and WeaponRounds +64 hold the same projectile)'}
                 if projectile else None),
-            'notExposed':['reload time (the reload ability duration; WeaponReload +56 is 0)',
-                'WeaponRounds +92 / +104 (meaning not proven)','the projectile reference (fired member unproven)'],
+            'notExposed':['WeaponRounds +92 / +104 (meaning not proven)','the projectile reference (fired member unproven)'],
             'fields':fields})
     return result
 

@@ -47,7 +47,7 @@ end
 
 -- Returns true when every target is still present, owned, and desired.
 function M.verify(runtime,handle)
-    local started=metrics.now()
+    local started=metrics.start()
     metrics.count('steady.verifications')
     local ok,stable,reason=pcall(function()
         for _,item in pairs(handle.owners)do

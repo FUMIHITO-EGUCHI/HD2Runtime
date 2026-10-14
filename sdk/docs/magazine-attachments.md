@@ -138,3 +138,26 @@ magazine functions above return.
   independently. Output: `validation/magazine-attachment-snapshot.json`.
 - The packaged-runtime scenarios `magazine-attachment` and `magazine-attachment-options` apply
   edits from the built runtime ZIP and re-apply them after a simulated reset.
+
+## Heatsink attachments (0.40.0)
+
+Heatsinks occupy the same native magazine slot. `sdk/HeatsinkAttachmentCapabilities.json`
+lists nine definitions and 50 writable scalar overrides. `describe().kind` identifies a
+`heatsink`; ordinary magazine definitions report `magazine`.
+
+Use `hd2.weapon("LAS-5 Scythe"):magazine_attachments()` to enumerate the three known
+Scythe heatsinks, or `:magazine_attachment()` for its native default. Existing
+`hd2.fields.heatsink.*` and `hd2.fields.heat.*` constants apply to these attachment
+targets. Reload and ergonomics use the existing `hd2.fields.attachment.*` constants.
+Both `allow_shared` and `allow_unverified_effect` are required.
+
+Only fields actually overridden by a definition are writable through that target.
+The Sai's standard heatsink inherits the weapon's base values and has no scalar
+attachment overrides. Weapon base fields that the default attachment replaces stay
+blocked; changing them would not change the equipped attachment's effective values.
+
+These edits change shared attachment definitions. Equip or rebuild the weapon to
+consume the definition; live reapplication and gameplay effects remain unverified.
+Editing a definition does not select or unlock that attachment. Extended and Rapid
+charge heatsinks are addressable by name, but are not assigned to weapon pages
+without a proven weapon relationship.

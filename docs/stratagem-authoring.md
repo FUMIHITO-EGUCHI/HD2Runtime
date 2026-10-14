@@ -665,3 +665,20 @@ It is presentation only.
 - For C4, the call-in's reviewed debug name (`TEAM WEAPONS. C4`), cooldown (480 s) and unlimited uses corroborate the catalog record.
 
 Research: `scripts/research_stratagem_icons.py` → `research/stratagem-icons-F5FEE03DCFDB.json`. Generator: `scripts/generate_stratagem_authoring.py`.
+
+
+## Barrage walking controls (0.40.0)
+
+Ten bombardment orbitals expose `orbital.walking_speed` (0 to 15 metres/second),
+`orbital.aim_step_min` and `orbital.aim_step_max` (0 to 100 metres).
+Walking speed 0 disables forward drift; 3 is the Walking Barrage default.
+Positive speed can add drift to the other nine bombardment orbitals, including
+120mm and 380mm. It is copied when a new barrage starts. Single-shell strikes
+need more shells or salvos to make movement visible. Laser and Railcannon use
+different components and do not expose these fields.
+
+Aim steps are a separate random radial movement between shells, after the first
+shell; they do not control forward drift. Gas uses 1/1 and Gatling 1/2 by default.
+These fields require `allow_unverified_effect=true`. Native readers and reversible
+snapshot writes are verified; live gameplay and private instance copies still
+need confirmation.

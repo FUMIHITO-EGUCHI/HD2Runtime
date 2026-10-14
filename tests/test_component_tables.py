@@ -54,6 +54,26 @@ end
 
 
 class ComponentTableGuardTests(unittest.TestCase):
+    def test_diagnostic_mode_drops_caches_and_keeps_table_guards(self):
+        self.assertEqual(run(CAPTURE + r'''
+local mode=require('hd2runtime/runtime/application_mode')
+local function reuses()
+ local c=require('hd2runtime/runtime/metrics').snapshot().counters
+ return (c['entity_catalog.map_decode_reuses']or 0)+(c['entity_catalog.index_decode_reuses']or 0)
+end
+capture();capture();assert(reuses()>0)
+mode.configure(false);local before=reuses()
+local c=capture();capture()
+assert(reuses()==before,'off mode reused decoded metadata')
+assert(c.record(find(c,JAR5),'ProjectileWeaponComponentData').bytes)
+move('ProjectileWeaponComponentData',0x7FF000010000)
+c=capture();assert(c.tables.ProjectileWeaponComponentData,'off mode lost the foreign-table guard')
+mode.configure(true);before=reuses();capture()
+assert(reuses()==before,'re-enabled mode reused the dropped cache')
+capture();assert(reuses()>before)
+return 'ok'
+'''), b'ok')
+
     def test_in_place_tables_read_as_before(self):
         self.assertEqual(run(CAPTURE + r'''
 local c=capture()
@@ -61,6 +81,44 @@ assert(next(c.tables)==nil,'no component refused')
 assert(c.record(find(c,JAR5),'ProjectileWeaponComponentData').index==p.resources.jar5.components.ProjectileWeaponComponentData.record)
 assert(c.record(find(c,AMR),'WeaponDataComponentData').index==p.resources.amr.components.WeaponDataComponentData.record)
 assert(moved_lines()==0)
+return 'ok'
+'''), b'ok')
+
+    def test_warm_decoding_cache_rechecks_records_membership_indices_and_table_pointers(self):
+        self.assertEqual(run(CAPTURE + r'''
+local bytes=require('hd2runtime/core/bytes')
+local first,owner=capture()
+local c=capture();local candidate=find(c,JAR5)
+local rec=c.record(candidate,'ProjectileWeaponComponentData')
+assert(require('hd2runtime/runtime/metrics').snapshot().counters['entity_catalog.map_decode_reuses']>=1)
+local entity
+for _,s in ipairs(spans)do if s.at==owner.base then entity=s end end
+assert(entity)
+local originals={};for _,span in ipairs(spans)do originals[span]=span.bytes end
+local function restore()for span,raw in pairs(originals)do span.bytes=raw end end
+local function poke(offset,value)replace(owner.base+offset,value)end
+-- A cached index never carries record values across captures.
+poke(rec.offset,'ABCD')
+c=capture();assert(c.record(find(c,JAR5),'ProjectileWeaponComponentData').bytes:sub(1,4)=='ABCD')
+restore()
+-- A changed membership pointer is decoded again, despite the same region, schema and length.
+poke(28+candidate.entityRow*32+8,u64(0x7FF000000))
+c=capture();assert(find(c,JAR5).entityRow==nil and #find(c,JAR5).diagnostics>0)
+restore()
+-- A valid new alias is counted even when the caller asks for just the original target.
+local schema=p.components.ProjectileWeaponComponentData
+local amr=find(capture(),AMR).ownership.ProjectileWeaponComponentData
+poke(schema.offset+28+amr.indexRow*16+8,u32(rec.identity.recordIndex))
+c=capture();assert(find(c,JAR5).ownership.ProjectileWeaponComponentData.ownerCount>=2)
+restore()
+-- Invalid index flags cannot be hidden by a warm cache.
+local schema=p.components.ProjectileWeaponComponentData
+poke(schema.offset+28+rec.identity.indexRow*16+12,u32(1))
+local ok,why=pcall(capture);assert(not ok and tostring(why):find('index bounds/flags',1,true))
+restore()
+-- A table repoint is independently checked even when all metadata bytes match the cache.
+move('ProjectileWeaponComponentData',0x7FF000010000)
+c=capture();assert(c.tables.ProjectileWeaponComponentData)
 return 'ok'
 '''), b'ok')
 

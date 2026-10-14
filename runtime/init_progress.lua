@@ -320,7 +320,7 @@ function M.start()
     function watch.tick(dt)
         if watch.status~='waiting'then return end
         local okm,metrics=pcall(require,'hd2runtime/runtime/metrics')
-        local started=okm and metrics.now()
+        local started=okm and metrics.start()
         local ok,result=pcall(tick,dt)
         if okm then metrics.elapsed('init_progress.tick',started)end
         if not ok then

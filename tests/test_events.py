@@ -328,6 +328,96 @@ tick();assert(presses==2)
 return 'ok'
 ''')
 
+    def test_the_game_keybind_page_through_mod_bindings_menu(self):
+        # spec.native: the binding is also registered with Mod Bindings Menu (its published API only); an input bound on
+        # the game's keybind page presses it like its own key, which keeps working. Without the addon nothing changes.
+        self.lua(r'''
+local bridge=require('hd2runtime/runtime/mod_bindings_bridge');bridge.reset_for_tests()
+local count_every=bridge.COUNT_EVERY;bridge.COUNT_EVERY=1
+-- Mod Bindings Menu's assignments file: id, group, action (and session) per line; its other lines are skipped.
+local tab,nl=string.char(9),string.char(10)
+local assignments_text=bridge.hooks.assignments_text
+bridge.hooks.assignments_text=function()return 'format 2'..nl..'session 163'..nl..'hd2runtime.settings'..tab..'11'..tab..'1'..tab
+  ..'163'..nl..'native_test.open'..tab..'11'..tab..'2'..tab..'163'..nl..'action 12:1 cleared 1 found fc497f19 left d6e6c384'..nl end
+local a=bridge.action_of('native_test.open',1);assert(a and a.group==11 and a.action==2)
+assert(bridge.action_of('hd2runtime.settings',1).action==1 and bridge.action_of('nope',1)==nil)
+bridge.hooks.assignments_text=assignments_text
+local mod=api.mod('mods/t/native')
+local presses,releases=0,0
+local spec={key='F9',on_press=function()presses=presses+1 end,on_release=function()releases=releases+1 end,
+  native={label='Open my window',category='My Mod'}}
+-- No addon yet: the key alone.
+local b=mod:bind('native_test.open',spec)
+assert(b.state=='active')
+tick();keys[VK.F9]=true;tick();keys[VK.F9]=false;tick()
+assert(presses==1 and releases==1 and b.native_down==nil)
+-- The addon appears: registered once, with the label and the category, no fixed slot.
+local calls,down,refuse={},{},nil
+rawset(_G,'ModBindingsMenu',{api=1,version=3,revision=1,
+  register_binding=function(id,label,slot,opts)
+    calls[#calls+1]={id=id,label=label,slot=slot,category=opts and opts.category}
+    if refuse then return false,refuse end
+    return true
+  end,
+  is_down=function(id)return down[id]==true end})
+tick();tick()
+assert(#calls==1 and calls[1].id=='native_test.open'and type(calls[1].label)=='function'
+  and calls[1].label()=='Open my window'and calls[1].slot==nil
+  and calls[1].category=='My Mod',#calls)
+assert(count('also on the game\'s keybind page')==1)
+assert(b:describe().native.registered==true)
+-- Registered but never used there: the key still works.
+keys[VK.F9]=true;tick();keys[VK.F9]=false;tick()
+assert(presses==2 and releases==2 and b:describe().native.owned==false)
+-- An input bound there presses it (held is one press, up releases it) and takes over: one input, not two.
+down['native_test.open']=true;tick();tick()
+assert(presses==3 and releases==2,presses)
+down['native_test.open']=false;tick()
+assert(releases==3 and b:describe().native.owned==true)
+assert(count('took over: its own key F9 is ignored from now on')==1)
+keys[VK.F9]=true;tick();keys[VK.F9]=false;tick()
+assert(presses==3,'the key is ignored once the native input took over')
+-- Known counts decide alone: an input set there ignores the key, none (emptied there) brings it back, owned or not.
+local bound_n=0;bridge.hooks.bound_count=function(id)if id=='native_test.open'then return bound_n end end
+tick();keys[VK.F9]=true;tick();keys[VK.F9]=false;tick()
+assert(presses==4 and b:describe().native.bound==false,'emptied there: the key works again')
+assert(count('no input on the game'..string.char(39)..'s keybind page: its own key F9 works')==1)
+bound_n=2;tick();keys[VK.F9]=true;tick();keys[VK.F9]=false;tick()
+assert(presses==4 and b:describe().native.bound==true,'an input set there: the key is ignored')
+bound_n=nil;tick();keys[VK.F9]=true;tick();keys[VK.F9]=false;tick()
+assert(presses==4,'unknown: the first-use takeover decides (owned)')
+bridge.hooks.bound_count=function()return nil end
+-- Disabled: the native input does not fire either.
+b:disable();down['native_test.open']=true;tick();assert(presses==4);down['native_test.open']=false;b:enable();tick()
+-- A refusal is logged once and retried only after the addon's revision changed.
+refuse='binding already registered differently'
+local other=mod:bind('native_test.other',{key='F11',on_press=function()end,native={label='Other',category='My Mod'}})
+tick();tick();tick()
+assert(#calls==2 and count('Mod Bindings Menu refused it (binding already registered differently)')==1,#calls)
+ModBindingsMenu.revision=2;refuse=nil;tick()
+assert(#calls==3 and other:describe().native.registered==true,#calls)
+-- Unbinding forgets it; a bad native spec is refused like any bad spec.
+other:unbind();assert(bridge.describe('native_test.other')==nil)
+-- A mod's own function label (its language): asked again by the addon; Mod Bindings Menu 2 takes the text once.
+local word='Eins'
+mod:bind('native_test.fn',{key='F12',on_press=function()end,native={label=function()return word end,category='My Mod'}})
+tick();assert(calls[#calls].id=='native_test.fn'and calls[#calls].label()=='Eins');word='Uno'
+assert(calls[#calls].label()=='Uno'and bridge.describe('native_test.fn').label=='Uno')
+ModBindingsMenu.version=2
+mod:bind('native_test.v2',{key='Ctrl+F12',on_press=function()end,native={label='Plain',category='My Mod'}})
+tick();assert(calls[#calls].id=='native_test.v2'and calls[#calls].label=='Plain')
+local bad=mod:bind('native_test.bad',{key='F12',on_press=function()end,native={label=''}})
+assert(bad.state=='rejected'and bad.reason:find('native label',1,true),bad.reason)
+local bad2=mod:bind('native_test.bad2',{key='F12',on_press=function()end,native={label='x',category='y',slot=1}})
+assert(bad2.state=='rejected'and bad2.reason:find('unsupported native option',1,true),bad2.reason)
+-- The addon gone: the native state is unknown, the key works again.
+rawset(_G,'ModBindingsMenu',nil);tick()
+assert(b.native_down==nil and b.native_owned==nil)
+keys[VK.F9]=true;tick();keys[VK.F9]=false;tick();assert(presses==5)
+bridge.COUNT_EVERY=count_every
+return 'ok'
+''')
+
     def test_the_win32_backend_loads_on_the_game_luajit(self):
         self.assertEqual(run(PRELUDE + r'''
 input.set_backend(nil)

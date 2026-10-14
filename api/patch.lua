@@ -133,7 +133,10 @@ function M.start_spec(runtime,emit,spec,startup_delay)
         if not ok then return fail(result)end
         if coroutine.status(worker)~='dead' then return end
         watch.result=result
-        result.id=spec.id;result.field=spec.field;result.resource=spec.resource or'0x80F1A156D9FA1E36'
+        -- Typed domains can retain patch metadata only in changes[1]. Reporting
+        -- must not throw after the bytes were written and before ownership is claimed.
+        local display=spec.field~=nil and spec or(spec.changes and spec.changes[1])or spec
+        result.id=spec.id;result.field=display.field;result.resource=spec.resource or'0x80F1A156D9FA1E36'
         result.mode=runtime.mode;result.fixture_fallback='disabled'
         if spec.diagnostic then
             log('patch '..spec.id..' writes='..result.writes..' bytes_written='..result.bytes_written
@@ -142,7 +145,7 @@ function M.start_spec(runtime,emit,spec,startup_delay)
                 ..' fixture_fallback=disabled')
         end
         if result.status=='APPLIED' then
-            log(spec.field..' '..value_text(spec.expect)..' -> '..value_text(spec.value))
+            log(tostring(display.field or spec.kind or'patch')..' '..value_text(display.expect)..' -> '..value_text(display.value))
         end
         if result.status=='APPLIED' or result.status=='ALREADY_DESIRED' then
             for _,note in ipairs(result.notes or{})do log(note)end

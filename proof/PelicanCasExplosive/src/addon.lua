@@ -1,5 +1,5 @@
 -- Generated from custom_stratagems.json by the HD2Runtime SDK (hd2.py custom-stratagem compile; format hd2runtime-custom-stratagems/1).
--- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 21c2a8bb106a43332ed03c5a67b1acc093e2ca117d8761173f3789d9d656ca60.
+-- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 eb03b975cfcb4cbeb51f5731d99d9620a8f941302b4eea9ea18e38ff15982788.
 local hd2=require('mods/skyeshade/hd2runtime')
 local mod=hd2.mod()
 mod:log('PelicanGatlingSupport 0.8.0 BUILD: select Pelican Gatling Support in the custom panel, then a mission; call it with LEFT DOWN LEFT LEFT UP UP.')

@@ -26,7 +26,7 @@
     ]
    },
    "mode": "snapshot-overlay",
-   "noops": 52,
+   "noops": 53,
    "notes": {
     "avatar": [
      "note: helldiver-helldiver_speed_sprint: entity 249 (the local player) carries a private AvatarComponentData copy (made at spawn by an entity delta; the ship's avatar always has one): helldiver.speed.sprint changed the type record but not that Helldiver; it keeps the copied values until it spawns again without a copy (Runtime never writes private copies)"
@@ -52,18 +52,21 @@
     "status": "checked"
    },
    "problems": [],
-   "protectionChanges": 24,
+   "protectionChanges": 28,
    "rejections": {
     "avatar index row moved": "Helldiver AvatarComponentData record ownership changed",
     "avatar record gains a second owner": "Helldiver AvatarComponentData record consumer scope changed",
     "avatar third-party value": "CONFLICT: helldiver.speed.jog is neither expected nor desired (target helldiver helldiver.speed.jog; expected 3.2 (3.20000005); desired 4.5 (4.5); observed 7.25; no HD2Runtime patch, transaction, plan",
     "health index row moved": "Helldiver HealthComponentData record ownership changed",
+    "inventory index row moved": "Helldiver InventoryComponentData record ownership changed",
     "jog 10.5": "value outside the reviewed range [0, 10] for helldiver.speed.jog",
     "jog NaN": "value must be a finite number",
     "no allow_shared": "shared field requires allow_shared=true: helldiver.speed.jog (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) reads it, so a ",
     "no allow_unverified_effect": "field requires allow_unverified_effect=true: helldiver.speed.jog (Native-code proven offline (research/avatar-fields-F5FEE03DCFDB.json: the reader, the record identity and the snapshot bytes); no chan",
     "sprint duration 0": "value outside the reviewed range [1, 3600] for helldiver.stamina.sprint_duration",
     "stale expect": "expect differs from the reviewed value of helldiver.speed.jog: declared=3 reviewed=3.2",
+    "stim refill no allow_shared": "shared field requires allow_shared=true: helldiver.supply.stims_from_supply (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) ",
+    "stim third-party value": "CONFLICT: helldiver.supply.stims_from_supply is neither expected nor desired (target helldiver helldiver.supply.stims_from_supply; expected 2 (2); desired 4 (4); observed 1; no HD2Runtime patch, trans",
     "unknown damage multiplier name": "UNKNOWN_DAMAGE_MULTIPLIER: zone.damage_multiplier value armoured is not one of none, critical, normal, reduced, symbolic",
     "unknown zone": "UNKNOWN_ZONE: unknown Helldiver damage zone: tail (head, body, arm_left, arm_right, leg_left, leg_right)",
     "zone name hash changed": "Helldiver damage zone identity changed (zone.damage_multiplier guard at +616)",
@@ -75,7 +78,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -92,7 +95,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -109,7 +112,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 2,
      "tableBytesCompared": 11108224,
@@ -126,7 +129,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -145,7 +148,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -164,7 +167,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -177,12 +180,29 @@
       3,
       0.5
      ]
+    },
+    "stim_refill": {
+     "notes": {},
+     "otherRecordsUnchanged": 86,
+     "protectionChanges": 2,
+     "protectionRestored": true,
+     "readerBytes": 377508,
+     "restored": true,
+     "tableBytesChanged": 1,
+     "tableBytesCompared": 15280,
+     "targetOffsetsInRecord": [
+      52
+     ],
+     "writes": 1,
+     "written": [
+      5.605193857299268e-45
+     ]
     }
    },
    "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
    "status": "VALIDATED",
    "tamperedPin": "the avatar manager layout changed (0x507920: health private-copy map, else 0x507430 at game+50797A)",
-   "writes": 14
+   "writes": 16
   },
   "F5FEE03DCFDB-20260927T155654Z.hd2snap": {
    "fixtureFallback": "disabled",
@@ -209,7 +229,7 @@
     ]
    },
    "mode": "snapshot-overlay",
-   "noops": 52,
+   "noops": 53,
    "notes": {
     "avatar": [
      "note: helldiver-helldiver_speed_sprint: entity 249 (the local player) carries a private AvatarComponentData copy (made at spawn by an entity delta; the ship's avatar always has one): helldiver.speed.sprint changed the type record but not that Helldiver; it keeps the copied values until it spawns again without a copy (Runtime never writes private copies)"
@@ -235,18 +255,21 @@
     "status": "checked"
    },
    "problems": [],
-   "protectionChanges": 24,
+   "protectionChanges": 28,
    "rejections": {
     "avatar index row moved": "Helldiver AvatarComponentData record ownership changed",
     "avatar record gains a second owner": "Helldiver AvatarComponentData record consumer scope changed",
     "avatar third-party value": "CONFLICT: helldiver.speed.jog is neither expected nor desired (target helldiver helldiver.speed.jog; expected 3.2 (3.20000005); desired 4.5 (4.5); observed 7.25; no HD2Runtime patch, transaction, plan",
     "health index row moved": "Helldiver HealthComponentData record ownership changed",
+    "inventory index row moved": "Helldiver InventoryComponentData record ownership changed",
     "jog 10.5": "value outside the reviewed range [0, 10] for helldiver.speed.jog",
     "jog NaN": "value must be a finite number",
     "no allow_shared": "shared field requires allow_shared=true: helldiver.speed.jog (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) reads it, so a ",
     "no allow_unverified_effect": "field requires allow_unverified_effect=true: helldiver.speed.jog (Native-code proven offline (research/avatar-fields-F5FEE03DCFDB.json: the reader, the record identity and the snapshot bytes); no chan",
     "sprint duration 0": "value outside the reviewed range [1, 3600] for helldiver.stamina.sprint_duration",
     "stale expect": "expect differs from the reviewed value of helldiver.speed.jog: declared=3 reviewed=3.2",
+    "stim refill no allow_shared": "shared field requires allow_shared=true: helldiver.supply.stims_from_supply (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) ",
+    "stim third-party value": "CONFLICT: helldiver.supply.stims_from_supply is neither expected nor desired (target helldiver helldiver.supply.stims_from_supply; expected 2 (2); desired 4 (4); observed 1; no HD2Runtime patch, trans",
     "unknown damage multiplier name": "UNKNOWN_DAMAGE_MULTIPLIER: zone.damage_multiplier value armoured is not one of none, critical, normal, reduced, symbolic",
     "unknown zone": "UNKNOWN_ZONE: unknown Helldiver damage zone: tail (head, body, arm_left, arm_right, leg_left, leg_right)",
     "zone name hash changed": "Helldiver damage zone identity changed (zone.damage_multiplier guard at +616)",
@@ -258,7 +281,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -275,7 +298,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -292,7 +315,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 2,
      "tableBytesCompared": 11108224,
@@ -309,7 +332,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -328,7 +351,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -347,7 +370,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -360,12 +383,29 @@
       3,
       0.5
      ]
+    },
+    "stim_refill": {
+     "notes": {},
+     "otherRecordsUnchanged": 86,
+     "protectionChanges": 2,
+     "protectionRestored": true,
+     "readerBytes": 377508,
+     "restored": true,
+     "tableBytesChanged": 1,
+     "tableBytesCompared": 15280,
+     "targetOffsetsInRecord": [
+      52
+     ],
+     "writes": 1,
+     "written": [
+      5.605193857299268e-45
+     ]
     }
    },
    "snapshot": "F5FEE03DCFDB-20260927T155654Z.hd2snap",
    "status": "VALIDATED",
    "tamperedPin": "the avatar manager layout changed (0x507920: health private-copy map, else 0x507430 at game+50797A)",
-   "writes": 14
+   "writes": 16
   },
   "F5FEE03DCFDB-20260927T160033Z.hd2snap": {
    "fixtureFallback": "disabled",
@@ -392,7 +432,7 @@
     ]
    },
    "mode": "snapshot-overlay",
-   "noops": 52,
+   "noops": 53,
    "notes": {
     "avatar": [
      "note: helldiver-helldiver_speed_sprint: entity 249 (the local player) carries a private AvatarComponentData copy (made at spawn by an entity delta; the ship's avatar always has one): helldiver.speed.sprint changed the type record but not that Helldiver; it keeps the copied values until it spawns again without a copy (Runtime never writes private copies)"
@@ -418,18 +458,21 @@
     "status": "checked"
    },
    "problems": [],
-   "protectionChanges": 24,
+   "protectionChanges": 28,
    "rejections": {
     "avatar index row moved": "Helldiver AvatarComponentData record ownership changed",
     "avatar record gains a second owner": "Helldiver AvatarComponentData record consumer scope changed",
     "avatar third-party value": "CONFLICT: helldiver.speed.jog is neither expected nor desired (target helldiver helldiver.speed.jog; expected 3.2 (3.20000005); desired 4.5 (4.5); observed 7.25; no HD2Runtime patch, transaction, plan",
     "health index row moved": "Helldiver HealthComponentData record ownership changed",
+    "inventory index row moved": "Helldiver InventoryComponentData record ownership changed",
     "jog 10.5": "value outside the reviewed range [0, 10] for helldiver.speed.jog",
     "jog NaN": "value must be a finite number",
     "no allow_shared": "shared field requires allow_shared=true: helldiver.speed.jog (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) reads it, so a ",
     "no allow_unverified_effect": "field requires allow_unverified_effect=true: helldiver.speed.jog (Native-code proven offline (research/avatar-fields-F5FEE03DCFDB.json: the reader, the record identity and the snapshot bytes); no chan",
     "sprint duration 0": "value outside the reviewed range [1, 3600] for helldiver.stamina.sprint_duration",
     "stale expect": "expect differs from the reviewed value of helldiver.speed.jog: declared=3 reviewed=3.2",
+    "stim refill no allow_shared": "shared field requires allow_shared=true: helldiver.supply.stims_from_supply (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) ",
+    "stim third-party value": "CONFLICT: helldiver.supply.stims_from_supply is neither expected nor desired (target helldiver helldiver.supply.stims_from_supply; expected 2 (2); desired 4 (4); observed 1; no HD2Runtime patch, trans",
     "unknown damage multiplier name": "UNKNOWN_DAMAGE_MULTIPLIER: zone.damage_multiplier value armoured is not one of none, critical, normal, reduced, symbolic",
     "unknown zone": "UNKNOWN_ZONE: unknown Helldiver damage zone: tail (head, body, arm_left, arm_right, leg_left, leg_right)",
     "zone name hash changed": "Helldiver damage zone identity changed (zone.damage_multiplier guard at +616)",
@@ -441,7 +484,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -458,7 +501,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -475,7 +518,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 2,
      "tableBytesCompared": 11108224,
@@ -492,7 +535,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -511,7 +554,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -530,7 +573,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -543,12 +586,29 @@
       3,
       0.5
      ]
+    },
+    "stim_refill": {
+     "notes": {},
+     "otherRecordsUnchanged": 86,
+     "protectionChanges": 2,
+     "protectionRestored": true,
+     "readerBytes": 377508,
+     "restored": true,
+     "tableBytesChanged": 1,
+     "tableBytesCompared": 15280,
+     "targetOffsetsInRecord": [
+      52
+     ],
+     "writes": 1,
+     "written": [
+      5.605193857299268e-45
+     ]
     }
    },
    "snapshot": "F5FEE03DCFDB-20260927T160033Z.hd2snap",
    "status": "VALIDATED",
    "tamperedPin": "the avatar manager layout changed (0x507920: health private-copy map, else 0x507430 at game+50797A)",
-   "writes": 14
+   "writes": 16
   },
   "F5FEE03DCFDB-20260929T172647Z-mission-host.hd2snap": {
    "fixtureFallback": "disabled",
@@ -575,7 +635,7 @@
     ]
    },
    "mode": "snapshot-overlay",
-   "noops": 52,
+   "noops": 53,
    "notes": {
     "avatar": {},
     "healthZone": {},
@@ -599,18 +659,21 @@
     "status": "checked"
    },
    "problems": [],
-   "protectionChanges": 24,
+   "protectionChanges": 28,
    "rejections": {
     "avatar index row moved": "Helldiver AvatarComponentData record ownership changed",
     "avatar record gains a second owner": "Helldiver AvatarComponentData record consumer scope changed",
     "avatar third-party value": "CONFLICT: helldiver.speed.jog is neither expected nor desired (target helldiver helldiver.speed.jog; expected 3.2 (3.20000005); desired 4.5 (4.5); observed 7.25; no HD2Runtime patch, transaction, plan",
     "health index row moved": "Helldiver HealthComponentData record ownership changed",
+    "inventory index row moved": "Helldiver InventoryComponentData record ownership changed",
     "jog 10.5": "value outside the reviewed range [0, 10] for helldiver.speed.jog",
     "jog NaN": "value must be a finite number",
     "no allow_shared": "shared field requires allow_shared=true: helldiver.speed.jog (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) reads it, so a ",
     "no allow_unverified_effect": "field requires allow_unverified_effect=true: helldiver.speed.jog (Native-code proven offline (research/avatar-fields-F5FEE03DCFDB.json: the reader, the record identity and the snapshot bytes); no chan",
     "sprint duration 0": "value outside the reviewed range [1, 3600] for helldiver.stamina.sprint_duration",
     "stale expect": "expect differs from the reviewed value of helldiver.speed.jog: declared=3 reviewed=3.2",
+    "stim refill no allow_shared": "shared field requires allow_shared=true: helldiver.supply.stims_from_supply (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) ",
+    "stim third-party value": "CONFLICT: helldiver.supply.stims_from_supply is neither expected nor desired (target helldiver helldiver.supply.stims_from_supply; expected 2 (2); desired 4 (4); observed 1; no HD2Runtime patch, trans",
     "unknown damage multiplier name": "UNKNOWN_DAMAGE_MULTIPLIER: zone.damage_multiplier value armoured is not one of none, critical, normal, reduced, symbolic",
     "unknown zone": "UNKNOWN_ZONE: unknown Helldiver damage zone: tail (head, body, arm_left, arm_right, leg_left, leg_right)",
     "zone name hash changed": "Helldiver damage zone identity changed (zone.damage_multiplier guard at +616)",
@@ -622,7 +685,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -639,7 +702,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -656,7 +719,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 2,
      "tableBytesCompared": 11108224,
@@ -673,7 +736,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -690,7 +753,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -707,7 +770,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -720,12 +783,29 @@
       3,
       0.5
      ]
+    },
+    "stim_refill": {
+     "notes": {},
+     "otherRecordsUnchanged": 86,
+     "protectionChanges": 2,
+     "protectionRestored": true,
+     "readerBytes": 377508,
+     "restored": true,
+     "tableBytesChanged": 1,
+     "tableBytesCompared": 15280,
+     "targetOffsetsInRecord": [
+      52
+     ],
+     "writes": 1,
+     "written": [
+      5.605193857299268e-45
+     ]
     }
    },
    "snapshot": "F5FEE03DCFDB-20260929T172647Z-mission-host.hd2snap",
    "status": "VALIDATED",
    "tamperedPin": "the avatar manager layout changed (0x507920: health private-copy map, else 0x507430 at game+50797A)",
-   "writes": 14
+   "writes": 16
   },
   "F5FEE03DCFDB-20260929T172918Z-mission-host-alive.hd2snap": {
    "fixtureFallback": "disabled",
@@ -752,7 +832,7 @@
     ]
    },
    "mode": "snapshot-overlay",
-   "noops": 52,
+   "noops": 53,
    "notes": {
     "avatar": {},
     "healthZone": {},
@@ -776,18 +856,21 @@
     "status": "checked"
    },
    "problems": [],
-   "protectionChanges": 24,
+   "protectionChanges": 28,
    "rejections": {
     "avatar index row moved": "Helldiver AvatarComponentData record ownership changed",
     "avatar record gains a second owner": "Helldiver AvatarComponentData record consumer scope changed",
     "avatar third-party value": "CONFLICT: helldiver.speed.jog is neither expected nor desired (target helldiver helldiver.speed.jog; expected 3.2 (3.20000005); desired 4.5 (4.5); observed 7.25; no HD2Runtime patch, transaction, plan",
     "health index row moved": "Helldiver HealthComponentData record ownership changed",
+    "inventory index row moved": "Helldiver InventoryComponentData record ownership changed",
     "jog 10.5": "value outside the reviewed range [0, 10] for helldiver.speed.jog",
     "jog NaN": "value must be a finite number",
     "no allow_shared": "shared field requires allow_shared=true: helldiver.speed.jog (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) reads it, so a ",
     "no allow_unverified_effect": "field requires allow_unverified_effect=true: helldiver.speed.jog (Native-code proven offline (research/avatar-fields-F5FEE03DCFDB.json: the reader, the record identity and the snapshot bytes); no chan",
     "sprint duration 0": "value outside the reviewed range [1, 3600] for helldiver.stamina.sprint_duration",
     "stale expect": "expect differs from the reviewed value of helldiver.speed.jog: declared=3 reviewed=3.2",
+    "stim refill no allow_shared": "shared field requires allow_shared=true: helldiver.supply.stims_from_supply (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) ",
+    "stim third-party value": "CONFLICT: helldiver.supply.stims_from_supply is neither expected nor desired (target helldiver helldiver.supply.stims_from_supply; expected 2 (2); desired 4 (4); observed 1; no HD2Runtime patch, trans",
     "unknown damage multiplier name": "UNKNOWN_DAMAGE_MULTIPLIER: zone.damage_multiplier value armoured is not one of none, critical, normal, reduced, symbolic",
     "unknown zone": "UNKNOWN_ZONE: unknown Helldiver damage zone: tail (head, body, arm_left, arm_right, leg_left, leg_right)",
     "zone name hash changed": "Helldiver damage zone identity changed (zone.damage_multiplier guard at +616)",
@@ -799,7 +882,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -816,7 +899,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -833,7 +916,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 2,
      "tableBytesCompared": 11108224,
@@ -850,7 +933,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -867,7 +950,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -884,7 +967,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -897,12 +980,29 @@
       3,
       0.5
      ]
+    },
+    "stim_refill": {
+     "notes": {},
+     "otherRecordsUnchanged": 86,
+     "protectionChanges": 2,
+     "protectionRestored": true,
+     "readerBytes": 377508,
+     "restored": true,
+     "tableBytesChanged": 1,
+     "tableBytesCompared": 15280,
+     "targetOffsetsInRecord": [
+      52
+     ],
+     "writes": 1,
+     "written": [
+      5.605193857299268e-45
+     ]
     }
    },
    "snapshot": "F5FEE03DCFDB-20260929T172918Z-mission-host-alive.hd2snap",
    "status": "VALIDATED",
    "tamperedPin": "the avatar manager layout changed (0x507920: health private-copy map, else 0x507430 at game+50797A)",
-   "writes": 14
+   "writes": 16
   },
   "F5FEE03DCFDB-20260929T173206Z-mission-host-after-reinforce.hd2snap": {
    "fixtureFallback": "disabled",
@@ -929,7 +1029,7 @@
     ]
    },
    "mode": "snapshot-overlay",
-   "noops": 52,
+   "noops": 53,
    "notes": {
     "avatar": {},
     "healthZone": {},
@@ -953,18 +1053,21 @@
     "status": "checked"
    },
    "problems": [],
-   "protectionChanges": 24,
+   "protectionChanges": 28,
    "rejections": {
     "avatar index row moved": "Helldiver AvatarComponentData record ownership changed",
     "avatar record gains a second owner": "Helldiver AvatarComponentData record consumer scope changed",
     "avatar third-party value": "CONFLICT: helldiver.speed.jog is neither expected nor desired (target helldiver helldiver.speed.jog; expected 3.2 (3.20000005); desired 4.5 (4.5); observed 7.25; no HD2Runtime patch, transaction, plan",
     "health index row moved": "Helldiver HealthComponentData record ownership changed",
+    "inventory index row moved": "Helldiver InventoryComponentData record ownership changed",
     "jog 10.5": "value outside the reviewed range [0, 10] for helldiver.speed.jog",
     "jog NaN": "value must be a finite number",
     "no allow_shared": "shared field requires allow_shared=true: helldiver.speed.jog (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) reads it, so a ",
     "no allow_unverified_effect": "field requires allow_unverified_effect=true: helldiver.speed.jog (Native-code proven offline (research/avatar-fields-F5FEE03DCFDB.json: the reader, the record identity and the snapshot bytes); no chan",
     "sprint duration 0": "value outside the reviewed range [1, 3600] for helldiver.stamina.sprint_duration",
     "stale expect": "expect differs from the reviewed value of helldiver.speed.jog: declared=3 reviewed=3.2",
+    "stim refill no allow_shared": "shared field requires allow_shared=true: helldiver.supply.stims_from_supply (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) ",
+    "stim third-party value": "CONFLICT: helldiver.supply.stims_from_supply is neither expected nor desired (target helldiver helldiver.supply.stims_from_supply; expected 2 (2); desired 4 (4); observed 1; no HD2Runtime patch, trans",
     "unknown damage multiplier name": "UNKNOWN_DAMAGE_MULTIPLIER: zone.damage_multiplier value armoured is not one of none, critical, normal, reduced, symbolic",
     "unknown zone": "UNKNOWN_ZONE: unknown Helldiver damage zone: tail (head, body, arm_left, arm_right, leg_left, leg_right)",
     "zone name hash changed": "Helldiver damage zone identity changed (zone.damage_multiplier guard at +616)",
@@ -976,7 +1079,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -993,7 +1096,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -1010,7 +1113,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 2,
      "tableBytesCompared": 11108224,
@@ -1027,7 +1130,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -1044,7 +1147,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -1061,7 +1164,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -1074,12 +1177,29 @@
       3,
       0.5
      ]
+    },
+    "stim_refill": {
+     "notes": {},
+     "otherRecordsUnchanged": 86,
+     "protectionChanges": 2,
+     "protectionRestored": true,
+     "readerBytes": 377508,
+     "restored": true,
+     "tableBytesChanged": 1,
+     "tableBytesCompared": 15280,
+     "targetOffsetsInRecord": [
+      52
+     ],
+     "writes": 1,
+     "written": [
+      5.605193857299268e-45
+     ]
     }
    },
    "snapshot": "F5FEE03DCFDB-20260929T173206Z-mission-host-after-reinforce.hd2snap",
    "status": "VALIDATED",
    "tamperedPin": "the avatar manager layout changed (0x507920: health private-copy map, else 0x507430 at game+50797A)",
-   "writes": 14
+   "writes": 16
   },
   "F5FEE03DCFDB-20260929T173443Z-mission-end-transition.hd2snap": {
    "fixtureFallback": "disabled",
@@ -1106,7 +1226,7 @@
     ]
    },
    "mode": "snapshot-overlay",
-   "noops": 52,
+   "noops": 53,
    "notes": {
     "avatar": {},
     "healthZone": {},
@@ -1121,18 +1241,21 @@
     "status": "checked"
    },
    "problems": [],
-   "protectionChanges": 24,
+   "protectionChanges": 28,
    "rejections": {
     "avatar index row moved": "Helldiver AvatarComponentData record ownership changed",
     "avatar record gains a second owner": "Helldiver AvatarComponentData record consumer scope changed",
     "avatar third-party value": "CONFLICT: helldiver.speed.jog is neither expected nor desired (target helldiver helldiver.speed.jog; expected 3.2 (3.20000005); desired 4.5 (4.5); observed 7.25; no HD2Runtime patch, transaction, plan",
     "health index row moved": "Helldiver HealthComponentData record ownership changed",
+    "inventory index row moved": "Helldiver InventoryComponentData record ownership changed",
     "jog 10.5": "value outside the reviewed range [0, 10] for helldiver.speed.jog",
     "jog NaN": "value must be a finite number",
     "no allow_shared": "shared field requires allow_shared=true: helldiver.speed.jog (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) reads it, so a ",
     "no allow_unverified_effect": "field requires allow_unverified_effect=true: helldiver.speed.jog (Native-code proven offline (research/avatar-fields-F5FEE03DCFDB.json: the reader, the record identity and the snapshot bytes); no chan",
     "sprint duration 0": "value outside the reviewed range [1, 3600] for helldiver.stamina.sprint_duration",
     "stale expect": "expect differs from the reviewed value of helldiver.speed.jog: declared=3 reviewed=3.2",
+    "stim refill no allow_shared": "shared field requires allow_shared=true: helldiver.supply.stims_from_supply (The avatar_helldiver TYPE record: every Helldiver this machine simulates (the local player, and whoever else it simulates) ",
+    "stim third-party value": "CONFLICT: helldiver.supply.stims_from_supply is neither expected nor desired (target helldiver helldiver.supply.stims_from_supply; expected 2 (2); desired 4 (4); observed 1; no HD2Runtime patch, trans",
     "unknown damage multiplier name": "UNKNOWN_DAMAGE_MULTIPLIER: zone.damage_multiplier value armoured is not one of none, critical, normal, reduced, symbolic",
     "unknown zone": "UNKNOWN_ZONE: unknown Helldiver damage zone: tail (head, body, arm_left, arm_right, leg_left, leg_right)",
     "zone name hash changed": "Helldiver damage zone identity changed (zone.damage_multiplier guard at +616)",
@@ -1144,7 +1267,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -1161,7 +1284,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -1178,7 +1301,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 2,
      "tableBytesCompared": 11108224,
@@ -1195,7 +1318,7 @@
      "otherRecordsUnchanged": 501,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 445364,
+     "readerBytes": 447972,
      "restored": true,
      "tableBytesChanged": 1,
      "tableBytesCompared": 11108224,
@@ -1212,7 +1335,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -1229,7 +1352,7 @@
      "otherRecordsUnchanged": 1,
      "protectionChanges": 2,
      "protectionRestored": true,
-     "readerBytes": 370876,
+     "readerBytes": 373484,
      "restored": true,
      "tableBytesChanged": 3,
      "tableBytesCompared": 1736,
@@ -1242,12 +1365,29 @@
       3,
       0.5
      ]
+    },
+    "stim_refill": {
+     "notes": {},
+     "otherRecordsUnchanged": 86,
+     "protectionChanges": 2,
+     "protectionRestored": true,
+     "readerBytes": 377508,
+     "restored": true,
+     "tableBytesChanged": 1,
+     "tableBytesCompared": 15280,
+     "targetOffsetsInRecord": [
+      52
+     ],
+     "writes": 1,
+     "written": [
+      5.605193857299268e-45
+     ]
     }
    },
    "snapshot": "F5FEE03DCFDB-20260929T173443Z-mission-end-transition.hd2snap",
    "status": "VALIDATED",
    "tamperedPin": "the avatar manager layout changed (0x507920: health private-copy map, else 0x507430 at game+50797A)",
-   "writes": 14
+   "writes": 16
   }
  },
  "snapshots": 7,

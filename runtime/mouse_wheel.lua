@@ -352,13 +352,26 @@ end
 -- GetCursorPos, which blocking does not touch. Returns true, or false and why (no hook yet: the game window must have
 -- the focus and the hook installs on the first call).
 local LEASE_MS=500
-function M.block(spec)
+local block_leases={}
+function M.block(spec,owner)
+    owner=owner or'legacy'
     local flags=0
     if type(spec)=='table'then
         if spec.keyboard then flags=flags+1 end
         if spec.mouse then flags=flags+2 end
     end
-    state.block_flags,state.block_query=flags,now()
+    local clock=now()
+    block_leases[owner]=flags~=0 and{flags=flags,expires=clock+LEASE_MS/1000}or nil
+    local keyboard,mouse,expires=false,false,clock
+    for id,lease in pairs(block_leases)do
+        if lease.expires<=clock then block_leases[id]=nil
+        else
+            keyboard=keyboard or lease.flags%2==1;mouse=mouse or lease.flags>=2
+            expires=math.max(expires,lease.expires)
+        end
+    end
+    flags=(keyboard and 1 or 0)+(mouse and 2 or 0)
+    state.block_flags,state.block_query=flags,clock
     if flags~=0 then
         state.last_query=now()
         if not state.hook then ensure_hook()end
@@ -367,7 +380,7 @@ function M.block(spec)
     local hook=state.hook
     if not hook and flags~=0 and not M.native_allowed()then return false,M.NATIVE_OFF end
     if not hook or not hook.block then return flags==0,'no message hook (yet)'end
-    local ok,why=pcall(function()hook.block(flags,flags~=0 and hook.now()+LEASE_MS or 0)end)
+    local ok,why=pcall(function()hook.block(flags,flags~=0 and hook.now()+math.min(LEASE_MS,math.max(1,math.ceil((expires-clock)*1000)))or 0)end)
     if not ok then disable(why);return false,tostring(why)end
     return true
 end
@@ -382,6 +395,7 @@ function M.status()
 end
 function M.reset_for_tests()
     off_setting=nil
+    block_leases={}
     state.block_flags,state.block_query=nil,nil
     remove()
     state.value,state.frame,state.last_query,state.disabled,state.source,state.logged,state.engine_ok,state.next_try=

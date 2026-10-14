@@ -1,0 +1,14 @@
+{
+  "baseReloads": 60,
+  "changedWrites": 162,
+  "firearms": 77,
+  "heatFields": 85,
+  "liveGameTested": false,
+  "magazineReloads": 17,
+  "noReloadAbility": 1,
+  "rejections": [
+    "heat.level_1.damage.standard_damage",
+    "heat.level_3.self_damage.standard_damage"
+  ],
+  "status": "VALIDATED"
+}

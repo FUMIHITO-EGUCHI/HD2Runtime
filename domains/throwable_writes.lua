@@ -15,7 +15,7 @@ local M={}
 local component_names={'ThrowableComponentData','ExplosiveComponentData','StickyComponentData',
     'ShieldComponentData','HealthComponentData'}
 local PATHS={throwable=true,detonation=true,explosion=true,status_effect=true,shrapnel=true,
-    bomblets=true,bomblet_explosion=true,damage=true,entity=true,shield=true}
+    bomblets=true,bomblet_explosion=true,damage=true,entity=true,shield=true,flight=true,arc=true,pulse=true}
 
 local function equal(a,c,storage)
     if storage=='f32'then return type(a)=='number'and type(c)=='number'
@@ -51,6 +51,41 @@ local function validate_change(entry,owned,item,request)
     assert(not field.shared or request.allow_shared==true,'shared field requires allow_shared=true: '..item.field)
     assert(request.allow_unverified_effect==true,
         'throwable writes require allow_unverified_effect=true: '..item.field..' ('..field.acknowledgementReason..')')
+    if field.type=='explosion_reference'then
+        local catalog=require('hd2runtime/api/explosion_catalogue')
+        local function resolve(value)
+            if value=='none'then return nil,'none',0 end
+            local e,id=catalog.entry(value);assert(e,id)
+            return e,id,e.type
+        end
+        local original,eid,expected=resolve(item.expect)
+        local donor,did,desired=resolve(item.value)
+        assert(eid==field.currentDefault,'expect differs from reviewed explosion payload')
+        assert(request.allow_unverified_reference==true,'explosion replacement requires allow_unverified_reference=true')
+        local dependencies
+        if donor and did~=eid then
+            assert(donor.payload,'ASSET_UNAVAILABLE: explosion payload has no reviewed package')
+            dependencies=require('hd2runtime/core/assets').explosion_dependencies(donor,did)
+        end
+        return {field=item.field,canonical_field=field.semanticFieldId,descriptor=field,
+            expect=eid,value=did,expected=b.encode(expected,'u32'),desired=b.encode(desired,'u32'),
+            original_explosion=original,donor_explosion=donor,asset_dependencies=dependencies}
+    end
+    if field.type=='explosion_payload'then
+        local catalog=require('hd2runtime/api/explosion_catalogue')
+        local expected,eid=catalog.entry(item.expect);assert(expected,eid)
+        local desired,did=catalog.entry(item.value);assert(desired,did)
+        assert(eid==field.currentDefault,'expect differs from reviewed pulse payload')
+        assert(field.payloadOptions[did],'pulse payload is not a reviewed donor')
+        assert(request.allow_unverified_reference==true,'pulse replacement requires allow_unverified_reference=true')
+        local dependency
+        if did~=eid and desired.package and not desired.package.mission then
+            dependency=assert(require('hd2runtime/core/assets').dependency(desired.package.key),
+                'pulse payload package unavailable')
+        end
+        return {field=item.field,canonical_field=field.semanticFieldId,descriptor=field,
+            expect=eid,value=did,asset_dependency=dependency}
+    end
     if field.type=='status_reference'then
         -- An explosion DamageInfo status slot (0.31.1): catalog semantic IDs ('gas', 'fire', ...) or 'none', the same
         -- rules as a weapon's slot (domains/player_weapon_writes.lua): a used slot's status, or the first empty one.
@@ -93,7 +128,8 @@ local function validate_change(entry,owned,item,request)
 end
 local function validate(request,multiple)
     assert(type(request)=='table',(multiple and'transaction'or'patch')..' requires a descriptor')
-    local allowed={id=true,target=true,diagnostic=true,allow_shared=true,allow_unverified_effect=true}
+    local allowed={id=true,target=true,diagnostic=true,allow_shared=true,allow_unverified_effect=true,
+        allow_unverified_reference=true}
     if multiple then allowed.changes=true else allowed.field=true;allowed.expect=true;allowed.value=true end
     for key in pairs(request)do assert(allowed[key],'unsupported option: '..tostring(key))end
     valid_id(request.id)
@@ -112,6 +148,11 @@ local function validate(request,multiple)
         result.changes[index]=change
     end
     result.field=request.field;result.expect=request.expect;result.value=request.value
+    result.asset_dependencies={}
+    for _,change in ipairs(result.changes)do
+        if change.asset_dependency then result.asset_dependencies[#result.asset_dependencies+1]=change.asset_dependency end
+        for _,dep in ipairs(change.asset_dependencies or{})do result.asset_dependencies[#result.asset_dependencies+1]=dep end
+    end
     return result
 end
 function M.validate_patch(request)return validate(request,false)end
@@ -158,6 +199,7 @@ local function collect_needs(spec)
     for _,change in ipairs(spec.changes)do
         local backing=change.descriptor.backing
         if backing.kind=='settings'then needed[backing.settings]=true end
+        if change.descriptor.type=='explosion_reference'then needed.explosion=true end
         if change.descriptor.type=='status_reference'then needed.status=true end   -- the status names are re-read
     end
     return needed
@@ -185,10 +227,63 @@ function M.capture(runtime,reader,spec)return M.capture_many(runtime,reader,{spe
 
 -- packing: a plan phase's status slot packing state (domains/composition_plans.lua verifies it); without one, this
 -- write set is its own and is verified here.
+local function prepare_pulse(resolved,reader,change,plan)
+    local field=change.descriptor
+    local function bytes(option,check_row)
+        local row,owner=settings_record(resolved.roots,'explosion',option.recordType,option.group,option.row)
+        assert(row.settings_type==option.settingsType,'pulse payload settings identity changed')
+        local array=b.unhex(option.arrayHex)
+        assert(option.arrayOffset>=0 and option.arrayOffset+#array<=owner.size,'pulse payload array outside allocation')
+        assert(reader.read(owner,option.arrayOffset,#array)==array,'pulse payload array changed')
+        local ptr=owner.base+option.arrayOffset
+        local pointer=b.encode(ptr%4294967296,'u32')..b.encode(math.floor(ptr/4294967296),'u32')
+        local raw=b.unhex(option.hex);raw=raw:sub(1,40)..pointer..raw:sub(49)
+        if check_row then assert(row.bytes==raw,'pulse donor definition changed')end
+        return raw:sub(5,152),row,owner
+    end
+    local donor=change.value~=change.expect and bytes(field.payloadOptions[change.value],true)or nil
+    local expected,desired,current,rows={},{},{},{}
+    for _,recipient in ipairs(field.payloadRecipients)do
+        local baseline,row,owner=bytes(recipient,false)
+        expected[#expected+1]=baseline;desired[#desired+1]=donor or baseline
+        current[#current+1]=row.bytes:sub(5,152)
+        rows[#rows+1]={record=row,owner=owner,type=recipient.recordType}
+    end
+    change.expected=table.concat(expected);change.desired=table.concat(desired)
+    local observed=table.concat(current)
+    local accepted=ownership.expected(change,observed)
+    -- Both pulse rows (repeated and final discharge) commit or roll back together. Preserve each type ID.
+    for n,item in ipairs(rows)do
+        local at=0;local base=(n-1)*148
+        while at<148 do
+            local width=at+4==40 and 8 or 4
+            local first,last=base+at+1,base+at+width
+            local before=observed:sub(first,last);local after=change.desired:sub(first,last)
+            plan.changes[#plan.changes+1]={label=change.field..'['..item.type..':'..at..']',
+                canonical_field=change.canonical_field..'['..item.type..':'..at..']',semantic_aliases={change.field},
+                owner=item.owner,offset=item.record.offset+4+at,field_offset=4+at,
+                expected=accepted:sub(first,last),desired=after,before=before,already_desired=before==after,
+                expect=change.expect,value=change.value,
+                identity={component='explosion',component_type='semantic',record_index=item.record.row,
+                    unique_owner=false,owner_count=0,scope='shared Urchin pulse payload'},chain={}}
+            at=at+width
+        end
+    end
+end
+
 function M.prepare(resolved,reader,spec,packing)
     local plan={changes={},snapshots=reader.snapshots};local physical={}
     local own_packing=packing==nil;packing=packing or status_slots.new()
     for _,change in ipairs(spec.changes)do
+        if change.descriptor.type=='explosion_payload'then prepare_pulse(resolved,reader,change,plan)else
+        if change.descriptor.type=='explosion_reference'then
+            local function prove(e)
+                if not e then return end
+                local row=settings_record(resolved.roots,'explosion',e.type,e.group,e.row)
+                assert(row.settings_type==e.settingsType,'explosion payload settings identity changed')
+            end
+            prove(change.original_explosion);prove(change.donor_explosion)
+        end
         local backing=change.descriptor.backing
         local record,owner
         if backing.kind=='component'then
@@ -243,7 +338,9 @@ function M.prepare(resolved,reader,spec,packing)
                     unique_owner=not change.descriptor.shared,owner_count=backing.ownerCount or 0,
                     scope=change.descriptor.operationGroup},
                 chain={}}
-            physical[key]=item;plan.changes[#plan.changes+1]=item
+            physical[key]=item
+            plan.changes[#plan.changes+1]=item
+        end
         end
     end
     if own_packing then status_slots.verify(packing)end

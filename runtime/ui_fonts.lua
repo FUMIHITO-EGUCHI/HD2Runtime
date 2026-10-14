@@ -21,6 +21,21 @@ M.GAME=D.game or{}
 M.KERN_KEY=4294967296     -- a kerning pair's key: previous * 2^32 + codepoint (domains/ui_fonts_<key>.lua)
 local utf8_codes
 
+-- Immutable font metrics: bounded per-font string caches, never engine pointers or residency answers.
+-- Width is stored in font units so every size shares it. A full cache is replaced rather than growing with counters.
+local text_cache=setmetatable({},{__mode='k'})
+local function cached(font,text)
+    if #text>M.MAX_TEXT_BYTES then return nil end
+    local c=text_cache[font]
+    if not c then c={n=0,values={}};text_cache[font]=c end
+    local v=c.values[text]
+    if not v then
+        if c.n>=512 then c={n=0,values={}};text_cache[font]=c end
+        v={};c.values[text]=v;c.n=c.n+1
+    end
+    return v
+end
+
 local resident={}
 local function loaded(runtime,name)
     if resident[name]~=nil then return resident[name]end
@@ -45,6 +60,8 @@ end
 -- The width of text at `size` pixels in a font (its glyph advances, and its kerning pairs as the engine adds them; an
 -- unknown character counts as the '?').
 function M.width(font,text,size)
+    local memo=cached(font,text)
+    if memo and memo.width then return memo.width*size/font.em end
     local adv,em,kern=font.advances,font.em,font.kerning
     local q=adv[63]or em*0.5
     local w,prev=0,nil
@@ -53,13 +70,18 @@ function M.width(font,text,size)
         if kern and prev then w=w+(kern[prev*M.KERN_KEY+cp]or 0)end
         prev=cp
     end
+    if memo then memo.width=w end
     return w*size/em
 end
 -- Whether a font has a glyph for every character of text (the Runtime-owned fonts have the call-in code's arrows,
 -- monaco does not).
 function M.has(font,text)
-    for _,cp in utf8_codes(text)do if not font.advances[cp]then return false end end
-    return true
+    local memo=cached(font,text)
+    if memo and memo.has~=nil then return memo.has end
+    local has=true
+    for _,cp in utf8_codes(text)do if not font.advances[cp]then has=false;break end end
+    if memo then memo.has=has end
+    return has
 end
 -- The cap height of a font at `size` (the size that gives a cap height: size = cap_px * em / cap).
 function M.size_for_cap(font,cap_px)return cap_px*font.em/font.cap end
@@ -341,5 +363,6 @@ utf8_codes=function(s)
 end
 M.utf8_codes=utf8_codes
 function M.reset_for_tests()resident={};metrics={};objects={};cache,cache_at,cache_runtime={},nil,nil
+    text_cache=setmetatable({},{__mode='k'})
     M.requests={};asked={};asked_count=0 end
 return M

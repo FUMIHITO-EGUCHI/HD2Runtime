@@ -33,19 +33,19 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
         # 0.31.0: +2 beam references (attack.beam on the LAS-98 and the 40-K Meltagun, research/beam-outputs); +34
         # missile fields (research/wasp-rocket: W.A.S.P. 9 missile + 9 function_missile, Spear 8, Commando 8); +14 the
         # Breaching Hammer's ability explosion (3 radii, 9 damage, 2 status slots).
-        self.assertEqual(self.capabilities['summary']['internalSupportAuthoringInstances'],1987)   # 0.31.2: +51 impact / expiry payloads (terminal.explosion, scripts/payload_fields.py); 0.31.0: +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits (Spear, Commando, W.A.S.P.), +53 ProgrammableAmmo rows (AC-8, GR-8, RL-77); 0.31.2: +306 status slots (every empty slot of a row, not only the first), +1 heat.cool_per_second_overheated (Quasar), +2 attack.primary.projectile (Quasar, Railgun: traced hosts)
-        self.assertEqual(self.capabilities['summary']['publishedSupportFieldInstances'],1987)
-        self.assertEqual(self.capabilities['summary']['legacyFlattenedFieldEntries'],1482)   # +23 terminal.explosion (one per weapon with a payload field, 0.31.2); +1 heat.cool_per_second_overheated, +2 traced host projectiles (0.31.2); +12 hammer explosion, +1 the MG-43's left input (0.31.0); +27 missile direct-hit damage members, +1 the AC-8 projectile.lifetime (0.31.1: the other ProgrammableAmmo fields repeat a semantic id of the weapon's primary attack)
-        self.assertEqual(self.capabilities['summary']['deduplicationLossPrevented'],505)   # 0.31.2: + the payload fields beyond each weapon's first (28); 0.31.1: + the missile direct hits' status slots, + the ProgrammableAmmo fields beside the primary attack's; 0.31.2: + every later empty status slot (306)
-        self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldGroups'],158)   # 0.31.2: + terminal.explosion on 20 weapons with more than one payload field; 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77; 0.31.2: + the later empty status slots
-        self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldInstances'],344)   # 0.31.2: + their 48 payload fields; 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77; 0.31.2: + the later empty status slots
+        self.assertEqual(self.capabilities['summary']['internalSupportAuthoringInstances'],2016)   # 0.31.2: +51 impact / expiry payloads (terminal.explosion, scripts/payload_fields.py); 0.31.0: +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits (Spear, Commando, W.A.S.P.), +53 ProgrammableAmmo rows (AC-8, GR-8, RL-77); 0.31.2: +306 status slots (every empty slot of a row, not only the first), +1 heat.cool_per_second_overheated (Quasar), +2 attack.primary.projectile (Quasar, Railgun: traced hosts)
+        self.assertEqual(self.capabilities['summary']['publishedSupportFieldInstances'],2016)
+        self.assertEqual(self.capabilities['summary']['legacyFlattenedFieldEntries'],1495)   # +23 terminal.explosion (one per weapon with a payload field, 0.31.2); +1 heat.cool_per_second_overheated, +2 traced host projectiles (0.31.2); +12 hammer explosion, +1 the MG-43's left input (0.31.0); +27 missile direct-hit damage members, +1 the AC-8 projectile.lifetime (0.31.1: the other ProgrammableAmmo fields repeat a semantic id of the weapon's primary attack)
+        self.assertEqual(self.capabilities['summary']['deduplicationLossPrevented'],521)   # 0.31.2: + the payload fields beyond each weapon's first (28); 0.31.1: + the missile direct hits' status slots, + the ProgrammableAmmo fields beside the primary attack's; 0.31.2: + every later empty status slot (306)
+        self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldGroups'],174)   # 0.31.2: + terminal.explosion on 20 weapons with more than one payload field; 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77; 0.31.2: + the later empty status slots
+        self.assertEqual(self.capabilities['summary']['duplicateSemanticFieldInstances'],376)   # 0.31.2: + their 48 payload fields; 0.31.1: + the ProgrammableAmmo rows of the AC-8, GR-8 and RL-77; 0.31.2: + the later empty status slots
         self.assertEqual(self.capabilities['summary']['intentionallyOmittedInstances'],0)
         # + the two overcharge explosion references (RS-422 Railgun, PLAS-45 Epoch) and the status slots of the four
         # charge-level DamageInfo rows (the Epoch full-charge shot and explosion, the two overcharge explosions).
         # 0.31.0: + the beam references of the LAS-98 and the 40-K Meltagun (attack.beam); + the hammer explosion's
         # status slot. 0.31.1: + the status slot of the three missile direct-hit rows and of the three ProgrammableAmmo rows.
         # 0.31.2: + every later empty status slot's status (153).
-        self.assertEqual(self.capabilities['referenceContract']['currentReferenceFieldInstances'],310)   # 0.31.2: + the 51 payload references; 0.31.2: + the Quasar and Railgun projectile references
+        self.assertEqual(self.capabilities['referenceContract']['currentReferenceFieldInstances'],317)   # 0.31.2: + the 51 payload references; 0.31.2: + the Quasar and Railgun projectile references
         self.assertTrue(self.capabilities['referenceContract']['typedIdentityOnly'])
         required={'identityStatus','family','attackBranches','writableFieldsByDomain',
             'sharedScopes','blockedFields','backpackDependency','linkedStratagem'}
@@ -63,11 +63,11 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
     def test_canonical_instances_exactly_cover_internal_descriptors(self):
         runtime,generated=generate_support_weapon_authoring.build()
         audit=generate_support_weapon_authoring.audit_instance_coverage(runtime,generated)
-        self.assertEqual(audit,{'internalInstances':1987,'publishedInstances':1987,   # 0.31.2: +51 payloads; 0.31.0: +34 missile fields, +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits, +53 ProgrammableAmmo rows; 0.31.2: +306 status slots (every empty slot), +1 the Quasar's overheated cooling
+        self.assertEqual(audit,{'internalInstances':2016,'publishedInstances':2016,   # 0.31.2: +51 payloads; 0.31.0: +34 missile fields, +1 the MG-43's left input (fire_mode); 0.31.1: +33 missile direct hits, +53 ProgrammableAmmo rows; 0.31.2: +306 status slots (every empty slot), +1 the Quasar's overheated cooling
             'missingInstances':0,'unexpectedInstances':0,'identityCoverage':'exact'})
         instances=self.capabilities['fieldInstances']
-        self.assertEqual(len(instances),1987)
-        self.assertEqual(len({item['instanceKey'] for item in instances}),1987)
+        self.assertEqual(len(instances),2016)
+        self.assertEqual(len({item['instanceKey'] for item in instances}),2016)
         objects={item['objectKey']:item for item in self.capabilities['backingObjects']}
         operations={item['operationGroupingKey']:item
             for item in self.capabilities['operationGroups']}
@@ -76,8 +76,8 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
         # and its damage row).
         # 0.31.0: + the 40-K Meltagun BeamWeapon record (beam fire mode and pulse); + 4 missile SeekingMissile records
         # (the W.A.S.P.'s two, the Spear's, the Commando's: research/wasp-rocket), one operation group each.
-        self.assertEqual(len(objects),252)   # 0.31.2: + the three missiles' carried projectile rows (their impact payloads); 0.31.0: + the Breaching Hammer's ability explosion row and its damage row; 0.31.1: + the three missile direct-hit DamageInfo rows, + three ProgrammableAmmo projectile rows and two damage rows (the RL-77's is its primary's)
-        self.assertEqual(len(operations),318)   # 0.31.2: + one per payload role (27: impact and expiry together); 0.31.2: + the Quasar and Railgun projectile references; 0.31.0: + one operation group per hammer explosion row; 0.31.1: + one per missile direct-hit row, + one per ProgrammableAmmo row
+        self.assertEqual(len(objects),254)   # 0.31.2: + the three missiles' carried projectile rows (their impact payloads); 0.31.0: + the Breaching Hammer's ability explosion row and its damage row; 0.31.1: + the three missile direct-hit DamageInfo rows, + three ProgrammableAmmo projectile rows and two damage rows (the RL-77's is its primary's)
+        self.assertEqual(len(operations),325)   # 0.31.2: + one per payload role (27: impact and expiry together); 0.31.2: + the Quasar and Railgun projectile references; 0.31.0: + one operation group per hammer explosion row; 0.31.1: + one per missile direct-hit row, + one per ProgrammableAmmo row
         required={'instanceKey','supportWeapon','supportWeaponIdentity','target','semanticFieldId',
             'qualifiedSemanticFieldId','apiFieldConstant','display','value','writable',
             'readOnly','blockedReason','backing','sharedScope','operation','resolution',
@@ -92,7 +92,7 @@ class SupportWeaponAuthoringTests(unittest.TestCase):
             self.assertEqual(instance['operation']['phase'],1)
             self.assertEqual(instance['target']['accessor'][0],'support_weapon')
         self.assertEqual(sum(len(weapon['fieldInstanceKeys'])
-            for weapon in self.capabilities['weapons']),1987)   # 0.31.2: +51 payloads
+            for weapon in self.capabilities['weapons']),2016)   # 0.31.2: +51 payloads
 
     def test_ammunition_is_bounded_by_the_network_fields(self):
         # 0.31.2 (scripts/ammo_limits.py): a magazine's capacity is bounded by the 11-bit live round count (2047) and

@@ -5,6 +5,8 @@
   "orbitals": {
     "Orbital 120mm HE Barrage": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -12,7 +14,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         194,
@@ -22,6 +25,8 @@
     },
     "Orbital 380mm HE Barrage": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -29,7 +34,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         80,
@@ -39,6 +45,8 @@
     },
     "Orbital Airburst Strike": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -46,7 +54,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         158
@@ -54,6 +63,8 @@
     },
     "Orbital EMS Strike": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -61,7 +72,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         74
@@ -69,6 +81,8 @@
     },
     "Orbital Gas Strike": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -76,7 +90,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         197
@@ -84,6 +99,8 @@
     },
     "Orbital Gatling Barrage": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -91,7 +108,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         77,
@@ -102,6 +120,8 @@
     },
     "Orbital Napalm Barrage": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -109,7 +129,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         234,
@@ -119,6 +140,8 @@
     },
     "Orbital Precision Strike": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -126,7 +149,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         100
@@ -134,6 +158,8 @@
     },
     "Orbital Smoke Strike": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -141,7 +167,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         247
@@ -149,6 +176,8 @@
     },
     "Orbital Walking Barrage": {
       "fields": [
+        "orbital.aim_step_max",
+        "orbital.aim_step_min",
         "orbital.salvo_interval",
         "orbital.salvo_interval_random",
         "orbital.salvo_scatter",
@@ -156,7 +185,8 @@
         "orbital.scatter",
         "orbital.shell_interval",
         "orbital.shell_interval_random",
-        "orbital.shells_per_salvo"
+        "orbital.shells_per_salvo",
+        "orbital.walking_speed"
       ],
       "shellTypes": [
         80,
@@ -165,15 +195,67 @@
       ]
     }
   },
-  "patternNoOps": 80,
-  "protectionChanges": 28,
+  "patternNoOps": 110,
+  "protectionChanges": 44,
   "rejections": {
-    "acknowledgement": 174,
+    "acknowledgement": 204,
     "conflict": 1,
     "recordProof": 1,
     "value": 15
   },
   "roundTrips": [
+    {
+      "after": "00000000",
+      "before": "00004040",
+      "field": "orbital.walking_speed",
+      "from": 3,
+      "inverseRestored": true,
+      "offset": 96,
+      "otherBytesUnchanged": true,
+      "protectionRestored": true,
+      "stratagem": "Orbital Walking Barrage",
+      "to": 0,
+      "writes": 1
+    },
+    {
+      "after": "00004040",
+      "before": "00000000",
+      "field": "orbital.walking_speed",
+      "from": 0,
+      "inverseRestored": true,
+      "offset": 96,
+      "otherBytesUnchanged": true,
+      "protectionRestored": true,
+      "stratagem": "Orbital 120mm HE Barrage",
+      "to": 3,
+      "writes": 1
+    },
+    {
+      "after": "00000040",
+      "before": "0000803f",
+      "field": "orbital.aim_step_min",
+      "from": 1,
+      "inverseRestored": true,
+      "offset": 16,
+      "otherBytesUnchanged": true,
+      "protectionRestored": true,
+      "stratagem": "Orbital Gas Strike",
+      "to": 2,
+      "writes": 1
+    },
+    {
+      "after": "00004040",
+      "before": "0000803f",
+      "field": "orbital.aim_step_max",
+      "from": 1,
+      "inverseRestored": true,
+      "offset": 20,
+      "otherBytesUnchanged": true,
+      "protectionRestored": true,
+      "stratagem": "Orbital Gas Strike",
+      "to": 3,
+      "writes": 1
+    },
     {
       "after": "05000000",
       "before": "01000000",
@@ -309,5 +391,5 @@
       "writes": 2
     }
   ],
-  "writes": 32
+  "writes": 40
 }

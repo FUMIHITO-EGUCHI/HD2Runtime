@@ -1,7 +1,7 @@
 # Stratagem mission uses
 
 `hd2.fields.stratagem.max_uses` sets how many times a stratagem can be called in during a mission.
-It works for every non-Eagle stratagem, whether its baseline is limited or unlimited.
+Apply it aboard the ship **before launch**. The definition supports finite and unlimited baselines on non-Eagle stratagems.
 
 ```lua
 -- Exosuits: 3 uses -> unlimited (see examples/projects/ExosuitUnlimitedUses)
@@ -33,8 +33,12 @@ never a large finite count.
 - **Proven change:** Exosuit 3 → `'unlimited'` is gameplay-proven by the Exosuit Unlimited Uses
   reference mod, so it needs no acknowledgement.
 - **Unproven changes:** every other change requires `allow_unverified_effect=true`.
-- **Host behavior:** the mission host applies use counts, and the HUD counter may show the old value
-  until the next mission.
+- **Launch-time counter:** each mission slot copies its uses at launch, before the mission preparation event.
+  Editing the definition after launch does not update the current remaining-use counter. An unlimited slot can
+  therefore keep working indefinitely until the next mission; this is not just a stale HUD number.
+- **Duplicate slots:** each equipped slot has its own counter. Two copies of a two-use stratagem provide two uses each.
+- **Refill pool:** a stratagem linked to Eagle Rearm has charges per rearm, rather than a lifetime mission limit.
+- **Multiplayer:** every machine should run the same settings; the host synchronizes mission entries.
 
 `sdk/StratagemAuthoringCapabilities.json` publishes `maxUses` for every stratagem, with:
 

@@ -143,7 +143,7 @@
     "objectivePackage": 2,
     "explosionPackage": 141,
     "unknown": 73,
-    "packages": 215,
+    "packages": 218,
     "unnamedPackages": 24,
     "passiveEffectPackages": 2,
     "liveTestedObjects": 3,
@@ -7739,6 +7739,4881 @@
         "derivation": "passive_effect_package",
         "package": null,
         "packageNamed": false,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/1",
+      "label": "1",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/10",
+      "label": "10",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/2",
+      "label": "2",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/3",
+      "label": "3",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/4",
+      "label": "4",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/5",
+      "label": "5",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/6",
+      "label": "6",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/7",
+      "label": "7",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/8",
+      "label": "8",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/difficulty/9",
+      "label": "9",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/faction/automatons",
+      "label": "automatons",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/faction/illuminate",
+      "label": "illuminate",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/faction/super_earth",
+      "label": "super_earth",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/faction/terminids",
+      "label": "terminids",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_assassinate_chargers",
+      "label": "bug_assassinate_chargers",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_assassinate_commander",
+      "label": "bug_assassinate_commander",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_assassinate_impaler",
+      "label": "bug_assassinate_impaler",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_assassinate_striders",
+      "label": "bug_assassinate_striders",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_central_core",
+      "label": "bug_central_core",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_city_fog_garden",
+      "label": "bug_city_fog_garden",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_city_mega_shrieker_nest",
+      "label": "bug_city_mega_shrieker_nest",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_destroy_spawners",
+      "label": "bug_destroy_spawners",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_destroy_stalker_lair",
+      "label": "bug_destroy_stalker_lair",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_extract_oil_hive_world",
+      "label": "bug_extract_oil_hive_world",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_foggenerator",
+      "label": "bug_foggenerator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_hive_world_destroy_spore_lung",
+      "label": "bug_hive_world_destroy_spore_lung",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_hive_world_retrieve_se_equipment",
+      "label": "bug_hive_world_retrieve_se_equipment",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_hive_world_retrieve_se_equipment_briefcase",
+      "label": "bug_hive_world_retrieve_se_equipment_briefcase",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_horde",
+      "label": "bug_horde",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_kill",
+      "label": "bug_kill",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_kill_world",
+      "label": "bug_kill_world",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_oil_pump_hive_world",
+      "label": "bug_oil_pump_hive_world",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_protospire",
+      "label": "bug_protospire",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_purge_cave_hive_world",
+      "label": "bug_purge_cave_hive_world",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_purge_hatchery",
+      "label": "bug_purge_hatchery",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_raise_flag_hive_world",
+      "label": "bug_raise_flag_hive_world",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_retrieve_larva",
+      "label": "bug_retrieve_larva",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_shrieker_nest",
+      "label": "bug_shrieker_nest",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_tcs_01",
+      "label": "bug_tcs_01",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_tcs_02",
+      "label": "bug_tcs_02",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_tcs_02_destroy_eggs",
+      "label": "bug_tcs_02_destroy_eggs",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_tcs_03_backpack",
+      "label": "bug_tcs_03_backpack",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_tcs_03_thumper",
+      "label": "bug_tcs_03_thumper",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_tcs_04",
+      "label": "bug_tcs_04",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/bug_thumper",
+      "label": "bug_thumper",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_aa_emplacement",
+      "label": "cy_aa_emplacement",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_aa_emplacement_infiltration",
+      "label": "cy_aa_emplacement_infiltration",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_assassinate_devastator",
+      "label": "cy_assassinate_devastator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_assassinate_fabricator",
+      "label": "cy_assassinate_fabricator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_assassinate_lt",
+      "label": "cy_assassinate_lt",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_assassinate_tank",
+      "label": "cy_assassinate_tank",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_blow_up_organic_assembly_site",
+      "label": "cy_blow_up_organic_assembly_site",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_chemicals",
+      "label": "cy_chemicals",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_claim_mine_quarry",
+      "label": "cy_claim_mine_quarry",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_convoy_assault",
+      "label": "cy_convoy_assault",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_airbase",
+      "label": "cy_destroy_airbase",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_ammo",
+      "label": "cy_destroy_ammo",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_command_bunker",
+      "label": "cy_destroy_command_bunker",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_communication",
+      "label": "cy_destroy_communication",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_control_tower",
+      "label": "cy_destroy_control_tower",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_cooling_structure",
+      "label": "cy_destroy_cooling_structure",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_detector_tower",
+      "label": "cy_destroy_detector_tower",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_fuel",
+      "label": "cy_destroy_fuel",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_gunship",
+      "label": "cy_destroy_gunship",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_spawners",
+      "label": "cy_destroy_spawners",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_destroy_stratagem_blocker",
+      "label": "cy_destroy_stratagem_blocker",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_extract_organic_soup",
+      "label": "cy_extract_organic_soup",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_factory_world_aa_emplacement",
+      "label": "cy_factory_world_aa_emplacement",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_factory_world_access_point_icon",
+      "label": "cy_factory_world_access_point_icon",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_factory_world_destroy_factory",
+      "label": "cy_factory_world_destroy_factory",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_factory_world_mortar_emplacement",
+      "label": "cy_factory_world_mortar_emplacement",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_hack_refinery",
+      "label": "cy_hack_refinery",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_hack_turrets",
+      "label": "cy_hack_turrets",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_horde",
+      "label": "cy_horde",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_kill",
+      "label": "cy_kill",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_mortar_emplacement",
+      "label": "cy_mortar_emplacement",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_neutralize_cannon",
+      "label": "cy_neutralize_cannon",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_obj_collect_code_discs",
+      "label": "cy_obj_collect_code_discs",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_obj_infiltration_extract_package",
+      "label": "cy_obj_infiltration_extract_package",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_optional_extraction_zone",
+      "label": "cy_optional_extraction_zone",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_orbital_cannon",
+      "label": "cy_orbital_cannon",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_raise_flag",
+      "label": "cy_raise_flag",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_raze_city",
+      "label": "cy_raze_city",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_raze_statues",
+      "label": "cy_raze_statues",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_sabotage_organic_soup_production",
+      "label": "cy_sabotage_organic_soup_production",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_sabotage_pipes",
+      "label": "cy_sabotage_pipes",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_samsite",
+      "label": "cy_samsite",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_shutdown_grinder",
+      "label": "cy_shutdown_grinder",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_steal_battery_cores",
+      "label": "cy_steal_battery_cores",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_steal_coordinates",
+      "label": "cy_steal_coordinates",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_steal_platinum",
+      "label": "cy_steal_platinum",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/cy_transport_shuttle_theft_horde",
+      "label": "cy_transport_shuttle_theft_horde",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_black_box",
+      "label": "gen_black_box",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_cargo_truck",
+      "label": "gen_cargo_truck",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_city_retrieve_codes",
+      "label": "gen_city_retrieve_codes",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_collect_data",
+      "label": "gen_collect_data",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_collect_samples",
+      "label": "gen_collect_samples",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_colony_relay",
+      "label": "gen_colony_relay",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_destroy_research_station",
+      "label": "gen_destroy_research_station",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_escort_oil_rig",
+      "label": "gen_escort_oil_rig",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_evacuate_civilians",
+      "label": "gen_evacuate_civilians",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_extract_civilians",
+      "label": "gen_extract_civilians",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_find_escape_pod",
+      "label": "gen_find_escape_pod",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_gather_footage",
+      "label": "gen_gather_footage",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_harddrive",
+      "label": "gen_harddrive",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_horde_defend",
+      "label": "gen_horde_defend",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_icbm",
+      "label": "gen_icbm",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_infiltration_black_box",
+      "label": "gen_infiltration_black_box",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_infiltration_extract_camera",
+      "label": "gen_infiltration_extract_camera",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_infiltration_pickup_camera",
+      "label": "gen_infiltration_pickup_camera",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_infiltration_respawn_point",
+      "label": "gen_infiltration_respawn_point",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_investigate_research_station",
+      "label": "gen_investigate_research_station",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_military_uplink",
+      "label": "gen_military_uplink",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_oil_pickup",
+      "label": "gen_oil_pickup",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_oilpump",
+      "label": "gen_oilpump",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_prospecting_drill",
+      "label": "gen_prospecting_drill",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_radar_station",
+      "label": "gen_radar_station",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_radar_wagon",
+      "label": "gen_radar_wagon",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_raise_flag",
+      "label": "gen_raise_flag",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_refueling_station",
+      "label": "gen_refueling_station",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_restore_power",
+      "label": "gen_restore_power",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_retrieve_codes",
+      "label": "gen_retrieve_codes",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_retrieve_oil_rig",
+      "label": "gen_retrieve_oil_rig",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_samsite",
+      "label": "gen_samsite",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_seaf_gun",
+      "label": "gen_seaf_gun",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_seismic_probe",
+      "label": "gen_seismic_probe",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_truth_transmitter",
+      "label": "gen_truth_transmitter",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/gen_upload_data",
+      "label": "gen_upload_data",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_assassinate_tripod",
+      "label": "il_assassinate_tripod",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_collect_black_box",
+      "label": "il_collect_black_box",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_corrupted_growth",
+      "label": "il_corrupted_growth",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_destroy_monolith",
+      "label": "il_destroy_monolith",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_destroy_portals",
+      "label": "il_destroy_portals",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_destroy_spawners",
+      "label": "il_destroy_spawners",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_destroy_spawners_gateways",
+      "label": "il_destroy_spawners_gateways",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_destroy_weather_device",
+      "label": "il_destroy_weather_device",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_disable_stratagem_scrambler",
+      "label": "il_disable_stratagem_scrambler",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_dropoff_black_box",
+      "label": "il_dropoff_black_box",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_extract_corruption",
+      "label": "il_extract_corruption",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_flesh_labs",
+      "label": "il_flesh_labs",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_hijack_tech_hub",
+      "label": "il_hijack_tech_hub",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_horde",
+      "label": "il_horde",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_kill",
+      "label": "il_kill",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_lightning_rod",
+      "label": "il_lightning_rod",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_optional_extraction_zone",
+      "label": "il_optional_extraction_zone",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_orbital_cannon",
+      "label": "il_orbital_cannon",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_poison_water_temple",
+      "label": "il_poison_water_temple",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_prevent_invasion_foothold",
+      "label": "il_prevent_invasion_foothold",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_purge_illuminates",
+      "label": "il_purge_illuminates",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_reclaim_location",
+      "label": "il_reclaim_location",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_retrieve_artifact",
+      "label": "il_retrieve_artifact",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_samsite",
+      "label": "il_samsite",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_shoot_down_mothership",
+      "label": "il_shoot_down_mothership",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/il_upload_data",
+      "label": "il_upload_data",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/objective",
+      "label": "objective",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/tut_intro_mission",
+      "label": "tut_intro_mission",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/objective/tut_outpost",
+      "label": "tut_outpost",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_shared",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/ACCLIMATED",
+      "label": "ACCLIMATED",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/ADRENO-DEFIBRILLATOR",
+      "label": "ADRENO-DEFIBRILLATOR",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/ADVANCED FILTRATION",
+      "label": "ADVANCED FILTRATION",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/BALLISTIC PADDING",
+      "label": "BALLISTIC PADDING",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/BLUNT-FORCE MITIGATION",
+      "label": "BLUNT-FORCE MITIGATION",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/CONCUSSIVE PADDING, GRENADIER",
+      "label": "CONCUSSIVE PADDING, GRENADIER",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/CONCUSSIVE PADDING, HAZMAT",
+      "label": "CONCUSSIVE PADDING, HAZMAT",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/CONCUSSIVE PADDING, REINFORCED",
+      "label": "CONCUSSIVE PADDING, REINFORCED",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/DEMOCRACY PROTECTS",
+      "label": "DEMOCRACY PROTECTS",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/DESERT STORMER",
+      "label": "DESERT STORMER",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/ELECTRICAL CONDUIT",
+      "label": "ELECTRICAL CONDUIT",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/ENGINEERING KIT",
+      "label": "ENGINEERING KIT",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/EXTRA PADDING",
+      "label": "EXTRA PADDING",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/FEET FIRST",
+      "label": "FEET FIRST",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/FORTIFIED",
+      "label": "FORTIFIED",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/GUNSLINGER",
+      "label": "GUNSLINGER",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/INFLAMMABLE",
+      "label": "INFLAMMABLE",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/INTEGRATED EXPLOSIVES",
+      "label": "INTEGRATED EXPLOSIVES",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/KINETIC DISPLACEMENT MITIGATION",
+      "label": "KINETIC DISPLACEMENT MITIGATION",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/MED-KIT",
+      "label": "MED-KIT",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/OXYGENATOR",
+      "label": "OXYGENATOR",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/PEAK PHYSIQUE",
+      "label": "PEAK PHYSIQUE",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/REDUCED SIGNATURE",
+      "label": "REDUCED SIGNATURE",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/REINFORCED EPAULETTES",
+      "label": "REINFORCED EPAULETTES",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/ROCK-SOLID",
+      "label": "ROCK-SOLID",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/SCOUT",
+      "label": "SCOUT",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/SERVO-ASSISTED",
+      "label": "SERVO-ASSISTED",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/SIEGE-READY",
+      "label": "SIEGE-READY",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/STANDARD ISSUE",
+      "label": "STANDARD ISSUE",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/SUPPLEMENTAL ADRENALINE",
+      "label": "SUPPLEMENTAL ADRENALINE",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/TRUE GRIT",
+      "label": "TRUE GRIT",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/passive/UNFLINCHING",
+      "label": "UNFLINCHING",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_ship",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-10 Incendiary",
+      "label": "G-10 Incendiary",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-109 Urchin",
+      "label": "G-109 Urchin",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-12 High Explosive",
+      "label": "G-12 High Explosive",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-123 Thermite",
+      "label": "G-123 Thermite",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-13 Incendiary Impact",
+      "label": "G-13 Incendiary Impact",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-142 Pyrotech",
+      "label": "G-142 Pyrotech",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-16 Impact",
+      "label": "G-16 Impact",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-23 Stun",
+      "label": "G-23 Stun",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-3 Smoke",
+      "label": "G-3 Smoke",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-31 Arc",
+      "label": "G-31 Arc",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-4 Gas",
+      "label": "G-4 Gas",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-48 Giga Grenade",
+      "label": "G-48 Giga Grenade",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-50 Seeker",
+      "label": "G-50 Seeker",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-6 Frag",
+      "label": "G-6 Frag",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-60 Anti-Tank Seeker",
+      "label": "G-60 Anti-Tank Seeker",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-7 Pineapple",
+      "label": "G-7 Pineapple",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-8 Immolation",
+      "label": "G-8 Immolation",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G-89 Smokescreen",
+      "label": "G-89 Smokescreen",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G/40-K Melta Mine",
+      "label": "G/40-K Melta Mine",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/G/SH-39 Shield",
+      "label": "G/SH-39 Shield",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/K-2 Throwing Knife",
+      "label": "K-2 Throwing Knife",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/TED-63 Dynamite",
+      "label": "TED-63 Dynamite",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/throwable/TM-1 Lure Mine",
+      "label": "TM-1 Lure Mine",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/40-K Meltagun",
+      "label": "40-K Meltagun",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AC-8 Autocannon",
+      "label": "AC-8 Autocannon",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/APW-1 Anti-Materiel Rifle",
+      "label": "APW-1 Anti-Materiel Rifle",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR-11 Arbitrator",
+      "label": "AR-11 Arbitrator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR-2 Coyote",
+      "label": "AR-2 Coyote",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR-23 Liberator",
+      "label": "AR-23 Liberator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR-23A Liberator Carbine",
+      "label": "AR-23A Liberator Carbine",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR-23C Liberator Concussive",
+      "label": "AR-23C Liberator Concussive",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR-23P Liberator Penetrator",
+      "label": "AR-23P Liberator Penetrator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR-32 Pacifier",
+      "label": "AR-32 Pacifier",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR-59 Suppressor",
+      "label": "AR-59 Suppressor",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR-61 Tenderizer",
+      "label": "AR-61 Tenderizer",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/AR/GL-21 One-Two",
+      "label": "AR/GL-21 One-Two",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/ARC-12 Blitzer",
+      "label": "ARC-12 Blitzer",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/ARC-3 Arc Thrower",
+      "label": "ARC-3 Arc Thrower",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/B/FLAM-80 Cremator",
+      "label": "B/FLAM-80 Cremator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/B/MD C4 Pack",
+      "label": "B/MD C4 Pack",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/BR-14 Adjudicator",
+      "label": "BR-14 Adjudicator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CB-9 Exploding Crossbow",
+      "label": "CB-9 Exploding Crossbow",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CQC-1 One True Flag",
+      "label": "CQC-1 One True Flag",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CQC-19 Stun Lance",
+      "label": "CQC-19 Stun Lance",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CQC-2 Saber",
+      "label": "CQC-2 Saber",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CQC-30 Stun Baton",
+      "label": "CQC-30 Stun Baton",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CQC-42 Machete",
+      "label": "CQC-42 Machete",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CQC-5 Combat Hatchet",
+      "label": "CQC-5 Combat Hatchet",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CQC-72 Entrenchment Tool",
+      "label": "CQC-72 Entrenchment Tool",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CQC-73 Entrenchment Tool",
+      "label": "CQC-73 Entrenchment Tool",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/CQC-9 Defoliation Tool",
+      "label": "CQC-9 Defoliation Tool",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/DBS-2 Double Freedom",
+      "label": "DBS-2 Double Freedom",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/EAT-17 Expendable Anti-Tank",
+      "label": "EAT-17 Expendable Anti-Tank",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/EAT-411 Leveller",
+      "label": "EAT-411 Leveller",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/EAT-700 Expendable Napalm",
+      "label": "EAT-700 Expendable Napalm",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/FAF-14 Spear",
+      "label": "FAF-14 Spear",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/FLAM-40 Flamethrower",
+      "label": "FLAM-40 Flamethrower",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/FLAM-66 Torcher",
+      "label": "FLAM-66 Torcher",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/GL-15 Evictor",
+      "label": "GL-15 Evictor",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/GL-21 Grenade Launcher",
+      "label": "GL-21 Grenade Launcher",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/GL-28 Belt-Fed Grenade Launcher",
+      "label": "GL-28 Belt-Fed Grenade Launcher",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/GL-52 De-Escalator",
+      "label": "GL-52 De-Escalator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/GP-20 Ultimatum",
+      "label": "GP-20 Ultimatum",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/GP-31 Grenade Pistol",
+      "label": "GP-31 Grenade Pistol",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/GR-8 Recoilless Rifle",
+      "label": "GR-8 Recoilless Rifle",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/JAR-5 Dominator",
+      "label": "JAR-5 Dominator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-12 Sai",
+      "label": "LAS-12 Sai",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-13 Trident",
+      "label": "LAS-13 Trident",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-16 Sickle",
+      "label": "LAS-16 Sickle",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-17 Double-Edge Sickle",
+      "label": "LAS-17 Double-Edge Sickle",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-22 Shear",
+      "label": "LAS-22 Shear",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-5 Scythe",
+      "label": "LAS-5 Scythe",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-58 Talon",
+      "label": "LAS-58 Talon",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-7 Dagger",
+      "label": "LAS-7 Dagger",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-98 Laser Cannon",
+      "label": "LAS-98 Laser Cannon",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/LAS-99 Quasar Cannon",
+      "label": "LAS-99 Quasar Cannon",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/M-1000 Maxigun",
+      "label": "M-1000 Maxigun",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/M-105 Stalwart",
+      "label": "M-105 Stalwart",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/M6C/SOCOM Pistol",
+      "label": "M6C/SOCOM Pistol",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/M7S SMG",
+      "label": "M7S SMG",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/M90A Shotgun",
+      "label": "M90A Shotgun",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/MA5C Assault Rifle",
+      "label": "MA5C Assault Rifle",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/MG-206 Heavy Machine Gun",
+      "label": "MG-206 Heavy Machine Gun",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/MGX-42 Bullet Storm",
+      "label": "MGX-42 Bullet Storm",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/MLS-4X Commando",
+      "label": "MLS-4X Commando",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/MP-98 Knight",
+      "label": "MP-98 Knight",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-11 Stim Pistol",
+      "label": "P-11 Stim Pistol",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-113 Verdict",
+      "label": "P-113 Verdict",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-19 Redeemer",
+      "label": "P-19 Redeemer",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-2 Peacemaker",
+      "label": "P-2 Peacemaker",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-33 Missile Pistol",
+      "label": "P-33 Missile Pistol",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-34 Breacher",
+      "label": "P-34 Breacher",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-35 Re-Educator",
+      "label": "P-35 Re-Educator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-4 Senator",
+      "label": "P-4 Senator",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-69 Veto",
+      "label": "P-69 Veto",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-72 Crisper",
+      "label": "P-72 Crisper",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P-92 Warrant",
+      "label": "P-92 Warrant",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/P/40-K Bolt Pistol",
+      "label": "P/40-K Bolt Pistol",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/PLAS-1 Scorcher",
+      "label": "PLAS-1 Scorcher",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/PLAS-101 Purifier",
+      "label": "PLAS-101 Purifier",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/PLAS-15 Loyalist",
+      "label": "PLAS-15 Loyalist",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/PLAS-39 Accelerator Rifle",
+      "label": "PLAS-39 Accelerator Rifle",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/PLAS-45 Epoch",
+      "label": "PLAS-45 Epoch",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/R-2 Amendment",
+      "label": "R-2 Amendment",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/R-2124 Constitution",
+      "label": "R-2124 Constitution",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/R-36 Eruptor",
+      "label": "R-36 Eruptor",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/R-4 Hyena",
+      "label": "R-4 Hyena",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/R-6 Deadeye",
+      "label": "R-6 Deadeye",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/R-63 Diligence",
+      "label": "R-63 Diligence",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/R-63CS Diligence Counter Sniper",
+      "label": "R-63CS Diligence Counter Sniper",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/R-72 Censor",
+      "label": "R-72 Censor",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/R/40-K Hot-Shot Marksman Rifle",
+      "label": "R/40-K Hot-Shot Marksman Rifle",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/RL-77 Airburst Rocket Launcher",
+      "label": "RL-77 Airburst Rocket Launcher",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/RS-422 Railgun",
+      "label": "RS-422 Railgun",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/S-11 Speargun",
+      "label": "S-11 Speargun",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-20 Halt",
+      "label": "SG-20 Halt",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-22 Bushwhacker",
+      "label": "SG-22 Bushwhacker",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-225 Breaker",
+      "label": "SG-225 Breaker",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-225IE Breaker Incendiary",
+      "label": "SG-225IE Breaker Incendiary",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-225SP Breaker Spray&Pray",
+      "label": "SG-225SP Breaker Spray&Pray",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-451 Cookout",
+      "label": "SG-451 Cookout",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-8 Punisher",
+      "label": "SG-8 Punisher",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-88 Break-Action Shotgun",
+      "label": "SG-88 Break-Action Shotgun",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-8P Punisher Plasma",
+      "label": "SG-8P Punisher Plasma",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-8S Slugger",
+      "label": "SG-8S Slugger",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SG-97 Sweeper",
+      "label": "SG-97 Sweeper",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SMG-203 Gallant",
+      "label": "SMG-203 Gallant",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SMG-32 Reprimand",
+      "label": "SMG-32 Reprimand",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SMG-37 Defender",
+      "label": "SMG-37 Defender",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SMG-72 Pummeler",
+      "label": "SMG-72 Pummeler",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/SMG/FLAM-34 Stoker",
+      "label": "SMG/FLAM-34 Stoker",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/StA-11 SMG",
+      "label": "StA-11 SMG",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/StA-52 Assault Rifle",
+      "label": "StA-52 Assault Rifle",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/StA-X3 W.A.S.P. Launcher",
+      "label": "StA-X3 W.A.S.P. Launcher",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/TX-41 Sterilizer",
+      "label": "TX-41 Sterilizer",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
+        "liveTested": false,
+        "packageLiveLoaded": false,
+        "blocker": null
+      }
+    },
+    {
+      "key": "game_icon/weapon/VG-70 Variable",
+      "label": "VG-70 Variable",
+      "kind": "game_icon",
+      "packageDependency": {
+        "known": true,
+        "autoLoadSupported": true,
+        "derivation": "hud_atlas_package",
+        "package": "atlas_mission",
+        "packageNamed": true,
         "liveTested": false,
         "packageLiveLoaded": false,
         "blocker": null

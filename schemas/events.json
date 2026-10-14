@@ -4225,7 +4225,7 @@
      [
       "face_target",
       "true|nil",
-      "The body turns toward the locked target (needs behave_as)."
+      "The body follows the native target with an untouched native gun, or the Runtime target lock with behave_as."
      ]
     ]
    },

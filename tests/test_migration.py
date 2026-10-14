@@ -497,6 +497,26 @@ def available(build_id=None, snapshot=None):
         return False
 
 
+class CompoundPayloadMigrationTests(unittest.TestCase):
+    def test_payload_requires_same_build_and_unchanged_donors(self):
+        before = Build()
+        before.explosion[EXPLOSION_TYPE + 1] = row(EXPLOSION_TYPE + 1, 24, o16=('<f', 2.0))
+        field = next(f for f in fields() if f['backing'].get('settings') == 'explosion')
+        field['backing'].update(offset=4, width=20, storage='bytes',
+            payloadRows=[EXPLOSION_TYPE, EXPLOSION_TYPE + 1])
+        release = {'fields': [field], 'relationships': []}
+        def state(after):
+            return engine.run(before.view(), after.view(), release)['fields'][0]['state']
+        self.assertEqual(state(copy.deepcopy(before)), 'EXACT')
+        after = copy.deepcopy(before); after.dll = 'C' * 64
+        self.assertEqual(state(after), 'BLOCKED')
+        after = copy.deepcopy(before)
+        after.explosion[EXPLOSION_TYPE + 1] = row(EXPLOSION_TYPE + 1, 24, o16=('<f', 3.0))
+        self.assertEqual(state(after), 'BLOCKED')
+        after = copy.deepcopy(before); del after.explosion[EXPLOSION_TYPE + 1]
+        self.assertEqual(state(after), 'BLOCKED')
+
+
 class HistoricalMigrationTests(unittest.TestCase):
     """Real builds. Skipped where the retained snapshots/datalibraries are not present."""
 

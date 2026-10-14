@@ -1,7 +1,7 @@
 {
   "contract": "hd2runtime.backpack.guarded_authoring.v1",
   "schemaVersion": 1,
-  "hd2RuntimeVersion": "0.31.3",
+  "hd2RuntimeVersion": "0.40.0",
   "canonicalCollection": "fieldInstances",
   "backpacks": [
     {
@@ -28,13 +28,12 @@
       ],
       "settingGroups": [
         {
-          "group": "charges",
+          "group": "supply_boxes",
           "fieldInstanceKeys": [
             "backpack:b-1-supply-pack:b-1-supply-pack-backpack:deposit.capacity",
             "backpack:b-1-supply-pack:b-1-supply-pack-backpack:deposit.start_amount",
             "backpack:b-1-supply-pack:b-1-supply-pack-backpack:deposit.refill_amount"
-          ],
-          "readOnly": true
+          ]
         }
       ],
       "blockedFields": [],
@@ -1619,12 +1618,12 @@
     {
       "instanceKey": "backpack:b-1-supply-pack:b-1-supply-pack-backpack:deposit.capacity",
       "semanticFieldId": "deposit.capacity",
-      "displayName": "Charge capacity",
+      "displayName": "Supply box capacity",
       "type": "integer",
-      "unit": "charges",
+      "unit": "boxes",
       "currentDefault": 4,
-      "editable": false,
-      "reason": "Exact wiki correlation for drone backpacks and a typed schema member, but no reference mod has proven write semantics.",
+      "editable": true,
+      "reason": null,
       "target": {
         "resource": "backpack",
         "backpack": "B-1 Supply Pack",
@@ -1650,23 +1649,30 @@
       "planPhase": 1,
       "dependsOn": [],
       "evidence": {
-        "tier": "schema_proven",
+        "tier": "native_consumer_proven",
         "referenceMod": null,
         "proof": null,
         "provenOn": [],
-        "sharedTypedSchema": true
+        "sharedTypedSchema": false,
+        "research": "research/supply-pack-F5FEE03DCFDB.json"
       },
-      "provenance": "current-build typed entity schema plus exact retained-snapshot baseline"
+      "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
+      "uiGroup": "supply_boxes",
+      "min": 1,
+      "max": 1023,
+      "rangeReason": "the live deposit amount is the engine network field deposit_value (10 bits): the game clamps it to 1023 on every write, so a larger value shows only until the first shot or resupply",
+      "acknowledgement": "allow_unverified_effect",
+      "acknowledgementReason": "Native deposit readers verified offline; not yet tested in game. These values control boxes carried, not the supplies delivered to a player. Starting boxes -1 means full. Refill adds at least one box, up to capacity."
     },
     {
       "instanceKey": "backpack:b-1-supply-pack:b-1-supply-pack-backpack:deposit.start_amount",
       "semanticFieldId": "deposit.start_amount",
-      "displayName": "Starting charges",
+      "displayName": "Supply boxes at call-in",
       "type": "integer",
-      "unit": "charges",
+      "unit": "boxes",
       "currentDefault": 4,
-      "editable": false,
-      "reason": "Exact wiki correlation for drone backpacks and a typed schema member, but no reference mod has proven write semantics.",
+      "editable": true,
+      "reason": null,
       "target": {
         "resource": "backpack",
         "backpack": "B-1 Supply Pack",
@@ -1692,23 +1698,30 @@
       "planPhase": 1,
       "dependsOn": [],
       "evidence": {
-        "tier": "schema_proven",
+        "tier": "native_consumer_proven",
         "referenceMod": null,
         "proof": null,
         "provenOn": [],
-        "sharedTypedSchema": true
+        "sharedTypedSchema": false,
+        "research": "research/supply-pack-F5FEE03DCFDB.json"
       },
-      "provenance": "current-build typed entity schema plus exact retained-snapshot baseline"
+      "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
+      "uiGroup": "supply_boxes",
+      "min": -1,
+      "max": 1023,
+      "rangeReason": "the live deposit amount is the engine network field deposit_value (10 bits): the game clamps it to 1023 on every write, so a larger value shows only until the first shot or resupply",
+      "acknowledgement": "allow_unverified_effect",
+      "acknowledgementReason": "Native deposit readers verified offline; not yet tested in game. These values control boxes carried, not the supplies delivered to a player. Starting boxes -1 means full. Refill adds at least one box, up to capacity."
     },
     {
       "instanceKey": "backpack:b-1-supply-pack:b-1-supply-pack-backpack:deposit.refill_amount",
       "semanticFieldId": "deposit.refill_amount",
-      "displayName": "Charges per resupply",
+      "displayName": "Supply boxes restored by resupply",
       "type": "integer",
-      "unit": "charges",
+      "unit": "boxes",
       "currentDefault": 1,
-      "editable": false,
-      "reason": "Typed schema member without wiki correlation or proven write semantics.",
+      "editable": true,
+      "reason": null,
       "target": {
         "resource": "backpack",
         "backpack": "B-1 Supply Pack",
@@ -1734,13 +1747,20 @@
       "planPhase": 1,
       "dependsOn": [],
       "evidence": {
-        "tier": "schema_proven",
+        "tier": "native_consumer_proven",
         "referenceMod": null,
         "proof": null,
         "provenOn": [],
-        "sharedTypedSchema": true
+        "sharedTypedSchema": false,
+        "research": "research/supply-pack-F5FEE03DCFDB.json"
       },
-      "provenance": "current-build typed entity schema plus exact retained-snapshot baseline"
+      "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
+      "uiGroup": "supply_boxes",
+      "min": 0,
+      "max": 1023,
+      "rangeReason": "the live deposit amount is the engine network field deposit_value (10 bits): the game clamps it to 1023 on every write, so a larger value shows only until the first shot or resupply",
+      "acknowledgement": "allow_unverified_effect",
+      "acknowledgementReason": "Native deposit readers verified offline; not yet tested in game. These values control boxes carried, not the supplies delivered to a player. Starting boxes -1 means full. Refill adds at least one box, up to capacity."
     },
     {
       "instanceKey": "backpack:lift-850-jump-pack:lift-850-jump-pack-backpack:recharge.time",
@@ -1947,7 +1967,7 @@
     {
       "instanceKey": "backpack:lift-850-jump-pack:lift-850-jump-pack-backpack:jump.sustain_thrust",
       "semanticFieldId": "jump.sustain_thrust",
-      "displayName": "Sustain thrust",
+      "displayName": "Landing thrust",
       "type": "number",
       "unit": "meters_per_second_squared",
       "currentDefault": 60.0,
@@ -1989,7 +2009,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "Peak thrust of the sustain phase (m/s^2, tapering as 1 - t^2 over jump.sustain_duration). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
+      "acknowledgementReason": "Peak landing thrust (m/s^2), tapering as 1 - t^2 over the landing thrust duration. Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
       "min": 0.0,
       "max": 500.0,
       "effect": {
@@ -1999,12 +2019,13 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-850-jump-pack:lift-850-jump-pack-backpack:jump.sustain_duration",
       "semanticFieldId": "jump.sustain_duration",
-      "displayName": "Sustain thrust duration",
+      "displayName": "Landing thrust duration",
       "type": "number",
       "unit": "seconds",
       "currentDefault": 1.0,
@@ -2046,7 +2067,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "Seconds the sustain thrust lasts (0 disables the sustain phase). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
+      "acknowledgementReason": "Seconds the landing thrust lasts (0 disables landing thrust). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
       "min": 0.0,
       "max": 10.0,
       "effect": {
@@ -2056,12 +2077,13 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-850-jump-pack:lift-850-jump-pack-backpack:jump.sustain_forward_ratio",
       "semanticFieldId": "jump.sustain_forward_ratio",
-      "displayName": "Sustain thrust forward share",
+      "displayName": "Landing horizontal braking share",
       "type": "number",
       "unit": "ratio",
       "currentDefault": 0.30000001192092896,
@@ -2103,7 +2125,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "Share of the sustain thrust along the travel direction; the rest pushes up. Read live by the flight code; not yet shown in game.",
+      "acknowledgementReason": "Share of landing thrust used to brake horizontal movement; the rest pushes up. Read live by the flight code; not yet shown in game.",
       "min": 0.0,
       "max": 1.0,
       "effect": {
@@ -2113,12 +2135,13 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-850-jump-pack:lift-850-jump-pack-backpack:jump.sustain_start_delay",
       "semanticFieldId": "jump.sustain_start_delay",
-      "displayName": "Earliest sustain start",
+      "displayName": "Earliest landing thrust start",
       "type": "number",
       "unit": "seconds",
       "currentDefault": 1.0,
@@ -2160,7 +2183,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "Seconds of launch before the sustain phase may start. Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
+      "acknowledgementReason": "Seconds after launch before landing thrust may start. Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
       "min": 0.0,
       "max": 10.0,
       "effect": {
@@ -2170,12 +2193,13 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-850-jump-pack:lift-850-jump-pack-backpack:jump.sustain_start_speed",
       "semanticFieldId": "jump.sustain_start_speed",
-      "displayName": "Minimum speed to start the sustain",
+      "displayName": "Minimum speed for landing thrust",
       "type": "number",
       "unit": "meters_per_second",
       "currentDefault": 3.0,
@@ -2217,7 +2241,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "Minimum speed (m/s) to start the sustain phase (a forward probe must also be clear). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
+      "acknowledgementReason": "Minimum speed (m/s) for landing thrust; the travel probe must detect a surface below the wearer. Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
       "min": 0.0,
       "max": 100.0,
       "effect": {
@@ -2227,12 +2251,13 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-850-jump-pack:lift-850-jump-pack-backpack:jump.sustain_cutoff_speed",
       "semanticFieldId": "jump.sustain_cutoff_speed",
-      "displayName": "Sustain cut-off speed",
+      "displayName": "Landing thrust cut-off speed",
       "type": "number",
       "unit": "meters_per_second",
       "currentDefault": 1.0,
@@ -2274,7 +2299,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "The sustain phase ends, and the pack deactivates, below this speed (m/s). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
+      "acknowledgementReason": "Landing thrust ends and the pack deactivates below this speed (m/s). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
       "min": 0.0,
       "max": 100.0,
       "effect": {
@@ -2284,7 +2309,8 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-850-jump-pack:lift-850-jump-pack-backpack:jump.air_control_acceleration",
@@ -5460,7 +5486,7 @@
     {
       "instanceKey": "backpack:lift-860-hover-pack:lift-860-hover-pack-backpack:jump.sustain_thrust",
       "semanticFieldId": "jump.sustain_thrust",
-      "displayName": "Sustain thrust",
+      "displayName": "Landing thrust",
       "type": "number",
       "unit": "meters_per_second_squared",
       "currentDefault": 60.0,
@@ -5502,7 +5528,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "Peak thrust of the sustain phase (m/s^2, tapering as 1 - t^2 over jump.sustain_duration). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
+      "acknowledgementReason": "Peak landing thrust (m/s^2), tapering as 1 - t^2 over the landing thrust duration. Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
       "min": 0.0,
       "max": 500.0,
       "effect": {
@@ -5512,12 +5538,13 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-860-hover-pack:lift-860-hover-pack-backpack:jump.sustain_duration",
       "semanticFieldId": "jump.sustain_duration",
-      "displayName": "Sustain thrust duration",
+      "displayName": "Landing thrust duration",
       "type": "number",
       "unit": "seconds",
       "currentDefault": 1.0,
@@ -5559,7 +5586,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "Seconds the sustain thrust lasts (0 disables the sustain phase). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
+      "acknowledgementReason": "Seconds the landing thrust lasts (0 disables landing thrust). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
       "min": 0.0,
       "max": 10.0,
       "effect": {
@@ -5569,12 +5596,13 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-860-hover-pack:lift-860-hover-pack-backpack:jump.sustain_forward_ratio",
       "semanticFieldId": "jump.sustain_forward_ratio",
-      "displayName": "Sustain thrust forward share",
+      "displayName": "Landing horizontal braking share",
       "type": "number",
       "unit": "ratio",
       "currentDefault": 0.10000000149011612,
@@ -5616,7 +5644,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "Share of the sustain thrust along the travel direction; the rest pushes up. Read live by the flight code; not yet shown in game.",
+      "acknowledgementReason": "Share of landing thrust used to brake horizontal movement; the rest pushes up. Read live by the flight code; not yet shown in game.",
       "min": 0.0,
       "max": 1.0,
       "effect": {
@@ -5626,12 +5654,13 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-860-hover-pack:lift-860-hover-pack-backpack:jump.sustain_start_speed",
       "semanticFieldId": "jump.sustain_start_speed",
-      "displayName": "Minimum speed to start the sustain",
+      "displayName": "Minimum speed for landing thrust",
       "type": "number",
       "unit": "meters_per_second",
       "currentDefault": 3.0,
@@ -5673,7 +5702,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "Minimum speed (m/s) to start the sustain phase (a forward probe must also be clear). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
+      "acknowledgementReason": "Minimum speed (m/s) for landing thrust; the travel probe must detect a surface below the wearer. Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
       "min": 0.0,
       "max": 100.0,
       "effect": {
@@ -5683,12 +5712,13 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-860-hover-pack:lift-860-hover-pack-backpack:jump.sustain_cutoff_speed",
       "semanticFieldId": "jump.sustain_cutoff_speed",
-      "displayName": "Sustain cut-off speed",
+      "displayName": "Landing thrust cut-off speed",
       "type": "number",
       "unit": "meters_per_second",
       "currentDefault": 1.0,
@@ -5730,7 +5760,7 @@
       },
       "provenance": "current-build typed entity schema plus exact retained-snapshot baseline",
       "acknowledgement": "allow_unverified_effect",
-      "acknowledgementReason": "The sustain phase ends, and the pack deactivates, below this speed (m/s). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
+      "acknowledgementReason": "Landing thrust ends and the pack deactivates below this speed (m/s). Read live by the flight code; not yet shown in game. The meaning is proven from the code, but no value differs between the packs (no differential), so the magnitude has no independent confirmation.",
       "min": 0.0,
       "max": 100.0,
       "effect": {
@@ -5740,7 +5770,8 @@
         "instantiationOnly": false,
         "gameplayEffectProven": false,
         "lifecycle": "Read live every frame from the backpack's own JumppackComponent record (one owner): a write takes effect on the next frame, including a pack already worn and mid-flight."
-      }
+      },
+      "uiGroup": "landing_thrust"
     },
     {
       "instanceKey": "backpack:lift-860-hover-pack:lift-860-hover-pack-backpack:jump.air_control_acceleration",
@@ -9871,14 +9902,14 @@
   "summary": {
     "backpacks": 21,
     "fieldInstances": 126,
-    "writableFieldInstances": 112,
-    "readOnlyFieldInstances": 14,
-    "backpacksWithWritableFields": 19,
+    "writableFieldInstances": 115,
+    "readOnlyFieldInstances": 11,
+    "backpacksWithWritableFields": 20,
     "writableByTier": {
       "gameplay_proven": 2,
       "schema_proven": 35,
       "native_correlated": 34,
-      "native_consumer_proven": 41
+      "native_consumer_proven": 44
     },
     "rackChainsResolved": 21,
     "weaponFedBackpacks": 3,

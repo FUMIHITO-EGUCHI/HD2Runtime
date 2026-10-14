@@ -45,11 +45,31 @@ bad({rate_multiplier=3,behave_as='gatling_sentry'},'gun.rate_multiplier must be 
 bad({rate_multiplier=2},'it needs behave_as')
 bad({spread=101},'gun.spread is a width in mrad')
 bad({recoil=true},'gun.recoil can only be false')
-bad({face_target=true},'gun.face_target follows the Runtime target lock')
+bad({face_target=true},'gun.face_target needs an untouched native gun or the Gatling AI')
 bad({colour='red'},'unsupported gun option: colour')
 assert(gunship.check_orbit({radius=40,altitude=60,duration=55}))
 assert(select(2,gunship.check_orbit({radius=400}))=='orbit.radius must be 5 to 150')
 assert(select(2,gunship.check_orbit({entry=60,duration=55})):find('orbit.entry must be shorter',1,true))
+return 'ok'
+""")
+
+    def test_native_autocannon_round_with_target_lock_and_body_facing(self):
+        self.lua(r"""
+pworld();BOMB.set_clock(T0);tcount(0);tick(4);scene();controller();stage(0,2,0);ai(4)
+local events={}
+local g=assert(gunship.arm(9501,{gun={behave_as='gatling_sentry',round='native',rpm=300,casing='own',
+    recoil=false,unlimited_ammo=true,face_target=true,aim_height=0.7},
+    orbit={radius=40,altitude=60,duration=85},credit=true,label='autocannon-facing'},
+    function(e)events[#events+1]=e end))
+tick(16)
+local armed;for _,e in ipairs(events)do if e.kind=='armed'then armed=e end end
+assert(armed and armed.projectile==120 and armed.round=='native'and armed.rpm==300 and armed.verified,
+    'native autocannon was not configured: '..table.concat(logged,' | '))
+assert(g.switched and not g.config.untouched,'target-lock AI was not installed')
+local world=world_module.open();held(world)
+W.add{entity=5555,type='73F8498BFFDCF415',unit=7555,health=500};W.unit(7555,100,70,0)
+BOMB.set_clock(T0+1000000);ai(12,5555);tick(4)
+assert(g.locks==1 and desired()>0.1,'autocannon did not turn toward its target')
 return 'ok'
 """)
 

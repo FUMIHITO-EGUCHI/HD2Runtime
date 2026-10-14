@@ -32,10 +32,7 @@ class ThrowableAuthoringTests(unittest.TestCase):
         self.assertEqual(self.catalog['contract'], 'hd2runtime.throwable.guarded_authoring.v1')
         summary = self.catalog['summary']
         self.assertEqual((summary['throwables'], summary['resolved'], summary['writableThrowables']), (23, 23, 23))
-        # 0.31.1: + the explosion DamageInfo status slots (each used slot's status, the first empty slot's status and
-        # strength) on every throwable explosion row: 48 fields, 46 writable. 0.31.2: + every later empty slot's status
-        # and strength (104 fields, 98 writable).
-        self.assertEqual((summary['fieldInstances'], summary['writableFieldInstances']), (563, 532))
+        self.assertEqual((summary['fieldInstances'], summary['writableFieldInstances']), (939, 908))
 
     def test_every_wiki_throwable_resolves_to_one_native_entity(self):
         self.assertEqual(tuple(item['name'] for item in self.research['catalog']), NAMES)
@@ -105,7 +102,8 @@ class ThrowableAuthoringTests(unittest.TestCase):
         # 0.31.2: so does slot 4 (every empty slot is offered; core/status_slots.lua keeps them packed at write time).
         gas = self.targets[('G-4 Gas', 'explosion', None)]
         self.assertEqual({k: v['baseline'] for k, v in gas.items() if '.status_' in k},
-            {'explosion.damage.status_1_type': 'gas', 'explosion.damage.status_2_type': 'gas_confusion',
+            {'explosion.damage.status_1_type': 'gas', 'explosion.damage.status_1_strength': 100.0,
+             'explosion.damage.status_2_type': 'gas_confusion', 'explosion.damage.status_2_strength': 100.0,
              'explosion.damage.status_3_type': 'none', 'explosion.damage.status_3_strength': 0.0,
              'explosion.damage.status_4_type': 'none', 'explosion.damage.status_4_strength': 0.0})
         self.assertTrue(gas['explosion.damage.status_4_type']['editable'])
@@ -114,7 +112,9 @@ class ThrowableAuthoringTests(unittest.TestCase):
         self.assertIn('fire', attach['allowedValues'])
         self.assertIn('acid_storm', attach['allowedValues'])      # 0.31.2: the one reviewed weather exception
         self.assertNotIn('blizzard', attach['allowedValues'])     # weather: otherwise never attachable
-        self.assertFalse(gas['explosion.damage.status_1_type']['allowNone'], 'only the last used slot can be cleared')
+        # The new transaction path can clear multiple used slots together; the live packing guard
+        # refuses clearing slot 1 alone (covered by validate_throwable_status_slots).
+        self.assertTrue(gas['explosion.damage.status_1_type']['allowNone'])
         self.assertEqual(attach['acknowledgements'], ['allow_shared', 'allow_unverified_effect'])
         self.assertEqual(run(r"""
 local hd2=require('hd2runtime/api/session').new({},function()end)
@@ -141,13 +141,53 @@ refused({id='x',target=gas,allow_shared=true,field='explosion.damage.status_3_ty
  value='acid_storm'},'allow_unverified_effect')
 refused(with{field='explosion.damage.status_3_type',expect='none',value='no_such'},'unknown status')
 refused(with{field='explosion.damage.status_3_type',expect='gas',value='fire'},'expect differs')
-refused(with{field='explosion.damage.status_1_type',expect='gas',value='none'},'cannot be cleared')
+writes.validate_patch(with{field='explosion.damage.status_1_type',expect='gas',value='none'})
 refused(with{field='explosion.damage.status_3_type',expect='none',value=3},'semantic ID')
 refused({id='x',target=gas,allow_unverified_effect=true,field='explosion.damage.status_3_type',expect='none',
  value='fire'},'allow_shared')
 -- the last used slot can be swapped or cleared
 writes.validate_patch(with{field='explosion.damage.status_2_type',expect='gas_confusion',value='none'})
 writes.validate_patch(with{field='explosion.damage.status_1_type',expect='gas',value='stun_small'})
+return 'ok'
+"""), b'ok')
+
+    def test_throwable_explosion_catalogue_guards_and_package_dependencies(self):
+        self.assertEqual(run(r"""
+local hd2=require('hd2runtime/api/hd2')
+local W=require('hd2runtime/domains/throwable_writes')
+local D=require('hd2runtime/domains/throwable_authoring')
+local C=require('hd2runtime/domains/explosion_catalogue')
+local function request(name,desired)
+ local f=D.throwables[name].targets.detonation.fields['throwable.explosion']
+ return {id='swap',target=hd2.throwable(name):detonation(),field='throwable.explosion',
+ expect=hd2.explosion(f.currentDefault),value=desired,allow_shared=true,
+ allow_unverified_effect=true,allow_unverified_reference=true}
+end
+local count=0
+for name,e in pairs(D.throwables)do
+ if e.targets.detonation then
+  count=count+1
+  local t=hd2.throwable(name):detonation()
+  local o=t:payload_options();assert(#o.options>100 and o.own and o.none.value=='none')
+  assert(#hd2.explosions.payload_options(t).options==#o.options)
+  for _,option in ipairs(o.options)do
+   local r=request(name,option.value);local spec=W.validate_patch(r)
+   assert(spec.changes[1].donor_explosion.type==C.explosions[option.name].type)
+  end
+  local r=request(name,'none');assert(W.validate_patch(r).changes[1].desired==string.rep('\0',4))
+ end
+end
+assert(count==22)
+local r=request('G-6 Frag',hd2.explosion('support_weapon/plas45_epoch/charge_2_expiry'))
+local s=W.validate_patch(r);assert(#s.asset_dependencies>0,'loadout explosion asset is not retained')
+local function refuses(needle)
+ local ok,why=pcall(W.validate_patch,r);assert(not ok and tostring(why):find(needle,1,true),tostring(why))
+end
+r.allow_unverified_reference=nil;refuses('allow_unverified_reference')
+r.allow_unverified_reference=true;r.value=227;refuses('EXPLOSION')
+r.value=hd2.explosion('support_weapon/plas45_epoch/impact');r.expect=r.value;refuses('expect differs')
+assert(not pcall(function()return hd2.throwable('K-2 Throwing Knife'):detonation()end),
+ 'a nonexistent knife ExplosiveComponent must never be invented')
 return 'ok'
 """), b'ok')
 
@@ -243,7 +283,7 @@ return 'ok'
         self.assertEqual(result['rangeRejections'], 2 * writable)
         # 0.31.2: each status slot after its row's first empty one (type and strength) is exercised after an earlier
         # operation fills the slots before it; setting its status without them is refused (STATUS_SLOT_GAP).
-        self.assertEqual((result['statusPrefills'], result['statusGapRejections']), (98, 49))
+        self.assertEqual((result['statusPrefills'], result['statusGapRejections']), (132, 66))
         self.assertEqual(result['readOnlyRejections'],
             self.catalog['summary']['fieldInstances'] - writable)
         # Every family the task names is exercised.

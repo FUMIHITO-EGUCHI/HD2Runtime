@@ -4,7 +4,8 @@ Live test for enemy spawn weights (`hd2.enemies.spawn_weight`, `docs/enemy-spawn
 API 1 and Bingus Shared Loader v15+. Mod Options Menu is optional: without it every option keeps its default.
 
 Each option scales one or more enemy types' weights in the game's spawn rosters. The type is then picked more or less
-often within the spawn groups it shares, or (× 0) never. This changes **which** enemies spawn, not **how many**. The
+often within the spawn groups it shares, or (× 0) excluded from normal picks. Native bypasses and direct squads
+can still spawn it; this is not a global blacklist. This changes **which** enemies spawn, not **how many**. The
 pick is proven offline (`validation/enemy-spawn-weights-snapshot.json`), not yet in game.
 
 **Set the options aboard the ship (APPLY), then deploy.** A type turned back on from × 0 returns only once you are aboard

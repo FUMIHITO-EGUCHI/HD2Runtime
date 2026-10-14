@@ -9,6 +9,7 @@ from pathlib import Path
 
 import fire_mode_fields
 import live_evidence
+import wasp_projectile_fields
 
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / 'research/weapon-functions-F5FEE03DCFDB.json'
@@ -57,7 +58,11 @@ def fire_mode_selectors():
 
 def load():
     research = json.loads(RESEARCH.read_text())
-    return {(row['kind'], row['weapon']): row for row in research['weapons']}, research
+    rows = {(row['kind'], row['weapon']): row for row in research['weapons']}
+    import requested_weapon_controls
+    requested_weapon_controls.rates(rows)
+    wasp_projectile_fields.modes(rows)
+    return rows, research
 
 
 def rates_writable(row):
@@ -175,4 +180,6 @@ def apply_function_projectile(field, row, identity_ok):
     field['evidence'] = dict(EVIDENCE, nativeOwner='ProjectileWeaponComponent weapon_function_projectile_type',
         reader='the projectile fire path (research proofs)')
     field['effect'] = effect(FIRE_EFFECT, applies='weapon_build')
+    if row['weapon'] == wasp_projectile_fields.NAME:
+        wasp_projectile_fields.annotate(field)
     return live_evidence.promote_field(field, row['weapon'])

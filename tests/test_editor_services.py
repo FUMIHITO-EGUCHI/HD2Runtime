@@ -246,6 +246,28 @@ return 'ok'
 
 
 class WheelTests(unittest.TestCase):
+    def test_independent_windows_keep_their_own_input_leases(self):
+        self.assertEqual(run(HARNESS + r'''
+local wheel=require('hd2runtime/runtime/mouse_wheel')
+wheel.reset_for_tests();wheel.native_allowed=function()return true end
+rawset(_G,'stingray',{})
+local flags,deadline
+wheel.hooks.install=function()return{remove=function()end,read=function()return 0,0,0 end,
+    block=function(f,d)flags,deadline=f,d end,now=function()return 1000+events.state.now*1000 end}end
+local function block(owner,spec)events.run_as(owner,function()hd2.input.block(spec)end)end
+block('mods/a',{keyboard=true});assert(flags==1)
+block('mods/b',{mouse=true});assert(flags==3)
+block('mods/a',false);assert(flags==2,'closing A must preserve B')
+wheel.block({keyboard=true,mouse=true},'hd2runtime.settings');assert(flags==3)
+block('mods/b',false);assert(flags==3,'closing editor must preserve F10')
+wheel.block(false,'hd2runtime.settings');assert(flags==0)
+block('mods/a',{keyboard=true});events.tick(0.3)
+block('mods/b',{mouse=true});events.tick(0.3)
+block('mods/b',{mouse=true});assert(flags==2,'expired A must not linger')
+block('mods/b',false);assert(flags==0)
+return 'ok'
+'''), b'ok')
+
     def test_the_wheel_combines_the_message_hook_and_the_engine_axis(self):
         self.assertEqual(run(HARNESS + r'''
 local wheel=require('hd2runtime/runtime/mouse_wheel')

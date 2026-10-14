@@ -1,0 +1,19 @@
+{
+  "changedWrites": 22,
+  "liveGameTested": false,
+  "rejections": [
+    {
+      "error": "[string \"hd2runtime/domains/player_weapon_writes\"]:1601: linked support projectile ExplosionSettings absent",
+      "link": "projectile"
+    },
+    {
+      "error": "[string \"hd2runtime/domains/player_weapon_writes\"]:1603: explosion arc selector changed",
+      "link": "explosion"
+    },
+    {
+      "error": "[string \"hd2runtime/domains/player_weapon_writes\"]:1718: linked explosion arc DamageInfo absent",
+      "link": "arc"
+    }
+  ],
+  "status": "VALIDATED"
+}

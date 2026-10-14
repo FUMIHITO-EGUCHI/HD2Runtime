@@ -17,7 +17,7 @@ local function target_from_profile(s)
     return {resource=s.resource,package=s.package,id=s.id,current_type=s.record_type,
         group=s.group,row=s.row,payload_count=s.payload_count}
 end
-function M.parse_all(bytes,base,pointers,s)
+function M.parse_all(bytes,base,pointers,s,cooperate)
     assert(type(bytes)=='string' and #bytes==s.size and type(pointers)=='string'
         and #pointers==s.entries*8,'stratagem captured sizes')
     assert(s.version==1 and s.info_type==0x7BD60854 and s.stride==400
@@ -39,6 +39,7 @@ function M.parse_all(bytes,base,pointers,s)
         local start,row_representation=array_offset(b.pointer(bytes,root),root,base,finish,
             count*s.stride,'stratagem rows')
         for row=0,count-1 do
+            if cooperate and row%8==0 then cooperate()end
             local ro=start+row*s.stride
             local kind=b.u32(bytes,ro)
             assert(kind<s.entries and not seen[kind],'stratagem type duplicated/out of range')
@@ -73,7 +74,7 @@ function M.parse_all(bytes,base,pointers,s)
     table.sort(records,function(a,c)return a.record_kind<c.record_kind end)
     return records
 end
-function M.parse(bytes,base,pointers,s,target)
+function M.parse(bytes,base,pointers,s,target,cooperate)
     target=target or target_from_profile(s)
     assert(type(bytes)=='string' and #bytes==s.size and type(pointers)=='string'
         and #pointers==s.entries*8,'stratagem captured sizes')
@@ -96,6 +97,7 @@ function M.parse(bytes,base,pointers,s,target)
         local start,row_representation=array_offset(b.pointer(bytes,root),root,base,finish,
             count*s.stride,'stratagem rows')
         for row=0,count-1 do
+            if cooperate and row%8==0 then cooperate()end
             local ro=start+row*s.stride
             local kind=b.u32(bytes,ro)
             assert(kind<s.entries and not seen[kind],'stratagem type duplicated/out of range')
@@ -177,7 +179,7 @@ function M.capture(runtime,reader,profile)
     local bytes=reader.read(owner,0,s.size,true)
     local pointers=reader.read(image,s.table_rva,s.entries*8,true)
     reader.stage='core/stratagem:grouped_records'
-    local result=M.parse(bytes,base,pointers,s)
+    local result=M.parse(bytes,base,pointers,s,nil,reader.cooperate)
     result.owner=owner
     return result
 end
@@ -201,6 +203,6 @@ function M.capture_all(runtime,reader,profile)
     local bytes=reader.read(region,0,s.size,true)
     local pointers=reader.read(image,s.table_rva,s.entries*8,true)
     reader.stage='core/stratagem:grouped_records'
-    return M.parse_all(bytes,base,pointers,s),region
+    return M.parse_all(bytes,base,pointers,s,reader.cooperate),region
 end
 return M

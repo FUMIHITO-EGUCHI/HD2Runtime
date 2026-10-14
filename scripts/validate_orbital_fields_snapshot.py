@@ -116,7 +116,7 @@ local worker=coroutine.create(function()
    changes[#changes+1]={field=id,expect=field.currentDefault,value=field.currentDefault};ids[#ids+1]=id
   end
   table.sort(changes,function(a,c)return a.field<c.field end);table.sort(ids)
-  assert(#changes==8,name..' publishes '..#changes..' pattern fields')
+  assert(#changes==11,name..' publishes '..#changes..' pattern fields')
   local plan=resolve(stratagems.validate_transaction({id='orbital-noop',target=target(name),changes=changes,
    allow_unverified_effect=true}))
   for _,part in ipairs(plan.changes)do
@@ -142,7 +142,11 @@ local worker=coroutine.create(function()
   result.callInNoOps=result.callInNoOps+1
  end
  -- 3. The live-test writes.
- for _,case in ipairs({{'Orbital EMS Strike','orbital.salvos',1,5,'u32'},
+ for _,case in ipairs({{'Orbital Walking Barrage','orbital.walking_speed',3,0,'f32'},
+   {'Orbital 120mm HE Barrage','orbital.walking_speed',0,3,'f32'},
+   {'Orbital Gas Strike','orbital.aim_step_min',1,2,'f32'},
+   {'Orbital Gas Strike','orbital.aim_step_max',1,3,'f32'},
+   {'Orbital EMS Strike','orbital.salvos',1,5,'u32'},
    {'Orbital EMS Strike','orbital.shells_per_salvo',1,3,'u32'},
    {'Orbital Napalm Barrage','orbital.shells_per_salvo',5,1,'u32'},
    {'Orbital Napalm Barrage','orbital.scatter',25,1,'f32'},

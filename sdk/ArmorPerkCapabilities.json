@@ -1,0 +1,2495 @@
+{
+  "schemaVersion": 1,
+  "runtimeVersion": "0.40.0",
+  "liveTested": false,
+  "perks": [
+    {
+      "id": 0,
+      "name": "STANDARD ISSUE",
+      "description": "No additional bonuses.",
+      "stats": [],
+      "armorKits": 13,
+      "icon": "3642B3057D12359E",
+      "fields": []
+    },
+    {
+      "id": 1,
+      "name": "EXTRA PADDING",
+      "description": "Provides a higher armor rating.",
+      "stats": [],
+      "armorKits": 9,
+      "icon": "3642B3057D12359E",
+      "fields": [
+        {
+          "semanticFieldId": "perk.armor_rating",
+          "label": "Armor rating bonus",
+          "currentDefault": 1.0,
+          "min": 0,
+          "max": 10,
+          "unit": "value",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Uses the worn armor kit, not a passive slot override. Re-equip or respawn after editing.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 1
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/1",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "SCOUT",
+      "description": "Markers placed on the map will generate radar scans every #BONUS. Reduces range at which enemies can detect the wearer by #BONUS.",
+      "stats": [],
+      "armorKits": 5,
+      "icon": "6733080FB1201D53",
+      "fields": [
+        {
+          "semanticFieldId": "perk.radar_scan_interval",
+          "label": "Marker radar scan interval",
+          "currentDefault": 2.0,
+          "min": 0.05,
+          "max": 120,
+          "unit": "seconds",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 2
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/2",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 2
+          }
+        },
+        {
+          "semanticFieldId": "perk.enemy_detection_range",
+          "label": "Detection range multiplier",
+          "currentDefault": 0.7,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 2
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/2",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "FORTIFIED",
+      "description": "Further reduces recoil when crouching or prone by #BONUS. Provides #BONUS resistance to explosive damage.",
+      "stats": [],
+      "armorKits": 11,
+      "icon": "2DD4B3F171775457",
+      "fields": [
+        {
+          "semanticFieldId": "perk.crouch_prone_recoil",
+          "label": "Crouched and prone recoil multiplier",
+          "currentDefault": 0.7,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 3
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/3",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 3
+          }
+        },
+        {
+          "semanticFieldId": "perk.explosive_resistance",
+          "label": "Explosive damage multiplier",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 3
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/3",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "ELECTRICAL CONDUIT",
+      "description": "Provides #BONUS resistance to arc damage.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "557AC351AC2EFD83",
+      "fields": [
+        {
+          "semanticFieldId": "perk.arc_resistance",
+          "label": "Arc damage multiplier",
+          "currentDefault": 0.05,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 5
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/5",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 5
+          }
+        },
+        {
+          "semanticFieldId": "perk.unknown_8933e7f4",
+          "label": "Arc status buildup multiplier",
+          "currentDefault": 0.05,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Scales element-2 status buildup; identification as arc is inferred from its consumers.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 5
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/5",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "ENGINEERING KIT",
+      "description": "Further reduces recoil when crouching or prone by #BONUS. Increases initial inventory and holding capacity of throwables by #BONUS.",
+      "stats": [],
+      "armorKits": 12,
+      "icon": "7C818B04A594D8E5",
+      "fields": [
+        {
+          "semanticFieldId": "perk.crouch_prone_recoil",
+          "label": "Crouched and prone recoil multiplier",
+          "currentDefault": 0.7,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 6
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/6",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 6
+          }
+        },
+        {
+          "semanticFieldId": "perk.grenade_capacity",
+          "label": "Extra grenades",
+          "currentDefault": 2.0,
+          "min": 0,
+          "max": 20,
+          "unit": "count",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 6
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/6",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "MED-KIT",
+      "description": "Increases initial inventory and holding capacity of stims by #SIGN#BONUS. Increases stim effect duration by #BONUS.",
+      "stats": [],
+      "armorKits": 7,
+      "icon": "E5AD658BA8221ACF",
+      "fields": [
+        {
+          "semanticFieldId": "perk.stim_capacity",
+          "label": "Extra stims",
+          "currentDefault": 2.0,
+          "min": 0,
+          "max": 20,
+          "unit": "count",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 7
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/7",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 7
+          }
+        },
+        {
+          "semanticFieldId": "perk.stim_duration",
+          "label": "Extra stim duration",
+          "currentDefault": 2.0,
+          "min": 0,
+          "max": 120,
+          "unit": "seconds",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 7
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/7",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "SERVO-ASSISTED",
+      "description": "Increases throwing range by #BONUS. Provides #SIGN#BONUS limb health.",
+      "stats": [],
+      "armorKits": 7,
+      "icon": "6435159D8E466B03",
+      "fields": [
+        {
+          "semanticFieldId": "perk.throw_range",
+          "label": "Throw range multiplier",
+          "currentDefault": 1.3,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 8
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/8",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 8
+          }
+        },
+        {
+          "semanticFieldId": "perk.limb_health",
+          "label": "Limb health multiplier",
+          "currentDefault": 1.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 8
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/8",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "DEMOCRACY PROTECTS",
+      "description": "#BONUS chance to not die when taking lethal damage. Prevents all damage from bleeding if chest hemorrhages.",
+      "stats": [],
+      "armorKits": 6,
+      "icon": "61AE934CAA6F09DA",
+      "fields": [
+        {
+          "semanticFieldId": "perk.lethal_damage_survival",
+          "label": "Lethal damage survival value",
+          "currentDefault": 1.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Native perk value, not a percentage. Its gameplay response has not been tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 9
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/9",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 9
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "REINFORCED EPAULETTES",
+      "description": "Increases reload speed of primary weapons by #BONUS. Gives wearer a #BONUS chance to avoid grievous limb injury. Increases melee damage by #BONUS.",
+      "stats": [
+        {
+          "stat": 13,
+          "name": "primary reload",
+          "add": 0.0,
+          "mul": 1.3,
+          "describedBy": "CC530B21"
+        }
+      ],
+      "armorKits": 3,
+      "icon": "1917030BB5F2A130",
+      "fields": [
+        {
+          "semanticFieldId": "perk.limb_injury_avoidance",
+          "label": "Limb injury avoidance value",
+          "currentDefault": 1.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Native perk value, not a percentage. Its gameplay response has not been tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 10
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/10",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 10
+          }
+        },
+        {
+          "semanticFieldId": "perk.melee_damage",
+          "label": "Melee damage multiplier",
+          "currentDefault": 1.2,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 2,
+            "offset": 40,
+            "storage": "f32",
+            "width": 4,
+            "passive": 10
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/10",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 10
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_13.add",
+          "label": "Primary reload speed bonus",
+          "currentDefault": 0.0,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "value",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 4,
+            "storage": "f32",
+            "width": 4,
+            "passive": 10
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/10",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 10
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_13.mul",
+          "label": "Primary reload speed multiplier",
+          "currentDefault": 1.3,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "multiplier",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 10
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/10",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "INFLAMMABLE",
+      "description": "Provides #BONUS damage resistance to fire, allowing bearer to rest assured in their inflammability.",
+      "stats": [],
+      "armorKits": 4,
+      "icon": "B70E83517E7E9D2A",
+      "fields": [
+        {
+          "semanticFieldId": "perk.fire_resistance",
+          "label": "Fire damage multiplier",
+          "currentDefault": 0.25,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 11
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/11",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "PEAK PHYSIQUE",
+      "description": "Increases melee damage by #BONUS. Increases weapon ergonomics to reduce drag on weapon movement.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "978EA957FA83A4C9",
+      "fields": [
+        {
+          "semanticFieldId": "perk.melee_damage",
+          "label": "Melee damage multiplier",
+          "currentDefault": 1.4,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 12
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/12",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 12
+          }
+        },
+        {
+          "semanticFieldId": "perk.weapon_ergonomics",
+          "label": "Weapon ergonomics bonus",
+          "currentDefault": 30.0,
+          "min": 0,
+          "max": 200,
+          "unit": "value",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 12
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/12",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 12
+          }
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "ADVANCED FILTRATION",
+      "description": "Provides #BONUS resistance to gas damage and effects.",
+      "stats": [],
+      "armorKits": 4,
+      "icon": "501271EF8B35994E",
+      "fields": [
+        {
+          "semanticFieldId": "perk.gas_resistance",
+          "label": "Gas damage multiplier",
+          "currentDefault": 0.2,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 13
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/13",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "UNFLINCHING",
+      "description": "Helps prevent Helldivers from flinching when hit. Provides a higher armor rating. Markers placed on the map will generate radar scans every #BONUS.",
+      "stats": [
+        {
+          "stat": 11,
+          "name": "unnamed (0x607ED0 scales an integer quantity)",
+          "add": 0.0,
+          "mul": 0.05,
+          "describedBy": null
+        }
+      ],
+      "armorKits": 3,
+      "icon": "17208F22C9F98ADC",
+      "fields": [
+        {
+          "semanticFieldId": "perk.armor_rating",
+          "label": "Armor rating bonus",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "value",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Uses the worn armor kit, not a passive slot override. Re-equip or respawn after editing.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 14
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/14",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 14
+          }
+        },
+        {
+          "semanticFieldId": "perk.radar_scan_interval",
+          "label": "Marker radar scan interval",
+          "currentDefault": 2.0,
+          "min": 0.05,
+          "max": 120,
+          "unit": "seconds",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 2,
+            "offset": 40,
+            "storage": "f32",
+            "width": 4,
+            "passive": 14
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/14",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 14
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_11.add",
+          "label": "Unmapped stat 11 bonus",
+          "currentDefault": 0.0,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "value",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Native stat 11 has a verified reader, but its gameplay meaning is unresolved. Respawn after applying.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 4,
+            "storage": "f32",
+            "width": 4,
+            "passive": 14
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/14",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 14
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_11.mul",
+          "label": "Unmapped stat 11 multiplier",
+          "currentDefault": 0.05,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "multiplier",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Native stat 11 has a verified reader, but its gameplay meaning is unresolved. Respawn after applying.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 14
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/14",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "ACCLIMATED",
+      "description": "Provides #BONUS resistance to fire, gas, acid, and electrical damage.",
+      "stats": [],
+      "armorKits": 2,
+      "icon": "341A3B9CB9629A6E",
+      "fields": [
+        {
+          "semanticFieldId": "perk.elemental_resistance",
+          "label": "Elemental damage multiplier",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 15
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/15",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 15
+          }
+        },
+        {
+          "semanticFieldId": "perk.unknown_8933e7f4",
+          "label": "Arc status buildup multiplier",
+          "currentDefault": 0.05,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Scales element-2 status buildup; identification as arc is inferred from its consumers.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 15
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/15",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "SIEGE-READY",
+      "description": "Increases reload speed of primary weapons by #BONUS. Increases ammo capacity of all weapons by #BONUS. Does not affect weapon backpacks.",
+      "stats": [
+        {
+          "stat": 13,
+          "name": "primary reload",
+          "add": 0.0,
+          "mul": 1.3,
+          "describedBy": "CC530B21"
+        },
+        {
+          "stat": 12,
+          "name": "ammo capacity",
+          "add": 0.0,
+          "mul": 1.2,
+          "describedBy": "33C9C713"
+        }
+      ],
+      "armorKits": 4,
+      "icon": "8667ED2CA6A6846F",
+      "fields": [
+        {
+          "semanticFieldId": "perk.stat_13.add",
+          "label": "Primary reload speed bonus",
+          "currentDefault": 0.0,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "value",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 4,
+            "storage": "f32",
+            "width": 4,
+            "passive": 16
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/16",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 16
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_13.mul",
+          "label": "Primary reload speed multiplier",
+          "currentDefault": 1.3,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "multiplier",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 16
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/16",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 16
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_12.add",
+          "label": "Ammo capacity bonus",
+          "currentDefault": 0.0,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "value",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 1,
+            "offset": 16,
+            "storage": "f32",
+            "width": 4,
+            "passive": 16
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/16",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 16
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_12.mul",
+          "label": "Ammo capacity multiplier",
+          "currentDefault": 1.2,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "multiplier",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 1,
+            "offset": 20,
+            "storage": "f32",
+            "width": 4,
+            "passive": 16
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/16",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 16
+          }
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "INTEGRATED EXPLOSIVES",
+      "description": "Armor explodes #BONUS after the wearer dies. Increases initial inventory and holding capacity of throwables by #BONUS.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "C12ACD1176804821",
+      "fields": [
+        {
+          "semanticFieldId": "perk.grenade_capacity",
+          "label": "Extra grenades",
+          "currentDefault": 2.0,
+          "min": 0,
+          "max": 20,
+          "unit": "count",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 17
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/17",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 17
+          }
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "GUNSLINGER",
+      "description": "Increases sidearms reload speed by #BONUS. Sidearm draw/holster speed increased by #BONUS. Sidearm recoil reduced by #BONUS.",
+      "stats": [
+        {
+          "stat": 15,
+          "name": "sidearm reload",
+          "add": 0.0,
+          "mul": 1.6,
+          "describedBy": "B4F88129"
+        },
+        {
+          "stat": 16,
+          "name": "sidearm draw / holster",
+          "add": 0.0,
+          "mul": 1.5,
+          "describedBy": "AD5289FE"
+        },
+        {
+          "stat": 17,
+          "name": "sidearm recoil",
+          "add": 0.0,
+          "mul": 0.3,
+          "describedBy": "22035F3C"
+        }
+      ],
+      "armorKits": 3,
+      "icon": "11FC1753D5A4F6A2",
+      "fields": [
+        {
+          "semanticFieldId": "perk.stat_15.add",
+          "label": "Sidearm reload speed bonus",
+          "currentDefault": 0.0,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "value",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 4,
+            "storage": "f32",
+            "width": 4,
+            "passive": 18
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/18",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 18
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_15.mul",
+          "label": "Sidearm reload speed multiplier",
+          "currentDefault": 1.6,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "multiplier",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 18
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/18",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 18
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_16.add",
+          "label": "Sidearm draw and holster speed bonus",
+          "currentDefault": 0.0,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "value",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 1,
+            "offset": 16,
+            "storage": "f32",
+            "width": 4,
+            "passive": 18
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/18",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 18
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_16.mul",
+          "label": "Sidearm draw and holster speed multiplier",
+          "currentDefault": 1.5,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "multiplier",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 1,
+            "offset": 20,
+            "storage": "f32",
+            "width": 4,
+            "passive": 18
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/18",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 18
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_17.add",
+          "label": "Sidearm recoil bonus",
+          "currentDefault": 0.0,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "value",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 2,
+            "offset": 28,
+            "storage": "f32",
+            "width": 4,
+            "passive": 18
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/18",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 18
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_17.mul",
+          "label": "Sidearm recoil multiplier",
+          "currentDefault": 0.3,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "multiplier",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 2,
+            "offset": 32,
+            "storage": "f32",
+            "width": 4,
+            "passive": 18
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/18",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 18
+          }
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "ADRENO-DEFIBRILLATOR",
+      "description": "Provides one-time, short-lived resuscitation upon death, given that the Helldiver's body is still intact. Increases stim effect duration by #BONUS. Provides #BONUS resistance to arc damage.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "0C2D003EE391E9D0",
+      "fields": [
+        {
+          "semanticFieldId": "perk.stim_duration",
+          "label": "Extra stim duration",
+          "currentDefault": 2.0,
+          "min": 0,
+          "max": 120,
+          "unit": "seconds",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 19
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/19",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 19
+          }
+        },
+        {
+          "semanticFieldId": "perk.arc_resistance",
+          "label": "Arc damage multiplier",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 2,
+            "offset": 40,
+            "storage": "f32",
+            "width": 4,
+            "passive": 19
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/19",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 19
+          }
+        },
+        {
+          "semanticFieldId": "perk.unknown_8933e7f4",
+          "label": "Arc status buildup multiplier",
+          "currentDefault": 0.05,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Scales element-2 status buildup; identification as arc is inferred from its consumers.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 3,
+            "offset": 56,
+            "storage": "f32",
+            "width": 4,
+            "passive": 19
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/19",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 19
+          }
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "BALLISTIC PADDING",
+      "description": "Provides #BONUS resistance to chest damage. Provides #BONUS resistance to explosive damage. Prevents all damage from bleeding if chest hemorrhages.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "6E1DE6F251D0AEC6",
+      "fields": [
+        {
+          "semanticFieldId": "perk.chest_damage_resistance",
+          "label": "Chest damage multiplier",
+          "currentDefault": 0.75,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 20
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/20",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 20
+          }
+        },
+        {
+          "semanticFieldId": "perk.explosive_resistance",
+          "label": "Explosive damage multiplier",
+          "currentDefault": 0.75,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 20
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/20",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "DESERT STORMER",
+      "description": "Provides #BONUS resistance to fire, gas, acid, and electrical damage. Increases throwing range by #BONUS.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "C4CF3510DF2D3ADB",
+      "fields": [
+        {
+          "semanticFieldId": "perk.elemental_resistance",
+          "label": "Elemental damage multiplier",
+          "currentDefault": 0.6,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 21
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/21",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 21
+          }
+        },
+        {
+          "semanticFieldId": "perk.unknown_8933e7f4",
+          "label": "Arc status buildup multiplier",
+          "currentDefault": 0.06,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Scales element-2 status buildup; identification as arc is inferred from its consumers.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 21
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/21",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 21
+          }
+        },
+        {
+          "semanticFieldId": "perk.throw_range",
+          "label": "Throw range multiplier",
+          "currentDefault": 1.2,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 2,
+            "offset": 40,
+            "storage": "f32",
+            "width": 4,
+            "passive": 21
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/21",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 21
+          }
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "name": "FEET FIRST",
+      "description": "Wearer makes #BONUS less noise when moving. Increases point-of-interest identification range by #BONUS. Provides immunity to leg injuries.",
+      "stats": [],
+      "armorKits": 2,
+      "icon": "64FCB7D7E42E8C3A",
+      "fields": [
+        {
+          "semanticFieldId": "perk.movement_noise",
+          "label": "Movement noise multiplier",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 31
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/31",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 31
+          }
+        },
+        {
+          "semanticFieldId": "perk.poi_identification_range",
+          "label": "Point of interest identification range multiplier",
+          "currentDefault": 1.3,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 31
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/31",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 31
+          }
+        },
+        {
+          "semanticFieldId": "perk.leg_injury_immunity",
+          "label": "Leg injury immunity (0 / 1)",
+          "currentDefault": 1.0,
+          "min": 0,
+          "max": 1,
+          "unit": "value",
+          "type": "integer",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 2,
+            "offset": 40,
+            "storage": "f32",
+            "width": 4,
+            "passive": 31
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/31",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 31
+          }
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "name": "REDUCED SIGNATURE",
+      "description": "Wearer makes #BONUS less noise when moving. Reduces range at which enemies can detect the wearer by #BONUS.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "38033888FEB0EC8D",
+      "fields": [
+        {
+          "semanticFieldId": "perk.movement_noise",
+          "label": "Movement noise multiplier",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 32
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/32",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 32
+          }
+        },
+        {
+          "semanticFieldId": "perk.enemy_detection_range",
+          "label": "Detection range multiplier",
+          "currentDefault": 0.6,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 32
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/32",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 32
+          }
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "name": "ROCK-SOLID",
+      "description": "Increases melee damage by #BONUS. Bearer is more resistant to being knocked prone.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "90502679EC8F7942",
+      "fields": [
+        {
+          "semanticFieldId": "perk.melee_damage",
+          "label": "Melee damage multiplier",
+          "currentDefault": 1.4,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 33
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/33",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 33
+          }
+        },
+        {
+          "semanticFieldId": "perk.knock_prone_resistance",
+          "label": "Knockdown multiplier",
+          "currentDefault": 0.7,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 2,
+            "offset": 40,
+            "storage": "f32",
+            "width": 4,
+            "passive": 33
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/33",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 33
+          }
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "name": "SUPPLEMENTAL ADRENALINE",
+      "description": "When the wearer takes damage, they regain some stamina. Provides a higher armor rating.",
+      "stats": [],
+      "armorKits": 2,
+      "icon": "B6F70694E795E2D9",
+      "fields": [
+        {
+          "semanticFieldId": "perk.stamina_when_damaged",
+          "label": "Stamina gained when damaged",
+          "currentDefault": 2.0,
+          "min": 0,
+          "max": 10,
+          "unit": "value",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 34
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/34",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 34
+          }
+        },
+        {
+          "semanticFieldId": "perk.armor_rating",
+          "label": "Armor rating bonus",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "value",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Uses the worn armor kit, not a passive slot override. Re-equip or respawn after editing.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 34
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/34",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 34
+          }
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "name": "CONCUSSIVE PADDING, REINFORCED",
+      "description": "Provides #BONUS resistance to explosive damage. Provides a higher armor rating.",
+      "stats": [],
+      "armorKits": 1,
+      "icon": "90400C4B2C62C1BA",
+      "fields": [
+        {
+          "semanticFieldId": "perk.explosive_resistance",
+          "label": "Explosive damage multiplier",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 35
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/35",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 35
+          }
+        },
+        {
+          "semanticFieldId": "perk.armor_rating",
+          "label": "Armor rating bonus",
+          "currentDefault": 0.6,
+          "min": 0,
+          "max": 10,
+          "unit": "value",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Uses the worn armor kit, not a passive slot override. Re-equip or respawn after editing.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 35
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/35",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "name": "CONCUSSIVE PADDING, GRENADIER",
+      "description": "Provides #BONUS resistance to explosive damage. Increases initial inventory and holding capacity of throwables by #BONUS.",
+      "stats": [],
+      "armorKits": 1,
+      "icon": "90400C4B2C62C1BA",
+      "fields": [
+        {
+          "semanticFieldId": "perk.explosive_resistance",
+          "label": "Explosive damage multiplier",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 36
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/36",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 36
+          }
+        },
+        {
+          "semanticFieldId": "perk.grenade_capacity",
+          "label": "Extra grenades",
+          "currentDefault": 2.0,
+          "min": 0,
+          "max": 20,
+          "unit": "count",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 36
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/36",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 36
+          }
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "name": "CONCUSSIVE PADDING, HAZMAT",
+      "description": "Provides #BONUS resistance to explosive damage. Provides #BONUS resistance to gas damage and effects. Sidearm recoil reduced by #BONUS.",
+      "stats": [
+        {
+          "stat": 17,
+          "name": "sidearm recoil",
+          "add": 0.0,
+          "mul": 0.7,
+          "describedBy": "22035F3C"
+        }
+      ],
+      "armorKits": 1,
+      "icon": "90400C4B2C62C1BA",
+      "fields": [
+        {
+          "semanticFieldId": "perk.explosive_resistance",
+          "label": "Explosive damage multiplier",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 37
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/37",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 37
+          }
+        },
+        {
+          "semanticFieldId": "perk.gas_resistance",
+          "label": "Gas damage multiplier",
+          "currentDefault": 0.75,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 37
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/37",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 37
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_17.add",
+          "label": "Sidearm recoil bonus",
+          "currentDefault": 0.0,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "value",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 4,
+            "storage": "f32",
+            "width": 4,
+            "passive": 37
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/37",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 37
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_17.mul",
+          "label": "Sidearm recoil multiplier",
+          "currentDefault": 0.7,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "multiplier",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 37
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/37",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 37
+          }
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "name": "OXYGENATOR",
+      "description": "Increases the wearer's walking and running speed. Increases the speed and duration of slides.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "87197339BE6A1EB4",
+      "fields": [
+        {
+          "semanticFieldId": "perk.movement_speed",
+          "label": "Jog speed multiplier",
+          "currentDefault": 1.1,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 38
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/38",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 38
+          }
+        },
+        {
+          "semanticFieldId": "perk.unknown_f6d67313",
+          "label": "Sprint speed multiplier",
+          "currentDefault": 1.1,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 38
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/38",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 38
+          }
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "name": "KINETIC DISPLACEMENT MITIGATION",
+      "description": "Provides #BONUS damage resistance to fire, allowing bearer to rest assured in their inflammability. Gives wearer a #BONUS chance to avoid grievous limb injury. Reduces damage taken from impact and collisions by #BONUS.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "FF6E9C50D4C71B91",
+      "fields": [
+        {
+          "semanticFieldId": "perk.fire_resistance",
+          "label": "Fire damage multiplier",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 39
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/39",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 39
+          }
+        },
+        {
+          "semanticFieldId": "perk.limb_injury_avoidance",
+          "label": "Limb injury avoidance value",
+          "currentDefault": 1.5,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Native perk value, not a percentage. Its gameplay response has not been tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 39
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/39",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 39
+          }
+        },
+        {
+          "semanticFieldId": "perk.impact_resistance",
+          "label": "Impact damage multiplier",
+          "currentDefault": 0.7,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 2,
+            "offset": 40,
+            "storage": "f32",
+            "width": 4,
+            "passive": 39
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/39",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 39
+          }
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "name": "BLUNT-FORCE MITIGATION",
+      "description": "Bearer is more resistant to being knocked prone. Reduces damage taken from impact and collisions by #BONUS. Provides a higher armor rating.",
+      "stats": [],
+      "armorKits": 3,
+      "icon": "5F351AAC239F0F8B",
+      "fields": [
+        {
+          "semanticFieldId": "perk.knock_prone_resistance",
+          "label": "Knockdown multiplier",
+          "currentDefault": 0.7,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 40
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/40",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 40
+          }
+        },
+        {
+          "semanticFieldId": "perk.impact_resistance",
+          "label": "Impact damage multiplier",
+          "currentDefault": 0.7,
+          "min": 0,
+          "max": 10,
+          "unit": "multiplier",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 40
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/40",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 40
+          }
+        },
+        {
+          "semanticFieldId": "perk.armor_rating",
+          "label": "Armor rating bonus",
+          "currentDefault": 0.5,
+          "min": 0,
+          "max": 10,
+          "unit": "value",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Uses the worn armor kit, not a passive slot override. Re-equip or respawn after editing.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 2,
+            "offset": 40,
+            "storage": "f32",
+            "width": 4,
+            "passive": 40
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/40",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 40
+          }
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "name": "TRUE GRIT",
+      "description": "Increases reload speed of support weapons by #BONUS. Slightly increases weapon ergonomics to reduce drag on weapon movement.",
+      "stats": [
+        {
+          "stat": 14,
+          "name": "support reload",
+          "add": 0.0,
+          "mul": 1.3,
+          "describedBy": "35F17BEC"
+        }
+      ],
+      "armorKits": 2,
+      "icon": "06974150D5198CC3",
+      "fields": [
+        {
+          "semanticFieldId": "perk.weapon_ergonomics",
+          "label": "Weapon ergonomics bonus",
+          "currentDefault": 20.0,
+          "min": 0,
+          "max": 200,
+          "unit": "value",
+          "type": "number",
+          "editable": true,
+          "section": "Perk bonuses",
+          "lifecycle": "Shared by everyone using this perk. Gameplay effect not yet tested.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "modifier",
+            "index": 1,
+            "offset": 24,
+            "storage": "f32",
+            "width": 4,
+            "passive": 41
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/41",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 41
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_14.add",
+          "label": "Support reload speed bonus",
+          "currentDefault": 0.0,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "value",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 4,
+            "storage": "f32",
+            "width": 4,
+            "passive": 41
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/41",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 41
+          }
+        },
+        {
+          "semanticFieldId": "perk.stat_14.mul",
+          "label": "Support reload speed multiplier",
+          "currentDefault": 1.3,
+          "min": 0,
+          "max": 10,
+          "type": "number",
+          "unit": "multiplier",
+          "editable": true,
+          "section": "Stats applied at spawn",
+          "lifecycle": "Uses the armor kit worn at spawn. Respawn after applying; passive slot overrides do not select these stats.",
+          "backing": {
+            "kind": "armor_perk",
+            "part": "stat",
+            "index": 0,
+            "offset": 8,
+            "storage": "f32",
+            "width": 4,
+            "passive": 41
+          },
+          "shared": true,
+          "acknowledgement": "allow_unverified_effect",
+          "operationGroup": "armor_perk/41",
+          "target": {
+            "resource": "armor_perk",
+            "armor_perk": 41
+          }
+        }
+      ]
+    }
+  ]
+}

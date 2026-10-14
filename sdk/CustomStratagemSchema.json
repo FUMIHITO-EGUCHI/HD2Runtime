@@ -7293,7 +7293,7 @@
        ]
       },
       "face_target": {
-       "doc": "the Pelican turns its nose to the target (with behave_as)",
+       "doc": "the Pelican faces its native target with an untouched native gun, or its target lock with behave_as",
        "optional": true,
        "type": "enum",
        "values": [
@@ -7817,7 +7817,7 @@
   }
  },
  "format": "hd2runtime-custom-stratagems/1",
- "hd2RuntimeVersion": "0.31.3",
+ "hd2RuntimeVersion": "0.40.0",
  "limits": {
   "definitions": 16,
   "orbitalShells": 64

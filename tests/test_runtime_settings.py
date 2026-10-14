@@ -33,8 +33,58 @@ def lua(body):
 
 
 class RuntimeSettingsTests(unittest.TestCase):
+    def test_input_blocking_and_sounds_follow_visible_panel_lifetime(self):
+        self.check(r'''
+local events=require('hd2runtime/runtime/events')
+local blocking,sounds={},{}
+settings.hooks.block=function(on)blocking[#blocking+1]=on end
+settings.hooks.sound=function(event)sounds[#sounds+1]=event;return true end
+settings.open('performance')
+assert(settings.visible()and blocking[#blocking]and sounds[1]=='ui/slot_select')
+events.state.now=1
+settings.select_tab('settings');assert(sounds[#sounds]=='ui/generic_select')
+events.state.now=2;keys.ESCAPE=true
+settings.draw(builder(1920,1080),nil,input)
+assert(not settings.visible()and blocking[#blocking]==false)
+assert(sounds[#sounds]=='ui/picker_close')
+local n=#sounds;events.tick(1);assert(#sounds==n,'no background sounds')
+settings.set('ui_sounds',false);settings.open();settings.close();assert(#sounds==n,'mute')
+settings.set('ui_sounds',true);events.state.now=4
+local attempts=0;settings.hooks.sound=function()attempts=attempts+1;return nil end
+settings.sound('click');events.state.now=5;settings.sound('click');assert(attempts==1)
+events.state.now=35;settings.sound('click');assert(attempts==2,'bounded retry')
+''')
+
     def check(self, body):
         self.assertEqual(lua(body), b'ok')
+
+    def test_global_filter_badges_paging_and_return_to_runtime_details(self):
+        self.check(r'''
+local perf=require('hd2runtime/runtime/perf_watch')
+local monitor=require('hd2runtime/runtime/performance_panel')
+require('hd2runtime/runtime/metrics').set_clock(function()return 0 end)
+CowboyBingusModLoader={modules={}}
+for i=1,15 do CowboyBingusModLoader.modules[('mods/test/asset_%02d'):format(i)]='loaded'end
+settings.select_tab('performance')
+local L=settings.layout(1920,1080,1)
+local function click(id)
+    local box;for _,v in ipairs(monitor.controls(L.content,L.k))do if v.id==id then box=v end end
+    local m={x=box.x+box.w/2,y=box.y+box.h/2,left=false}
+    settings.draw(builder(1920,1080),m,input);m.left=true
+    settings.draw(builder(1920,1080),m,input)
+end
+click('global');assert(monitor.mode()=='global')
+local t=perf.begin();perf.finish(t,'mods/skyeshade/hd2runtime_editor','editor');perf.update(0.25)
+local d=builder(1920,1080);settings.draw(d,nil,input)
+assert(has(d,'HD2R Editor')and has(d,'[R]')and has(d,'Not measured')and has(d,'Page 1 / 4'))
+click('next');d=builder(1920,1080);settings.draw(d,nil,input)
+assert(has(d,'Page 2 / 4')and has(d,'asset 05')and not has(d,'HD2R Editor'))
+click('runtime');assert(monitor.mode()=='runtime'and perf.history().head==1)
+t=perf.begin();perf.finish(t,'HD2Runtime',{perf_name='event: mission_started / example'});perf.update(0.25)
+d=builder(1920,1080);settings.draw(d,nil,input)
+assert(has(d,'event: mission_started / example')and not has(d,'asset 07'))
+settings.close();assert(not perf.recording())
+''')
 
     def test_every_setting_is_on_by_default_and_a_click_turns_it_off_and_saves_it(self):
         self.check(r'''
@@ -201,8 +251,24 @@ end
 d=builder(1920,1080);settings.draw(d,m,input)
 assert(has(d,'Runtime and mods: 5.50 ms per frame'),'the total per update')
 assert(has(d,'33.0% of the frame time  |  60 FPS'))
-assert(has(d,'hog')and has(d,'small')and has(d,'custom stratagems')and has(d,'HD2R')and has(d,'MOD'))
+assert(has(d,'hog')and has(d,'small')and has(d,'custom stratagems')and has(d,'HD2R')and has(d,'[R]'))
 assert(has(d,'4.00 ms')and has(d,'0.50 ms'))
+-- Page navigation sits beside the footer number, with an opaque dark background.
+local controls=require('hd2runtime/runtime/performance_panel').controls(L.content,L.k)
+local page
+for _,t in ipairs(d.texts)do if t.s=='Page 1 / 1'then page=t end end
+assert(page,'page number missing')
+for _,id in ipairs({'previous','next'})do
+ local c
+ for _,control in ipairs(controls)do if control.id==id then c=control end end
+ assert(c,'navigation control absent')
+ assert(math.abs(c.y+c.h/2-(page.y+page.size*settings.CAP_OFFSET))<0.001 and c.x>page.x,'navigation is not beside page number')
+ local background
+ for _,r in ipairs(d.rects)do
+  if r.x==c.x and r.y==c.y and r.w==c.w and r.h==c.h then background=r.c end
+ end
+ assert(background and background[4]==255 and background[1]<40,'navigation background must be dark and opaque')
+end
 -- the heaviest first in the table
 local order={}
 for _,t in ipairs(d.texts)do if t.s=='hog'or t.s=='small'or t.s=='custom stratagems'then order[#order+1]=t.s end end

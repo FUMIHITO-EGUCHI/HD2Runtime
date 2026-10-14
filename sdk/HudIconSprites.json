@@ -6,7 +6,8 @@
  "note": "Sprite names of the HUD icons: lookup keys of records in the game's texture_atlas resources. sdk/tools/hd2_hud_icons.py extracts the artwork locally from the installed game; none is published. Stratagem sprites are icon masks (R category colour, G white); booster sprites are colour images.",
  "sources": {
   "stratagem": "StratagemInfo +0xB0 of the uniquely resolved root (stratagem-calldown-F5FEE03DCFDB.json)",
-  "booster": "native Booster table row +0x20 (booster-native-F5FEE03DCFDB.json)"
+  "booster": "native Booster table row +0x20 (booster-native-F5FEE03DCFDB.json)",
+  "silhouettes": "Reviewed encyclopedia HUD sprites and atlas symbols (hud-silhouettes-F5FEE03DCFDB.json)"
  },
  "stratagems": {
   "40-K Meltagun": {
@@ -471,5 +472,1972 @@
  "missing": {
   "CQC-72 Entrenchment Tool": "no call-in stratagem (rootResolution NO_CALL_IN): no StratagemInfo row",
   "SG-88 Break-Action Shotgun": "no call-in stratagem (rootResolution NO_CALL_IN): no StratagemInfo row"
+ },
+ "weapons": {
+  "40-K Meltagun": {
+   "sprite": "0x5A76F8D776BA3898",
+   "width": 162,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AC-8 Autocannon": {
+   "sprite": "0x482F153DC3E0DF40",
+   "width": 243,
+   "height": 72,
+   "mode": "mask"
+  },
+  "APW-1 Anti-Materiel Rifle": {
+   "sprite": "0xAB6A77032D6639A6",
+   "width": 276,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR-11 Arbitrator": {
+   "sprite": "0x30BB29C985FAE4B8",
+   "width": 185,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR-2 Coyote": {
+   "sprite": "0x1680CB4EAFADE6E5",
+   "width": 191,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR-23 Liberator": {
+   "sprite": "0x731C19E0B30F79E4",
+   "width": 174,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR-23A Liberator Carbine": {
+   "sprite": "0x99B9C9A7F27F027C",
+   "width": 148,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR-23C Liberator Concussive": {
+   "sprite": "0x678FD804989ADE0E",
+   "width": 160,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR-23P Liberator Penetrator": {
+   "sprite": "0xFE83A951448DDFD3",
+   "width": 240,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR-32 Pacifier": {
+   "sprite": "0xB4C2ADDB3C18F2AB",
+   "width": 249,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR-59 Suppressor": {
+   "sprite": "0xCBD5F9036CB1B4CF",
+   "width": 180,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR-61 Tenderizer": {
+   "sprite": "0x2099B39874F6EB94",
+   "width": 224,
+   "height": 72,
+   "mode": "mask"
+  },
+  "AR/GL-21 One-Two": {
+   "sprite": "0x44D15B3258B2C325",
+   "width": 180,
+   "height": 56,
+   "mode": "mask"
+  },
+  "ARC-12 Blitzer": {
+   "sprite": "0xDC8B4C5DCF02B3F8",
+   "width": 218,
+   "height": 72,
+   "mode": "mask"
+  },
+  "ARC-3 Arc Thrower": {
+   "sprite": "0xF014CED110BDA2BC",
+   "width": 188,
+   "height": 72,
+   "mode": "mask"
+  },
+  "B/FLAM-80 Cremator": {
+   "sprite": "0x16B8D2C732CD4F85",
+   "width": 284,
+   "height": 72,
+   "mode": "mask"
+  },
+  "B/MD C4 Pack": {
+   "sprite": "0x08BA88203B509433",
+   "width": 26,
+   "height": 72,
+   "mode": "mask"
+  },
+  "BR-14 Adjudicator": {
+   "sprite": "0x08BF285D3F4FA702",
+   "width": 283,
+   "height": 72,
+   "mode": "mask"
+  },
+  "CB-9 Exploding Crossbow": {
+   "sprite": "0x831574BADC429337",
+   "width": 195,
+   "height": 72,
+   "mode": "mask"
+  },
+  "CQC-1 One True Flag": {
+   "sprite": "0x7FD3EC258B1AD92B",
+   "width": 170,
+   "height": 74,
+   "mode": "mask"
+  },
+  "CQC-19 Stun Lance": {
+   "sprite": "0x96AA6CA137F70588",
+   "width": 186,
+   "height": 72,
+   "mode": "mask"
+  },
+  "CQC-2 Saber": {
+   "sprite": "0x23EE2B25DE113613",
+   "width": 349,
+   "height": 72,
+   "mode": "mask"
+  },
+  "CQC-30 Stun Baton": {
+   "sprite": "0x9D80F1076BD65C82",
+   "width": 186,
+   "height": 72,
+   "mode": "mask"
+  },
+  "CQC-42 Machete": {
+   "sprite": "0x52DBE6D951E5C495",
+   "width": 503,
+   "height": 72,
+   "mode": "mask"
+  },
+  "CQC-5 Combat Hatchet": {
+   "sprite": "0x731EE6B49D5A6F12",
+   "width": 140,
+   "height": 72,
+   "mode": "mask"
+  },
+  "CQC-72 Entrenchment Tool": {
+   "sprite": "0x5CCA30861C0B83A9",
+   "width": 186,
+   "height": 75,
+   "mode": "mask"
+  },
+  "CQC-73 Entrenchment Tool": {
+   "sprite": "0x5CCA30861C0B83A9",
+   "width": 186,
+   "height": 75,
+   "mode": "mask"
+  },
+  "CQC-9 Defoliation Tool": {
+   "sprite": "0x6F8053A1F8E0F7D4",
+   "width": 342,
+   "height": 72,
+   "mode": "mask"
+  },
+  "DBS-2 Double Freedom": {
+   "sprite": "0x6339F317E3B31789",
+   "width": 291,
+   "height": 72,
+   "mode": "mask"
+  },
+  "EAT-17 Expendable Anti-Tank": {
+   "sprite": "0x612F1192925142EB",
+   "width": 244,
+   "height": 72,
+   "mode": "mask"
+  },
+  "EAT-411 Leveller": {
+   "sprite": "0x15C88B5F326110A2",
+   "width": 219,
+   "height": 72,
+   "mode": "mask"
+  },
+  "EAT-700 Expendable Napalm": {
+   "sprite": "0xD6D6392B6297ECFE",
+   "width": 219,
+   "height": 72,
+   "mode": "mask"
+  },
+  "FAF-14 Spear": {
+   "sprite": "0xD209ED31D4E6CFCB",
+   "width": 118,
+   "height": 64,
+   "mode": "mask"
+  },
+  "FLAM-40 Flamethrower": {
+   "sprite": "0xF61D0F1DF7FAFC44",
+   "width": 230,
+   "height": 72,
+   "mode": "mask"
+  },
+  "FLAM-66 Torcher": {
+   "sprite": "0x410965AAB76809EC",
+   "width": 226,
+   "height": 103,
+   "mode": "mask"
+  },
+  "GL-15 Evictor": {
+   "sprite": "0x615317D300C48763",
+   "width": 183,
+   "height": 72,
+   "mode": "mask"
+  },
+  "GL-21 Grenade Launcher": {
+   "sprite": "0x07651A5C67186150",
+   "width": 174,
+   "height": 72,
+   "mode": "mask"
+  },
+  "GL-28 Belt-Fed Grenade Launcher": {
+   "sprite": "0xCF4D29EEAB9DBE52",
+   "width": 313,
+   "height": 72,
+   "mode": "mask"
+  },
+  "GL-52 De-Escalator": {
+   "sprite": "0xC700430E7FA49CB1",
+   "width": 186,
+   "height": 72,
+   "mode": "mask"
+  },
+  "GP-20 Ultimatum": {
+   "sprite": "0x71B3E9BBDF44BB9B",
+   "width": 223,
+   "height": 72,
+   "mode": "mask"
+  },
+  "GP-31 Grenade Pistol": {
+   "sprite": "0x9DDF3FD6BF0196DE",
+   "width": 140,
+   "height": 72,
+   "mode": "mask"
+  },
+  "GR-8 Recoilless Rifle": {
+   "sprite": "0xE24A828C83F5CC4E",
+   "width": 212,
+   "height": 72,
+   "mode": "mask"
+  },
+  "JAR-5 Dominator": {
+   "sprite": "0xD2CF805C547B38EE",
+   "width": 230,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-12 Sai": {
+   "sprite": "0xF192966A03AD746D",
+   "width": 151,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-13 Trident": {
+   "sprite": "0x108B4FD4FCCDDD41",
+   "width": 285,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-16 Sickle": {
+   "sprite": "0xF0D54F530316A826",
+   "width": 272,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-17 Double-Edge Sickle": {
+   "sprite": "0x729A14F4479713BD",
+   "width": 314,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-22 Shear": {
+   "sprite": "0x7ED0078D2037CD4D",
+   "width": 199,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-5 Scythe": {
+   "sprite": "0x75DF12FBA6937F19",
+   "width": 208,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-58 Talon": {
+   "sprite": "0xBC4C9016A7BA6D00",
+   "width": 196,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-7 Dagger": {
+   "sprite": "0x8307C1A486543264",
+   "width": 106,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-98 Laser Cannon": {
+   "sprite": "0x1EDB6BB4BECA787E",
+   "width": 168,
+   "height": 72,
+   "mode": "mask"
+  },
+  "LAS-99 Quasar Cannon": {
+   "sprite": "0x5B61D11264A43FE6",
+   "width": 191,
+   "height": 72,
+   "mode": "mask"
+  },
+  "M-1000 Maxigun": {
+   "sprite": "0x7E71404B010B8BB6",
+   "width": 313,
+   "height": 72,
+   "mode": "mask"
+  },
+  "M-105 Stalwart": {
+   "sprite": "0x03D66D0507630193",
+   "width": 246,
+   "height": 72,
+   "mode": "mask"
+  },
+  "M6C/SOCOM Pistol": {
+   "sprite": "0xEEFB4141E2B83C75",
+   "width": 120,
+   "height": 72,
+   "mode": "mask"
+  },
+  "M7S SMG": {
+   "sprite": "0xDD42AB9A9CD21040",
+   "width": 189,
+   "height": 72,
+   "mode": "mask"
+  },
+  "M90A Shotgun": {
+   "sprite": "0xA7B40908445C39CB",
+   "width": 312,
+   "height": 72,
+   "mode": "mask"
+  },
+  "MA5C Assault Rifle": {
+   "sprite": "0xF08F99763666D621",
+   "width": 244,
+   "height": 72,
+   "mode": "mask"
+  },
+  "MG-206 Heavy Machine Gun": {
+   "sprite": "0x787E77D2F3C85D09",
+   "width": 222,
+   "height": 72,
+   "mode": "mask"
+  },
+  "MGX-42 Bullet Storm": {
+   "sprite": "0x1215B58B789249D3",
+   "width": 175,
+   "height": 72,
+   "mode": "mask"
+  },
+  "MLS-4X Commando": {
+   "sprite": "0x752DC3E797C23B45",
+   "width": 195,
+   "height": 72,
+   "mode": "mask"
+  },
+  "MP-98 Knight": {
+   "sprite": "0x37C29B439B0CE4BB",
+   "width": 194,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-11 Stim Pistol": {
+   "sprite": "0x7DCDE95869244644",
+   "width": 109,
+   "height": 97,
+   "mode": "mask"
+  },
+  "P-113 Verdict": {
+   "sprite": "0x2CFC9FFBB92DC519",
+   "width": 133,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-19 Redeemer": {
+   "sprite": "0xC095C3F011CEE04C",
+   "width": 72,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-2 Peacemaker": {
+   "sprite": "0xEA8DB749083C9F79",
+   "width": 122,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-33 Missile Pistol": {
+   "sprite": "0x9C008826A405642A",
+   "width": 108,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-34 Breacher": {
+   "sprite": "0xB9A60093F06E748D",
+   "width": 128,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-35 Re-Educator": {
+   "sprite": "0x3C465ED7459AAB04",
+   "width": 255,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-4 Senator": {
+   "sprite": "0x5AAE5F36C992CCB3",
+   "width": 145,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-69 Veto": {
+   "sprite": "0xC41A2C29837D7D42",
+   "width": 146,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-72 Crisper": {
+   "sprite": "0x1F76F1CE65EA87B2",
+   "width": 171,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P-92 Warrant": {
+   "sprite": "0x8E65F41CE36E98D9",
+   "width": 119,
+   "height": 72,
+   "mode": "mask"
+  },
+  "P/40-K Bolt Pistol": {
+   "sprite": "0xAB5F8F1E258BCF92",
+   "width": 156,
+   "height": 122,
+   "mode": "mask"
+  },
+  "PLAS-1 Scorcher": {
+   "sprite": "0x2431028BD338D823",
+   "width": 162,
+   "height": 72,
+   "mode": "mask"
+  },
+  "PLAS-101 Purifier": {
+   "sprite": "0x996FBFA2959CFEF0",
+   "width": 218,
+   "height": 72,
+   "mode": "mask"
+  },
+  "PLAS-15 Loyalist": {
+   "sprite": "0xE2C9F41F2F6944D2",
+   "width": 130,
+   "height": 72,
+   "mode": "mask"
+  },
+  "PLAS-39 Accelerator Rifle": {
+   "sprite": "0xFCC002D6FF63461F",
+   "width": 262,
+   "height": 72,
+   "mode": "mask"
+  },
+  "PLAS-45 Epoch": {
+   "sprite": "0x8248984F3ED06DA7",
+   "width": 163,
+   "height": 72,
+   "mode": "mask"
+  },
+  "R-2 Amendment": {
+   "sprite": "0xF32EAC08EC23DB5D",
+   "width": 368,
+   "height": 72,
+   "mode": "mask"
+  },
+  "R-2124 Constitution": {
+   "sprite": "0x72F4F4968F5A0CC2",
+   "width": 380,
+   "height": 72,
+   "mode": "mask"
+  },
+  "R-36 Eruptor": {
+   "sprite": "0xFB7EA60822D71315",
+   "width": 224,
+   "height": 72,
+   "mode": "mask"
+  },
+  "R-4 Hyena": {
+   "sprite": "0x3B6859DE0E9F5DC8",
+   "width": 347,
+   "height": 72,
+   "mode": "mask"
+  },
+  "R-6 Deadeye": {
+   "sprite": "0xB96889E0D082D26E",
+   "width": 359,
+   "height": 72,
+   "mode": "mask"
+  },
+  "R-63 Diligence": {
+   "sprite": "0xE8E06C3E30D3E19D",
+   "width": 262,
+   "height": 72,
+   "mode": "mask"
+  },
+  "R-63CS Diligence Counter Sniper": {
+   "sprite": "0x302A2A727A43CFA4",
+   "width": 302,
+   "height": 72,
+   "mode": "mask"
+  },
+  "R-72 Censor": {
+   "sprite": "0xE216F57C8B369479",
+   "width": 289,
+   "height": 63,
+   "mode": "mask"
+  },
+  "R/40-K Hot-Shot Marksman Rifle": {
+   "sprite": "0x66B3FA38DD02AFCE",
+   "width": 208,
+   "height": 70,
+   "mode": "mask"
+  },
+  "RL-77 Airburst Rocket Launcher": {
+   "sprite": "0xA87F72C1E0CCF73A",
+   "width": 310,
+   "height": 72,
+   "mode": "mask"
+  },
+  "RS-422 Railgun": {
+   "sprite": "0x12DC6522AB6D6061",
+   "width": 278,
+   "height": 72,
+   "mode": "mask"
+  },
+  "S-11 Speargun": {
+   "sprite": "0x8D5C8DF20AE656A8",
+   "width": 474,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-20 Halt": {
+   "sprite": "0x8B25747C1F710B9E",
+   "width": 206,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-22 Bushwhacker": {
+   "sprite": "0xE7F65BC67E9AD6AC",
+   "width": 216,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-225 Breaker": {
+   "sprite": "0x347E4A303F9648B0",
+   "width": 172,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-225IE Breaker Incendiary": {
+   "sprite": "0x74E9FB57960A868B",
+   "width": 188,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-225SP Breaker Spray&Pray": {
+   "sprite": "0x94F9FEF8E3346DF8",
+   "width": 190,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-451 Cookout": {
+   "sprite": "0xB99D067823958C2E",
+   "width": 223,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-8 Punisher": {
+   "sprite": "0x82B41AA53FED989B",
+   "width": 205,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-88 Break-Action Shotgun": {
+   "sprite": "0x9B1A5B66F0D384DD",
+   "width": 330,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-8P Punisher Plasma": {
+   "sprite": "0x82B41AA53FED989B",
+   "width": 205,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-8S Slugger": {
+   "sprite": "0x82B41AA53FED989B",
+   "width": 205,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SG-97 Sweeper": {
+   "sprite": "0xA7FE7C281969F621",
+   "width": 442,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SMG-203 Gallant": {
+   "sprite": "0x39D0051ECF8B026C",
+   "width": 194,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SMG-32 Reprimand": {
+   "sprite": "0x506EB1F978E2ABFA",
+   "width": 160,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SMG-37 Defender": {
+   "sprite": "0xEA7B94FC7317EBF7",
+   "width": 187,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SMG-72 Pummeler": {
+   "sprite": "0x8A3B1C294B6391E8",
+   "width": 173,
+   "height": 72,
+   "mode": "mask"
+  },
+  "SMG/FLAM-34 Stoker": {
+   "sprite": "0x8FB311AD25233526",
+   "width": 194,
+   "height": 72,
+   "mode": "mask"
+  },
+  "StA-11 SMG": {
+   "sprite": "0x7FA1C8F00B2E5938",
+   "width": 212,
+   "height": 72,
+   "mode": "mask"
+  },
+  "StA-52 Assault Rifle": {
+   "sprite": "0x4FB1ED5D22E31ED0",
+   "width": 223,
+   "height": 72,
+   "mode": "mask"
+  },
+  "StA-X3 W.A.S.P. Launcher": {
+   "sprite": "0xE9A9ED09FA784042",
+   "width": 209,
+   "height": 72,
+   "mode": "mask"
+  },
+  "TX-41 Sterilizer": {
+   "sprite": "0x8ADEFFD2B7242C3E",
+   "width": 207,
+   "height": 72,
+   "mode": "mask"
+  },
+  "VG-70 Variable": {
+   "sprite": "0x94E5122A36EED856",
+   "width": 267,
+   "height": 72,
+   "mode": "mask"
+  }
+ },
+ "throwables": {
+  "G-10 Incendiary": {
+   "sprite": "0xE1EBFA9B2CA0963C",
+   "width": 64,
+   "height": 64,
+   "mode": "mask"
+  },
+  "G-109 Urchin": {
+   "sprite": "0x3F9622906C4B0F07",
+   "width": 45,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-12 High Explosive": {
+   "sprite": "0x2E3C60FB10962672",
+   "width": 45,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-123 Thermite": {
+   "sprite": "0x08BA88203B509433",
+   "width": 26,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-13 Incendiary Impact": {
+   "sprite": "0x24BB5293D53430A6",
+   "width": 34,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-142 Pyrotech": {
+   "sprite": "0x34B9C310B2840888",
+   "width": 71,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-16 Impact": {
+   "sprite": "0x897F70D97E28705F",
+   "width": 51,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-23 Stun": {
+   "sprite": "0x4E1853B93BFE38FC",
+   "width": 47,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-3 Smoke": {
+   "sprite": "0x96B951C91DD57C44",
+   "width": 45,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-31 Arc": {
+   "sprite": "0x0D853036C6E71117",
+   "width": 32,
+   "height": 74,
+   "mode": "mask"
+  },
+  "G-4 Gas": {
+   "sprite": "0xCB3504D06DB2DF56",
+   "width": 43,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-48 Giga Grenade": {
+   "sprite": "0xA4BB0A113FFCD1A2",
+   "width": 41,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-50 Seeker": {
+   "sprite": "0x4636768D6335074E",
+   "width": 86,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-6 Frag": {
+   "sprite": "0x4C3BEF8BC16021C9",
+   "width": 52,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-60 Anti-Tank Seeker": {
+   "sprite": "0xF7297A01C1B88A7F",
+   "width": 30,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-7 Pineapple": {
+   "sprite": "0x018AAFBC592D7DDF",
+   "width": 41,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-8 Immolation": {
+   "sprite": "0x9E9AEFA66C2EF5F5",
+   "width": 33,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G-89 Smokescreen": {
+   "sprite": "0x32BBE2F375DA13C4",
+   "width": 66,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G/40-K Melta Mine": {
+   "sprite": "0x5ED42BB594A2D295",
+   "width": 59,
+   "height": 72,
+   "mode": "mask"
+  },
+  "G/SH-39 Shield": {
+   "sprite": "0x953FDBE02FD0770C",
+   "width": 72,
+   "height": 72,
+   "mode": "mask"
+  },
+  "K-2 Throwing Knife": {
+   "sprite": "0x4C47F37C5C2C89D8",
+   "width": 36,
+   "height": 150,
+   "mode": "mask"
+  },
+  "TED-63 Dynamite": {
+   "sprite": "0xB6735F8036EFB9AF",
+   "width": 34,
+   "height": 72,
+   "mode": "mask"
+  },
+  "TM-1 Lure Mine": {
+   "sprite": "0xCCCFFC19F5E5670D",
+   "width": 65,
+   "height": 72,
+   "mode": "mask"
+  }
+ },
+ "factions": {
+  "automatons": {
+   "sprite": "0xFAD9C776C98DCC7D",
+   "width": 64,
+   "height": 64,
+   "mode": "mask"
+  },
+  "illuminate": {
+   "sprite": "0xADD2ECC40DEE7C3E",
+   "width": 64,
+   "height": 64,
+   "mode": "mask"
+  },
+  "super_earth": {
+   "sprite": "0x4557F77A0C886E64",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "terminids": {
+   "sprite": "0x69DF23FFCA2CBB8D",
+   "width": 64,
+   "height": 64,
+   "mode": "mask"
+  }
+ },
+ "objectives": {
+  "bug_assassinate_chargers": {
+   "sprite": "0x1917DB63358F4011",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_assassinate_commander": {
+   "sprite": "0xD44B85488C6CB5B1",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_assassinate_impaler": {
+   "sprite": "0xAFA8E81AAFB21E9F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_assassinate_striders": {
+   "sprite": "0x53AA317D21F894AF",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_central_core": {
+   "sprite": "0x2856C9C4F556C96B",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_city_fog_garden": {
+   "sprite": "0x69DEB4C639BD2B99",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_city_mega_shrieker_nest": {
+   "sprite": "0x75A3EC2525862354",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_destroy_spawners": {
+   "sprite": "0x8B223C09961250EC",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_destroy_stalker_lair": {
+   "sprite": "0xC34E98C4707C7CB7",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_extract_oil_hive_world": {
+   "sprite": "0x43181C09C9D58B29",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_foggenerator": {
+   "sprite": "0x69DEB4C639BD2B99",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_hive_world_destroy_spore_lung": {
+   "sprite": "0x3EB562F253A546E3",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_hive_world_retrieve_se_equipment": {
+   "sprite": "0xEFF04F1B48311FA0",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_hive_world_retrieve_se_equipment_briefcase": {
+   "sprite": "0xEFF04F1B48311FA0",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_horde": {
+   "sprite": "0x16B0008CACEEADD5",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_kill": {
+   "sprite": "0x8B223C09961250EC",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_kill_world": {
+   "sprite": "0x8B223C09961250EC",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_oil_pump_hive_world": {
+   "sprite": "0xF4C25445244D747E",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_protospire": {
+   "sprite": "0x026FE012D1B076C8",
+   "width": 64,
+   "height": 64,
+   "mode": "image"
+  },
+  "bug_purge_cave_hive_world": {
+   "sprite": "0x8B223C09961250EC",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_purge_hatchery": {
+   "sprite": "0x9F17D80090AA7610",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_raise_flag_hive_world": {
+   "sprite": "0x193B63C75E026D7F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_retrieve_larva": {
+   "sprite": "0xDFA27DE4D4ED16F6",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_shrieker_nest": {
+   "sprite": "0x75A3EC2525862354",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_tcs_01": {
+   "sprite": "0xBEB2BBFBB3818656",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_tcs_02": {
+   "sprite": "0xBEB2BBFBB3818656",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_tcs_02_destroy_eggs": {
+   "sprite": "0x9F17D80090AA7610",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_tcs_03_backpack": {
+   "sprite": "0x5E83CAE72C87D3B8",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_tcs_03_thumper": {
+   "sprite": "0xA821395BA2B02B30",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_tcs_04": {
+   "sprite": "0xBEB2BBFBB3818656",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "bug_thumper": {
+   "sprite": "0x1F43378CDA5301B2",
+   "width": 64,
+   "height": 64,
+   "mode": "image"
+  },
+  "cy_aa_emplacement": {
+   "sprite": "0x00FBA3FCEBB76B23",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_aa_emplacement_infiltration": {
+   "sprite": "0x00FBA3FCEBB76B23",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_assassinate_devastator": {
+   "sprite": "0x1CAE1027473AA692",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_assassinate_fabricator": {
+   "sprite": "0x76930D04B49DC8FA",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_assassinate_lt": {
+   "sprite": "0xDE95803EC607E705",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_assassinate_tank": {
+   "sprite": "0xA0D0463541915D6C",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_blow_up_organic_assembly_site": {
+   "sprite": "0x857AEA964CEF7224",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_chemicals": {
+   "sprite": "0x47449C55061C26DB",
+   "width": 64,
+   "height": 64,
+   "mode": "image"
+  },
+  "cy_claim_mine_quarry": {
+   "sprite": "0x2A2C668C49ED89D5",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_convoy_assault": {
+   "sprite": "0x912CC869E82921C8",
+   "width": 128,
+   "height": 128,
+   "mode": "image"
+  },
+  "cy_destroy_airbase": {
+   "sprite": "0x8FC0AD3F7948A839",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_ammo": {
+   "sprite": "0x841737EBBEEB4C25",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_command_bunker": {
+   "sprite": "0x1AE253C6C93122AF",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_communication": {
+   "sprite": "0x1552CD14306600BA",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_control_tower": {
+   "sprite": "0x40E0C88E73076109",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_cooling_structure": {
+   "sprite": "0x3E5ADE3BA27A2EB1",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_detector_tower": {
+   "sprite": "0x236B31A1DE956E22",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_fuel": {
+   "sprite": "0x6B48A8D6A91D4A44",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_gunship": {
+   "sprite": "0x24BE53F4C0FD80DB",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_spawners": {
+   "sprite": "0xA0D0463541915D6C",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_destroy_stratagem_blocker": {
+   "sprite": "0x29F0A82731D9D461",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_extract_organic_soup": {
+   "sprite": "0xEE8101C31DF9EDF5",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_factory_world_aa_emplacement": {
+   "sprite": "0x00FBA3FCEBB76B23",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_factory_world_access_point_icon": {
+   "sprite": "0x3679746371F658EA",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_factory_world_destroy_factory": {
+   "sprite": "0x6D2A92BA6C9EE05D",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_factory_world_mortar_emplacement": {
+   "sprite": "0x1AE253C6C93122AF",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_hack_refinery": {
+   "sprite": "0x882988B5EF266A06",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_hack_turrets": {
+   "sprite": "0x2C2523E44DEEB851",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_horde": {
+   "sprite": "0x16B0008CACEEADD5",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_kill": {
+   "sprite": "0xA0D0463541915D6C",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_mortar_emplacement": {
+   "sprite": "0x1AE253C6C93122AF",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_neutralize_cannon": {
+   "sprite": "0x0E20C39ECD902F3D",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_obj_collect_code_discs": {
+   "sprite": "0x43063F8F66F5D13A",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_obj_infiltration_extract_package": {
+   "sprite": "0xBFA80013C29CDB76",
+   "width": 257,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_optional_extraction_zone": {
+   "sprite": "0x2A986C224911685A",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_orbital_cannon": {
+   "sprite": "0x0E20C39ECD902F3D",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_raise_flag": {
+   "sprite": "0x193B63C75E026D7F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_raze_city": {
+   "sprite": "0x990928A804F55CB8",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_raze_statues": {
+   "sprite": "0x7B4558489077BBFD",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_sabotage_organic_soup_production": {
+   "sprite": "0x4508971A026D15DD",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_sabotage_pipes": {
+   "sprite": "0x681F8DBE6A62165F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_samsite": {
+   "sprite": "0x7703A1CB12DFC392",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_shutdown_grinder": {
+   "sprite": "0x4508971A026D15DD",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_steal_battery_cores": {
+   "sprite": "0x8ABC671CDBA89C93",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_steal_coordinates": {
+   "sprite": "0x43063F8F66F5D13A",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_steal_platinum": {
+   "sprite": "0xFF5D0E3CB7CB59DE",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "cy_transport_shuttle_theft_horde": {
+   "sprite": "0xFF5D0E3CB7CB59DE",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_black_box": {
+   "sprite": "0xEFF04F1B48311FA0",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_cargo_truck": {
+   "sprite": "0x98B25B412E7C8978",
+   "width": 64,
+   "height": 64,
+   "mode": "image"
+  },
+  "gen_city_retrieve_codes": {
+   "sprite": "0x16DC768AE4B412D9",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_collect_data": {
+   "sprite": "0x16DC768AE4B412D9",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_collect_samples": {
+   "sprite": "0xEFF04F1B48311FA0",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_colony_relay": {
+   "sprite": "0x3823625B89B1085F",
+   "width": 320,
+   "height": 64,
+   "mode": "image"
+  },
+  "gen_destroy_research_station": {
+   "sprite": "0x93B0557D036AE045",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_escort_oil_rig": {
+   "sprite": "0x9E2E1BB0F1E8F55D",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_evacuate_civilians": {
+   "sprite": "0xC1A62AAEB37B0938",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_extract_civilians": {
+   "sprite": "0x2C4057C16FD1CDD3",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_find_escape_pod": {
+   "sprite": "0xDFDC9E78EA361C05",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_gather_footage": {
+   "sprite": "0xC48AF478A352EA1F",
+   "width": 257,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_harddrive": {
+   "sprite": "0x42CB0F30708F7F15",
+   "width": 64,
+   "height": 64,
+   "mode": "image"
+  },
+  "gen_horde_defend": {
+   "sprite": "0x04D5C5635A44E4A9",
+   "width": 256,
+   "height": 257,
+   "mode": "image"
+  },
+  "gen_icbm": {
+   "sprite": "0x4526FC97BB3AF6B2",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_infiltration_black_box": {
+   "sprite": "0xEFF04F1B48311FA0",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_infiltration_extract_camera": {
+   "sprite": "0xFFE397036A744C4C",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_infiltration_pickup_camera": {
+   "sprite": "0xFFE397036A744C4C",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_infiltration_respawn_point": {
+   "sprite": "0x86EB92DF74DD833B",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_investigate_research_station": {
+   "sprite": "0x4EE686922120CD49",
+   "width": 64,
+   "height": 64,
+   "mode": "image"
+  },
+  "gen_military_uplink": {
+   "sprite": "0x16DC768AE4B412D9",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_oil_pickup": {
+   "sprite": "0x43181C09C9D58B29",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_oilpump": {
+   "sprite": "0xF4C25445244D747E",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_prospecting_drill": {
+   "sprite": "0xF54891209CA662B6",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_radar_station": {
+   "sprite": "0x669033BFEA9BFEE8",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_radar_wagon": {
+   "sprite": "0xDBFDA7C2B74D2179",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_raise_flag": {
+   "sprite": "0x193B63C75E026D7F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_refueling_station": {
+   "sprite": "0x43181C09C9D58B29",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_restore_power": {
+   "sprite": "0xEE62F6A061E7EA92",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_retrieve_codes": {
+   "sprite": "0x16DC768AE4B412D9",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_retrieve_oil_rig": {
+   "sprite": "0xB37986190A180F90",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_samsite": {
+   "sprite": "0x7703A1CB12DFC392",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_seaf_gun": {
+   "sprite": "0xC9DD4D3AD0BEBBAF",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_seismic_probe": {
+   "sprite": "0xE67034E3F0DE9B3E",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_truth_transmitter": {
+   "sprite": "0xAA2D4939420BC14A",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "gen_upload_data": {
+   "sprite": "0xA2FE518B4653732C",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_assassinate_tripod": {
+   "sprite": "0xC5643A851D1C1C85",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_collect_black_box": {
+   "sprite": "0xEFF04F1B48311FA0",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_corrupted_growth": {
+   "sprite": "0x3C48CC085B10D73F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_destroy_monolith": {
+   "sprite": "0xE62E16B39799CD2A",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_destroy_portals": {
+   "sprite": "0xEFF04F1B48311FA0",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_destroy_spawners": {
+   "sprite": "0x2725458A0AEAC178",
+   "width": 257,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_destroy_spawners_gateways": {
+   "sprite": "0x2725458A0AEAC178",
+   "width": 257,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_destroy_weather_device": {
+   "sprite": "0x5DAC65FFF87C817A",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_disable_stratagem_scrambler": {
+   "sprite": "0x107466190F1A8285",
+   "width": 257,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_dropoff_black_box": {
+   "sprite": "0xA2FE518B4653732C",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_extract_corruption": {
+   "sprite": "0xB37986190A180F90",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_flesh_labs": {
+   "sprite": "0x02561EDFD01CEC68",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_hijack_tech_hub": {
+   "sprite": "0xA821395BA2B02B30",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_horde": {
+   "sprite": "0x16B0008CACEEADD5",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_kill": {
+   "sprite": "0x2725458A0AEAC178",
+   "width": 257,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_lightning_rod": {
+   "sprite": "0x193B63C75E026D7F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_optional_extraction_zone": {
+   "sprite": "0xAC81F0BB53D7876E",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_orbital_cannon": {
+   "sprite": "0x999AD749021A0D1B",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_poison_water_temple": {
+   "sprite": "0xF02B171BD0C3DD33",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_prevent_invasion_foothold": {
+   "sprite": "0x6A1A5F0B3E0D6C41",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_purge_illuminates": {
+   "sprite": "0x2725458A0AEAC178",
+   "width": 257,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_reclaim_location": {
+   "sprite": "0x193B63C75E026D7F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_retrieve_artifact": {
+   "sprite": "0x0E6E34913463F9F1",
+   "width": 64,
+   "height": 64,
+   "mode": "image"
+  },
+  "il_samsite": {
+   "sprite": "0x7703A1CB12DFC392",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_shoot_down_mothership": {
+   "sprite": "0xE52BE50A8329EA51",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "il_upload_data": {
+   "sprite": "0xA2FE518B4653732C",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "objective": {
+   "sprite": "0x230BE372B3E9BAAC",
+   "width": 96,
+   "height": 96,
+   "mode": "mask"
+  },
+  "tut_intro_mission": {
+   "sprite": "0x193B63C75E026D7F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "tut_outpost": {
+   "sprite": "0x41F76579D117162C",
+   "width": 64,
+   "height": 64,
+   "mode": "image"
+  }
+ },
+ "difficulties": {
+  "1": {
+   "sprite": "0x152458093848EBA5",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  },
+  "2": {
+   "sprite": "0xDC925EE240A8A6C7",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  },
+  "3": {
+   "sprite": "0x374E721E743897C2",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  },
+  "4": {
+   "sprite": "0x1A6D4B98B4D3D9E8",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  },
+  "5": {
+   "sprite": "0xF907D8377D927A0E",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  },
+  "6": {
+   "sprite": "0xB28452E2898FEDE0",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  },
+  "7": {
+   "sprite": "0x11218269B70A0DF4",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  },
+  "8": {
+   "sprite": "0x13C1802872A1FAF3",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  },
+  "9": {
+   "sprite": "0xD2AB2D9F4A5DB3E9",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  },
+  "10": {
+   "sprite": "0x664AD6794BA2079F",
+   "width": 200,
+   "height": 138,
+   "mode": "image"
+  }
+ },
+ "extendedMissing": {
+  "CQC-20 Breaching Hammer": "no unique encyclopedia HUD sprite",
+  "MG-43 Machine Gun": "no unique encyclopedia HUD sprite",
+  "MS-11 Solo Silo": "no unique encyclopedia HUD sprite"
+ },
+ "passives": {
+  "STANDARD ISSUE": {
+   "sprite": "0x3642B3057D12359E",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "EXTRA PADDING": {
+   "sprite": "0x3642B3057D12359E",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "SCOUT": {
+   "sprite": "0x6733080FB1201D53",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "FORTIFIED": {
+   "sprite": "0x2DD4B3F171775457",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "ELECTRICAL CONDUIT": {
+   "sprite": "0x557AC351AC2EFD83",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "ENGINEERING KIT": {
+   "sprite": "0x7C818B04A594D8E5",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "MED-KIT": {
+   "sprite": "0xE5AD658BA8221ACF",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "SERVO-ASSISTED": {
+   "sprite": "0x6435159D8E466B03",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "DEMOCRACY PROTECTS": {
+   "sprite": "0x61AE934CAA6F09DA",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "REINFORCED EPAULETTES": {
+   "sprite": "0x1917030BB5F2A130",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "INFLAMMABLE": {
+   "sprite": "0xB70E83517E7E9D2A",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "PEAK PHYSIQUE": {
+   "sprite": "0x978EA957FA83A4C9",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "ADVANCED FILTRATION": {
+   "sprite": "0x501271EF8B35994E",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "UNFLINCHING": {
+   "sprite": "0x17208F22C9F98ADC",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "ACCLIMATED": {
+   "sprite": "0x341A3B9CB9629A6E",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "SIEGE-READY": {
+   "sprite": "0x8667ED2CA6A6846F",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "INTEGRATED EXPLOSIVES": {
+   "sprite": "0xC12ACD1176804821",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "GUNSLINGER": {
+   "sprite": "0x11FC1753D5A4F6A2",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "ADRENO-DEFIBRILLATOR": {
+   "sprite": "0x0C2D003EE391E9D0",
+   "width": 240,
+   "height": 240,
+   "mode": "image"
+  },
+  "BALLISTIC PADDING": {
+   "sprite": "0x6E1DE6F251D0AEC6",
+   "width": 240,
+   "height": 240,
+   "mode": "image"
+  },
+  "DESERT STORMER": {
+   "sprite": "0xC4CF3510DF2D3ADB",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "FEET FIRST": {
+   "sprite": "0x64FCB7D7E42E8C3A",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "REDUCED SIGNATURE": {
+   "sprite": "0x38033888FEB0EC8D",
+   "width": 240,
+   "height": 240,
+   "mode": "image"
+  },
+  "ROCK-SOLID": {
+   "sprite": "0x90502679EC8F7942",
+   "width": 240,
+   "height": 240,
+   "mode": "image"
+  },
+  "SUPPLEMENTAL ADRENALINE": {
+   "sprite": "0xB6F70694E795E2D9",
+   "width": 240,
+   "height": 240,
+   "mode": "image"
+  },
+  "CONCUSSIVE PADDING, REINFORCED": {
+   "sprite": "0x90400C4B2C62C1BA",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "CONCUSSIVE PADDING, GRENADIER": {
+   "sprite": "0x90400C4B2C62C1BA",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "CONCUSSIVE PADDING, HAZMAT": {
+   "sprite": "0x90400C4B2C62C1BA",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "OXYGENATOR": {
+   "sprite": "0x87197339BE6A1EB4",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "KINETIC DISPLACEMENT MITIGATION": {
+   "sprite": "0xFF6E9C50D4C71B91",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "BLUNT-FORCE MITIGATION": {
+   "sprite": "0x5F351AAC239F0F8B",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  },
+  "TRUE GRIT": {
+   "sprite": "0x06974150D5198CC3",
+   "width": 256,
+   "height": 256,
+   "mode": "image"
+  }
  }
 }

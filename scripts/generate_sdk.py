@@ -43,6 +43,8 @@ def outputs():
     booster_authoring=json.loads((ROOT/'sdk/BoosterAuthoringCapabilities.json').read_text())
     throwable_authoring=json.loads((ROOT/'sdk/ThrowableAuthoringCapabilities.json').read_text())
     enemy_authoring=json.loads((ROOT/'sdk/EnemyAuthoringCapabilities.json').read_text())
+    enemy_controls=json.loads((ROOT/'sdk/EnemyControlCapabilities.json').read_text())
+    enemy_director=json.loads((ROOT/'sdk/EnemyDirectorCapabilities.json').read_text())
     attack_outputs=json.loads((ROOT/'sdk/AttackOutputCapabilities.json').read_text())
     asset_dependencies=json.loads((ROOT/'sdk/AssetDependencyCapabilities.json').read_text())
     weapon_movement=json.loads((ROOT/'sdk/WeaponMovementCapabilities.json').read_text())
@@ -108,7 +110,10 @@ def outputs():
         if constant in fields.setdefault(domain,{}) and fields[domain][constant]!=field_id:
             constant='booster_'+constant
         fields[domain][constant]=field_id
-    for definition in json.loads((ROOT/'schemas/enemy_fields.json').read_text())['fields']:
+    for definition in (json.loads((ROOT/'schemas/enemy_fields.json').read_text())['fields']
+                       +enemy_controls['fields']+enemy_director['fields']
+                       +[json.loads((ROOT/'sdk/MissionCapabilities.json').read_text(encoding='utf8'))['field']]
+                       +[{'id':f['semanticFieldId']} for p in json.loads((ROOT/'sdk/ArmorPerkCapabilities.json').read_text(encoding='utf8'))['perks'] for f in p['fields']]):
         field_id=definition['id'];domain,name=field_id.split('.',1)
         if field_id in fields.setdefault(domain,{}).values():continue
         fields[domain].setdefault(ident(name),field_id)
@@ -129,7 +134,8 @@ def outputs():
         domain,name=field_id.split('.',1)
         assert ident(name) not in fields.setdefault(domain,{}),'armor stats field constant collision: '+field_id
         fields[domain][ident(name)]=field_id
-    for definition in json.loads((ROOT/'schemas/throwable_fields.json').read_text())['fields']:
+    for definition in (json.loads((ROOT/'schemas/throwable_fields.json').read_text())['fields']
+                       +json.loads((ROOT/'sdk/MeleeAuthoringCapabilities.json').read_text())['fields']):
         field_id=definition['id'];domain,name=field_id.split('.',1)
         if field_id in fields.setdefault(domain,{}).values():continue
         constant=ident(name)
@@ -327,7 +333,7 @@ def outputs():
         '---@field path "attachment_option"','---@field weapon HD2WeaponName',
         '---@field category string','---@field option string','local HD2AttachmentOption = {}',
         '---@return table','function HD2AttachmentOption:describe() end','',
-        '---@alias HD2AuthoringTarget HD2Weapon|HD2DamageProfile|HD2Stratagem|HD2StratagemAttack|HD2EagleRearm|HD2PlayerAttack|HD2WeaponAmmunition|HD2ProjectileReference|HD2TerminalAction|HD2Explosion|HD2SupportWeapon|HD2SupportAttack|HD2SupportProjectile|HD2SupportTerminalAction|HD2SupportExplosion|HD2DeployedEntity|HD2DeployedShield|HD2DeployedZone|HD2MountedWeapon|HD2VehicleEntity|HD2VehicleZone|HD2VehicleMount|HD2VehicleWeapon|HD2VehicleWeaponAttack|HD2Backpack|HD2BackpackZone|HD2BackpackLinked|HD2BackpackLinkedZone|HD2BoosterTarget|HD2WeaponAttachment|HD2PodRack|HD2PodSlot|HD2CatalogueExplosion','',
+        '---@alias HD2AuthoringTarget HD2Weapon|HD2DamageProfile|HD2Stratagem|HD2StratagemAttack|HD2EagleRearm|HD2PlayerAttack|HD2WeaponAmmunition|HD2ProjectileReference|HD2TerminalAction|HD2Explosion|HD2SupportWeapon|HD2SupportAttack|HD2SupportProjectile|HD2SupportExplosion|HD2DeployedEntity|HD2DeployedShield|HD2DeployedZone|HD2MountedWeapon|HD2VehicleEntity|HD2VehicleZone|HD2VehicleMount|HD2VehicleWeapon|HD2VehicleWeaponAttack|HD2Backpack|HD2BackpackZone|HD2BackpackLinked|HD2BackpackLinkedZone|HD2BoosterTarget|HD2WeaponAttachment|HD2PodRack|HD2PodSlot|HD2CatalogueExplosion|HD2Throwable|HD2ThrowableTarget|HD2MeleeTarget','',
         '---@param role HD2AttackRole','---@return HD2PlayerAttack',
         'function HD2Weapon:attack(role) end',
         '---The default ammunition that owns this weapon\'s fired projectile (its delta patches ProjectileWeapon +0',
@@ -689,9 +695,13 @@ def outputs():
     alias('HD2ThrowableName',[item['name'] for item in throwable_authoring['throwables']]
         +[item['semanticId'] for item in throwable_authoring['throwables']])
     stub+=['','---@class HD2ThrowableTarget','---@field resource "throwable"',
-        '---@field path "detonation"|"explosion"|"status_effect"|"shrapnel"|"bomblets"|"bomblet_explosion"|"damage"|"entity"|"shield"',
+        '---@field path "detonation"|"explosion"|"status_effect"|"shrapnel"|"bomblets"|"bomblet_explosion"|"damage"|"entity"|"shield"|"flight"|"arc"|"pulse"',
         '---@field throwable string','---@field status? string','local HD2ThrowableTarget = {}',
         '---@return table','function HD2ThrowableTarget:describe() end',
+        '---On :detonation(): every package-backed explosion payload, its own payload and none.',
+        '---@param filter? table','---@return table','function HD2ThrowableTarget:payload_options(filter) end',
+        '---Arc created by this explosion; available only on reviewed arc throwables.',
+        '---@return HD2ThrowableTarget','function HD2ThrowableTarget:arc() end',
         '---Explosion targets: a status effect its DamageInfo applies (label such as "fire", or slot number).',
         '---@param identity string|integer','---@return HD2ThrowableTarget',
         'function HD2ThrowableTarget:status_effect(identity) end',
@@ -710,6 +720,9 @@ def outputs():
         '---@return HD2ThrowableTarget','function HD2Throwable:detonation() end',
         '---The explosion (ExplosionSettings and its DamageInfo).',
         '---@return HD2ThrowableTarget','function HD2Throwable:explosion() end',
+        '---@return HD2ThrowableTarget','function HD2Throwable:arc() end',
+        '---Reviewed repeating pulse payload override (shared Urchin definition).',
+        '---@return HD2ThrowableTarget','function HD2Throwable:pulse() end',
         '---@param identity string|integer','---@return HD2ThrowableTarget',
         'function HD2Throwable:status_effect(identity) end',
         '---@return HD2ThrowableTarget[]','function HD2Throwable:status_effects() end',
@@ -717,15 +730,18 @@ def outputs():
         '---@return HD2ThrowableTarget','function HD2Throwable:shrapnel() end',
         '---Bomblet projectile (G-7 Pineapple); :explosion() reaches the explosion of each bomblet.',
         '---@return HD2ThrowableTarget','function HD2Throwable:bomblets() end',
+        '---Per-throwable launch curve, fixed-speed override and spin.',
+        '---@return HD2ThrowableTarget','function HD2Throwable:flight() end',
         '---Direct-hit damage (K-2 Throwing Knife; no explosion).',
         '---@return HD2ThrowableTarget','function HD2Throwable:damage() end',
         '---Health of the deployed entity (mines).',
         '---@return HD2ThrowableTarget','function HD2Throwable:entity() end',
         '---Shield of the deployed entity (G/SH-39 Shield).',
         '---@return HD2ThrowableTarget','function HD2Throwable:shield() end']
-    alias('HD2EnemyName',sorted({n for item in enemy_authoring['classes'] if item['kind']=='enemy'
+    enemy_classes=enemy_authoring['classes']+enemy_controls['entities']
+    alias('HD2EnemyName',sorted({n for item in enemy_classes
         for n in (item['name'],item['className'])}))
-    alias('HD2StructureName',sorted({n for item in enemy_authoring['classes'] if item['kind']=='structure'
+    alias('HD2StructureName',sorted({n for item in enemy_classes if item['kind']=='structure'
         for n in (item['name'],item['className'])}))
     stub+=['','---@class HD2EnemyZone','---@field resource "enemy"','---@field path "damage_zone"',
         '---@field enemy string','---@field zone string','local HD2EnemyZone = {}',
@@ -750,6 +766,9 @@ def outputs():
         '---@param identity string Attack id ("slot_0", "slot_0_impact", "slot_0_projectile", "slot_0_impact_explosion") or an exactly matched wiki attack name.',
         '---@return HD2EnemyAttack','function HD2Enemy:attack(identity) end',
         '---@return HD2EnemyAttack[]','function HD2Enemy:attacks() end']
+    stub+=['','---@class HD2EnemyDirectorTarget','---@field resource "enemy_director"',
+        '---@field path string','---@field key string','local HD2EnemyDirectorTarget = {}',
+        '---@return table','function HD2EnemyDirectorTarget:describe() end']
     helldiver=json.loads((ROOT/'sdk/HelldiverFieldCapabilities.json').read_text(encoding='utf-8'))
     alias('HD2HelldiverZoneName',[zone['id'] for zone in helldiver['target']['zones']])
     alias('HD2DamageMultiplierName',helldiver['enums']['damage_multiplier']['values'])
@@ -829,6 +848,9 @@ def outputs():
     alias('HD2ExplosionName',[item['name'] for item in event_actions['namedExplosions']]
         +['Hellbomb','Portable Hellbomb'])
     alias('HD2StatusId',[item['semanticId'] for item in event_actions['status']['allowlist']])
+    heatsink_authoring=json.loads((ROOT/'sdk/HeatsinkAttachmentCapabilities.json').read_text())
+    alias('HD2HeatsinkAttachmentId',[item['semanticId']for item in heatsink_authoring['attachments']]
+        +[item['name']for item in heatsink_authoring['attachments']])
     alias('HD2MagazineAttachmentId',[item['semanticId'] for item in attachment_authoring['attachments']]
         +[item['name'] for item in attachment_authoring['attachments'] if item['nameUnique']])
     # Muzzle, optics and underbarrel definitions (sdk/WeaponAttachmentModifierCapabilities.json; docs/weapon-attachments.md).
@@ -836,7 +858,7 @@ def outputs():
     alias('HD2ModifierAttachmentId',[item['semanticId'] for item in modifier_attachments]
         +[item['name'] for item in modifier_attachments if item['nameUnique']])
     stub+=['','---@alias HD2AttachmentSlot "magazine"|"muzzle"|"optics"|"underbarrel"',
-        '---@alias HD2WeaponAttachmentId HD2MagazineAttachmentId|HD2ModifierAttachmentId',
+        '---@alias HD2WeaponAttachmentId HD2MagazineAttachmentId|HD2ModifierAttachmentId|HD2HeatsinkAttachmentId',
         '','---@class HD2WeaponAttachment','---@field resource "weapon_attachment"',
         '---@field path HD2AttachmentSlot','---@field attachment string','local HD2WeaponAttachment = {}',
         '---Slot, relationship and fields; muzzle/optics/underbarrel also list compatibleWeapons, modifiers and the',
@@ -890,16 +912,20 @@ def outputs():
            '---@param id string 1 to 64 lowercase letters, digits or underscores','---@return HD2Model',
            'function HD2Resources.model(id) end',
            # hd2.resources.game_icon: the game's own HUD icons (docs/game-icons.md); names only, nothing shipped.
-           '','---@class HD2GameIcon','---@field kind "stratagem"|"booster"','---@field name string',
-           "---The game's own HUD icon of a stratagem or booster, for d:image (docs/game-icons.md): drawn from the game's",
+           '','---@class HD2GameIcon','---@field kind "stratagem"|"booster"|"weapon"|"throwable"|"faction"|"objective"|"difficulty"|"passive"','---@field name string',
+           'local HD2GameIcon = {}',
+           "---The game's own atlas icon (weapon, throwable, faction, objective, stratagem or booster), for d:image (docs/game-icons.md): drawn from the game's",
            "---own atlas page with the game's own icon material; nothing shipped, nothing written. Drawn only while its",
            '---atlas page is loaded (booster icons are not during a mission). nil, code ("UNKNOWN_KIND" | "UNKNOWN_ICON")',
            '---and reason for an unknown name.',
-           '---@param kind "stratagem"|"booster"','---@param name string the name the Runtime\'s catalogues use',
+           '---@param kind "stratagem"|"booster"|"weapon"|"throwable"|"faction"|"objective"|"difficulty"|"passive"','---@param name string the name the Runtime\'s catalogues use',
            '---@return HD2GameIcon|nil','---@return string? code','---@return string? reason',
            'function HD2Resources.game_icon(kind, name) end',
-           '---Every game icon name of a kind, sorted.','---@param kind "stratagem"|"booster"','---@return string[]',
-           'function HD2Resources.game_icons(kind) end']
+           '---Every game icon name of a kind, sorted.','---@param kind "stratagem"|"booster"|"weapon"|"throwable"|"faction"|"objective"|"difficulty"|"passive"','---@return string[]',
+           'function HD2Resources.game_icons(kind) end',
+           '---Sprite geometry and render mode; width/height may be nil for legacy icons.',
+           '---@return table info kind, name, width, height, mode',
+           'function HD2GameIcon:describe() end']
     import generate_events
     event_classes,event_fields,event_functions=generate_events.stub_lines()
     stub+=event_classes
@@ -917,7 +943,17 @@ def outputs():
         alias('HD2'+method.title()+'Name',names)
         stub+=['---@param name HD2'+method.title()+'Name','---@return '+types[domain]['class'],
                'function hd2.'+method+'(name) end']
-    stub+=['---@param name HD2SupportWeaponName','---@return HD2SupportWeapon',
+    alias('HD2MeleeName',[e['name'] for e in json.loads((ROOT/'sdk/MeleeAuthoringCapabilities.json').read_text(encoding='utf-8'))['entries']])
+    stub+=['---@class HD2MeleeTarget','---@field resource "melee"','---@field melee HD2MeleeName',
+        '---@field path string','local HD2MeleeTarget = {}',
+        '---@return table','function HD2MeleeTarget:describe() end',
+        '---@param identity string|integer','---@return HD2MeleeTarget','function HD2MeleeTarget:zone(identity) end',
+        '---@return HD2MeleeTarget[]','function HD2MeleeTarget:zones() end',
+        '---Melee stamina and named hit volumes. Geometry is local to animated bones; shared records require allow_shared.',
+        '---@class HD2MeleeAPI','---@overload fun(name: HD2MeleeName): HD2MeleeTarget',
+        '---@type HD2MeleeAPI','hd2.melee = {}',
+        '---@return string[]','function hd2.melee.names() end',
+        '---@param name HD2SupportWeaponName','---@return HD2SupportWeapon',
         'function hd2.support_weapon(name) end',
         '---@param name HD2BackpackName','---@return HD2Backpack','function hd2.backpack(name) end',
         '---@param name HD2BoosterName','---@return HD2Booster','function hd2.booster(name) end',
@@ -933,12 +969,12 @@ def outputs():
         '---@param category? "support_weapon"|"backpack"|"ammo"|"stim"|"grenade"|"supply"',
         '---@return HD2Pickup[]','function hd2.pickups(category) end',
         '---An enemy class by wiki name (when proven) or native class name (see sdk/EnemyAuthoringCapabilities.json).',
-        '---@param name HD2EnemyName','---@return HD2Enemy','function hd2.enemy(name) end',
+        '---@param name HD2EnemyName|string','---@return HD2Enemy','function hd2.enemy(name) end',
         '---An enemy structure (fabricators, emplacements, objectives) by wiki or native class name.',
-        '---@param name HD2StructureName','---@return HD2Enemy','function hd2.structure(name) end',
+        '---@param name HD2StructureName|string','---@return HD2Enemy','function hd2.structure(name) end',
         '---Reviewed enemy / structure names (call it: hd2.enemies(filter), optionally filtered by kind and faction),',
         '---and how often each enemy type spawns (hd2.enemies.spawn_weight; docs/enemy-spawns.md).',
-        '---@type HD2Enemies|fun(filter?: {kind?: "enemy"|"structure", faction?: "terminids"|"automatons"|"illuminate"|"neutral"}): string[]',
+        '---@type HD2Enemies|fun(filter?: {kind?: "enemy"|"structure"|"entity", faction?: "terminids"|"automatons"|"illuminate"|"neutral"|"unknown", component?: string}): string[]',
         'hd2.enemies = {}',
         '---The Helldiver type (avatar_helldiver; docs/helldiver-fields.md): movement speeds, stamina and body zones of every',
         '---Helldiver this machine simulates. Every write needs allow_shared=true and allow_unverified_effect=true.',
@@ -987,6 +1023,10 @@ def outputs():
         '---Ensure-owned targets something else keeps overwriting (always on; a warning is logged after 3 re-applications',
         '---in the operation\'s window): {operation, target, externalChanges, warnings, windowSeconds}[], most first.',
         '---@return table[]','function HD2Diagnostics.write_conflicts() end',
+        '---Runtime-wide diagnostic: false disables shared discovery/decode caches and restores the older read limit.',
+        '---Both modes retain buffers and write guards. Not a third-party scanner crash fix.',
+        '---@param enabled? boolean','---@return boolean enabled',
+        'function HD2Diagnostics.application_optimizations(enabled) end',
         '---Every operation registered this session, refused ones included (HD2Runtime 0.28.1+): {kind, id, mod, sdk,',
         '---sdk_source, status, result, code, error, runs, legacy}[], in registration order. `legacy` lists the fields an',
         '---operation of a mod declaring an older SDK wrote without an acknowledgement a later SDK added',
@@ -1001,6 +1041,8 @@ def outputs():
         '---nor bytes an HD2Runtime operation applied, found by a refused write or by hd2.inspect. HD2Runtime never writes',
         '---them. {target, field, observed, expected, owner = "unknown", seen}[], in the order found (docs/diagnostics.md).',
         '---@return table[]','function HD2Diagnostics.foreign_values() end',
+        '---One explicit read of mission definitions and the active countdown. No polling or writes.',
+        '---@return table? report','---@return string? reason','function HD2Diagnostics.mission_timer() end',
         '---@type HD2Diagnostics','hd2.diagnostics = {}']
     stub+=event_functions
     # 0.31.2: target:display_name() (api/text.lua; docs/game-text.md), the game's own name in the game's language.
@@ -1009,6 +1051,64 @@ def outputs():
         stub+=['---HD2Runtime 0.31.2+: the game\'s own name of this object in the game\'s language (\'AR-23 Liberator\') and its',
             '---parts; or nil, code (UNAVAILABLE, NO_NAME, ...) and reason: show the key then (docs/game-text.md).',
             '---@return string|nil, HD2GameName|string|nil, string?','function '+owner+':display_name() end']
+    stub+=['','---@class HD2ArmorPerkTarget','---@field resource "armor_perk"','---@field armor_perk integer',
+        'local HD2ArmorPerkTarget = {}','---@return table','function HD2ArmorPerkTarget:describe() end',
+        '---@return table[]','function HD2ArmorPerkTarget:fields() end',
+        '---Shared numeric perk definitions. Spawn-time stats require a respawn wearing the original perk.',
+        '---@param identity HD2PassiveName|integer','---@return HD2ArmorPerkTarget',
+        'function HD2Passives.perk(identity) end']
+    stub+=['','---@class HD2MissionTarget','---@field resource "mission"','---@field mission string',
+        'local HD2MissionTarget = {}','---@return table','function HD2MissionTarget:describe() end',
+        '---Launch-time duration in seconds; missions sharing a timerGroup share edits. Ship state required.',
+        '---@param id string From hd2.missions().','---@return HD2MissionTarget','function hd2.mission(id) end',
+        '---@param filter? table faction: terminids, automatons, or illuminate.','---@return table[]',
+        'function hd2.missions(filter) end','',
+        '---EXPERIMENTAL, the host only, in a mission: freezes or resumes the countdown with the game\'s own timer pause',
+        '---(the next mission starts unpaused). Other Runtimes in the lobby follow the host\'s freeze.',
+        '---@param request {frozen: boolean, allow_unverified_effect: true}',
+        '---@return {status: "APPLIED"|"UNCHANGED", frozen: boolean, remainingSeconds: number, source: string, verified?: boolean}? result',
+        '---@return string? code "ACKNOWLEDGEMENT_REQUIRED" | "TARGET_UNAVAILABLE" | "HOST_ONLY" | "NOT_APPLICABLE" | "NOT_PRIVATE" | "UNAVAILABLE" | "GUARD_REJECTED"',
+        '---@return string? reason','function hd2.freeze_mission_timer(request) end']
+    stub+=['','---0.40.0 enemy director controls. Source spawn writes require Ship state and both acknowledgements.',
+        '---@param level integer Difficulty 1 through 10.','---@return HD2EnemyDirectorTarget',
+        'function hd2.enemies.difficulty(level) end',
+        '---@param id string From hd2.enemies.compositions().','---@return HD2EnemyDirectorTarget',
+        'function hd2.enemies.composition(id) end',
+        '---@param filter? table faction and/or family (1 through 8).','---@return table[]',
+        'function hd2.enemies.compositions(filter) end',
+        '---Preview faction composition counts scaled from defaults. Does not write; submit transactions via ensure or patch.',
+        '---Patrol/reinforcement/all scale whole counts; map divides guard cost, retaining native fill limits.',
+        '---Budgets, transport capacity and scripted spawns still apply; map is not an exact count multiplier.',
+        '---@param faction "terminids"|"automatons"|"illuminate"','---@param multiplier number 0.1 through 5',
+        '---@return table recipe scope, transactions, fields, clamped, authoredCount, desiredCount, lifecycle',
+        '---@param channel? "all"|"patrol"|"reinforcement"|"map" Default all retains every composition family.',
+        'function hd2.enemies.spawn_multiplier(faction, multiplier, channel) end',
+        '---Loaded spawn-picker ownership; overlapping Runtime writes are refused, including prepared plans.',
+        '---@return table status blocked, owner, reason, code, foreign_status',
+        'function hd2.enemies.spawn_compatibility() end',
+        '---@param target table Canonical descriptor target','---@param field string',
+        '---@return string? reason','---@return string? code',
+        'function hd2.enemies.spawn_control_reason(target, field) end',
+        '---Open the loaded picker UI through its own opening path. User action only.',
+        '---@param before_open? function Close the caller menu after the bridge is found.',
+        '---@return boolean opened','---@return string? reason',
+        'function hd2.enemies.open_spawn_picker(before_open) end','',
+
+        '---Preview patrol-clock factors for all authored faction modes; no continuous update loop.',
+        '---@param faction "terminids"|"automatons"|"illuminate"','---@param multiplier number 0.1 through 5',
+        '---@return table recipe','function hd2.enemies.patrol_frequency(faction, multiplier) end',
+        '---Preview native per-difficulty budgets or inverse shared-spawner cooldown. Budgets are not exact counts.',
+        '---@param level integer 1 through 10',
+        '---@param channel "encounter_budget"|"map_budget"|"spawner_frequency"',
+        '---@param multiplier number 0.1 through 5','---@return table recipe',
+        'function hd2.enemies.difficulty_multiplier(level, channel, multiplier) end',
+        '---@param id string From hd2.enemies.rosters().','---@return HD2EnemyDirectorTarget',
+        'function hd2.enemies.roster(id) end','---@param filter? table roster name.','---@return table[]',
+        'function hd2.enemies.rosters(filter) end',
+        '---@param name string Shared demolition template name.','---@return HD2EnemyDirectorTarget',
+        'function hd2.enemies.demolition_template(name) end','---@return table[]',
+        'function hd2.enemies.demolition_templates() end','---@return table[]',
+        'function hd2.enemies.destruction_models() end']
     for method,spec in schema['api']['functions'].items():
         stub+=['---'+spec['doc']]
         for name,kind in spec['params']:stub.append('---@param '+name+' '+kind)
@@ -1066,8 +1166,8 @@ def outputs():
             '`hd2.explosions.payload_warnings()`.']
     for domain,t in types.items():
         doc+=['','## '+t['class'],'']
-        for method,to in t['methods'].items():doc+=['- `:'+method+'()` → `'+types[to]['class']+'` (only where mapped).']
-        doc+=['- `:describe()` → offline field metadata; `:read_target()` → descriptor for `hd2.read/observe`.']
+        for method,to in t['methods'].items():doc+=['- `:'+method+'()` â†’ `'+types[to]['class']+'` (only where mapped).']
+        doc+=['- `:describe()` â†’ offline field metadata; `:read_target()` â†’ descriptor for `hd2.read/observe`.']
     for key,r in resources.items():
         doc+=['','## '+r['label'],'',r['resource']+' (`hd2.resources.'+key+'`)','',
               '| Field constant | Domain / value type | Access | Baseline | Evidence | Semantic range | Enum | Source |',
@@ -1099,6 +1199,11 @@ def outputs():
             'sdk/docs/pod-payloads.md':(ROOT/'docs/pod-payloads.md').read_text(encoding='utf-8'),
             'sdk/docs/booster-authoring.md':(ROOT/'docs/booster-authoring.md').read_text(encoding='utf-8'),
             'sdk/docs/throwable-authoring.md':(ROOT/'docs/throwable-authoring.md').read_text(encoding='utf-8'),
+            'sdk/docs/knife-melee.md':(ROOT/'docs/knife-melee.md').read_text(encoding='utf-8'),
+            'sdk/docs/throwable-statuses.md':(ROOT/'docs/throwable-statuses.md').read_text(encoding='utf-8'),
+            'sdk/docs/belt-urchin-swaps.md':(ROOT/'docs/belt-urchin-swaps.md').read_text(encoding='utf-8'),
+            'sdk/docs/explosion-arcs.md':(ROOT/'docs/explosion-arcs.md').read_text(encoding='utf-8'),
+            'sdk/docs/reload-heat-controls.md':(ROOT/'docs/reload-heat-controls.md').read_text(encoding='utf-8'),
             'sdk/docs/asset-loading.md':(ROOT/'docs/asset-loading.md').read_text(encoding='utf-8'),
             'sdk/docs/explosions.md':(ROOT/'docs/explosions.md').read_text(encoding='utf-8'),
             'sdk/docs/weapon-movement.md':(ROOT/'docs/weapon-movement.md').read_text(encoding='utf-8'),
@@ -1115,6 +1220,7 @@ def outputs():
             'sdk/docs/options.md':(ROOT/'docs/options.md').read_text(encoding='utf-8'),
             'sdk/docs/weapon-reticles.md':(ROOT/'docs/weapon-reticles.md').read_text(encoding='utf-8'),
             'sdk/docs/fire-modes.md':(ROOT/'docs/fire-modes.md').read_text(encoding='utf-8'),
+            'sdk/docs/runtime-performance.md':(ROOT/'docs/runtime-performance.md').read_text(encoding='utf-8'),
             'sdk/docs/fire-rate-modes.md':(ROOT/'docs/fire-rate-modes.md').read_text(encoding='utf-8'),
             'sdk/docs/weapon-feeds.md':(ROOT/'docs/weapon-feeds.md').read_text(encoding='utf-8'),
             'sdk/docs/weapon-presentation.md':(ROOT/'docs/weapon-presentation.md').read_text(encoding='utf-8'),
@@ -1134,6 +1240,8 @@ def outputs():
             'sdk/docs/projectile-shots.md':(ROOT/'docs/projectile-shots.md').read_text(encoding='utf-8'),
             'sdk/docs/armor-passives.md':(ROOT/'docs/armor-passives.md').read_text(encoding='utf-8'),
             'sdk/docs/enemy-spawns.md':(ROOT/'docs/enemy-spawns.md').read_text(encoding='utf-8'),
+            'sdk/docs/enemy-controls.md':(ROOT/'docs/enemy-controls.md').read_text(encoding='utf-8'),
+            'sdk/docs/missions.md':(ROOT/'docs/missions.md').read_text(encoding='utf-8'),
             'sdk/docs/helldiver-fields.md':(ROOT/'docs/helldiver-fields.md').read_text(encoding='utf-8'),
             'sdk/docs/armor-stats.md':(ROOT/'docs/armor-stats.md').read_text(encoding='utf-8'),
             'sdk/docs/ui-overlay.md':(ROOT/'docs/ui-overlay.md').read_text(encoding='utf-8'),

@@ -1,7 +1,7 @@
 {
  "contract": "hd2runtime.events.v1",
  "schemaVersion": 1,
- "hd2RuntimeVersion": "0.31.3",
+ "hd2RuntimeVersion": "0.40.0",
  "summary": {
   "events": 22,
   "available": [
@@ -4255,7 +4255,7 @@
      [
       "face_target",
       "true|nil",
-      "The body turns toward the locked target (needs behave_as)."
+      "The body follows the native target with an untouched native gun, or the Runtime target lock with behave_as."
      ]
     ]
    },

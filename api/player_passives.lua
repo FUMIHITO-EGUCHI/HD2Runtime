@@ -54,7 +54,7 @@ local function copy_passive(p)
         stats[i]={stat=s.stat,name=s.name,add=s.add,mul=s.mul,described_by=s.describedBy}
     end
     local info=p.packageInfo
-    return {id=p.id,name=p.name,description=p.description,modifiers=modifiers,effect_package=p.package~=nil,
+    return {id=p.id,name=p.name,icon=p.icon,description=p.description,modifiers=modifiers,effect_package=p.package~=nil,
         package=p.package,armor_kits=p.armorKits,follows_swap=p.followsSwap,note=p.note,stats=stats,
         package_info=info and{key=info.key,catalogue=info.dependency,package=info.package,contents=info.contents,
             armor_slot_only=copy_list(info.armorSlotOnly),loads='core/assets before the write; shared with '

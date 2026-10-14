@@ -33,6 +33,8 @@ from migration import overlay as migration_overlay  # noqa: E402  build-migratio
 import generate_entity_authoring  # noqa: E402
 import status_fields  # noqa: E402
 import game_names  # noqa: E402  the game's own name text ids (0.31.2)
+import explosion_arc_fields
+import belt_urchin_fields
 
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / 'research/throwable-authoring-F5FEE03DCFDB.json'
@@ -69,8 +71,12 @@ def constants():
 
 def outputs(research_path=RESEARCH):
     research = json.loads(Path(research_path).read_text(encoding='utf-8'))
+    flight = json.loads((ROOT/'research/knife-melee-F5FEE03DCFDB.json').read_text(encoding='utf-8'))
+    grenade_shield = json.loads((ROOT/'research/dev4-controls-F5FEE03DCFDB.json').read_text())['shield']
+    explosion_names = {e['type']: e['name'] for e in json.loads((ROOT/'research/explosion-identities-F5FEE03DCFDB.json').read_text())['explosions'] if e.get('name')}
     definitions = {d['id']: d for d in json.loads(FIELDS.read_text())['fields']}
     api = constants()
+    explosion_arcs = explosion_arc_fields.load()
     status_names = {int(k): v[0] for k, v in research['statusNames'].items() if len(v) == 1}
     status_names.update(STATUS_BY_ELIMINATION)
     runtime = {'version': 1, 'build': research['build'], 'throwables': {}}
@@ -190,6 +196,14 @@ def outputs(research_path=RESEARCH):
                 wiki=wiki_value(fact, None), tier='wiki_exact' if fact in matched else 'native_member')
 
         # ---- detonation -----------------------------------------------------------------------------------
+        source = flight['throwables'][name]
+        assert source['resource'] == native['resource']
+        launch = target('flight', 'ThrowableComponent launch calculation and angular velocity', [])
+        for definition in definitions.values():
+            if definition.get('target') != 'flight': continue
+            field(launch, definition['id'], source['values'][str(definition['offset'])],
+                component_backing('throwable', 'ThrowableComponentData', definition['offset'], 'f32'),
+                True, tier='native_consumer', extra={'lifecycle': 'at_throw_release'})
         explosive = native.get('explosive')
         modes = research['modes']
         detonation = {'trigger': facts['trigger'], 'cookable': facts['cookable'], 'sticky': facts['sticky'],
@@ -199,6 +213,15 @@ def outputs(research_path=RESEARCH):
             detonation.update(nativeMode=mode, armingDelaySeconds=explosive['arming'],
                 explosionDelaySeconds=explosive['delay'])
             det = target('detonation', 'ExplosiveComponent owned by the throwable entity', [])
+            payload = explosion_names[explosive['explosion']] if explosive['explosion'] else 'none'
+            field(det, 'throwable.explosion', payload,
+                component_backing('explosive', 'ExplosiveComponentData', 36, 'u32'), True,
+                shared=native['explosive']['record']['ownerCount'] > 1,
+                extra={'allowNone': True, 'lifecycle': 'native_detonation',
+                    'referenceAcknowledgement': 'allow_unverified_reference'})
+            field(det, 'throwable.arming_delay', explosive['arming'],
+                component_backing('explosive', 'ExplosiveComponentData', 8, 'f32'), True,
+                extra={'lifecycle': 'Read when the thrown explosive arms; does not change its detonation mode.'})
             editable, reason, tier = False, None, 'native_member'
             fuses = facts['fuses']
             if len(fuses) > 1:
@@ -271,18 +294,7 @@ def outputs(research_path=RESEARCH):
                             'Native value does not reproduce the wiki fingerprint.'),
                         wiki=wiki_value(fact, None) if fact else None,
                         tier='wiki_exact' if fact and fact in matched else 'native_member')
-                # ---- the explosion DamageInfo's status slots as references (0.31.1) ------------------------
-                # The same model as a weapon explosion's (scripts/status_fields.py): each used slot's status, and
-                # every empty slot (0.31.2; before, the first), which takes a status and its strength. Slots stay
-                # packed from slot 1 (core/status_slots.lua, at write time).
-                for spec in status_fields.slot_specs(exp_damage['recordType']):
-                    extra = status_fields.type_extra(spec)
-                    backing = settings_backing(exp_damage, spec['offset'], spec['storage'])
-                    backing.update(status_fields.backing_extra(spec))
-                    field(ex, 'explosion.damage.' + spec['suffix'], spec['current'], backing, explosion_wiki,
-                        None if explosion_wiki else why, extra=extra,
-                        scope_note='Status slot ' + str(spec['slot']) + " of this explosion's DamageInfo row (every "
-                            'hit of the explosion applies it). ' + SHARED_SETTINGS)
+                # Type/strength descriptors are emitted once below with the other reviewed damage paths.
                 # ---- status slots on the explosion DamageInfo ----------------------------------------------
                 labels = entry['statusLabels']
                 slots = values['status']
@@ -407,6 +419,71 @@ def outputs(research_path=RESEARCH):
                     wiki=wiki_value(fact, None) if fact else None,
                     tier='wiki_exact' if fact and fact in matched else 'native_member')
 
+        # Explosion-created arcs have a separate damage row from the radial explosion.
+        if name in explosion_arcs:
+            item=explosion_arcs[name]
+            assert item['resource']==native['resource'] and item['explosion']['recordType']==native['explosion']['recordType']
+            arc,damage=item['arc'],item['damage']
+            chain=[link_explosion,{'from':'settings','settings':'explosion',
+                'recordType':item['explosion']['recordType'],'offset':120,'expect':arc['recordType']},
+                {'from':'settings','settings':'arc','recordType':arc['recordType'],'offset':36,'expect':damage['recordType']}]
+            at=target('arc','ExplosionSettings -> ArcSettings -> arc DamageInfo',chain,accessor=['explosion','arc'])
+            for spec in definitions.values():
+                if spec.get('settings')=='arc' or (spec['id'].startswith('damage.') and spec.get('offset') in range(4,40,4)):
+                    node=arc if spec.get('settings')=='arc' else damage
+                    field(at,spec['id'],explosion_arc_fields.value(node,spec['offset'],spec['storage']),
+                        settings_backing(node,spec['offset'],spec['storage']),True)
+            native=dict(native,arcDamage=damage)
+            for st in item['statuses']:
+                assert st['recordType']==37
+                key='arc-stun-small'
+                sc=chain+[{'from':'settings','settings':'damage','recordType':damage['recordType'],
+                    'offset':44+8*(st['slot']-1),'expect':st['recordType']}]
+                target_st=target('status_effect','Arc DamageInfo status -> StatusEffectSettings',sc,key=key,
+                    accessor=['arc','status_effect',key])
+                target_st.update(label='Arc Stun Small',slot=st['slot'],parentPath='arc')
+                field(target_st,'status.strength',st['strength'],
+                    settings_backing(damage,48+8*(st['slot']-1),'f32'),True)
+                field(target_st,'status.duration',explosion_arc_fields.value(st,40),settings_backing(st,40,'f32'),True)
+
+        if name=='G-109 Urchin':
+            pulse_data=belt_urchin_fields.load()
+            baseline='throwable/g109_urchin/detonation'
+            own=pulse_data['payloads'][baseline]
+            assert native['resource']==pulse_data['urchin']['resource'] and own['recordType']==explosion['recordType']
+            pt=target('pulse','Shared explosion definition requested directly by the native repeating pulse routine',
+                [link_explosion])
+            backing=settings_backing(explosion,4,'bytes');backing['width']=148
+            field(pt,'throwable.pulse_explosion',baseline,backing,True,shared=True,
+                extra={'payloadOptions':pulse_data['payloads'],'payloadRecipients':[own,pulse_data['urchin']['finalPayload']],'allowedValues':list(pulse_data['payloads']),
+                    'payloadReplacement':True},
+                scope_note='Replaces the shared pulse definition for every Urchin. Preserves its sticky/repeat logic. '
+                    'Copies the reviewed payload, including effects and damage links; original explosion controls '
+                    'can conflict while a replacement is active.')
+
+        # Four type/strength pairs on every reviewed damage path. The writer checks the complete resulting
+        # packing, so a transaction can attach four statuses or clear them together without leaving holes.
+        for path, damage_key, prefix in (
+                ('explosion','explosionDamage','explosion.damage.'),
+                ('shrapnel','submunitionDamage','damage.'), ('bomblets','submunitionDamage','damage.'),
+                ('bomblet_explosion','submunitionExplosionDamage','explosion.damage.'),
+                ('damage','directDamage','damage.'),('arc','arcDamage','damage.')):
+            tgt, damage = targets.get(path), native.get(damage_key)
+            if not tgt or not damage: continue
+            if path in ('shrapnel','bomblets'):
+                link={'from':'settings','settings':'projectile','recordType':native['submunition']['recordType'],
+                      'offset':60,'expect':damage['recordType']}
+                if link not in tgt['chain']: tgt['chain'].append(link)
+            editable = explosion_wiki if path=='explosion' else True
+            for spec in status_fields.slot_specs(damage['recordType'], all_slots=True):
+                extra=status_fields.type_extra(spec)
+                if spec['role']=='type': extra['allowNone']=True
+                backing=settings_backing(damage,spec['offset'],spec['storage'])
+                backing.update(status_fields.backing_extra(spec))
+                field(tgt,prefix+spec['suffix'],spec['current'],backing,editable,
+                    None if editable else 'This throwable explosion has no reviewed gameplay damage fingerprint.',
+                    tier='native_member',extra=extra,scope_note=SHARED_SETTINGS)
+
         # ---- deployed mine health / shield ------------------------------------------------------------------
         if native.get('health'):
             en = target('entity', 'HealthComponent owned by the thrown (deployed) entity itself', [])
@@ -424,8 +501,15 @@ def outputs(research_path=RESEARCH):
                     component_backing('shield', 'ShieldComponentData', offset, 'f32'), ok,
                     None if ok else 'Not fingerprinted by the wiki.', wiki=wiki_value(field_id, None),
                     tier='wiki_exact' if ok else 'native_member')
-            pub['leads'].append('ShieldComponent +88 and +92 (20 s each) reproduce the wiki regen and broken '
-                'delays; their member semantics are not proven, so they are not exposed.')
+            assert native['resource']==grenade_shield['resource']
+            assert native['shield']['record']['recordIndex']==grenade_shield['identity']['recordIndex']
+            for field_id,offset,meaning in generate_entity_authoring.SHIELD_RECHARGE:
+                value=grenade_shield['values'][str(offset)]
+                field(sh,field_id,value,component_backing('shield','ShieldComponentData',offset,'f32'),True,
+                    tier='cross_shield_correlation',extra={'acknowledgementReason':
+                        generate_entity_authoring.SHIELD_RECHARGE_REASON+' '+meaning})
+            pub['leads'].append('Shield recharge fields reuse the reviewed shield mapping. Rate is 0 natively; '
+                'changing delays alone does not enable recharge. The device still expires on its native timer.')
             pub['leads'].append('The wiki 0 s fuse is the deploy-on-contact behaviour; natively the '
                 'ExplosiveComponent ends the device after its 20 s explosion delay (published read-only).')
 
@@ -436,7 +520,7 @@ def outputs(research_path=RESEARCH):
                 'reason': 'ExplosiveComponent StatusEffectTimedSphericalTemplate member semantics are unproven; '
                     'its status types are published read-only.',
                 'nativeStatusTypes': [status_names.get(s['type'], 'unnamed') for s in native['explosive']['timedStatus']]})
-        if entry['family'] == 'Arc':
+        if entry['family'] == 'Arc' and name not in explosion_arcs:
             pub['blocked'].append({'what': 'arc child (Stun Small)', 'reason': 'The arc attack is not reached from '
                 'the explosion through any typed reference; no arc settings row is linked.'})
         if entry['family'] == 'Seeker':
@@ -454,13 +538,15 @@ def outputs(research_path=RESEARCH):
         if name == 'G-109 Urchin':
             pub['leads'].append('Wiki prose: one pulse every 2.9 s, 4 pulses. The 2.9 s native explosion delay '
                 'is exposed; the pulse count has no proven native owner.')
-        pub['leads'].append('ThrowableComponent +16 (FP32, hidden name 18 characters) is 20 for most throwables; it '
-            'is consistent with a throw speed but unproven, so no throw-distance field is exposed.')
+        pub['leads'].append('Launch speed = sqrt(18 * max(0, min_distance + (max_distance-min_distance) * strength)); '
+            'a positive speed override bypasses this calculation. Movement adjusts strength before interpolation. '
+            'This launch curve does not describe drag, gravity or the complete trajectory. Spin applies only when '
+            'the native angular-velocity flags permit it; axes and units retain native conventions.')
 
         # finalize targets
         for label, tgt in targets.items():
             record['targets'][label] = {'path': tgt['path'], 'key': tgt['key'], 'chain': tgt['chain'],
-                'fields': tgt['fields'], 'label': tgt.get('label'), 'slot': tgt.get('slot')}
+                'fields': tgt['fields'], 'label': tgt.get('label'), 'slot': tgt.get('slot'), 'parentPath':tgt.get('parentPath')}
             pub['targets'].append({'path': tgt['path'], 'key': tgt['key'], 'accessor': tgt['accessor'],
                 'relationship': tgt['relationship'], 'label': tgt.get('label'),
                 'labelConfidence': tgt.get('labelConfidence'), 'scope': tgt['scope'],

@@ -30,19 +30,37 @@ def render(data: dict) -> str:
              '-- map; the record itself is read from the running game). Names only: no artwork, texture name or archive',
              '-- detail.',
              'return {build=%s,source="sdk/HudIconSprites.json",' % lua_string(data['build'])]
-    for kind, key in (('stratagem', 'stratagems'), ('booster', 'boosters')):
+    for kind, key in (('stratagem', 'stratagems'), ('booster', 'boosters'), ('weapon', 'weapons'),
+                      ('throwable', 'throwables'), ('faction', 'factions'), ('objective', 'objectives'),
+                      ('difficulty', 'difficulties'), ('passive', 'passives')):
         lines.append('%s={' % key)
         for name in sorted(data[key]):
             sprite = data[key][name]['sprite']
             if not (sprite.startswith('0x') and len(sprite) == 18):
                 raise ValueError('%s %s: sprite %r is not 0x and 16 hex digits' % (kind, name, sprite))
-            lines.append('  [%s]="%s",' % (lua_string(name), sprite[2:].upper()))
+            entry = data[key][name]
+            if 'mode' in entry:
+                lines.append('  [%s]={sprite="%s",mode="%s",width=%d,height=%d},' %
+                    (lua_string(name), sprite[2:].upper(), entry['mode'], entry['width'], entry['height']))
+            else:
+                lines.append('  [%s]="%s",' % (lua_string(name), sprite[2:].upper()))
         lines.append('},')
     lines.append('missing={')
     for name in sorted(data.get('missing', {})):
         lines.append('  [%s]=%s,' % (lua_string(name), lua_string(data['missing'][name])))
     lines.append('}}')
     return '\n'.join(lines) + '\n'
+
+
+def generate(check=False):
+    text = render(json.loads(SOURCE.read_text(encoding='utf-8')))
+    current = OUTPUT.read_text(encoding='utf-8') if OUTPUT.exists() else ''
+    if current == text:
+        return []
+    if check:
+        raise RuntimeError('%s is stale: run py scripts/generate_game_icons.py' % OUTPUT.relative_to(ROOT))
+    OUTPUT.write_text(text, encoding='utf-8', newline='\n')
+    return [OUTPUT]
 
 
 def main(argv=None) -> int:

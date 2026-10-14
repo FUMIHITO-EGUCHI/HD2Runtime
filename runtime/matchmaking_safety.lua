@@ -585,7 +585,7 @@ function M.start()
     function watch.cancel()watch.status='cancelled';close_screen()end
     function watch.tick(dt)
         if watch.status~='active'then return end
-        local started=metrics.now()
+        local started=metrics.start()
         local ok,why=pcall(tick,dt)
         metrics.elapsed('matchmaking_safety.tick',started)
         if not ok then

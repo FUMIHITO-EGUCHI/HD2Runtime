@@ -31,6 +31,10 @@ HD2Runtime is designed to fail safely when a game structure or ownership relatio
 - Throwable authoring for all 23 throwable-slot items (`hd2.throwable`): inventory counts, fuses,
   explosions, per-hit status and shared status definitions, frag shrapnel, Pineapple bomblets, the throwing
   knife's direct hit, mine health and the throwable shield (see `docs/throwable-authoring.md`)
+- Throwable launch curves, speed overrides and spin; melee hit volumes, damage,
+  repeat-hit intervals and stamina (local 0.40.0; see [knife and melee controls](docs/knife-melee.md))
+- Four status types and strengths on supported throwable damage/explosion targets,
+  plus arming delay (see [throwable statuses](docs/throwable-statuses.md))
 - Automatic asset loading for reference swaps: the packages of pod pickups, mounted weapons and borrowed
   projectiles load through the game's own package system before the write, with no package IDs in mods
   (see `docs/asset-loading.md`)
@@ -93,6 +97,9 @@ HD2Runtime is designed to fail safely when a game structure or ownership relatio
 - Generated SDK metadata for tools such as HD2RuntimeGUI
 
 Unsupported or ambiguous values remain read-only rather than being modified speculatively.
+
+Version 0.40.0 (release candidate; on hold) expands enemy and structure authoring, scale, spawning, ship capacities,
+shields and demolition controls. See `docs/enemy-controls.md` and `docs/releases/0.40.0.md`.
 
 Version 0.31.3 is a hotfix release from player reports: picking a custom stratagem no longer fails when the lobby's
 carrier is a stratagem this account does not own, and it adds the LAS-22 Shear to the weapon stats, the EXO-55

@@ -45,19 +45,20 @@ class PlayerCoverageTests(unittest.TestCase):
         values = {f['semanticFieldId']: f['currentDefault'] for f in launcher['fields']}
         self.assertEqual(values, {'weapon.horizontal_spread': 30.0, 'weapon.vertical_spread': 30.0,
             'weapon.fire_rate': 900.0, 'rounds.feed_capacity_1': 1.0, 'rounds.spare_rounds': 5,
-            'rounds.rounds_from_supply': 5, 'rounds.starting_rounds': 3})
+            'rounds.rounds_from_supply': 5, 'rounds.starting_rounds': 3,
+            'reload.duration': 0.0})   # 0.40.0 dev11: the underbarrel's own reload (0 = the native ability timing)
         self.assertEqual(launcher['resources'], ['0x02CD7321CD8445F5'])
         self.assertTrue(all(f['acknowledgement'] == 'allow_unverified_effect' and f['writeScope'] == 'weapon_local'
             for f in launcher['fields']))
-        self.assertIn('reload time', ' '.join(launcher['notExposed']))
+        self.assertNotIn('reload time', ' '.join(launcher['notExposed']))   # exposed since 0.40.0 dev11 (reload.duration)
         # Not flattened: the rifle keeps its own records and has no grenade fields.
         rifle = self.weapons['AR/GL-21 One-Two']
         self.assertEqual(rifle['subweapons'], [{'name': 'AR/GL-21 One-Two / underbarrel', 'kind': 'underbarrel'}])
         self.assertNotIn('rounds.spare_rounds', {f['semanticFieldId'] for f in rifle['fields']})
         self.assertEqual({f['semanticFieldId']: f['currentDefault'] for f in rifle['fields']}['weapon.fire_rate'], 650)
-        # The Stoker's underbarrel flamer: spread only (no rounds, no projectile).
+        # The Stoker's underbarrel flamer: spread and (0.40.0 dev11) its own reload; no rounds, no projectile.
         self.assertEqual({f['semanticFieldId'] for f in subs['SMG/FLAM-34 Stoker / underbarrel']['fields']},
-            {'weapon.horizontal_spread', 'weapon.vertical_spread'})
+            {'weapon.horizontal_spread', 'weapon.vertical_spread', 'reload.duration'})
 
     def test_misattributed_duplicate_roots_resolve_to_the_proven_root(self):
         # 0.30.2: the underbarrel root is dropped and the weapon is writable (research/weapon-roots).

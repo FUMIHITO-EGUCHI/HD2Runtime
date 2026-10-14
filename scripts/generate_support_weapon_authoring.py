@@ -32,6 +32,9 @@ import ability_explosion_fields
 import live_evidence
 import submunition_links
 import game_names  # noqa: E402  the game's own name text ids (0.31.2)
+import explosion_arc_fields
+import belt_urchin_fields
+import wasp_projectile_fields
 
 ROOT=Path(__file__).resolve().parents[1]
 CATALOG=ROOT/'schemas/support_weapon_authoring_catalog.json'
@@ -232,7 +235,7 @@ def refresh_catalog(base_path,legacy_path=LEGACY,catalog_path=CATALOG):
 
 
 def build(catalog_path=CATALOG):
-    source=json.loads(Path(catalog_path).read_text())
+    source=explosion_arc_fields.augment_support(json.loads(Path(catalog_path).read_text()))
     fed_backpacks={item['supportWeapon']:item for item in json.loads(BACKPACK_AMMO.read_text())['backpackFedWeapons']}
     team_backpacks={item['supportWeapon']:item for item in json.loads(TEAM_RELOAD.read_text())['teamReloadWeapons']
         if item['supportWeapon']}
@@ -329,7 +332,7 @@ def build(catalog_path=CATALOG):
                 if prefix=='damage' and linkage=='projectile_damage' else None))
             fields.append(slot_field)
 
-    builder_hosts={item['weapon']:item for item in json.loads(BUILDER.read_text())['supportHosts']}
+    builder_hosts={item['weapon']:item for item in wasp_projectile_fields.hosts(belt_urchin_fields.hosts(json.loads(BUILDER.read_text())['supportHosts']))}
     output_weapons={item['weapon']:item for item in json.loads(ATTACK_OUTPUTS.read_text())['weapons']
         if item['kind']=='support_weapon'}
 
@@ -361,6 +364,8 @@ def build(catalog_path=CATALOG):
             field['acknowledgementReason']=HOST_TRACED_UNVERIFIED.format(structure=host['hostProof']['structure'])
             field['hostProof']=dict(host['hostProof'],acknowledgements=['allow_unverified_effect',
                 'allow_unverified_reference'])
+        if weapon['name']==belt_urchin_fields.NAME:
+            field['backpackProjectileHost']=belt_urchin_fields.host_proof(candidate)
         field['referenceKind']='projectile';field['compatibilityClass']=research['compatibilityClass']
         field['referenceRole']=role;field['referenceSettings']=research['output']['settings']
         field['residency']={'classification':'PACKAGE_AUTO_LOADED'if research['packageAutoLoad']else'PACKAGE_REQUIRED',
@@ -371,6 +376,8 @@ def build(catalog_path=CATALOG):
             'activeSourceProven':True,'gameplayEffectProven':False,'unverifiedEffect':True,
             'reason':('A component member the game copies into the weapon when it builds it: a weapon called in after '
                 'the write fires the new projectile; one already built keeps its copy until it is rebuilt.')}
+        if weapon['name']==wasp_projectile_fields.NAME:
+            wasp_projectile_fields.annotate(field)
         # Exact (host, donor output) pairs a live test proved (support_projectile_reference): liveProvenValues.
         return live_evidence.promote_field(field,weapon['name'])
 
@@ -742,12 +749,16 @@ def build(catalog_path=CATALOG):
                         (('velocity','arc_velocity',4,'f32'),('range','arc_range',8,'f32'),
                          ('distance_at_max_spread','arc_spread',12,'f32'),
                          ('max_angle_spread','arc_chain_spread',20,'f32'),
+                         *((('distance_at_max_spread_first_shot','arc_first_spread',16,'f32'),
+                            ('max_angle_spread_first_shot','arc_first_angle',24,'f32')) if attack.get('explosionArc') else ()),
                          ('chain_count','arc_chain_count',28,'u32'),('max_split','arc_max_split',32,'u32'))
                         if kind=='Arc'else(('radius','beam_radius',4,'f32'),('length','beam_range',8,'f32')))
+                    arc_extra=attack.get('explosionArc')or{}
+                    arc_link='projectile_explosion_arc'if arc_extra else settings_name
                     for suffix,key,offset,storage in layout:
                         fields.append(make_field(settings_name+'.'+role+'.'+suffix,values.get(key),
-                            settings(settings_name,record,offset,storage,role,settings_name),attack_target))
-                    damage_fields(fields,candidate,attack,attack_target,role,settings_name+'_damage')
+                            settings(settings_name,record,offset,storage,role,arc_link,**arc_extra),attack_target))
+                    damage_fields(fields,candidate,attack,attack_target,role,arc_link+'_damage',arc_extra)
                 elif kind in('Spray','Melee'):
                     damage_fields(fields,candidate,attack,attack_target,role,kind.lower()+'_damage')
                 elif kind=='Explosion':
@@ -786,6 +797,9 @@ def build(catalog_path=CATALOG):
                             else:
                                 status_extra['parentRole']=parent.get('parentRole')
                                 status_extra['phase']='expiry'if parent['role'].endswith('expiry')else'impact'
+                        elif parent.get('explosionArc'):
+                            parent_linkage='projectile_explosion_arc_damage'
+                            status_extra=dict(parent['explosionArc'])
                         else:parent_linkage=parent['kind'].lower()+'_damage'
                         if index is not None:
                             fields.append(make_field('status.'+role+'.strength',
@@ -812,6 +826,9 @@ def build(catalog_path=CATALOG):
                         attack_target))
                 damage_fields(fields,candidate,attack,attack_target,role,'function_projectile_damage')
                 programmable_feed_fields.annotate(fields[start:],feed)
+            for field in fields:
+                if 'explosion_arc' in str(field['backing'].get('linkage')) or 'explosion_arc' in str(field['backing'].get('parentLinkage')):
+                    field.update(acknowledgement='allow_unverified_effect',acknowledgementReason=explosion_arc_fields.ACK)
             # Which charge level fires each row, when the game reads it, who shares it, and the acknowledgement.
             charge_fields.annotate_levels(weapon['name'],fields,charge_levels)
             if ability_attack:ability_explosion_fields.annotate(fields,ability_attack)
@@ -863,6 +880,9 @@ def build(catalog_path=CATALOG):
         if weapon['name']in ability_explosion_fields.REVIEWED:
             roles={branch['name']:branch['runtimeMatch']['runtimeAttackRole']for branch in weapon['attackGraph']
                 if branch.get('state')=='RESOLVED'and(branch.get('runtimeMatch')or{}).get('runtimeAttackRole')}
+        roles=roles or{}
+        roles.update({b['name']:b['runtimeMatch']['runtimeAttackRole'] for b in weapon['attackGraph']
+            if b.get('resolvedBy')=='typed_explosion_arc'})
         if roles:
             # Catalog branch -> reviewed attack role, where the charge-level research re-resolved the branches the
             # read-only mapper matched heuristically (api/target.lua resolves support:attack(name) through it).

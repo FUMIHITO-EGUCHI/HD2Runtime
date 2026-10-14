@@ -55,7 +55,9 @@ class ResearchTests(unittest.TestCase):
         self.assertIn('heatsink is changed', blocked['heat.overheat_cooldown'])
         self.assertNotIn('20.0 s', blocked['heat.overheat_cooldown'])
         player = load('sdk/PlayerWeaponAuthoringCapabilities.json')
-        self.assertNotIn('heat.cool_per_second_overheated', json.dumps(player['weapons']))
+        owners = [w['name'] for w in player['weapons'] if any(
+            f['semanticFieldId'] == 'heat.cool_per_second_overheated' for f in w['fields'])]
+        self.assertEqual(owners, ['LAS-17 Double-Edge Sickle'])
         heat = load('sdk/PlayerWeaponHeatCapabilities.json')
         for weapon in heat['weapons']:
             for field in weapon.get('fields', []):

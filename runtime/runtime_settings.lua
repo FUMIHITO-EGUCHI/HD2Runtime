@@ -28,6 +28,8 @@ M.ITEMS={
         description='Problems before a launch, and how to fix them.'},
     {key='version_label',label='Version label',
         description='The HD2Runtime build, bottom left aboard the ship.'},
+    {key='ui_sounds',label='Menu sounds',
+        description='Play interface sounds when opening, closing or changing this menu.'},
     {key='startup_progress',label='Startup progress',
         description='The asset loading panel, top right, while mods load.'},
 }
@@ -51,7 +53,7 @@ M.COLOUR={panel={11,14,18,240},header={7,9,12,250},footer={7,9,12,250},rail={255
     hover={255,255,255,10},shadow={0,0,0,110},error={255,96,84,255},error_soft={255,96,84,44}}
 M.SIZE={title=22,heading=13,body=16,small=13,tiny=12}
 M.CAP_OFFSET=(49.25-34.75/2)/56   -- FS Sinclair: from a line's vertical centre to its top
-M.W,M.HEADER,M.FOOTER,M.ROW,M.PAD=700,58,46,52,18
+M.W,M.HEADER,M.FOOTER,M.ROW,M.PAD=700,58,46,46,18
 M.OPTION=30   -- a row of the language list
 
 local function log(text)pcall(log_module.emit,'[HD2Runtime] settings '..text)end
@@ -60,6 +62,23 @@ local function performance()return require('hd2runtime/runtime/performance_panel
 -------------------------------------------------------------------------------------------------- the values --
 -- The Runtime's store (only inside the game: offline, and in tests unless replaced, the values live in memory).
 M.hooks={}
+function M.hooks.block(on)
+    return require('hd2runtime/runtime/mouse_wheel').block(on and{keyboard=true,mouse=true}or false,'hd2runtime.settings')
+end
+function M.hooks.sound(event)return require('hd2runtime/runtime/sound_events').play(M.OWNER,event)end
+local sound_last=-math.huge
+local sound_failed={}
+local SOUND={open='ui/slot_select',back='ui/picker_close',click='ui/generic_select'}
+function M.sound(kind)
+    if not M.enabled('ui_sounds')then return end
+    local event=SOUND[kind];if not event then return end
+    local t=require('hd2runtime/runtime/events').state.now or 0
+    if t-sound_last<0.04 or(sound_failed[event]and t-sound_failed[event]<30)then return end
+    sound_last=t
+    local ok,handle=pcall(M.hooks.sound,event)
+    sound_failed[event]=not(ok and handle)and t or nil
+end
+
 function M.hooks.store()
     if type(rawget(_G,'stingray'))~='table'then return nil end
     return require('hd2runtime/runtime/mod_store').open(M.OWNER)
@@ -168,13 +187,16 @@ function M.layout(width,height,scale)
     local by=L.size.y+L.size.h/2-14*k
     L.size_up={x=L.size.x+L.size.w-30*k,y=by,w=30*k,h=28*k}
     L.size_down={x=L.size_up.x-110*k,y=by,w=30*k,h=28*k}
-    cy=cy+(M.ROW+M.PAD)*k
-    L.messages_y=cy
-    cy=cy+22*k
-    for _,item in ipairs(M.ITEMS)do
+    cy=cy+M.ROW*k
+    local function add_row(item)
         L.rows[#L.rows+1]={item=item,box={x=x+M.PAD*k,y=cy,w=w-2*M.PAD*k,h=(M.ROW-6)*k},y=cy}
         cy=cy+M.ROW*k
     end
+    add_row(KNOWN.ui_sounds)
+    cy=cy+M.PAD*k
+    L.messages_y=cy
+    cy=cy+22*k
+    for _,item in ipairs(M.ITEMS)do if item.key~='ui_sounds'then add_row(item)end end
     L.about_y=cy+M.PAD*k
     L.close={x=x+w-50*k,y=y+12*k,w=36*k,h=34*k}
     -- the open language list: below its row, every option (Automatic first), kept on screen
@@ -213,6 +235,14 @@ function M.language_text(code)
 end
 -- One frame of the panel (the overlay's draw function).
 function M.draw(d,mouse,input)
+    -- One breadcrumb on entering a view, not a frame-by-frame trace. A native GUI crash cannot be caught by pcall.
+    local view=panel.tab..(panel.tab=='performance'and('/'..performance().mode())or(panel.menu and'/languages'or''))
+    d._diagnostic_view='F10 '..view
+    if panel.draw_view~=view then
+        panel.draw_view=view
+        log(('layout begin: %s (%sx%s)'):format(view,tostring(d.width),tostring(d.height)))
+    end
+    pcall(M.hooks.block,true)
     local C,S=M.COLOUR,M.SIZE
     local L=M.layout(d.width,d.height,d.scale)
     local k,x,y,w=L.k,L.x,L.y,L.w
@@ -247,13 +277,13 @@ function M.draw(d,mouse,input)
     d:rect(x,fy,w,M.FOOTER*k,C.footer,1)
     d:rect(x,fy,w,math.max(1,k),C.line_strong,2)
     local footer_text=panel.tab=='performance'
-        and T('Time spent in HD2Runtime and its mods, not in the game itself  |  F10 or Esc closes')
+        and T('Measured Lua callbacks only; native hooks and asset costs are not individually measurable | F10 or Esc closes')
         or T('F10 or Esc closes  |  click a row to turn it on or off')
     local footer=d:wrap(footer_text,w-2*M.PAD*k,{size=S.small*k,lines=1})
     text(d,footer[1]or'',x+M.PAD*k,fy+M.FOOTER*k/2,S.small*k,C.faint,'body')
     local escape=input and input.pressed('ESCAPE')
     if panel.tab=='performance'then
-        performance().draw({d=d,text=text,C=C,S=S},L.content,k)
+        performance().draw({d=d,text=text,C=C,S=S,sound=M.sound},L.content,k,mouse,press)
         if press and tab_hit then M.select_tab(tab_hit.tab.id)
         elseif(press and close_hover)or escape then M.close()end
         return L
@@ -342,14 +372,14 @@ function M.draw(d,mouse,input)
     -- Input: the list first; a click on a row toggles it; a tab or a size button; the x or Esc closes.
     if menu then
         if press then
-            if picked then M.set_value('language',picked.option.code)end
+            if picked then M.set_value('language',picked.option.code);M.sound('click')else M.sound('back')end
             panel.menu=nil
-        elseif escape then panel.menu=nil end
+        elseif escape then panel.menu=nil;M.sound('back')end
         return L
     end
-    if press and language_hover then panel.menu=true;return L end
-    if press and hit then M.set(hit.item.key,not M.enabled(hit.item.key))end
-    if press and size_hit then M.step_ui_scale(size_hit.step)end
+    if press and language_hover then log('language list requested');panel.menu=true;M.sound('click');return L end
+    if press and hit then log('toggle requested: '..hit.item.key);M.sound('click');M.set(hit.item.key,not M.enabled(hit.item.key))end
+    if press and size_hit then M.step_ui_scale(size_hit.step);M.sound('click')end
     if press and tab_hit then M.select_tab(tab_hit.tab.id)end
     if(press and close_hover)or escape then M.close()end
     return L
@@ -359,7 +389,8 @@ end
 function M.select_tab(id)
     assert(id=='settings'or id=='performance','unknown HD2Runtime settings tab: '..tostring(id))
     if id~=panel.tab then
-        panel.tab=id;panel.menu=nil
+        log('tab requested: '..panel.tab..' -> '..id)
+        if M.visible()then M.sound('click')end;panel.tab=id;panel.menu=nil
         if id~='performance'then require('hd2runtime/runtime/perf_watch').record(false);performance().reset()end
     end
     return id
@@ -367,6 +398,8 @@ end
 function M.tab()return panel.tab end
 function M.open(tab)
     if tab then M.select_tab(tab)end
+    log('panel opening: '..panel.tab)
+    panel.draw_view=nil
     if not panel.overlay then
         local overlay=require('hd2runtime/runtime/mod_overlay')
         panel.overlay=overlay.open(M.OWNER,{id='settings',visible=false,layer=980})
@@ -381,11 +414,16 @@ function M.open(tab)
             end
         end)
     end
+    pcall(M.hooks.block,true)
+    if not M.visible()then M.sound('open')end
     panel.was_left=true   -- a held button is not a click
     panel.overlay:show(true)
     log('panel opened')
 end
 function M.close()
+    if M.visible()then log('panel closing: '..panel.tab)end
+    if M.visible()then M.sound('back')end
+    pcall(M.hooks.block,false)
     panel.menu=nil
     require('hd2runtime/runtime/perf_watch').record(false)
     performance().reset()
@@ -399,10 +437,14 @@ function M.visible()return panel.overlay~=nil and panel.overlay:status().visible
 function M.start()
     if panel.binding then return panel.binding end
     local input=require('hd2runtime/runtime/input')
-    panel.binding=input.bind(M.BINDING,{key=M.KEY,on_press=function()M.toggle()end},M.OWNER)
+    -- (also on the game's own keybind page with Mod Bindings Menu installed: runtime/mod_bindings_bridge.lua)
+    panel.binding=input.bind(M.BINDING,{key=M.KEY,on_press=function()M.toggle()end,
+        native={label='Open / close HD2Runtime settings',category='HD2Runtime'}},M.OWNER)
     return panel.binding
 end
 function M.reset_for_tests()
+    pcall(M.hooks.block,false)
+    sound_last=-math.huge;sound_failed={}
     if panel.overlay then pcall(panel.overlay.close,panel.overlay)end
     panel={overlay=nil,binding=nil,was_left=false,tab='settings'}
     require('hd2runtime/runtime/perf_watch').record(false)

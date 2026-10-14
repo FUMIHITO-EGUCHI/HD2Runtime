@@ -1,0 +1,867 @@
+{
+  "build": "F5FEE03DCFDB",
+  "coverage": {
+    "directorRows": {
+      "composition": 452,
+      "demolition_template": 9,
+      "difficulty": 10,
+      "roster": 191
+    },
+    "entityFields": 38787,
+    "entityTargetBatches": 4990,
+    "publicApi": {
+      "ensure": true,
+      "patch": true,
+      "plan": true,
+      "steadyState": true,
+      "transaction": true
+    }
+  },
+  "liveGameTested": false,
+  "mode": "snapshot-overlay",
+  "protectionChanges": 350,
+  "rejections": [
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "CONFLICT",
+    "native code changed",
+    "row identity changed",
+    "Ship state",
+    "allow_shared",
+    "allow_unverified_effect",
+    "reviewed range",
+    "reviewed range",
+    "read-only",
+    "ambiguous"
+  ],
+  "roundTrips": [
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0004",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0004",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0004",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0004",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0058",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0058",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0058",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0058",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0070",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0070",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0070",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0070",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0165",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0165",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0165",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0165",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0210",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0210",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0210",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0210",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0236",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0236",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0236",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0236",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0269",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0269",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0269",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0269",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0296",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0296",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0296",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0296",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0325",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0325",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0325",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0325",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0530",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0530",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0530",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0530",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0571",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0571",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0571",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0571",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0608",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0608",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0608",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0608",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0704",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0704",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0704",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0704",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0827",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0827",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0827",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0827",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0965",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0965",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0965",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0965",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0974",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0974",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0974",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0974",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_1046",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_1046",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_1046",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_1046",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_1048",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_2",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_1048",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_3",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_1048",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.patrol_clock_rate_players_4",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_1048",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "unit.scale_min",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "Charger",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "entity.health_change_rate",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "Charger",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "entity.health_change_rate_disabled",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "Charger",
+      "width": 1,
+      "writes": 1
+    },
+    {
+      "field": "entity.regeneration_cooldown",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "Charger",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "entity.regeneration_segments",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "Charger",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "entity.regeneration_change_rate",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "Charger",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "entity.zone_bleedout_change_rate",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "Charger",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "entity.health",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "il_spawner_ship",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "spawner.release_delay",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "il_spawner_ship",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "jammer.radius",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "cy_stratagem_blocker",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "transport.grid_dimension_0",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "illuminate_dropship",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "zone.fatal",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "spawner_factory_conscript_base",
+      "width": 1,
+      "writes": 1
+    },
+    {
+      "field": "shield.recharge_per_second",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0333",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "hive.refill_clock_rate_players_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_0965",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "breach.emission_radius",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "unnamed_entity_1110",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "damage.standard_damage",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "tripod_tier_2",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "difficulty.encounter_points",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "10",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "composition.group_0_count",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "terminids/family_1/row_0",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "spawn.weight_1",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "terminids/row_0",
+      "width": 4,
+      "writes": 1
+    },
+    {
+      "field": "demolition.force",
+      "nonTargetBytesUnchanged": true,
+      "restored": true,
+      "target": "OrbitalBombardment",
+      "width": 4,
+      "writes": 1
+    }
+  ],
+  "runtimeVersion": "0.32.0",
+  "status": "VALIDATED",
+  "writes": 188
+}

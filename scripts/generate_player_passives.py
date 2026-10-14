@@ -237,7 +237,7 @@ def build() -> dict:
                 raise ValueError('modifier type ' + m['type'])
             modifiers.append({'key': m['key'], 'key_name': KEY_NAMES[m['key']], 'type': m['type'], 'value': m['value'],
                 'text': m.get('text')})
-        passives.append({'id': p['id'], 'name': p['name'], 'nameId': p['nameId'],
+        passives.append({'id': p['id'], 'name': p['name'], 'nameId': p['nameId'], 'icon':p['icon'],
             'package': None if p['package'] == '00000000' else p['package'], 'modifiers': modifiers,
             'armorKits': len(p['armorKits'])})
     passives.sort(key=lambda p: p['id'])

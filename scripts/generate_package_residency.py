@@ -108,6 +108,37 @@ def outputs(research_path=RESEARCH):
             'packageDependency': {'known': True, 'autoLoadSupported': True, 'derivation': 'passive_effect_package',
                 'package': None, 'packageNamed': False, 'liveTested': False, 'packageLiveLoaded': False,
                 'blocker': None}})
+    hud=json.loads((ROOT/'research/hud-package-residency-F5FEE03DCFDB.json').read_text())
+    assert hud['build']==research['build']
+    kinds={'weapons':'weapon','throwables':'throwable','factions':'faction','objectives':'objective','difficulties':'difficulty'}
+    difficulties=json.loads((ROOT/'research/hud-difficulties-F5FEE03DCFDB.json').read_text())
+    for key,entry in difficulties['difficulty'].items():
+        hud['sprites']['difficulties/'+key]={'atlas':'0x'+entry['atlas'],'page':entry['page']}
+    perks=json.loads((ROOT/'research/armor-perk-icons-F5FEE03DCFDB.json').read_text(encoding='utf8'))
+    perk_packages=json.loads((ROOT/'research/armor-perk-packages-F5FEE03DCFDB.json').read_text(encoding='utf8'))
+    assert perk_packages['build']==hud['build']
+    packages_by_id={p['package']:p for p in hud['packages']}
+    for p in perk_packages['packages']:
+        previous=packages_by_id.get(p['package'])
+        if previous:
+            p['hits']=list({(h['type'],h['name']):h for h in previous['hits']+p['hits']}.values())
+        packages_by_id[p['package']]=p
+    hud['packages']=list(packages_by_id.values())
+    kinds['passives']='passive'
+    for name,perk_icon in perks['perks'].items():
+        hud['sprites']['passives/'+name]={'atlas':perk_icon['atlas'],'page':perk_icon['page']}
+    for label,sprite in sorted(hud['sprites'].items()):
+        owners=[p for p in hud['packages'] if p['inBundleDatabase'] and
+            {'0x9199BB50B6896F02':sprite['atlas'],'0xCD4238C6A0C69E32':sprite['page']}.items()
+            <= {(r['type'],r['name']) for r in p['hits']}]
+        assert len(owners)==1,'HUD atlas/page has no unique proven package: '+label
+        p=owners[0];plural,name=label.split('/',1);key='game_icon/'+kinds[plural]+'/'+name
+        packages[p['package']]={'name':p['path'],'named':True,'inBundleDatabase':True}
+        dependencies[key]={'package':p['package'],'via':'hud_atlas_package','label':name+' HUD icon'}
+        public.append({'key':key,'label':name,'kind':'game_icon','packageDependency':{
+            'known':True,'autoLoadSupported':True,'derivation':'hud_atlas_package',
+            'package':p['path'].rsplit('/',1)[-1],'packageNamed':True,'liveTested':False,
+            'packageLiveLoaded':False,'blocker':None}})
     runtime = {'version': 1, 'build': research['build'],
         'loader': {'requestRva': g['requestRva'], 'releaseRva': g['releaseRva'],
             'requestProof': g['requestProof'], 'releaseProof': g['releaseProof'],

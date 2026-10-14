@@ -773,6 +773,27 @@ def build(research_path=RESEARCH):
                             [str(offset)]]}], displayName=DRONE_DEPOSIT_LABELS[field_id], unit='magazines',
                         uiGroup='drone_magazines', min=low, max=high, rangeReason=AMMO_RANGE_REASON))['instanceKey'])
             groups.append({'group': 'drone_magazines', 'fieldInstanceKeys': keys})
+        elif deposit and name == 'B-1 Supply Pack':
+            supply = json.loads((ROOT / 'research/supply-pack-F5FEE03DCFDB.json').read_text())
+            identity = supply['deposit']
+            assert (backpack['resource'], deposit['recordIndex'], deposit['indexRow']) == (
+                identity['resource'], identity['recordIndex'], identity['indexRow'])
+            labels = {'deposit.capacity': 'Supply box capacity', 'deposit.start_amount': 'Supply boxes at call-in',
+                'deposit.refill_amount': 'Supply boxes restored by resupply'}
+            keys = []
+            for field_id, offset, storage in (('deposit.capacity', 0, 'u32'), ('deposit.start_amount', 4, 'i32'),
+                    ('deposit.refill_amount', 8, 'u32')):
+                low, high = TEAM_RANGE[field_id]
+                keys.append(backpack_builder.add(name, target, field_id, deposit['values'][str(offset)],
+                    component_backing(deposit, backpack['resource'], offset, storage, owners_of(deposit)),
+                    extra={'displayName': labels[field_id], 'unit': 'boxes', 'uiGroup': 'supply_boxes',
+                        'min': low, 'max': high, 'rangeReason': AMMO_RANGE_REASON,
+                        'acknowledgement': 'allow_unverified_effect',
+                        'acknowledgementReason': 'Native deposit readers verified offline; not yet tested in game. '
+                            'These values control boxes carried, not the supplies delivered to a player. '
+                            'Starting boxes -1 means full. Refill adds at least one box, up to capacity.',
+                        'evidence': {**TEAM_EVIDENCE, 'research': 'research/supply-pack-F5FEE03DCFDB.json'}})['instanceKey'])
+            groups.append({'group': 'supply_boxes', 'fieldInstanceKeys': keys})
         elif deposit:
             keys = [backpack_builder.add(name, target, field_id, deposit['values'][str(offset)],
                 component_backing(deposit, backpack['resource'], offset, storage, owners_of(deposit)),

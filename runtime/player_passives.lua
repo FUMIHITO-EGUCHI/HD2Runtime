@@ -533,7 +533,7 @@ local function ensure_watch()
         end
         if clock<next_look then return end
         next_look=clock+M.EVERY
-        local started=metrics.now()
+        local started=metrics.start()
         local ok,why=pcall(look)
         if not ok then log('update failed: '..tostring(why))end
         metrics.elapsed('player_passives.tick',started)

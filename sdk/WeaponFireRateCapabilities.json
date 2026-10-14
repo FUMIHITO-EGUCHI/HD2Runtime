@@ -1,7 +1,7 @@
 {
   "contract": "hd2runtime.weapon.fire_rates.v1",
   "schemaVersion": 1,
-  "hd2RuntimeVersion": "0.31.3",
+  "hd2RuntimeVersion": "0.40.0",
   "nativeModel": "ProjectileWeaponComponent +4 rounds_per_minute: three f32 slots X/Y/Z. Y (+8) is the default and the only rate of a weapon without a ROF selector. With WeaponFunctionType ROF bound to an input, each press moves to the next slot (Y -> Z -> X), skipping 0.0 slots. Fixed storage: three rates at most.",
   "states": {
     "selectable": "The rate-of-fire selector is bound: every rate can be edited, added (up to three) or removed.",
@@ -3541,7 +3541,7 @@
     {
       "kind": "player",
       "weapon": "VG-70 Variable",
-      "state": "blocked",
+      "state": "selectable",
       "modes": [
         {
           "slot": "x",
@@ -3581,17 +3581,23 @@
         "z",
         "x"
       ],
-      "maxModes": null,
+      "maxModes": 3,
       "selector": {
         "bound": true,
         "input": "right",
         "bindableInputs": []
       },
       "overriddenWhenEquipped": [],
-      "writable": false,
-      "reason": "The weapon uses a charge or safety fire mode (Safety_Off, 7); only Automatic, Single and Burst are proven.",
-      "fields": null,
-      "acknowledgements": null,
+      "writable": true,
+      "reason": null,
+      "fields": {
+        "modes": "fire_rate.modes",
+        "default": "weapon.fire_rate",
+        "binding": []
+      },
+      "acknowledgements": [
+        "allow_unverified_effect"
+      ],
       "liveEvidence": null
     },
     {
@@ -4978,14 +4984,14 @@
     "byState": {
       "player:absent": 13,
       "player:addable": 50,
-      "player:blocked": 17,
-      "player:selectable": 1,
+      "player:blocked": 16,
+      "player:selectable": 2,
       "support:absent": 12,
       "support:addable": 9,
       "support:blocked": 11,
       "support:selectable": 3
     },
-    "writable": 63,
+    "writable": 64,
     "nativeSelectors": [
       "AR-61 Tenderizer",
       "GL-28 Belt-Fed Grenade Launcher",

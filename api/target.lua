@@ -491,7 +491,7 @@ function M.new(describe)
                     acknowledgements={'allow_shared','allow_unverified_effect'}}
             end
             table.sort(fields,function(a,b)return a.semanticFieldId<b.semanticFieldId end)
-            return {semanticId=entry.semanticId,name=entry.name,slot='magazine',
+            return {semanticId=entry.semanticId,name=entry.name,slot='magazine',kind=entry.kind or'magazine',
                 relationship=relationship,option=option_name,fields=fields}
         end
         return setmetatable({resource='weapon_attachment',attachment=entry.semanticId,path='magazine'},
@@ -1810,16 +1810,26 @@ function M.new(describe)
                     result[#result+1]={semanticFieldId=field.id,currentDefault=field.currentDefault,
                         editable=descriptor.editable,reason=field.reason,shared=descriptor.shared,
                         min=descriptor.min,max=descriptor.max,acknowledgement=descriptor.acknowledgement,
+                        grade=descriptor.grade,lifecycle=descriptor.lifecycle,semantics=descriptor.semantics,
                         sharedWithClasses=descriptor.sharedWithClasses}
                 end
             end
             return result
         end
         local function zone_identity(value)
+            assert(type(value)=='string'or type(value)=='number','damage zone name or index required')
             for _,zone in ipairs(entry.zones)do
-                if value==zone.id or value==zone.name or value==zone.wikiZone
+                if value==zone.id
                     or type(value)=='number'and zone.index==value then return zone end
             end
+            local found
+            for _,zone in ipairs(entry.zones)do
+                if value==zone.name or value==zone.wikiZone then
+                    assert(not found,'ambiguous damage zone name; use zone_<slot> or its numeric index')
+                    found=zone
+                end
+            end
+            if found then return found end
             error('unknown damage zone for '..entry.name..': '..tostring(value),0)
         end
         local methods={}
@@ -1827,6 +1837,7 @@ function M.new(describe)
             local sub={}
             function sub.describe()
                 return {name=entry.name,zone=zone.id,nativeName=zone.name,wikiZone=zone.wikiZone,
+                    nameCandidates=copy(zone.nameCandidates),actors=copy(zone.actors),
                     fields=public_fields('damage_zone',zone.id)}
             end
             return setmetatable({resource='enemy',enemy=entry.name,path='damage_zone',zone=zone.id},{__index=sub})
@@ -1849,6 +1860,7 @@ function M.new(describe)
                 return {name=entry.name,attack=attack.id,mountSlot=attack.slot,role=attack.role,
                     wikiAttacks=copy(attack.wikiAttacks),rowWikiMatches=copy(attack.rowWikiMatches),
                     sharedWithClasses=copy(attack.reviewedClassesReachingRow),
+                    sourceComponent=attack.sourceComponent,note=attack.note,
                     fields=public_fields('attack',nil,attack.id)}
             end
             return setmetatable({resource='enemy',enemy=entry.name,path='attack',attack=attack.id},{__index=sub})
@@ -1856,14 +1868,19 @@ function M.new(describe)
         function methods.describe()
             local zones,attacks={},{}
             for _,zone in ipairs(entry.zones)do
-                zones[#zones+1]={id=zone.id,nativeName=zone.name,wikiZone=zone.wikiZone}
+                zones[#zones+1]={id=zone.id,nativeName=zone.name,wikiZone=zone.wikiZone,
+                    nameCandidates=copy(zone.nameCandidates)}
             end
             for _,attack in ipairs(entry.attacks or{})do
                 attacks[#attacks+1]={id=attack.id,mountSlot=attack.slot,role=attack.role,
                     wikiAttacks=copy(attack.wikiAttacks)}
             end
             return {name=entry.name,className=entry.className,wikiName=entry.wikiName,kind=entry.kind,
+                displayName=entry.displayName,gameName=entry.gameName,nameSource=entry.nameSource,variantLabel=entry.variantLabel,
+                fullDisplayName=entry.fullDisplayName,
                 faction=entry.faction,semanticId=entry.semanticId,zones=zones,attacks=attacks,
+                components=copy(entry.components),transport=copy(entry.transport),demolition=copy(entry.demolition),
+                mountedEntities=copy(entry.mountedEntities),
                 fields=public_fields('entity')}
         end
         function methods.attack(_,identity_)return attack_target(attack_identity(identity_))end
@@ -1886,11 +1903,19 @@ function M.new(describe)
     function builders.structure(identity)return enemy_target(identity,'structure')end
     -- Every reviewed enemy / structure name ({kind=...} filters).
     function builders.enemies(filter)
-        local database=require('hd2runtime/domains/enemy_authoring')
+        local entries=require('hd2runtime/domains/enemy_writes').entries()
+        assert(filter==nil or type(filter)=='table','enemy filter must be a table')
+        local component=filter and filter.component
+        if component then
+            assert(type(component)=='string','component filter must be a name')
+            if not component:match('ComponentData$')then component=component..'ComponentData'end
+        end
         local names={}
-        for name,entry in pairs(database.enemies)do
+        for name,entry in pairs(entries)do
+            local has=not component
+            for _,c in ipairs(entry.components or(entry.pendingControls or{}).components or{})do if c==component then has=true end end
             if not filter or((not filter.kind or entry.kind==filter.kind)
-                and(not filter.faction or entry.faction==filter.faction))then names[#names+1]=name end
+                and(not filter.faction or entry.faction==filter.faction)and has)then names[#names+1]=name end
         end
         table.sort(names)
         return names
@@ -1971,6 +1996,9 @@ function M.new(describe)
                 fields[#fields+1]={semanticFieldId=field_id,instanceKey=field.instanceKey,
                     currentDefault=field.currentDefault,editable=field.editable,reason=field.reason,
                     range=field.range,shared=field.shared,
+                    type=field.type,displayName=field.displayName,unit=field.unit,
+                    statusSlot=field.statusSlot,statusAttach=field.statusAttach,
+                    allowedValues=copy(field.allowedValues),allowNone=field.allowNone,
                     acknowledgements=field.editable and(field.shared and{'allow_shared','allow_unverified_effect'}
                         or{'allow_unverified_effect'})or{}}
             end
@@ -1978,16 +2006,16 @@ function M.new(describe)
             return fields
         end
         local owned_target
-        local function status_keys()
+        local function status_keys(parent)
             local keys={}
             for label,owned in pairs(entry.targets)do
-                if owned.path=='status_effect'then keys[#keys+1]=owned end
+                if owned.path=='status_effect'and(not parent or(owned.parentPath or'explosion')==parent)then keys[#keys+1]=owned end
             end
             table.sort(keys,function(a,b)return a.slot<b.slot end)
             return keys
         end
-        local function status_target(identity_)
-            for _,owned in ipairs(status_keys())do
+        local function status_target(identity_,parent)
+            for _,owned in ipairs(status_keys(parent))do
                 if owned.key==identity_ or owned.label==identity_ or owned.slot==identity_ then
                     return owned_target('status_effect',owned.key)
                 end
@@ -2001,10 +2029,14 @@ function M.new(describe)
             function methods.describe()
                 return {throwable=entry.name,path=path,status=key,label=owned.label,fields=fields_of(owned)}
             end
-            if path=='explosion'then
-                function methods.status_effect(_,identity_)return status_target(identity_)end
+            if path=='detonation'then
+                function methods.payload_options(self,filter)return require('hd2runtime/api/payload_options').for_target(self,filter)end
+            end
+            if path=='explosion'or path=='arc'then
+                function methods.arc()return owned_target('arc')end
+                function methods.status_effect(_,identity_)return status_target(identity_,path)end
                 function methods.status_effects()
-                    local result={};for index,item in ipairs(status_keys())do
+                    local result={};for index,item in ipairs(status_keys(path))do
                         result[index]=owned_target('status_effect',item.key)end
                     return result
                 end
@@ -2025,9 +2057,15 @@ function M.new(describe)
                 identityStatus=entry.identityStatus,targets=targets,fields=fields_of(entry.targets.throwable)}
         end
         function methods.detonation()return owned_target('detonation')end
+        function methods.flight()return owned_target('flight')end
+        function methods.pulse()return owned_target('pulse')end
+        function methods.arc()return owned_target('arc')end
         function methods.explosion()return owned_target('explosion')end
         function methods.status_effect(_,identity_)return status_target(identity_)end
-        function methods.status_effects()return owned_target('explosion'):status_effects()end
+        function methods.status_effects()
+            local result={};for index,item in ipairs(status_keys())do result[index]=owned_target('status_effect',item.key)end
+            return result
+        end
         function methods.shrapnel()return owned_target('shrapnel')end
         function methods.bomblets()return owned_target('bomblets')end
         function methods.damage()return owned_target('damage')end

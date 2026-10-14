@@ -107,8 +107,10 @@ class CatalogueTests(unittest.TestCase):
         catalog = json.loads((ROOT / 'sdk/AttackOutputCapabilities.json').read_text())
         sources = {(s['weapon'], s['attack']): s for s in catalog['projectileSources']}
         wasp = sources[(WASP, 'primary')]
-        self.assertEqual(wasp['status'], 'BLOCKED')
-        for text in ('ProjectileEntity', 'missile.*', 'function_missile.*', 'projectile 43', 'not swapped'):
+        # 0.40.0 RC7 (research/docs/wasp-projectile-swaps-rc7.md): the carried hit-projectile selectors of both missile
+        # modes are proven and editable; the missile entity keeps its own flight.
+        self.assertEqual(wasp['status'], 'ACTIVE_DIRECT')
+        for text in ('missile damage', 'Missile flight', 'missile entity', 'Not yet gameplay-tested'):
             self.assertIn(text, wasp['reason'])
         self.assertIn('not run by the projectile system', sources[('TD-110 Maelstrom / slot_3', 'primary')]['reason'])
         self.assertIn('not a missile', sources[('P-34 Breacher', 'primary')]['reason'])

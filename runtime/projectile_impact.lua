@@ -528,7 +528,7 @@ end
 
 -- One update, timed for hd2.diagnostics.telemetry ('projectile_impact.tick').
 local function tick(dt)
-    local started=metrics.now()
+    local started=metrics.start()
     step(dt)
     metrics.elapsed('projectile_impact.tick',started)
 end

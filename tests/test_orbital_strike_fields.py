@@ -19,6 +19,9 @@ import build_profile
 PATTERN = ROOT / 'research/bombardment-payload-F5FEE03DCFDB.json'
 TIMING = ROOT / 'research/beacon-redirect-F5FEE03DCFDB.json'
 FIELDS = {   # field id: (offset, storage, minimum, maximum, read timing)
+    'orbital.walking_speed': (0x60, 'f32', 0, 15, 'creation'),
+    'orbital.aim_step_min': (0x10, 'f32', 0, 100, 'live'),
+    'orbital.aim_step_max': (0x14, 'f32', 0, 100, 'live'),
     'orbital.salvos': (0x18, 'u32', 1, 16, 'creation'),
     'orbital.shells_per_salvo': (0x04, 'u32', 1, 64, 'creation'),
     'orbital.shell_interval': (0x08, 'f32', 0, 10, 'live'),
@@ -185,10 +188,10 @@ class StrikeFieldSnapshotOverlayTests(unittest.TestCase):
     def test_overlay_validation(self):
         result = self.result
         self.assertEqual(result['status'], 'VALIDATED')
-        self.assertEqual((result['patternNoOps'], result['callInNoOps']), (80, 94))
-        self.assertEqual(result['rejections'], {'acknowledgement': 174, 'conflict': 1, 'recordProof': 1, 'value': 15})
+        self.assertEqual((result['patternNoOps'], result['callInNoOps']), (110, 94))
+        self.assertEqual(result['rejections'], {'acknowledgement': 204, 'conflict': 1, 'recordProof': 1, 'value': 15})
         trips = {(t['stratagem'], t['field']): t for t in result['roundTrips']}
-        self.assertEqual(len(trips), 9)
+        self.assertEqual(len(trips), 13)
         for trip in trips.values():
             self.assertEqual(trip['writes'], 1)
             for key in ('protectionRestored', 'otherBytesUnchanged', 'inverseRestored'):

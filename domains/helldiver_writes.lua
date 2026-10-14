@@ -27,10 +27,11 @@ local M={}
 local NAME=database.name
 M.ZONES={}
 for _,zone in ipairs(database.zones)do M.ZONES[#M.ZONES+1]=zone.id end
-local RECORDS={avatar=database.avatar,health=database.health}
+local RECORDS={avatar=database.avatar,health=database.health,inventory=database.inventory}
 
 -- The runtime profile plus the AvatarComponentData table framing (the entity catalog reads components by name).
-local view_profile=setmetatable({components=setmetatable({[database.avatar.component]=database.avatar.layout},
+local view_profile=setmetatable({components=setmetatable({[database.avatar.component]=database.avatar.layout,
+    [database.inventory.component]=database.inventory.layout},
     {__index=profile.components})},{__index=profile})
 
 local function finite(value)return type(value)=='number'and value==value and value>-math.huge and value<math.huge end
@@ -68,7 +69,9 @@ local function descriptor(field)
             indexRow=record.indexRow,ownerCount=record.ownerCount,uniqueOwner=record.uniqueOwner,offset=field.offset,
             storage=field.storage,width=4,guards=guards},
         shared=true,allowSharedRequired=true,sharedReason=database.sharedReason,
-        acknowledgement='allow_unverified_effect',acknowledgementReason=database.unverifiedReason,
+        acknowledgement='allow_unverified_effect',acknowledgementReason=field.record=='inventory'
+            and('Supply refill consumer verified offline; not tested in game. '..field.semantics)
+            or database.unverifiedReason,
         operationGroup='helldiver/'..field.record}
     descriptors[field]=cached
     return cached
@@ -197,7 +200,7 @@ function M.names_for(specs)
         for _,change in ipairs(spec.changes)do wanted[change.descriptor.backing.component]=true end
     end
     local names={}
-    for _,name in ipairs({database.avatar.component,database.health.component})do
+    for _,name in ipairs({database.avatar.component,database.health.component,database.inventory.component})do
         if wanted[name]then names[#names+1]=name end
     end
     return names

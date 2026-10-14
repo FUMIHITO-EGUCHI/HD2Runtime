@@ -5156,8 +5156,8 @@ EXTRAS['proof-text-write-refused'] = {'menu': MENU_STUB, 'after': PROOF_TEXT_WRI
     'seedFamily': True, 'seedRegistryFull': True}
 
 
-# RuntimeVersionWarningTest (requires 0.32.0; raised at each minor release so it stays above the installed runtime)
-# and three more wrapped mods, loaded as the loader would: a prerelease requirement above it (0.32.1-rc.1), one equal to the installed runtime and one older. The two too-new mods fail
+# RuntimeVersionWarningTest (requires 0.41.0) and three more wrapped mods, loaded as the loader would: a prerelease
+# requirement above it (0.41.1-rc.1), one equal to the installed runtime and one older. The two too-new mods fail
 # closed and are reported; the dialog (presenter stubbed) appears once, only after the game state is Ship for five
 # polls, naming the highest requirement; equal and older mods start and never warn.
 VERSION_WARNING_LIVE = r'''
@@ -5170,17 +5170,17 @@ return function(frame,watches,counts,lines)
  step('too-new mods fail closed, equal and older mods start',started[1][1]==false and started[2][1]==false
   and tostring(started[1][2]):find('dependency version mismatch',1,true)and started[3][1]==true and started[4][1]==true,
   tostring(started[1][2]))
- step('each too-new mod is logged once with its exact requirement',count('requires HD2Runtime 0.32.0 or newer')==1
-  and count('requires HD2Runtime 0.32.1-rc.1 or newer')==1 and count('needs_equal')==0 and count('needs_older')==0,
+ step('each too-new mod is logged once with its exact requirement',count('requires HD2Runtime 0.41.0 or newer')==1
+  and count('requires HD2Runtime 0.41.1-rc.1 or newer')==1 and count('needs_equal')==0 and count('needs_older')==0,
   table.concat(lines,' | '):sub(1,400))
  step('no warning before the ship is stable',#shown==0,tostring(#shown))
  for _=1,120 do frame()end
  local installed=compatibility.installed()
  step('one aggregated warning with the highest requirement',#shown==1 and shown[1].title=='HD2Runtime update required'
   and shown[1].message=='One or more installed mods require a newer HD2Runtime version.\n\nRequired version: '
-   ..'0.32.1-rc.1\nInstalled version: '..installed..'\n\nPlease update HD2Runtime.',
+   ..'0.41.1-rc.1\nInstalled version: '..installed..'\n\nPlease update HD2Runtime.',
   shown[1]and shown[1].message or'none')
- compatibility.require_runtime('mods/test/needs_032','0.32.0','Repeat')
+ compatibility.require_runtime('mods/test/needs_033','0.41.0','Repeat')
  for _=1,120 do frame()end
  step('once per session',#shown==1 and count('HD2Runtime update warning shown')==1 and compatibility.status().shown,
   tostring(#shown))
@@ -5202,7 +5202,7 @@ def version_warning_addon():
     loader.loader.exec_module(sdk)
     installed = (ROOT / 'VERSION').read_text().strip()
     mods = [example('RuntimeVersionWarningTest'),
-        sdk.wrap_addon('mods/test/needs_0321', '0.32.1-rc.1', 'return true', 'Needs0321'),
+        sdk.wrap_addon('mods/test/needs_0331', '0.41.1-rc.1', 'return true', 'Needs0331'),
         sdk.wrap_addon('mods/test/needs_equal', installed, 'return true', 'NeedsEqual'),
         sdk.wrap_addon('mods/test/needs_older', '0.1.0', 'return true', 'NeedsOlder')]
     return ('''local compatibility=require('hd2runtime/api/compatibility')
@@ -5253,7 +5253,141 @@ end
 EXTRAS['example-auto-supply-pack-test'] = {'after': PLAYER_EQUIPMENT_LIVE, 'readOnly': True}
 
 
+ENEMY_CONTROLS = r'''local hd2=require('mods/skyeshade/hd2runtime')
+assert(hd2.enemy('illuminate_dropship'):describe().displayName=='Warp Ship')
+assert(hd2.enemy('spawner'):describe().displayName=='Factory Strider')
+assert(hd2.structure('cy_stratagem_blocker'):describe().displayName=='Stratagem Jammer')
+local watches={}
+local function edit(id,target,field,expect,value)
+ watches[#watches+1]=hd2.ensure({patch={id=id,target=target,field=field,expect=expect,value=value,
+  allow_shared=true,allow_unverified_effect=true}})
+end
+edit('charger-scale',hd2.enemy('Charger'),'unit.scale_min',1,1.5)
+edit('jammer-radius',hd2.structure('cy_stratagem_blocker'),'jammer.radius',150,75)
+edit('ship-capacity',hd2.enemy('illuminate_dropship'),'transport.grid_dimension_0',5,4)
+edit('difficulty-budget',hd2.enemies.difficulty(10),'difficulty.encounter_points',600,450)
+edit('composition-count',hd2.enemies.composition('terminids/family_1/row_0'),'composition.group_0_count',7,6)
+edit('roster-weight',hd2.enemies.roster('terminids/row_0'),'spawn.weight_1',1,0.5)
+edit('demolition-force',hd2.enemies.demolition_template('OrbitalBombardment'),'demolition.force',50,45)
+return watches
+'''
+
+# Asset preloading requests packages without editing gameplay data. Its RESIDENT
+# watch and native package request are still required by the packaged checks.
+EXTRAS['example-eagle-strafing-run-assets']={'readOnly':True,'watches':1,'packageRequests':1}
+EXTRAS['hud-atlas-assets']={'readOnly':True,'watches':1,'packageRequests':2}
+
+KNIFE_MELEE = r'''local hd2=require('mods/skyeshade/hd2runtime')
+local watches={}
+local function edit(id,target,field,expect,value)
+ watches[#watches+1]=hd2.ensure({patch={id=id,target=target,field=field,expect=expect,value=value,
+  allow_shared=true,allow_unverified_effect=true}})
+end
+edit('knife-speed',hd2.throwable('K-2 Throwing Knife'):flight(),'throwable.launch_speed_override',0,50)
+edit('knife-spin',hd2.throwable('K-2 Throwing Knife'):flight(),'throwable.spin_min_x',-55,-25)
+edit('saber-reach',hd2.melee('CQC-2 Saber'):zone(1),'melee.volume_z',0.85,1.5)
+edit('hammer-stamina',hd2.melee('CQC-20 Breaching Hammer'),'melee.stamina_cost',0.05,0)
+edit('bash-damage',hd2.melee('AR-23 Liberator'):zone(1),'damage.standard_damage',75,150)
+return watches
+'''
+
 SCENARIOS = {
+    'shield-accelerator': lambda: r'''local hd2=require('mods/skyeshade/hd2runtime')
+local watches={}
+for i,item in ipairs({
+ {hd2.throwable('G/SH-39 Shield'):shield(),'shield.recharge_delay',20,2},
+ {hd2.throwable('G/SH-39 Shield'):shield(),'shield.broken_recharge_delay',20,3},
+ {hd2.throwable('G/SH-39 Shield'):shield(),'shield.recharge_rate',0,50},
+ {hd2.weapon('PLAS-39 Accelerator Rifle'),'charge.burst_shots',2,4},
+ {hd2.weapon('PLAS-39 Accelerator Rifle'),'charge.burst_interval_seconds',0.11999999731779099,0.2},
+ {hd2.weapon('PLAS-39 Accelerator Rifle'),'charge.explode_at_overcharge',true,false},
+ {hd2.weapon('PLAS-39 Accelerator Rifle'),'fire_mode.modes',{'single'},{'single','unsafe'}},
+})do
+ watches[#watches+1]=hd2.ensure({patch={id='dev4-'..i,target=item[1],field=item[2],expect=item[3],value=item[4],
+  allow_unverified_effect=true}})
+end
+return watches
+''',
+    'hud-atlas-assets': lambda: r'''local hd2=require('mods/skyeshade/hd2runtime')
+return hd2.require_assets({id='hud-atlas-test',targets={
+ hd2.resources.game_icon('weapon','AR-23 Liberator'),
+ hd2.resources.game_icon('throwable','G-31 Arc'),
+ hd2.resources.game_icon('faction','automatons'),
+ hd2.resources.game_icon('objective','cy_destroy_stratagem_blocker'),
+}})
+''',
+    'belt-urchin': lambda: r'''local hd2=require('mods/skyeshade/hd2runtime')
+for _,item in ipairs({{'weapon','AR-23 Liberator','mask'},{'throwable','G-109 Urchin','mask'},
+ {'faction','illuminate','mask'},{'objective','cy_destroy_stratagem_blocker','image'}})do
+ local icon=assert(hd2.resources.game_icon(item[1],item[2]));assert(icon:describe().mode==item[3])
+end
+local source=hd2.support_weapon('GL-28 Belt-Fed Grenade Launcher'):projectile_source()
+assert(source.writable)
+return {
+ hd2.ensure({patch={id='belt-shotgun',target=source.target,field=source.field,expect=source.expect,
+  value=hd2.attack_output('SG-225 Breaker'),allow_shared=true,allow_unverified_effect=true,allow_unverified_reference=true}}),
+ hd2.ensure({patch={id='urchin-plasma',target=hd2.throwable('G-109 Urchin'):pulse(),
+  field='throwable.pulse_explosion',expect=hd2.explosion('throwable/g109_urchin/detonation'),
+  value=hd2.explosion('support_weapon/plas45_epoch/impact'),allow_shared=true,
+  allow_unverified_effect=true,allow_unverified_reference=true}}),
+}
+''',
+    'explosion-arcs': lambda: r'''local hd2=require('mods/skyeshade/hd2runtime')
+local watches={}
+for i,item in ipairs({
+ {hd2.support_weapon('GL-52 De-Escalator'):attack('primary_impact_arc'),'arc.range',10,20},
+ {hd2.support_weapon('GL-52 De-Escalator'):attack('primary_impact_arc_status_37'),'status.strength',1.75,3},
+ {hd2.throwable('G-31 Arc'):explosion():arc(),'arc.max_split',2,4},
+ {hd2.throwable('G-31 Arc'):arc(),'damage.standard_damage',100,200},
+})do
+ watches[#watches+1]=hd2.ensure({patch={id='explosion-arc-'..i,target=item[1],field=item[2],expect=item[3],value=item[4],
+  allow_shared=true,allow_unverified_effect=true}})
+end
+local changes={};local types={'stun_small','fire','gas','poison'}
+for slot=1,4 do
+ changes[#changes+1]={field='damage.status_'..slot..'_type',expect=slot==1 and 'stun_small'or'none',value=types[slot]}
+ changes[#changes+1]={field='damage.status_'..slot..'_strength',expect=slot==1 and 8 or 0,value=slot}
+end
+watches[#watches+1]=hd2.ensure({transaction={id='arc-four-statuses',target=hd2.throwable('G-31 Arc'):arc(),
+ changes=changes,allow_shared=true,allow_unverified_effect=true}})
+return watches
+''',
+    'reload-heat': lambda: r'''local hd2=require('mods/skyeshade/hd2runtime')
+local watches={}
+for i,item in ipairs({
+ {hd2.weapon('P-4 Senator'),'reload.duration',2.799999952316284,1.25},
+ {hd2.weapon('AR-23 Liberator'):magazine_attachment(),'attachment.reload_duration',3,1.5},
+ {hd2.weapon('LAS-17 Double-Edge Sickle'),'heat.fire_rate_multiplier_max',1.100000023841858,2},
+ {hd2.weapon('LAS-17 Double-Edge Sickle'),'heat.level_1.damage.standard_damage',55,100},
+ {hd2.weapon('LAS-17 Double-Edge Sickle'),'heat.level_3.self_damage.standard_damage',100,0},
+})do
+ watches[#watches+1]=hd2.ensure({patch={id='reload-heat-'..i,target=item[1],field=item[2],expect=item[3],value=item[4],
+  allow_shared=true,allow_unverified_effect=true}})
+end
+return watches
+''',
+    'throwable-four-statuses': lambda: r'''local hd2=require('mods/skyeshade/hd2runtime')
+local watches={}
+for i,item in ipairs({{hd2.throwable('G-12 High Explosive'):explosion(),'explosion.damage.'},
+ {hd2.throwable('K-2 Throwing Knife'):damage(),'damage.'}})do
+ local changes={};local names={'fire','gas','stun_small','poison'}
+ for slot=1,4 do
+  changes[#changes+1]={field=item[2]..'status_'..slot..'_type',expect='none',value=names[slot]}
+  changes[#changes+1]={field=item[2]..'status_'..slot..'_strength',expect=0,value=slot}
+ end
+ watches[#watches+1]=hd2.ensure({transaction={id='four-effects-'..i,target=item[1],changes=changes,
+  allow_shared=true,allow_unverified_effect=true}})
+end
+local target=hd2.throwable('G-12 High Explosive'):detonation()
+for _,f in ipairs(target:describe().fields)do if f.semanticFieldId=='throwable.arming_delay'then
+ watches[#watches+1]=hd2.ensure({patch={id='arming-delay',target=target,field=f.semanticFieldId,
+  expect=f.currentDefault,value=f.currentDefault+0.25,allow_unverified_effect=true}})
+end end
+assert(#watches==3)
+return watches
+''',
+    'knife-melee': lambda: KNIFE_MELEE,
+    'enemy-controls': lambda: ENEMY_CONTROLS,
     'player-weapon-patch': lambda: SIMPLE_PATCH,
     'runtime-version-label': lambda: 'return true',
     'projectile-active-sources': lambda: PROJECTILE_SOURCES,

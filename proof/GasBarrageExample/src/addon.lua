@@ -1,5 +1,5 @@
 -- Generated from custom_stratagems.json by the HD2Runtime SDK (hd2.py custom-stratagem compile; format hd2runtime-custom-stratagems/1).
--- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 74eb58cf8f1d5c330f5056358f3f5390b5c78ab4294c54bcab484954db69f883.
+-- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 c6c478b26055c39bd497975074bd992aa0a7b1034c6d431db7be1d7f4e8220b2.
 local hd2=require('mods/skyeshade/hd2runtime')
 local mod=hd2.mod()
 mod:log('OrbitalGasBarrage 0.2.0 BUILD: select Orbital Gas Barrage in the custom panel, then a mission; call it with RIGHT RIGHT DOWN LEFT DOWN LEFT.')

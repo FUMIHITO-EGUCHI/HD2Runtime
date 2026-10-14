@@ -164,3 +164,9 @@ Nothing here has been tried in game. Strongly differentiated values make a live 
 - the head's `damage_multiplier` `'normal'` → `'none'`.
 
 Test in a mission: aboard the ship, the private copy hides speed changes.
+
+## Supply refill (0.40.0)
+
+`hd2.fields.helldiver.supply_stims_from_supply` (`supply_stims_from_supply`, field id `helldiver.supply.stims_from_supply`) controls base stims restored per refill. Vanilla is 2; the accepted range is 0?100. Supply Pack use and ordinary supplies share it, and armor modifiers and the effective carrying capacity still apply. Zero suppresses the base contribution; modifiers can still add stims.
+
+This field edits the shared Inventory definition with the usual ownership, expected-value, conflict and rollback guards. A private Inventory copy can shadow the type setting. The existing `private_copies()` report covers Avatar and Health copies only; it does not report Inventory copies. Offline snapshot validation includes a 2 ? 4 ? 2 round trip. No in-game result is claimed.

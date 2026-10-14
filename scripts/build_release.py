@@ -30,6 +30,10 @@ import generate_status_catalog
 import generate_status_effect_authoring
 import generate_weapon_movement
 import generate_enemy_authoring
+import generate_enemy_controls
+import generate_enemy_director
+import generate_missions
+import generate_melee_authoring
 import generate_helldiver_fields
 import generate_armor_stats
 import generate_player_passives
@@ -249,6 +253,10 @@ def main():
     generate_package_residency.generate(check=True)
     generate_weapon_movement.generate(check=True)
     generate_enemy_authoring.generate(check=True)
+    generate_enemy_controls.generate(check=True)
+    generate_enemy_director.generate(check=True)
+    generate_missions.generate(check=True)
+    generate_melee_authoring.generate(check=True)
     generate_helldiver_fields.generate(check=True)
     generate_armor_stats.generate(check=True)
     generate_player_passives.generate(check=True)
@@ -370,6 +378,12 @@ def main():
         (ROOT/'sdk/ThrowableAuthoringCapabilities.json').read_text())['summary']
     report['throwable_snapshot_validation']=json.loads(
         (ROOT/'validation/throwable-authoring-snapshot.json').read_text())
+    report['melee_authoring']=json.loads((ROOT/'sdk/MeleeAuthoringCapabilities.json').read_text())['summary']
+    report['knife_melee_snapshot_validation']=json.loads((ROOT/'validation/knife-melee-snapshot.json').read_text())
+    report['throwable_status_slots']=json.loads((ROOT/'validation/throwable-status-slots.json').read_text())
+    report['belt_urchin']=json.loads((ROOT/'validation/belt-urchin-snapshot.json').read_text())
+    report['explosion_arcs']=json.loads((ROOT/'validation/explosion-arcs-snapshot.json').read_text())
+    report['reload_heat']=json.loads((ROOT/'validation/reload-heat-snapshot.json').read_text())
     report['weapon_movement']=json.loads((ROOT/'sdk/WeaponMovementCapabilities.json').read_text())['summary']
     report['asset_dependencies']=json.loads(
         (ROOT/'sdk/AssetDependencyCapabilities.json').read_text())['summary']

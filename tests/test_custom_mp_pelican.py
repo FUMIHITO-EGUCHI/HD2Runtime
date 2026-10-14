@@ -88,6 +88,15 @@ class MirrorTests(unittest.TestCase):
         self.assertEqual(run(WORLD + SLOT + PAYLOAD + PELICANS + 'return (function()\n' + GATLING + WEAPON + MIRROR
             + body + "\nreturn 'ok'\nend)()\n"), b'ok')
 
+    def test_native_autocannon_at_native_rate_is_a_valid_mirror_noop(self):
+        self.check(r"""
+local world=client_copy();instances()
+local spec={pelican=9501,round='native',gatling=true,rpm=300,casing='own',client=true}
+local r,code,reason=in_update(function()return weapon.mirror_configure(world,8102,spec,'native mirror')end)
+assert(r and r.projectile==120 and r.verified,tostring(code)..': '..tostring(reason))
+assert(r.writes==0,'native round/rate/casing should already match its private copy')
+""")
+
     def test_a_client_mirrors_the_chin_gun_on_its_own_copy_only(self):
         self.check(r"""
 local world=client_copy()

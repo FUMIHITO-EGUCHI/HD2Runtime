@@ -739,6 +739,72 @@ assert(count('CUSTOM MP NATIVE PICKS (aboard the ship, read-only; the carrier-in
 return 'ok'
 ''')
 
+    def test_a_lobby_waiting_for_a_members_value_never_moves_a_carrier_slot(self):
+        # Report 2026-10-14 (0.40.0, two players, both with the Pelican Gatling): after a mission the lobby waited for
+        # the other player's value. The host's allocation then was its own alone, which cannot tell the other player's
+        # custom slot (holding the same carrier) from a native pick: its slot MOVED to Orbital Napalm Barrage ("another
+        # player picked it natively"). The value arrived and the carrier went back, the loadout screen was not open again
+        # before the launch: DESYNCED, locked, shown as the barrage in the mission.
+        self.flow(r'''
+rawset(_G,'ModOptionsMenu',MENU)
+local channel=require('hd2runtime/runtime/peer_channel');channel.reset_for_tests()
+local sync=require('hd2runtime/runtime/custom_mp_sync');sync.reset_for_tests()
+local VERSION=require('hd2runtime/domains/metadata').version
+assert(loadstring(GAS_ADDON,'@'..GAS_RESOURCE))()
+local ME,THEM,NEW='1111222233334444','5555666677778888','9999AAAABBBBCCCC'
+local function post(peer,seq,slots)
+    W.lobby_values[peer]=('hd2rt/1;%s;%s;%d;%s'):format(VERSION,custom.registry_hash(),seq,slots)
+end
+W.players({{peer=ME,avatar=100},{peer=THEM}},ME)
+W.lobby({members={ME,THEM},host=ME})
+post(THEM,1,'-,-,-,-')
+tick(40)
+ship({})
+tick(120)
+assert(count('custom multiplayer ENABLED')>=1,lines('CUSTOM MP'))
+-- This player picks it; then the other player picks the same custom stratagem, whose slot (and its stratagem record
+-- here) holds the same carrier: one carrier per id.
+select_into(0)
+SCREEN.set('selecting',false);tick(8)
+local selector=require('hd2runtime/runtime/stratagem_selector')
+local V=selector.virtual_slots()
+local kind,cid=V.slots[0].type,V.slots[0].token
+assert(V.slots[0].carrier and kind~=118)
+post(THEM,2,'orbital_gas_barrage,-,-,-')
+tick(120)
+assert(lines('CUSTOM MP STATE'):find('P2 5555666677778888: orbital_gas_barrage,-,-,-',1,true),lines('CUSTOM MP STATE'))
+local h=W.stratagem_hud({peer=LOCAL,slots={{type=22,code={}}},record={{type=124,granted=1},{type=22,granted=0}}})
+local R=require('hd2runtime/domains/stratagem_slots').record
+local other=h.record+R.stride
+W.write(other,W.u32(0x77778888)..W.u32(0x55556666))
+for k,e in ipairs({{124,1},{kind,0},{130,0}})do
+    local at=other+R.state+R.entries+(k-1)*R.entryStride
+    W.write(at,W.u32(e[1]));W.write(at+4,W.u32(4294967295));W.write(at+9,string.char(e[2]))
+end
+W.write(other+R.state+R.entryCount,W.u32(3))
+W.write(h.record+R.count,W.u32(2))
+tick(200)
+assert(count('stratagem selector MOVED (carrier')==0,'the lobby agrees on one carrier: '..lines('MOVED'))
+-- A member joins and has posted nothing yet: the lobby waits. The slot holds its carrier.
+W.players({{peer=ME,avatar=100},{peer=THEM},{peer=NEW}},ME)
+W.lobby({members={ME,THEM,NEW},host=ME})
+tick(20)
+assert(sync.view().status=='waiting',tostring(sync.view().status)..': '..tostring(sync.view().reason))
+tick(200)
+assert(sync.view().status=='waiting','still within the missing-value grace')
+assert(count('stratagem selector MOVED (carrier')==0,'moved while the lobby waited: '..lines('MOVED')..' | '..lines('SHIP'))
+assert(count('SHIP: carrier slots hold their carriers while the lobby is waiting')==1,lines('SHIP'))
+assert(selector.virtual_slots().slots[0].token==cid)
+-- The value arrives: the lobby agrees again on the carrier both slots hold; nothing ever moved.
+post(NEW,1,'-,-,-,-')
+tick(120)
+assert(sync.view().status=='enabled',tostring(sync.view().reason))
+tick(200)
+assert(count('stratagem selector MOVED (carrier')==0,'moved after the lobby agreed: '..lines('MOVED')..' | '..lines('SHIP'))
+assert(selector.virtual_slots().slots[0].token==cid)
+return 'ok'
+''')
+
     def test_the_early_presentation_survives_the_loading_screen_and_the_first_mission_frames(self):
         # r41 (the r40 test): the ship-side restore ran on the loading screen when only a teammate's slot was presented,
         # and in the mission's first frames (state Mission, its mode not set yet): the HUD then showed the carrier.

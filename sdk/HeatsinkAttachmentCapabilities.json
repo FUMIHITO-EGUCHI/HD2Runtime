@@ -1,0 +1,1378 @@
+{
+  "contract": "hd2runtime.weapon_attachment.heatsink.v1",
+  "schemaVersion": 1,
+  "hd2RuntimeVersion": "0.40.0",
+  "attachments": [
+    {
+      "semanticId": "weapon-attachment/v1/magazine/laser-heatsink-medium-standard/2df091d9af2eab4c",
+      "name": "Laser Heatsink. Medium Standard",
+      "nameUnique": true,
+      "slot": "magazine",
+      "kind": "heatsink",
+      "compatibleWeapons": [
+        "LAS-5 Scythe"
+      ],
+      "fieldInstanceKeys": [
+        "attachment:magazine/laser-heatsink-medium-standard/2df091d9af2eab4c:heatsink.starting",
+        "attachment:magazine/laser-heatsink-medium-standard/2df091d9af2eab4c:heatsink.spare",
+        "attachment:magazine/laser-heatsink-medium-standard/2df091d9af2eab4c:heatsink.from_supply",
+        "attachment:magazine/laser-heatsink-medium-standard/2df091d9af2eab4c:heat.capacity"
+      ],
+      "consumers": {
+        "nativeDefaultOf": [
+          "LAS-5 Scythe"
+        ],
+        "unlockListedFor": [
+          "LAS-5 Scythe"
+        ]
+      }
+    },
+    {
+      "semanticId": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87",
+      "name": "Laser Heatsink. Medium Improved Heatcapacity",
+      "nameUnique": true,
+      "slot": "magazine",
+      "kind": "heatsink",
+      "compatibleWeapons": [
+        "LAS-5 Scythe"
+      ],
+      "fieldInstanceKeys": [
+        "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:heatsink.starting",
+        "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:heatsink.spare",
+        "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:heatsink.from_supply",
+        "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:heat.capacity",
+        "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:attachment.reload_duration",
+        "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:attachment.ergonomics_modifier"
+      ],
+      "consumers": {
+        "nativeDefaultOf": [],
+        "unlockListedFor": [
+          "LAS-5 Scythe"
+        ]
+      }
+    },
+    {
+      "semanticId": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee",
+      "name": "Laser Heatsink. Medium Improved Cooldown",
+      "nameUnique": true,
+      "slot": "magazine",
+      "kind": "heatsink",
+      "compatibleWeapons": [
+        "LAS-5 Scythe"
+      ],
+      "fieldInstanceKeys": [
+        "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heatsink.starting",
+        "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heatsink.spare",
+        "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heatsink.from_supply",
+        "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heat.capacity",
+        "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heat.cool_per_second"
+      ],
+      "consumers": {
+        "nativeDefaultOf": [],
+        "unlockListedFor": [
+          "LAS-5 Scythe"
+        ]
+      }
+    },
+    {
+      "semanticId": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+      "name": "Laser Heatsink (Charge). Standard Heatsink",
+      "nameUnique": true,
+      "slot": "magazine",
+      "kind": "heatsink",
+      "compatibleWeapons": [
+        "LAS-22 Shear"
+      ],
+      "fieldInstanceKeys": [
+        "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heatsink.starting",
+        "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heatsink.from_supply",
+        "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heatsink.spare",
+        "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.heat_per_second",
+        "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.cool_per_second",
+        "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.cool_per_second_overheated",
+        "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.firing_charge",
+        "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.charge_gain_per_second",
+        "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.charge_loss_per_second"
+      ],
+      "consumers": {
+        "nativeDefaultOf": [
+          "LAS-22 Shear"
+        ],
+        "unlockListedFor": []
+      }
+    },
+    {
+      "semanticId": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+      "name": "Laser Heatsink (Charge). Extended Heatsink",
+      "nameUnique": true,
+      "slot": "magazine",
+      "kind": "heatsink",
+      "compatibleWeapons": [],
+      "fieldInstanceKeys": [
+        "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heatsink.starting",
+        "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heatsink.from_supply",
+        "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heatsink.spare",
+        "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.heat_per_second",
+        "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.cool_per_second",
+        "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.cool_per_second_overheated",
+        "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.firing_charge",
+        "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.charge_gain_per_second",
+        "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.charge_loss_per_second"
+      ],
+      "consumers": {
+        "nativeDefaultOf": [],
+        "unlockListedFor": []
+      }
+    },
+    {
+      "semanticId": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+      "name": "Laser Heatsink (Charge). Rapid Heatsink",
+      "nameUnique": true,
+      "slot": "magazine",
+      "kind": "heatsink",
+      "compatibleWeapons": [],
+      "fieldInstanceKeys": [
+        "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heatsink.starting",
+        "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heatsink.from_supply",
+        "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heatsink.spare",
+        "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.heat_per_second",
+        "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.cool_per_second",
+        "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.cool_per_second_overheated",
+        "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.firing_charge",
+        "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.charge_gain_per_second",
+        "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.charge_loss_per_second"
+      ],
+      "consumers": {
+        "nativeDefaultOf": [],
+        "unlockListedFor": []
+      }
+    },
+    {
+      "semanticId": "weapon-attachment/v1/magazine/laser-heatsink-blaster-standard/94f719641f659898",
+      "name": "Laser Heatsink (Blaster). Standard",
+      "nameUnique": true,
+      "slot": "magazine",
+      "kind": "heatsink",
+      "compatibleWeapons": [
+        "LAS-12 Sai"
+      ],
+      "fieldInstanceKeys": [],
+      "consumers": {
+        "nativeDefaultOf": [
+          "LAS-12 Sai"
+        ],
+        "unlockListedFor": [
+          "LAS-12 Sai"
+        ]
+      }
+    },
+    {
+      "semanticId": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807",
+      "name": "Laser Heatsink (Blaster). Improved Heatcapacity",
+      "nameUnique": true,
+      "slot": "magazine",
+      "kind": "heatsink",
+      "compatibleWeapons": [
+        "LAS-12 Sai"
+      ],
+      "fieldInstanceKeys": [
+        "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:heatsink.starting",
+        "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:heatsink.spare",
+        "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:heat.heat_per_shot",
+        "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:attachment.reload_duration",
+        "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:attachment.ergonomics_modifier"
+      ],
+      "consumers": {
+        "nativeDefaultOf": [],
+        "unlockListedFor": [
+          "LAS-12 Sai"
+        ]
+      }
+    },
+    {
+      "semanticId": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873",
+      "name": "Laser Heatsink (Blaster). Improved Cooldown",
+      "nameUnique": true,
+      "slot": "magazine",
+      "kind": "heatsink",
+      "compatibleWeapons": [
+        "LAS-12 Sai"
+      ],
+      "fieldInstanceKeys": [
+        "attachment:magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873:heat.cool_per_second",
+        "attachment:magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873:attachment.reload_duration",
+        "attachment:magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873:attachment.ergonomics_modifier"
+      ],
+      "consumers": {
+        "nativeDefaultOf": [],
+        "unlockListedFor": [
+          "LAS-12 Sai"
+        ]
+      }
+    }
+  ],
+  "fieldInstances": [
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-standard/2df091d9af2eab4c:heatsink.starting",
+      "semanticFieldId": "heatsink.starting",
+      "displayName": "Starting heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 3,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-standard/2df091d9af2eab4c",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:27b16e4b2aba8421",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.starting",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-standard/2df091d9af2eab4c:heatsink.spare",
+      "semanticFieldId": "heatsink.spare",
+      "displayName": "Spare heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 4,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-standard/2df091d9af2eab4c",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:27b16e4b2aba8421",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.spare",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-standard/2df091d9af2eab4c:heatsink.from_supply",
+      "semanticFieldId": "heatsink.from_supply",
+      "displayName": "Heatsinks from supply",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 4,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-standard/2df091d9af2eab4c",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:27b16e4b2aba8421",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.from_supply",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-standard/2df091d9af2eab4c:heat.capacity",
+      "semanticFieldId": "heat.capacity",
+      "displayName": "Overheat threshold",
+      "unit": "heat_units",
+      "type": "number",
+      "currentDefault": 100.0,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-standard/2df091d9af2eab4c",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:27b16e4b2aba8421",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.capacity",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:heatsink.starting",
+      "semanticFieldId": "heatsink.starting",
+      "displayName": "Starting heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 2,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:bc690ade1d3fea8f",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.starting",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:heatsink.spare",
+      "semanticFieldId": "heatsink.spare",
+      "displayName": "Spare heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 3,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:bc690ade1d3fea8f",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.spare",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:heatsink.from_supply",
+      "semanticFieldId": "heatsink.from_supply",
+      "displayName": "Heatsinks from supply",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 3,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:bc690ade1d3fea8f",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.from_supply",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:heat.capacity",
+      "semanticFieldId": "heat.capacity",
+      "displayName": "Overheat threshold",
+      "unit": "heat_units",
+      "type": "number",
+      "currentDefault": 150.0,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:bc690ade1d3fea8f",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.capacity",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:attachment.reload_duration",
+      "semanticFieldId": "attachment.reload_duration",
+      "displayName": "Reload duration",
+      "unit": "seconds",
+      "type": "number",
+      "currentDefault": 3.5,
+      "min": 0.1,
+      "max": 20,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:bc690ade1d3fea8f",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.attachment.reload_duration",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87:attachment.ergonomics_modifier",
+      "semanticFieldId": "attachment.ergonomics_modifier",
+      "displayName": "Ergonomics modifier",
+      "unit": "ergonomics",
+      "type": "number",
+      "currentDefault": -10.0,
+      "min": -100,
+      "max": 100,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:bc690ade1d3fea8f",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.attachment.ergonomics_modifier",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heatsink.starting",
+      "semanticFieldId": "heatsink.starting",
+      "displayName": "Starting heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 3,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:fde3143d2d900c29",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.starting",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heatsink.spare",
+      "semanticFieldId": "heatsink.spare",
+      "displayName": "Spare heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 4,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:fde3143d2d900c29",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.spare",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heatsink.from_supply",
+      "semanticFieldId": "heatsink.from_supply",
+      "displayName": "Heatsinks from supply",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 4,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:fde3143d2d900c29",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.from_supply",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heat.capacity",
+      "semanticFieldId": "heat.capacity",
+      "displayName": "Overheat threshold",
+      "unit": "heat_units",
+      "type": "number",
+      "currentDefault": 60.0,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:fde3143d2d900c29",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.capacity",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee:heat.cool_per_second",
+      "semanticFieldId": "heat.cool_per_second",
+      "displayName": "Cooling rate",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 12.0,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:fde3143d2d900c29",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.cool_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heatsink.starting",
+      "semanticFieldId": "heatsink.starting",
+      "displayName": "Starting heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 4,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:e46fbfed1fa1590c",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.starting",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heatsink.from_supply",
+      "semanticFieldId": "heatsink.from_supply",
+      "displayName": "Heatsinks from supply",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 6,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:e46fbfed1fa1590c",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.from_supply",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heatsink.spare",
+      "semanticFieldId": "heatsink.spare",
+      "displayName": "Spare heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 6,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:e46fbfed1fa1590c",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.spare",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.heat_per_second",
+      "semanticFieldId": "heat.heat_per_second",
+      "displayName": "Heat per second",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 25.0,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:e46fbfed1fa1590c",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.heat_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.cool_per_second",
+      "semanticFieldId": "heat.cool_per_second",
+      "displayName": "Cooling rate",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 15.0,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:e46fbfed1fa1590c",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.cool_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.cool_per_second_overheated",
+      "semanticFieldId": "heat.cool_per_second_overheated",
+      "displayName": "Cooling rate while overheated",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 2.0,
+      "min": 0,
+      "max": 10000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:e46fbfed1fa1590c",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.cool_per_second_overheated",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.firing_charge",
+      "semanticFieldId": "heat.firing_charge",
+      "displayName": "Wind-up: charge needed to fire",
+      "unit": "charge",
+      "type": "number",
+      "currentDefault": 100.0,
+      "min": 0,
+      "max": 10000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:e46fbfed1fa1590c",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.firing_charge",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.charge_gain_per_second",
+      "semanticFieldId": "heat.charge_gain_per_second",
+      "displayName": "Wind-up: charge gained per second",
+      "unit": "charge_per_second",
+      "type": "number",
+      "currentDefault": 300.0,
+      "min": 0,
+      "max": 100000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:e46fbfed1fa1590c",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.charge_gain_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de:heat.charge_loss_per_second",
+      "semanticFieldId": "heat.charge_loss_per_second",
+      "displayName": "Wind-up: charge lost per second (released)",
+      "unit": "charge_per_second",
+      "type": "number",
+      "currentDefault": 100.0,
+      "min": 0,
+      "max": 100000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:e46fbfed1fa1590c",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.charge_loss_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heatsink.starting",
+      "semanticFieldId": "heatsink.starting",
+      "displayName": "Starting heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 3,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:719403a99843950e",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.starting",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heatsink.from_supply",
+      "semanticFieldId": "heatsink.from_supply",
+      "displayName": "Heatsinks from supply",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 5,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:719403a99843950e",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.from_supply",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heatsink.spare",
+      "semanticFieldId": "heatsink.spare",
+      "displayName": "Spare heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 5,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:719403a99843950e",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.spare",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.heat_per_second",
+      "semanticFieldId": "heat.heat_per_second",
+      "displayName": "Heat per second",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 14.5,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:719403a99843950e",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.heat_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.cool_per_second",
+      "semanticFieldId": "heat.cool_per_second",
+      "displayName": "Cooling rate",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 7.5,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:719403a99843950e",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.cool_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.cool_per_second_overheated",
+      "semanticFieldId": "heat.cool_per_second_overheated",
+      "displayName": "Cooling rate while overheated",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 2.0,
+      "min": 0,
+      "max": 10000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:719403a99843950e",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.cool_per_second_overheated",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.firing_charge",
+      "semanticFieldId": "heat.firing_charge",
+      "displayName": "Wind-up: charge needed to fire",
+      "unit": "charge",
+      "type": "number",
+      "currentDefault": 100.0,
+      "min": 0,
+      "max": 10000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:719403a99843950e",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.firing_charge",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.charge_gain_per_second",
+      "semanticFieldId": "heat.charge_gain_per_second",
+      "displayName": "Wind-up: charge gained per second",
+      "unit": "charge_per_second",
+      "type": "number",
+      "currentDefault": 300.0,
+      "min": 0,
+      "max": 100000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:719403a99843950e",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.charge_gain_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7:heat.charge_loss_per_second",
+      "semanticFieldId": "heat.charge_loss_per_second",
+      "displayName": "Wind-up: charge lost per second (released)",
+      "unit": "charge_per_second",
+      "type": "number",
+      "currentDefault": 500.0,
+      "min": 0,
+      "max": 100000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:719403a99843950e",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.charge_loss_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heatsink.starting",
+      "semanticFieldId": "heatsink.starting",
+      "displayName": "Starting heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 7,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:99e4709519dc09a4",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.starting",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heatsink.from_supply",
+      "semanticFieldId": "heatsink.from_supply",
+      "displayName": "Heatsinks from supply",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 9,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:99e4709519dc09a4",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.from_supply",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heatsink.spare",
+      "semanticFieldId": "heatsink.spare",
+      "displayName": "Spare heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 9,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:99e4709519dc09a4",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.spare",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.heat_per_second",
+      "semanticFieldId": "heat.heat_per_second",
+      "displayName": "Heat per second",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 50.0,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:99e4709519dc09a4",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.heat_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.cool_per_second",
+      "semanticFieldId": "heat.cool_per_second",
+      "displayName": "Cooling rate",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 15.0,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:99e4709519dc09a4",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.cool_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.cool_per_second_overheated",
+      "semanticFieldId": "heat.cool_per_second_overheated",
+      "displayName": "Cooling rate while overheated",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 2.0,
+      "min": 0,
+      "max": 10000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:99e4709519dc09a4",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.cool_per_second_overheated",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.firing_charge",
+      "semanticFieldId": "heat.firing_charge",
+      "displayName": "Wind-up: charge needed to fire",
+      "unit": "charge",
+      "type": "number",
+      "currentDefault": 100.0,
+      "min": 0,
+      "max": 10000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:99e4709519dc09a4",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.firing_charge",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.charge_gain_per_second",
+      "semanticFieldId": "heat.charge_gain_per_second",
+      "displayName": "Wind-up: charge gained per second",
+      "unit": "charge_per_second",
+      "type": "number",
+      "currentDefault": 200.0,
+      "min": 0,
+      "max": 100000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:99e4709519dc09a4",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.charge_gain_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578:heat.charge_loss_per_second",
+      "semanticFieldId": "heat.charge_loss_per_second",
+      "displayName": "Wind-up: charge lost per second (released)",
+      "unit": "charge_per_second",
+      "type": "number",
+      "currentDefault": 50.0,
+      "min": 0,
+      "max": 100000,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:99e4709519dc09a4",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.charge_loss_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:heatsink.starting",
+      "semanticFieldId": "heatsink.starting",
+      "displayName": "Starting heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 3,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:ed4ecbfc9896be90",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.starting",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:heatsink.spare",
+      "semanticFieldId": "heatsink.spare",
+      "displayName": "Spare heatsinks",
+      "unit": "heatsinks",
+      "type": "integer",
+      "currentDefault": 4,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:ed4ecbfc9896be90",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heatsink.spare",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:heat.heat_per_shot",
+      "semanticFieldId": "heat.heat_per_shot",
+      "displayName": "Heat per shot",
+      "unit": "heat_units_per_shot",
+      "type": "number",
+      "currentDefault": 1.5,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:ed4ecbfc9896be90",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.heat_per_shot",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:attachment.reload_duration",
+      "semanticFieldId": "attachment.reload_duration",
+      "displayName": "Reload duration",
+      "unit": "seconds",
+      "type": "number",
+      "currentDefault": 3.0,
+      "min": 0.1,
+      "max": 20,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:ed4ecbfc9896be90",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.attachment.reload_duration",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807:attachment.ergonomics_modifier",
+      "semanticFieldId": "attachment.ergonomics_modifier",
+      "displayName": "Ergonomics modifier",
+      "unit": "ergonomics",
+      "type": "number",
+      "currentDefault": -10.0,
+      "min": -100,
+      "max": 100,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:ed4ecbfc9896be90",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.attachment.ergonomics_modifier",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873:heat.cool_per_second",
+      "semanticFieldId": "heat.cool_per_second",
+      "displayName": "Cooling rate",
+      "unit": "heat_units_per_second",
+      "type": "number",
+      "currentDefault": 8.5,
+      "min": null,
+      "max": null,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:c0596b9e5c8318ab",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.heat.cool_per_second",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873:attachment.reload_duration",
+      "semanticFieldId": "attachment.reload_duration",
+      "displayName": "Reload duration",
+      "unit": "seconds",
+      "type": "number",
+      "currentDefault": 3.0,
+      "min": 0.1,
+      "max": 20,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:c0596b9e5c8318ab",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.attachment.reload_duration",
+      "gameplayWriteEffect": "unproven"
+    },
+    {
+      "instanceKey": "attachment:magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873:attachment.ergonomics_modifier",
+      "semanticFieldId": "attachment.ergonomics_modifier",
+      "displayName": "Ergonomics modifier",
+      "unit": "ergonomics",
+      "type": "number",
+      "currentDefault": -7.0,
+      "min": -100,
+      "max": 100,
+      "editable": true,
+      "target": {
+        "resource": "weapon_attachment",
+        "attachment": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873",
+        "path": "magazine"
+      },
+      "operationGroup": "operation:c0596b9e5c8318ab",
+      "shared": true,
+      "acknowledgement": "allow_unverified_effect",
+      "allowSharedRequired": true,
+      "reviewedScopeComplete": false,
+      "apiFieldConstant": "hd2.fields.attachment.ergonomics_modifier",
+      "gameplayWriteEffect": "unproven"
+    }
+  ],
+  "summary": {
+    "attachments": 9,
+    "fieldInstances": 50,
+    "selectionWritable": false
+  },
+  "lifecycle": "Shared attachment definitions; equip/rebuild the weapon to consume edits. Live reapplication is unproven.",
+  "scope": "Only native default and observed unlock-list relationships are assigned to weapons. Other variants remain independently addressable.",
+  "safety": {
+    "rawResourceIdentifiers": false,
+    "runtimeAddresses": false,
+    "writesDuringGeneration": 0
+  }
+}

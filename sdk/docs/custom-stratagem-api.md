@@ -1474,7 +1474,7 @@ hd2.pelican.spawn({position=ctx.position,hover=60,call=ctx,credit_to=ctx.player,
 | `spread` | In mrad, up to 100. |
 | `recoil=false` | No aim recoil. |
 | `unlimited_ammo=true` | The 2047-round safe magazine, refilled below 1500. |
-| `face_target=true` | The body turns toward the lock. |
+| `face_target=true` | With `round='native'` alone, only the body turns toward the native AI target; vanilla bursts, ammunition and weapon records remain untouched on every machine. With `behave_as='gatling_sentry'`, follows its Runtime target lock. |
 | `sound='sentry/gatling'` | Its firing sound: any name of the weapon sound catalogue (`hd2.sounds.list()`, docs/weapon-sounds.md), a per-shot sound (`'vehicle/maelstrom/main_gun'`, `'vehicle/bastion/hmg'`, `'support/mg206'`, ...) or a loop (`'sentry/gatling'`, `'sentry/machine_gun'`, `'support/m1000'`, ...). On its own weapon copy only; every compatible machine applies it to its own copy. The package of the stratagem that provides the sound's bank is loaded (a custom stratagem lists it as an asset); a resident-only sound is applied only while the game has its package resident. `'pelican/chin_autocannon'` (or no `sound`) keeps its own; `'maelstrom_main_gun'` still means `'vehicle/maelstrom/main_gun'`. Optional; offline-tested only. |
 
 The other options:
@@ -1639,3 +1639,21 @@ field and the stun status).
   modifications, another count of a DONOR's rack, two donors per pod (no reviewed per-instance path for any of them);
 - a carrier pod's spawn-count write (more items than its rack's usable slots), a secondary or throwable pod item, a
   carrier pod with several players (this pass).
+
+### Native Autocannon Pelican with target-facing AI
+
+For target locking and body turning with the native autocannon, use:
+
+```lua
+gun = {
+    behave_as = 'gatling_sentry', round = 'native', rpm = 300,
+    casing = 'own', recoil = false, unlimited_ammo = true,
+    face_target = true, aim_height = 0.7,
+}
+```
+
+This uses sustained target-lock fire at 300 RPM with native explosive rounds;
+the native burst cycle belongs to the original AI. Runtime 0.40.0 accepts
+the guarded `ALREADY_DESIRED` result when the freshly copied native projectile,
+rate and casing already match, then continues configuring the gun and AI.
+The same no-change handling applies to a client's private presentation copy.

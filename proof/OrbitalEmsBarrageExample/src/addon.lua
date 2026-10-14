@@ -1,5 +1,5 @@
 -- Generated from custom_stratagems.json by the HD2Runtime SDK (hd2.py custom-stratagem compile; format hd2runtime-custom-stratagems/1).
--- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 5b537418160bbf42f7122c1e4e76cfe9b13e7df792438e3c8cfe41ff147609d5.
+-- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 b818d4b5aacd0747deb0a5edf30cab7e0ad256b0c70d3977d4cbcf44b948fb9e.
 local hd2=require('mods/skyeshade/hd2runtime')
 local mod=hd2.mod()
 mod:log('OrbitalEmsBarrage 0.1.0 BUILD: select Orbital EMS Barrage in the custom panel, then a mission; call it with RIGHT DOWN UP RIGHT LEFT DOWN.')

@@ -232,8 +232,9 @@ MINE_COUNT_UNVERIFIED = ('ThrowerComponent slot-0 salvo count and mines per salv
     'live write has confirmed the gameplay effect yet.')
 RANGE_UNVERIFIED = ('SensorEyeComponent +0 equals the wiki-stated targeting range of seven sentries (75/100/125/50 m), '
     'but no live write has confirmed the gameplay effect yet.')
-USES_CAVEAT = ('Use counts are applied by the mission host; the HUD counter may keep its old value until the next '
-    'mission (reference mod observation).')
+USES_CAVEAT = ('Apply aboard the ship before launch. This edits the definition that seeds each mission slot, not '
+    'its remaining uses: changing it after launch leaves the current mission counter unchanged. '
+    'Each duplicate slot has its own counter. Eagle Rearm refills charges when rearm_pool is enabled.')
 
 
 # Eagle component fields (hd2.fields.eagle.*, Phase A): members of the EagleComponentData record of each Eagle
@@ -550,6 +551,12 @@ ORBITAL_FIELDS = (
         '0 to 100 record units (the native maximum is 36, the 380mm\'s).'),
     ('orbital.salvo_scatter', 0x28, 'f32', 0, 100, 'live', '0x8538E7 (each salvo centre\'s scatter)',
         '0 to 100 record units (the native maximum is 1).'),
+    ('orbital.walking_speed', 0x60, 'f32', 0, 15, 'creation', '0x851AC4 (barrage start, direction times speed)',
+        '0 disables forward walking; 3 is the Walking Barrage default. Up to five times that speed.'),
+    ('orbital.aim_step_min', 0x10, 'f32', 0, 100, 'live', '0x85262C (random aim step lower endpoint)',
+        '0 to 100 metres per shell after the first; separate from directional walking.'),
+    ('orbital.aim_step_max', 0x14, 'f32', 0, 100, 'live', '0x852621 (random aim step upper endpoint)',
+        '0 to 100 metres per shell after the first; separate from directional walking.'),
 )
 
 
@@ -567,6 +574,12 @@ def orbital_pattern_publication():
     """The reviewed orbitals' bombardment records: identity, shell list and the pattern values, checked against the
     research's layout, ranges and per-snapshot ownership."""
     research = json.loads(ORBITAL_RESEARCH.read_text(encoding='utf-8'))
+    walking = json.loads((ROOT / 'research/orbital-walking-dev10-F5FEE03DCFDB.json').read_text())
+    from scan.xref import CodeImage
+    image = CodeImage.from_snapshot()
+    assert image.sha256 == walking['gameDllSha256']
+    for pin in walking['pins']:
+        assert image.data[pin['rva']:pin['rva'] + len(pin['hex']) // 2].hex() == pin['hex']
     if research['writes'] != 0 or research['protectionChanges'] != 0 or research['component']['stride'] != 192:
         raise ValueError('unexpected bombardment research')
     layout = {item['offset']: item['type'] for item in research['pattern']}

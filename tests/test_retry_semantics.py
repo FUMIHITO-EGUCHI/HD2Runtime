@@ -158,6 +158,23 @@ local text=table.concat(seen,' ')
 assert(text:find('recovering:TARGET_UNAVAILABLE',1,true)and text:find('waiting:',1,true),text)
 ''')
 
+    def test_scheduled_recovery_sleeps_until_due_and_resumes_when_ready(self):
+        check('''
+loaded=false
+local e=hd2.ensure{transaction=transaction_request(),startup_delay=0,recover={delay=10,max_delay=15}}
+require('hd2runtime/runtime/scheduler').attach(e)
+for _=1,1000 do update(0.1);if e.status=='recovering'then break end end
+assert(e.status=='recovering'and e.recoveries==1,tostring(e.error))
+local tick,calls=e.tick,0
+e.tick=function(...)calls=calls+1;return tick(...)end
+for _=1,50 do update(0.1)end
+assert(calls==0 and e.retry_in<=5.01,'recovery wait still ticks or loses its countdown')
+loaded=true
+for _=1,200 do update(0.1);if e.runs==1 then break end end
+assert(e.runs==1 and e.status=='waiting','scheduled recovery did not apply')
+assert_values('new')
+''')
+
     def test_ensure_recover_never_covers_deterministic_failures_and_honours_its_limit(self):
         check('''
 replace(targets.radius.address,string.char(1,2,3,4))

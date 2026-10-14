@@ -25,6 +25,17 @@ end
 
 -- The kinds hd2.text.name takes (the builder each is a target of) and their generated entries, by key.
 M.KINDS={
+    passive=function()
+        local out={}
+        for _,p in ipairs(require('hd2runtime/domains/player_passives').passives)do
+            out[p.name]={nameText={name=tonumber(p.nameId,16)}}
+        end
+        return out
+    end,
+    mission=function()
+        local out={};for _,m in ipairs(require('hd2runtime/domains/missions').missions)do out[m.id]=m end
+        return out
+    end,
     weapon=function()return require('hd2runtime/domains/player_weapon_authoring').weapons end,
     support_weapon=function()return require('hd2runtime/domains/support_weapon_authoring').weapons end,
     throwable=function()return require('hd2runtime/domains/throwable_authoring').throwables end,

@@ -1,14 +1,16 @@
 local b=require('hd2runtime/core/bytes')
 local settings=require('hd2runtime/core/settings')
 local metrics=require('hd2runtime/runtime/metrics')
+local application_mode=require('hd2runtime/runtime/application_mode')
 local M={}
 -- Short-lived sharing of a completed walk between back-to-back operations (guarded
 -- operations run one at a time). Reuse re-validates every allocation's identity,
 -- extent, protection, and header and re-parses settings; any difference or missing
 -- key falls back to a full walk. Adapters without a clock never share.
 local SHARE_SECONDS=15
-local shared
-local function reuse(runtime,reader,profile,needed,now)
+local caches=setmetatable({},{__mode='k'}) -- address space -> profile -> a proven walk
+application_mode.on_change('discovery',function()caches=setmetatable({},{__mode='k'})end)
+local function reuse(shared,runtime,reader,profile,needed,now)
     if not(shared and shared.profile==profile and now<=shared.expires)then return nil end
     -- Pass 1: validate every key with uncaptured reads only, so a fallback to the
     -- full walk never leaves partial snapshots behind in the reader.
@@ -45,9 +47,13 @@ local function reuse(runtime,reader,profile,needed,now)
     return result
 end
 function M.locate(runtime,reader,profile,needed)
-    local now=runtime.monotonic_time and runtime.monotonic_time()
+    local space=rawget(runtime,'_discovery_space')or runtime
+    local by_profile=caches[space]
+    if not by_profile then by_profile=setmetatable({},{__mode='k'});caches[space]=by_profile end
+    local shared=by_profile[profile]
+    local now=application_mode.enabled()and runtime.monotonic_time and runtime.monotonic_time()
     if now then
-        local result=reuse(runtime,reader,profile,needed,now)
+        local result=reuse(shared,runtime,reader,profile,needed,now)
         if result then metrics.count('discover.shared_reuses');return result end
     end
     reader.stage='runtime/discover:allocation_map'
@@ -117,7 +123,7 @@ function M.locate(runtime,reader,profile,needed)
             result[key]=matches[key][1]
         end
     end
-    if now then
+    if now and application_mode.enabled()then
         -- Record only allocations whose uniqueness this walk just proved: every key it needed, the entity map and the
         -- entity delta table (always checked), and the settings keys whose whole size window it read.
         local regions={}
@@ -127,7 +133,7 @@ function M.locate(runtime,reader,profile,needed)
                 regions[key]={base=r.base,size=r.size}
             end
         end
-        shared={profile=profile,expires=now+SHARE_SECONDS,regions=regions}
+        by_profile[profile]={profile=profile,expires=now+SHARE_SECONDS,regions=regions}
     end
     return result
 end

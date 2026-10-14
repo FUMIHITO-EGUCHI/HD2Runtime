@@ -1,7 +1,8 @@
 -- Which mod is slow (docs/runtime-performance.md, "Which mod is slow"): every call the Runtime makes into a mod (event
 -- listeners, timers, keybinds, run_as: a mod's main file, custom stratagem and Pelican callbacks) and every scheduler
 -- watch (the Runtime's own work, and each mod's operations) is timed with the precise clock, by its own time only (a
--- callback dispatched from inside another is counted once, as the inner one's). Quiet by default:
+-- callback dispatched from inside another is counted once, as the inner one's). Disabled while the performance tab
+-- is closed: no clock reads, aggregation, callback labels, or performance logs. While the tab is open:
 --   * one call taking at least M.SINGLE_CALL logs one line naming the mod and the callback; the same callback logs
 --     again only at twice its last logged time, at most M.SINGLE_CALL_LINES times;
 --   * a mod (or a Runtime module) using at least M.SHARE per update on average over M.WINDOW seconds of game time logs
@@ -26,12 +27,24 @@ M.BINS=60
 M.MAX_SERIES=48              -- a session's series at most; later parts of the Runtime count as 'other Runtime work'
 
 -- The timing stack: start time and the time of the calls nested in it, per depth (no allocation per call).
-local starts,nested,depth={},{},0
+local starts,nested,histories,depth={},{},{},0
+local registered_mods={}
 local owners={}              -- owner -> {window, calls, total, total_calls, max, max_label, slow={}, slow_n, callbacks}
 local window,window_updates,game_time=0,0,0
 local recording=false
+local recording_thread
+local running=coroutine.running
+local unresolved={}
 local history                -- {series = {[id] = series}, list = {series}, bins = {frame seconds}, head, filled, ...}
 local runtime_series=setmetatable({},{__mode='k'})   -- callback key -> its Runtime series (labels computed once)
+local record_update,pending_dt,observer_cost
+local function flush_pending()
+    if depth==0 and pending_dt and recording then
+        local dt=pending_dt;pending_dt=nil
+        local started=metrics.now();record_update(dt)
+        if started then observer_cost(started)end
+    end
+end
 local emit=function(line)require('hd2runtime/runtime/log').emit(line)end
 
 local function owner_state(owner)
@@ -42,6 +55,26 @@ local function owner_state(owner)
         owners[owner]=o
     end
     return o
+end
+function M.register_mod(owner)
+    if type(owner)=='string'and owner:sub(1,5)=='mods/'then registered_mods[owner]=true end
+end
+function M.runtime_mod(owner)return registered_mods[owner]==true or(owners[owner]~=nil and owners[owner].mod==true)end
+function M.mod_name(owner)
+    if owner=='unattributed'then return 'Unattributed callback work'end
+    if owner=='mods/skyeshade/hd2runtime_editor'then return 'HD2R Editor'end
+    return (tostring(owner):match('([^/]+)$')or tostring(owner)):gsub('_',' ')
+end
+-- Known loaded mods, including ones with no observable recurring Lua callback (never presented as measured zero).
+function M.inventory()
+    local result={}
+    local loader=rawget(_G,'CowboyBingusModLoader')
+    for id,status in pairs(loader and loader.modules or{})do
+        if status=='loaded'and id~='mods/skyeshade/hd2runtime'then result[id]=true end
+    end
+    for id in pairs(registered_mods)do result[id]=true end
+    for id,o in pairs(owners)do if o.mod then result[id]=true end end
+    return result
 end
 local function who(owner)
     return owner=='HD2Runtime'and'HD2Runtime (its own work)'or('mod '..tostring(owner))
@@ -66,9 +99,19 @@ local function new_series(id,name,kind,owner)
     history.list[#history.list+1]=s
     return s
 end
--- The series a timed call adds to: its mod's, or its part of the Runtime's (labelled once per callback key).
+-- The series a timed call adds to: its mod's work or overlay, or its part of the Runtime (labelled once per key).
 local function series_for(o,owner,key,describe)
-    local id=o.mod and owner or runtime_series[key]
+    if type(key)=='table'and key.perf_group=='runtime_menu'then
+        local name=key.perf_name or'F10 menu';local id='runtime:'..name
+        return history.series[id]or new_series(id,name,'menu','HD2Runtime:menu')
+    end
+    local external=type(owner)=='string'and owner:sub(1,7)=='global:'
+    if external then
+        local id=owner:sub(8)
+        return history.series[owner]or new_series(owner,M.mod_name(id),'external',id)
+    end
+    local ui=o.mod and type(key)=='table'and key.perf_group=='ui'
+    local id=o.mod and(owner..(ui and':ui'or''))or runtime_series[key]
     if not id then
         -- a named timer or frame callback of the Runtime's own (its id), else its label
         local named=type(key)=='table'and type(key.perf_name)=='string'and key.perf_name
@@ -79,37 +122,66 @@ local function series_for(o,owner,key,describe)
     end
     local s=history.series[id]
     if s then return s end
-    if #history.list>=M.MAX_SERIES then
+    if not o.mod and #history.list>=M.MAX_SERIES then
         id=o.mod and'mods:other'or'runtime:other'
         return history.series[id]or new_series(id,o.mod and'other mods'or'other Runtime work',o.mod and'mod'or'runtime')
     end
     if o.mod then
-        return new_series(id,(tostring(owner):match('([^/]+)$')or tostring(owner)):gsub('_',' '),'mod',owner)
+        local name=(tostring(owner):match('([^/]+)$')or tostring(owner)):gsub('_',' ')
+        if owner=='mods/skyeshade/hd2runtime_editor'then name='HD2R Editor'..(ui and' UI'or' work')
+        elseif ui then name=name..' UI'end
+        return new_series(id,name,'mod',owner)
     end
     return new_series(id,id:sub(9),'runtime','HD2Runtime')
 end
 
+-- Bookkeeping, label formatting and diagnostics belong to the open monitor, never its enclosing mod/core.
+observer_cost=function(started)
+    local elapsed=math.max(0,metrics.now()-started)
+    if depth>0 then nested[depth]=nested[depth]+elapsed end
+    if elapsed>0 and recording then
+        local s=history.series['runtime:Performance monitor']
+            or new_series('runtime:Performance monitor','Performance monitor','menu','HD2Runtime:menu')
+        s.frame=s.frame+elapsed
+    end
+end
+
 -- Starts timing one call; returns true when it is timed (pass the same value to M.finish).
 function M.begin()
+    if not recording then return false end
+    -- A suspended coroutine must never hold the frame's shared timing stack open. Measure its synchronous
+    -- resume inside the caller as unresolved work; neither charge its yield time nor invent a mod attribution.
+    if running()~=recording_thread then
+        if depth>0 then unresolved[depth]=true end
+        return false
+    end
     local now=metrics.now()
     if not now then return false end
     depth=depth+1
     starts[depth],nested[depth]=now,0
+    histories[depth]=history;unresolved[depth]=nil
     return true
 end
 -- Ends the call M.begin started: `owner` (a mod id or 'HD2Runtime'), `key` (what identifies the callback: its record,
 -- function or watch), `describe(key)` -> its label (called only when a line is logged or a callback is first seen).
 function M.finish(timed,owner,key,describe)
     if not timed or depth==0 then return end
+    if not recording or histories[depth]~=history then
+        histories[depth]=nil;depth=depth-1;flush_pending();return
+    end
     local now=metrics.now()
     local elapsed=now-starts[depth]
     local own=elapsed-nested[depth]
+    local started_history=histories[depth];histories[depth]=nil
+    if unresolved[depth]then owner='global:unattributed' end
+    unresolved[depth]=nil
     depth=depth-1
     if depth>0 then nested[depth]=nested[depth]+elapsed end
     if own<0 then own=0 end
+    if owner==false then observer_cost(now);flush_pending();return end -- exclude a saved vanilla callback from its surrounding mod
     local o=owner_state(owner or'unknown')
     o.window,o.calls=o.window+own,o.calls+1
-    if recording then
+    if recording and started_history==history then
         local series=series_for(o,owner,key,describe)
         series.frame=series.frame+own
     end
@@ -141,6 +213,8 @@ function M.finish(timed,owner,key,describe)
                 s.lines==M.SINGLE_CALL_LINES and' (not logged again for it)'or''))
         end
     end
+    observer_cost(now)
+    flush_pending()
 end
 
 local function top(o,n)
@@ -161,11 +235,21 @@ local function top(o,n)
 end
 -- While recording: this update's time per series into the running bin; a full bin becomes one value per series (the
 -- average per update), with the bin's frame time and its largest single-update values.
-local function record_update(dt)
+record_update=function(dt)
     local h=history
     h.time,h.updates=h.time+dt,h.updates+1
     local total=0
+    for _,g in ipairs(h.global_list)do g.frame=0 end
     for _,s in ipairs(h.list)do
+        local id=s.kind=='runtime'and'HD2Runtime'or(s.owner or s.id)
+        local g=h.global_series[id]
+        if not g then
+            g={id=id,name=s.kind=='menu'and'F10 menu'or(id=='HD2Runtime'and'HD2Runtime core'or M.mod_name(id)),owner=id,
+                kind=s.kind=='menu'and'menu'or(id=='unattributed'and'unattributed'or(id=='HD2Runtime'and'runtime'or(M.runtime_mod(id)and'mod'or'external'))),
+                values={},peaks={},frame=0,bin=0,peak=0}
+            h.global_series[id]=g;h.global_list[#h.global_list+1]=g
+        end
+        g.frame=g.frame+s.frame
         local f=s.frame
         if f>0 then
             s.bin=s.bin+f
@@ -173,6 +257,9 @@ local function record_update(dt)
             total=total+f
             s.frame=0
         end
+    end
+    for _,g in ipairs(h.global_list)do
+        g.bin=g.bin+g.frame;g.peak=math.max(g.peak,g.frame)
     end
     if total>h.peak then h.peak=total end
     if h.time+1e-6<M.BIN then return end   -- (a sum of frame times never lands exactly on it)
@@ -184,26 +271,44 @@ local function record_update(dt)
         s.values[slot],s.peaks[slot]=s.bin/n,s.peak
         s.bin,s.peak=0,0
     end
+    for _,g in ipairs(h.global_list)do
+        g.values[slot],g.peaks[slot]=g.bin/n,g.peak
+        g.bin,g.peak=0,0
+    end
     h.time,h.updates,h.peak=0,0,0
 end
 -- Starts (true) or stops recording the live history (stopping drops it). Nothing is recorded unless something shows it.
 function M.record(on)
     on=on==true
     if on and not recording then
-        history={series={},list={},frames={},peaks={},head=0,time=0,updates=0,peak=0}
-    elseif not on then history=nil end
-    recording=on
+        recording_thread=running()
+        owners={};window,window_updates,game_time=0,0,0
+        history={series={},list={},global_series={},global_list={},frames={},peaks={},head=0,time=0,updates=0,peak=0}
+    elseif not on then
+        local watchdog=package.loaded['hd2runtime/runtime/global_perf']
+        if watchdog then watchdog.stop()end
+        history=nil
+    end
+    recording=on;metrics.profiling(on)
+    if not on then pending_dt=nil end
 end
 function M.recording()return recording end
 -- The live history while recording, else nil: {list = {series}, frames, peaks, head}. Bin i of the last
 -- n = min(head, M.BINS) (oldest first) is at slot (head - n + i - 1) % M.BINS + 1; series.values[slot] is its average
 -- own time per update (nil before it existed), series.peaks[slot] its largest single update, frames[slot] the average
 -- frame time and peaks[slot] the largest single-update total. Read-only for the caller.
-function M.history()return recording and history or nil end
+function M.history(mode)
+    if not recording then return nil end
+    if mode~='global'then return history end
+    local h=history
+    return {list=h.global_list,series=h.global_series,frames=h.frames,peaks=h.peaks,head=h.head}
+end
 
 -- Once per scheduler update (the Runtime's whole tick). Ends the window every M.WINDOW seconds of game time.
-function M.update(dt)
-    if recording then record_update(dt or 0)end
+local function update_recording(dt)
+    if recording then
+        if depth>0 then pending_dt=(pending_dt or 0)+(dt or 0)else record_update(dt or 0)end
+    end
     window=window+(dt or 0)
     window_updates=window_updates+1
     game_time=game_time+(dt or 0)
@@ -227,6 +332,13 @@ function M.update(dt)
         o.window,o.calls,o.callbacks,o.callback_n=0,0,{},0
     end
     window,window_updates=0,0
+end
+
+function M.update(dt)
+    if not recording then return end
+    local started=metrics.now()
+    update_recording(dt)
+    if started then observer_cost(started)end
 end
 
 -- Per owner: {owner, total_seconds, calls, max_seconds, max_label, last_window = {seconds, updates, per_update,
@@ -261,8 +373,10 @@ function M.slowest_operations(burst)
         ..' (hd2.diagnostics.performance() has every mod\'s time)'
 end
 function M.reset_for_tests()
-    starts,nested,depth,owners,window,window_updates,game_time={},{},0,{},0,0,0
-    recording,history=false,nil
+    local watchdog=package.loaded['hd2runtime/runtime/global_perf'];if watchdog then watchdog.stop()end
+    pending_dt=nil;registered_mods={};recording_thread=nil;unresolved={}
+    starts,nested,histories,depth,owners,window,window_updates,game_time={},{},{},0,{},0,0,0
+    recording,history=false,nil;metrics.profiling(false)
     runtime_series=setmetatable({},{__mode='k'})
 end
 return M

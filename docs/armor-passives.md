@@ -5,6 +5,42 @@ list the game's 411 kits by their game names. `hd2.player_passives()` reads the 
 the modifiers the game reads from them. `hd2.player_passives.set` overrides them for the local player only: it can
 swap the armor passive, add a second passive, or do both.
 
+## Editing perk definitions (0.40.0 RC10)
+
+`hd2.passives.perk(name_or_id)` is a typed target for `hd2.patch`, `hd2.transaction`, `hd2.ensure` and
+`hd2.inspect`. Its `:describe()` and `:fields()` list the reviewed numeric controls. The catalogue covers all
+32 passives, with 75 editable fields across 31 of them. Standard Issue has no numeric gameplay bonus.
+These edits are shared by everyone using the perk and require `allow_shared` and `allow_unverified_effect`.
+
+```lua
+hd2.transaction({
+    id = 'scout-radar', target = hd2.passives.perk('SCOUT'),
+    allow_shared = true, allow_unverified_effect = true,
+    changes = {{field = 'perk.radar_scan_interval', expect = 2, value = 1}},
+})
+local icon = hd2.resources.game_icon('passive', 'SCOUT')
+-- Use hd2.require_assets with this icon to load the game's ship atlas when needed.
+```
+
+The Editor now shows the two equipped-passive selectors on **Helldiver**. **Armor perks** is a separate
+catalogue under the same navigation group. Existing selector preset keys remain valid.
+
+The fields distinguish ordinary modifier values from `{add, mul}` stat rows. Reload speed, ammo capacity,
+sidearm draw/holster and sidearm recoil use the kit worn **at spawn**: respawn after applying. Swapping the
+two equipped passive slots does not select these spawn-time stats. Gunslinger's actual reload multiplier
+is 1.6 in this build; its description-only modifier says 1.4. The editable control uses the actual stat row.
+Extra Padding and similar armor-rating bonuses also follow the worn kit, not the passive slot override.
+
+Multipliers are native factors, not percentages. Resistance fields are labelled as damage multipliers:
+0.5 means half damage. Unresolved native values are labelled as such. Presence-only switches, unused keys,
+effect-package identifiers and description-only modifier copies are not offered as gameplay controls.
+Adreno-Defibrillator's revive mechanism remains unmapped; its stim and arc modifiers are editable.
+
+Definitions are resolved through the customization manager, with build, native-code, table, passive ID,
+icon, array count, modifier-key/type and stat-ID checks. Only existing private read-write f32 values are
+changed. Foreign edits cause conflicts. Apply and guarded reset were checked on seven snapshot overlays;
+these numerical perk edits still need in-game gameplay testing.
+
 ```lua
 for _, p in ipairs(hd2.passives.list()) do
     hd2.mod():log(('%d %s: %d modifiers, follows a swap: %s'):format(p.id, p.name, #p.modifiers, p.follows_swap))

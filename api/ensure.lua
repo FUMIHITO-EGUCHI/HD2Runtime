@@ -73,8 +73,32 @@ local function watch_status(watch,callback,owner,emit)
         end
     end
     local tick,cancel=watch.tick,watch.cancel
-    function watch.tick(dt)tick(dt);notify()end
+    function watch.tick(dt,skipped)tick(dt,skipped);notify()end
     function watch.cancel()cancel();notify()end
+    return watch
+end
+
+-- Private scheduler contract; direct/manual tick calls still run normally. A live option or its availability
+-- listener wakes the watch immediately. No polling is needed while disabled, blocked or waiting for options.
+local function sleeping(watch,delay)
+    local tick=watch.tick
+    watch.verification_enabled=true
+    function watch.wake()watch._sleep_for=nil end
+    -- Suspend periodic upkeep without cancelling ownership or an unfinished apply/restore/recovery.
+    function watch.set_verification_enabled(enabled)
+        assert(type(enabled)=='boolean','verification enabled must be a boolean')
+        if watch.verification_enabled==enabled then return end
+        watch.verification_enabled=enabled
+        if enabled then watch.wake()
+        elseif watch.status=='waiting'and watch._sleep_for and(watch.runs or 0)>0 then
+            watch._sleep_for=math.huge
+        end
+    end
+    function watch.tick(dt,skipped)
+        watch._sleep_for=nil
+        tick(dt,skipped)
+        watch._sleep_for=delay()
+    end
     return watch
 end
 
@@ -233,6 +257,7 @@ local function start_bound(runtime,emit,request,kind,validate,module,interval,st
         end
     end
     local function listener()
+        watch._sleep_for=nil
         -- Values seen before the options are available are picked up when they become available.
         if watch.status=='waiting_for_options'or watch.status=='unavailable'then return end
         -- A child never sits between a write and its completion across ticks (guarded writes
@@ -258,12 +283,12 @@ local function start_bound(runtime,emit,request,kind,validate,module,interval,st
         return {dirty=dirty,debounce=debounce,elapsed=elapsed,next_at=next_at,child=child and child.status or nil,
             applied=applied_signature~=nil,ticks=ticks,last_dt=last_dt,listeners=#bound}
     end
-    function watch.tick(dt)
+    function watch.tick(dt,skipped)
         if watch.status=='cancelled'or watch.status=='unavailable'
             or watch.status=='waiting_for_options'then return end
         assert(type(dt)=='number'and dt>=0 and dt<math.huge,'invalid elapsed time')
         ticks,last_dt=ticks+1,dt
-        elapsed=elapsed+dt
+        elapsed=elapsed+dt+(skipped or 0)
         if dirty then
             debounce=debounce-dt
             if debounce>0 then return end
@@ -271,6 +296,7 @@ local function start_bound(runtime,emit,request,kind,validate,module,interval,st
         end
         if watch.status=='blocked'or watch.status=='disabled'then return end
         if not child then
+            if not relaunch and watch.verification_enabled==false then return end
             if elapsed<next_at then
                 if relaunch then watch.retry_in=next_at-elapsed end
                 return
@@ -354,6 +380,9 @@ local function start_bound(runtime,emit,request,kind,validate,module,interval,st
     end
     local function on_state()
         if watch.status~='waiting_for_options'then return end
+        watch._sleep_for=nil
+        -- Waiting for options never advanced elapsed in tick(); preserve that startup-delay contract on wake.
+        watch._sleep_elapsed=nil
         local state,reasons,defaults=availability()
         if state=='unavailable'then
             watch.status='unavailable';watch.error='options unavailable: '..table.concat(reasons,'; ')
@@ -378,7 +407,14 @@ local function start_bound(runtime,emit,request,kind,validate,module,interval,st
         -- The page warning was logged before this operation was declared.
         log('ensure '..id..' inactive: '..watch.error)
     end
-    return watch
+    return sleeping(watch,function()
+        if dirty or child then return nil end
+        if watch.status=='blocked'or watch.status=='disabled'or watch.status=='waiting_for_options'then
+            return math.huge
+        end
+        if not relaunch and watch.verification_enabled==false then return math.huge end
+        return math.max(0,next_at-elapsed)
+    end)
 end
 
 function M.start(runtime,emit,request)
@@ -436,11 +472,12 @@ function M.start(runtime,emit,request)
         child=nil;watch.status='cancelled'
         log('ensure '..spec.id..' cancelled')
     end
-    function watch.tick(dt)
+    function watch.tick(dt,skipped)
         if watch.status=='cancelled' or watch.status=='rejected' then return end
         assert(type(dt)=='number' and dt>=0 and dt<math.huge,'invalid elapsed time')
-        elapsed=elapsed+dt
+        elapsed=elapsed+dt+(skipped or 0)
         if not child then
+            if watch.status~='recovering'and watch.verification_enabled==false then return end
             if elapsed<next_at then
                 if watch.status=='recovering'then watch.retry_in=next_at-elapsed end
                 return
@@ -504,6 +541,11 @@ function M.start(runtime,emit,request)
                 ..(verification and' steady=byte-check'or' steady=full'))
         else watch.status='running' end
     end
+    sleeping(watch,function()
+        if child then return nil end
+        if watch.status~='recovering'and watch.verification_enabled==false then return math.huge end
+        return math.max(0,next_at-elapsed)
+    end)
     return watch_status(watch,request.on_status,owner,emit)
 end
 return M

@@ -39,6 +39,37 @@ class OptionsTests(unittest.TestCase):
     def lua(self, body):
         self.assertEqual(run(PRELUDE + body), b'ok')
 
+    def test_sleeping_options_preserve_startup_delay_and_terminal_notification(self):
+        self.lua(r'''
+local page=hd2.options{id='late_sleep',title='Late'}
+local value=page:slider{id='v',label='V',min=0.5,max=1,step=0.05,default=0.8}
+local startup
+require('hd2runtime/api/patch').start_spec=function(_,_,_,delay)
+ startup=delay
+ return {status='waiting',cancel=function()end,tick=function()end}
+end
+local w=vitality('late-sleep',value)
+tick(4)
+assert(w.status=='waiting_for_options'and startup==nil)
+rawset(_G,'ModOptionsMenu',{api=1,register_option=function()return true end,
+ get=function()return nil end,on_change=function()return true end})
+tick(0.2)
+assert(startup and startup>=2.8 and startup<=3,'option wait consumed startup delay: '..tostring(startup))
+return 'ok'
+''')
+        self.lua(r'''
+local page=hd2.options{id='off_sleep',title='Off',fallback='disable'}
+local value=page:slider{id='v',label='V',min=0.5,max=1,step=0.05,default=0.8}
+local notices=0
+local w=scheduler.attach(ensure.start({},function()end,{patch={id='off-sleep',
+ allow_unverified_effect=true,target=vitality_target(),field=hd2.fields.booster.damage_taken_scale,
+ expect=0.9,value=value},on_status=function(status)if status=='unavailable'then notices=notices+1 end end}))
+tick(6)
+assert(w.status=='unavailable'and notices==1,'sleep lost terminal availability notification')
+assert(scheduler.active()==0)
+return 'ok'
+''')
+
     def test_declarations_follow_the_menu_limits(self):
         self.lua(r'''
 local page=hd2.options({id='limits',title='Limits'})

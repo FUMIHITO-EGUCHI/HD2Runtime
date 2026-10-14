@@ -19,6 +19,82 @@ end
 
 
 class RuntimePerformanceTests(unittest.TestCase):
+    def test_scheduler_sleeps_ensures_but_keeps_deadlines_and_drift_recovery(self):
+        check('''
+local e=hd2.ensure{transaction=transaction_request(),startup_delay=0,interval=2,max_interval=8}
+require('hd2runtime/runtime/scheduler').attach(e)
+for _=1,3000 do update(0);if e.runs==1 then break end end
+assert(e.runs==1,tostring(e.error))
+local calls,tick=0,e.tick
+e.tick=function(...)calls=calls+1;return tick(...)end
+local reads0=runtime.reads
+for _=1,100 do update(0.01)end
+assert(calls==0 and runtime.reads==reads0,'sleeping ensure still does work')
+for _=1,110 do update(0.01)end
+assert(calls==1 and e.verifications==1,'deadline not honored')
+assert(e.current_interval==4 and e.runs==1,'stable check did not back off')
+replace(targets.lifetime.address,targets.lifetime.old)
+for _=1,3000 do update(0.01);if e.runs==2 then break end end
+assert(e.runs==2 and e.drifts==1,'sleeping ensure did not recover drift')
+assert_values('new')
+local n=calls;e.cancel();update(0.01)
+assert(calls==n+1 and require('hd2runtime/runtime/scheduler').active()==0,
+ 'cancelled sleeping ensure did not finish cleanup immediately')
+''')
+
+    def test_sleeping_bound_ensure_wakes_without_consuming_new_option_debounce(self):
+        check('''
+local value=require('hd2runtime/api/options').value({id='cooldown',min=90,max=300,step=1,default=180},'mods/test/sleep')
+local notices=0
+local e=hd2.ensure{patch=typed_cooldown('sleep-bound',90,value),startup_delay=0,interval=30,
+ on_status=function()notices=notices+1 end}
+require('hd2runtime/runtime/scheduler').attach(e)
+for _=1,3000 do update(0);if e.runs==1 then break end end
+assert(e.runs==1,tostring(e.error))
+local n=e.debug().ticks
+for _=1,100 do update(0.1)end
+assert(e.debug().ticks==n,'idle bound ensure kept ticking')
+assert(value:set(200))
+for _=1,4 do update(0.1)end
+assert(e.runs==1,'old sleeping time consumed the new debounce')
+for _=1,3000 do update(0.1);if e.runs==2 then break end end
+assert(e.runs==2 and notices>0,'new option did not wake the sleeping ensure')
+assert(runtime.read(targets.cooldown.address,4)==require('hd2runtime/core/bytes').encode(200,'f32'))
+''')
+
+    def test_scheduler_keeps_sleep_time_separate_from_child_frame_time(self):
+        run('''
+local scheduler=require('hd2runtime/runtime/scheduler')
+local seen={}
+local w={status='waiting',_sleep_for=5}
+function w.cancel()w.status='cancelled'end
+function w.tick(dt,skipped)seen={dt,skipped};w.status='complete'end
+scheduler.attach(w)
+for _=1,4 do update(1)end
+assert(#seen==0)
+update(1)
+assert(seen[1]==1 and seen[2]==4,'sleep inflated a child operation frame')
+assert(scheduler.active()==0 and update==nil,'completed sleeper left scheduler attached')
+return 'ok'
+''')
+
+    def test_blocked_bound_ensure_sleeps_until_its_value_changes(self):
+        check('''
+local value=require('hd2runtime/api/options').value({id='blocked',min=90,max=300,step=1,default=180})
+replace(targets.cooldown.address,string.char(1,2,3,4))
+local e=hd2.ensure{patch=typed_cooldown('blocked-sleep',90,value),startup_delay=0,recover=true}
+require('hd2runtime/runtime/scheduler').attach(e)
+for _=1,3000 do update(0);if e.status=='blocked'then break end end
+assert(e.status=='blocked'and e.result.code=='CONFLICT',tostring(e.error))
+local ticks,reads=e.debug().ticks,runtime.reads
+for _=1,100 do update(0.1)end
+assert(e.debug().ticks==ticks and runtime.reads==reads,'blocked ensure kept polling')
+replace(targets.cooldown.address,targets.cooldown.old)
+assert(value:set(200))
+for _=1,3000 do update(0.1);if e.runs==1 then break end end
+assert(e.runs==1 and e.status=='waiting','blocked ensure did not wake on option change')
+''')
+
     def test_typed_stratagem_cooldown_applies_end_to_end(self):
         # Regression: the stratagem row used to be captured twice, so the guarded
         # transaction found two contexts and refused every typed cooldown write.
@@ -174,13 +250,44 @@ assert(largest(per)>64 and largest(per)<=102 and smallest_full(per)>=99,'1 ms sl
 -- 100 us per query (a slow machine): the base quantum still runs every tick, never less than before.
 per=slices(many(0.0001))
 assert(largest(per)==64 and smallest_full(per)==64,'slow machine: '..largest(per)..'/'..smallest_full(per))
--- Bytes: a slice reads at most MAX_BYTES (1 MiB) however cheap the tick is.
+-- Bytes: a slice reads at most MAX_BYTES (2 MiB) however cheap the tick is.
 per=slices(function()Reader.new(rt).read({base=0x1000000,size=0x1000000},0,4*1048576)end,{bytes=true})
-assert(largest(per)==Reader.MAX_BYTES and #per==4,'bytes per slice: '..largest(per)..' in '..#per)
+assert(largest(per)==Reader.MAX_BYTES and #per==math.ceil(4*1048576/Reader.MAX_BYTES),'bytes per slice: '..largest(per)..' in '..#per)
+local mode=require('hd2runtime/runtime/application_mode')
+mode.configure(false)
+per=slices(function()Reader.new(rt).read({base=0x1000000,size=0x1000000},0,4*1048576)end,{bytes=true})
+assert(largest(per)==1048576 and #per==4,'diagnostic mode did not restore the old byte ceiling')
+mode.configure(true)
 -- ... and without a clock exactly the 64 KiB quantum.
 metrics.set_clock(function()return nil end)
 per=slices(function()Reader.new(rt).read({base=0x1000000,size=0x1000000},0,1048576)end,{bytes=true})
 assert(largest(per)==65536 and #per==16,'no clock bytes: '..largest(per)..' in '..#per)
+return 'ok'
+''')
+
+    def test_burst_admission_budgets_new_jobs_but_never_starves_the_first(self):
+        run(r'''
+local metrics=require('hd2runtime/runtime/metrics')
+local gate=require('hd2runtime/runtime/exclusive')
+local scheduler=require('hd2runtime/runtime/scheduler')
+local clock=0;metrics.set_clock(function()return clock end)
+local completed=0
+for i=1,10 do
+ local w={status='waiting'}
+ function w.cancel()w.status='cancelled';gate.release(w)end
+ function w.tick()
+  if gate.acquire(w)then
+   clock=clock+0.0008;completed=completed+1;w.status='complete';gate.release(w)
+  end
+ end
+ scheduler.attach(w)
+end
+update(1/60);assert(completed==2,'a burst ignored its combined budget: '..completed)
+-- Unrelated expensive work precedes pending operations; at least one is admitted every frame.
+local busy={status='waiting',tick=function()clock=clock+0.010 end,cancel=function()end}
+scheduler.attach(busy)
+for expected=3,10 do update(1/60);assert(completed==expected,'pending writes starved')end
+assert(not gate.busy())
 return 'ok'
 ''')
 
@@ -230,8 +337,9 @@ function rt.read(at,n)
     end
     error('read outside the synthetic regions')
 end
-local function locate(needed)
-    local co=coroutine.create(function()return discover.locate(rt,Reader.new(rt),profile,needed)end)
+local function locate(needed,adapter,view)
+    adapter=adapter or rt;view=view or profile
+    local co=coroutine.create(function()return discover.locate(adapter,Reader.new(adapter),view,needed)end)
     while true do
         local ok,result=coroutine.resume(co);assert(ok,result)
         if coroutine.status(co)=='dead'then return result end
@@ -268,6 +376,56 @@ now=246;locate({entity=true,alpha=true});assert(counter('discover.walks')==7,'sh
 now=247;regions[3].data=string.rep('y',28);local w=counter('discover.walks')
 local ok=pcall(locate,{entity=true,beta=true})
 assert(counter('discover.walks')==w+1,'changed header reused')
+assert(not ok,'changed table header was accepted')
+regions[3].data=table_bytes(0xB2,0x5000)
+now=300
+local view=setmetatable({components={}},{__index=profile})
+local adapter=setmetatable({},{__index=rt})
+local before=counter('discover.walks')
+locate({entity=true,alpha=true})
+locate({entity=true,alpha=true},rt,view)
+locate({entity=true,alpha=true},adapter,profile)
+assert(counter('discover.walks')==before+3,'different adapters/profiles shared an unproven walk')
+for i=1,5 do
+ locate({entity=true,alpha=true})
+ locate({entity=true,alpha=true},rt,view)
+ locate({entity=true,alpha=true},adapter,profile)
+end
+assert(counter('discover.walks')==before+3,'alternating domains discarded valid discovery proofs')
+now=316
+locate({entity=true,alpha=true})
+locate({entity=true,alpha=true},rt,view)
+locate({entity=true,alpha=true},adapter,profile)
+assert(counter('discover.walks')==before+6,'a profile cache extended another cache lifetime')
+-- Live APIs make a wrapper per operation. Only an explicit common address-space token can share their proofs.
+local space={}
+local a=setmetatable({_discovery_space=space},{__index=rt})
+local c=setmetatable({_discovery_space=space},{__index=rt})
+before=counter('discover.walks')
+locate({entity=true,alpha=true},a,profile)
+locate({entity=true,alpha=true},c,profile)
+assert(counter('discover.walks')==before+1,'live wrappers did not share their completed walk')
+-- The diagnostic switch drops existing proofs and never shares while off.
+local mode=require('hd2runtime/runtime/application_mode')
+mode.configure(false)
+before=counter('discover.walks');local hits=counter('discover.shared_reuses')
+locate({entity=true,alpha=true},a);locate({entity=true,alpha=true},c)
+assert(counter('discover.walks')==before+2 and counter('discover.shared_reuses')==hits)
+mode.configure(true)
+locate({entity=true,alpha=true},a);locate({entity=true,alpha=true},c)
+assert(counter('discover.walks')==before+3,'re-enable reused an old proof or did not rebuild sharing')
+
+
+return 'ok'
+''')
+
+    def test_native_readonly_wrappers_share_process_discovery_identity(self):
+        run(r'''
+local create=require('hd2runtime/runtime/windows_readonly')
+local a,c=create(),create()
+assert(a~=c and type(a._discovery_space)=='table'and a._discovery_space==c._discovery_space,
+ 'per-operation native wrappers must share address-space identity')
+assert(a.write==nil and c.write==nil,'read-only adapter gained write access')
 return 'ok'
 ''')
 

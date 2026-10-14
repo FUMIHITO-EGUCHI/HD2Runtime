@@ -36,9 +36,9 @@ class FireModeTests(unittest.TestCase):
 
     def test_coverage_and_blockers(self):
         states = Counter((row['kind'], row['state']) for row in self.catalog['weapons'])
-        self.assertEqual(states[('player', 'selectable')], 31)   # + the SMG-37 Defender (0.30.2: the seven DUPLICATE weapons resolved to their proven roots, research/weapon-roots)
+        self.assertEqual(states[('player', 'selectable')], 32)   # + the SMG-37 Defender (0.30.2: the seven DUPLICATE weapons resolved to their proven roots, research/weapon-roots)
         # 0.31.0: every single-mode weapon has a free input, so each can take the fire-mode selector ('addable').
-        self.assertEqual(states[('player', 'addable')], 20)   # 0.30.2: the seven DUPLICATE weapons resolved to their proven roots
+        self.assertEqual(states[('player', 'addable')], 21)   # Includes the reviewed Warrant trigger.
         self.assertEqual(states[('player', 'single_mode')] + states[('support', 'single_mode')], 0)
         self.assertEqual(states[('support', 'selectable')], 3)
         self.assertEqual(states[('support', 'addable')], 10)
@@ -46,9 +46,9 @@ class FireModeTests(unittest.TestCase):
         self.assertEqual((hot['state'], hot['maxModes'], hot['bindableInputs'], hot['binding']['value']),
             ('addable', 3, ['left', 'right'], 'fire_mode'))
         self.assertEqual(self.weapons[('support', 'MG-43 Machine Gun')]['bindableInputs'], ['left'])
-        self.assertEqual(self.catalog['summary']['writable'], 64)   # 0.30.2 roots
+        self.assertEqual(self.catalog['summary']['writable'], 66)
         blocked = {('player', 'PLAS-15 Loyalist'): 'charge or safety', ('support', 'RS-422 Railgun'): 'charge or safety',
-            ('support', 'M-1000 Maxigun'): 'conventional projectile', ('player', 'P-92 Warrant'): 'ProgrammableAmmo',
+            ('support', 'M-1000 Maxigun'): 'conventional projectile',
             ('player', 'AR-11 Arbitrator'): 'special fire-control', ('player', 'SG-8 Punisher'): 'weapon-function'}
         for key, needle in blocked.items():
             row = self.weapons[key]
@@ -60,7 +60,11 @@ class FireModeTests(unittest.TestCase):
             if row['writable']:
                 self.assertTrue(set(row['modes']) <= {'automatic', 'single', 'burst'}, row['weapon'])
                 self.assertEqual(row['defaultMode'], row['modes'][0])
-                self.assertEqual(row['maxModes'], 3)
+                self.assertEqual(row['maxModes'], 2 if row['weapon']=='PLAS-39 Accelerator Rifle' else 3)
+        accelerator=self.weapons[('player','PLAS-39 Accelerator Rifle')]
+        self.assertEqual(accelerator['allowedModes'],['single','unsafe'])
+        self.assertEqual(accelerator['fields']['burstRounds'],'charge.burst_shots')
+        self.assertEqual(self.catalog['summary']['fullAutoPossible'],65)
 
     def test_lua_guards_and_api(self):
         self.assertEqual(run(r'''
@@ -102,15 +106,15 @@ return 'ok'
         result = json.loads((ROOT / 'validation/fire-mode-authoring-snapshot.json').read_text())
         self.assertEqual(result['status'], 'VALIDATED')
         # 62 writable fire-mode sets since the EAT-17 was delivery-resolved.
-        self.assertEqual((result['modeSetChecks'], result['burstChecks']), (64, 64))   # (0.30.2: the seven weapons resolved to their proven roots)
+        self.assertEqual((result['modeSetChecks'], result['burstChecks']), (66, 65))
         for key in ('changedWrites', 'rollbacks', 'conflictRejections', 'acknowledgementRejections'):
-            self.assertEqual(result[key], 128, key)
+            self.assertEqual(result[key], 131, key)
         self.assertEqual(result['jar5'], {'after': '01000000', 'before': '00000000', 'bytesWritten': 4,
             'changedSlot': 'tertiary_fire_mode (+152)', 'fieldOffset': 152, 'owner': 'WeaponDataComponentData',
             'record': 290, 'uniqueOwner': True})
         self.assertEqual(result['blockedRejections'], 5)
         self.assertEqual((result['addedSelectors'], result['selectorRejections'], result['fourModeRejections']),
-            (30, 60, 30))
+            (31, 62, 31))
         self.assertEqual(result['hotShot']['secondSlot'], {'offset': 148, 'before': '00000000', 'after': '01000000'})
         self.assertEqual((result['hotShot']['binding']['offset'], result['hotShot']['binding']['after']), (184, '03000000'))
         self.assertTrue(result['overlapRejected'])

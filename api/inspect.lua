@@ -20,6 +20,7 @@
 local Reader=require('hd2runtime/runtime/reader')
 local b=require('hd2runtime/core/bytes')
 local ownership=require('hd2runtime/core/ownership')
+local metrics=require('hd2runtime/runtime/metrics')
 local M={}
 M.MAX_FIELDS=64
 
@@ -151,19 +152,9 @@ function M.start(runtime,emit,request)
     local target,on_result=request.target,request.on_result
     local job={status='running',kind='inspect',perf_label='inspect '..tostring(target.resource)}
     local results,pending={},{}
-    for index,item in ipairs(items)do
-        if item.expect==nil then
-            results[index]={state='invalid',reason='no reviewed value for this field: pass {field, expect}'}
-        else
-            local spec,why=spec_for(target,item.field,item.expect)
-            if spec then pending[#pending+1]={index=index,item=item,spec=spec}
-            else results[index]={state='invalid',reason=why}end
-        end
-    end
     local function reset(entry)for _,change in ipairs(entry.spec.changes or{})do change.inspect={}end end
-    for _,entry in ipairs(pending)do reset(entry)end
-    local domain=#pending>0 and require('hd2runtime/domains/write_domains').for_kind(pending[1].spec.kind)
-    local stage=#pending>0 and'capture'or'done'
+    local domain
+    local stage,validation_cursor='validate',0
     local worker,steps,cursor,reader,resolved=nil,0,0,nil,nil
     local prepared={}
     local function change_of(entry)return(entry.spec.changes or{})[1]or{field=entry.item.field}end
@@ -172,6 +163,7 @@ function M.start(runtime,emit,request)
     -- Resumes the worker once: nil while it runs, else true and its result or false and why.
     local function step()
         steps=steps+1
+        if reader and reader.begin_slice then reader.begin_slice()end
         local ok,result=coroutine.resume(worker)
         if ok and coroutine.status(worker)~='dead'then
             if steps<=10000 then return nil end
@@ -198,15 +190,39 @@ function M.start(runtime,emit,request)
         end
     end
     function job.cancel()if job.status=='running'then job.status='cancelled'end end
-    function job.tick()
+    local function advance()
         if job.status~='running'then return end
+        if stage=='validate'then
+            local started=metrics.now()
+            for _=1,4 do
+                validation_cursor=validation_cursor+1
+                local item=items[validation_cursor]
+                if not item then
+                    domain=#pending>0 and require('hd2runtime/domains/write_domains').for_kind(pending[1].spec.kind)
+                    stage=#pending>0 and'capture'or'done'
+                    break
+                end
+                if item.expect==nil then
+                    results[validation_cursor]={state='invalid',reason='no reviewed value for this field: pass {field, expect}'}
+                else
+                    local spec,why=spec_for(target,item.field,item.expect)
+                    if spec then
+                        local entry={index=validation_cursor,item=item,spec=spec};reset(entry)
+                        pending[#pending+1]=entry
+                    else results[validation_cursor]={state='invalid',reason=why}end
+                end
+                local now=started and metrics.now()
+                if now and now-started>=0.0005 then break end
+            end
+            return
+        end
         if stage=='done'then return finish()end
         if stage=='capture'then
             if not worker then
                 local specs={}
                 for index,entry in ipairs(pending)do specs[index]=entry.spec end
                 begin(function()
-                    reader=Reader.new(runtime)
+                    reader=Reader.new(runtime,{cooperative=true})
                     return domain.capture_many(runtime,reader,specs)
                 end)
             end
@@ -248,7 +264,8 @@ function M.start(runtime,emit,request)
             local entry=pending[cursor]
             if not entry then stage='done';return end
             begin(function()
-                local own=Reader.new(runtime)
+                local own=Reader.new(runtime,{cooperative=true})
+                reader=own
                 local captured=domain.capture(runtime,own,entry.spec)
                 domain.prepare(captured,own,entry.spec)
                 own.verify()
@@ -258,6 +275,17 @@ function M.start(runtime,emit,request)
         local ok,result=step()
         if ok==nil then return end
         results[entry.index]=classify(change_of(entry),not ok and reason_of(result)or nil)
+    end
+    -- Consume small coroutine steps up to a UI-sized budget, instead of making every yield wait a whole frame.
+    -- A final atomic read/parse chunk may overrun the target; this is cooperative pacing, not preemption.
+    function job.tick()
+        local started=metrics.now()
+        if not started then return advance()end
+        for _=1,32 do
+            advance()
+            local now=metrics.now()
+            if job.status~='running'or not now or now-started>=0.00075 then return end
+        end
     end
     return job
 end

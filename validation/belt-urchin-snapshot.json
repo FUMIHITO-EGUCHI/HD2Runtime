@@ -1,0 +1,8 @@
+{
+  "changedWrites": 3,
+  "liveGameTested": false,
+  "ownedTransitions": 2,
+  "rejections": 5,
+  "rollbackFailures": 2,
+  "status": "VALIDATED"
+}

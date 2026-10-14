@@ -439,7 +439,7 @@ function M.bind_rockets(spec,callback)
     local present=true
     local guard_step
     function guard.tick()
-        local started=metrics.now()
+        local started=metrics.start()
         guard_step()
         metrics.elapsed('custom_eagles.rockets_tick',started)
     end

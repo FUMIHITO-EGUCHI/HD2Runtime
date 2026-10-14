@@ -139,8 +139,30 @@ end
 -- reason, shared, acknowledgements {own, none, catalogue}, own {value, name, label, acknowledgements} (nil without an
 -- explosion of its own), none {value, acknowledgements}, options (as list(), each with value and acknowledgements),
 -- excluded {name, label, reason}, groups (as groups(), counting this field's options)}.
+-- Throwable detonation references use the same complete, package-backed catalogue as projectile payloads.
+local function throwable_options(target,filter)
+    local weapon=assert(require('hd2runtime/domains/throwable_authoring').throwables[target.throwable],'unknown throwable')
+    local field=assert(weapon.targets.detonation.fields['throwable.explosion'],'no native explosion payload')
+    local acks={'allow_unverified_effect','allow_unverified_reference'}
+    if field.shared then acks[#acks+1]='allow_shared'end
+    local current=field.currentDefault
+    local result={field='throwable.explosion',resource='throwable',weapon=weapon.name,current=current,
+        editable=field.editable,shared=field.shared,options={},groups=M.groups(),excluded={},
+        none={value='none',acknowledgements=copy(acks)}}
+    if current~='none'then
+        result.own={value=catalogue_api.handle(current),name=current,label=catalogue.explosions[current].label,
+            acknowledgements=copy(acks)}
+    end
+    for _,item in ipairs(M.list(filter))do if item.name~=current then
+        item.acknowledgements=copy(acks);result.options[#result.options+1]=item
+    end end
+    return result
+end
 function M.for_target(target,filter)
     filter=check_filter(filter)
+    if rawget(target,'resource')=='throwable'and rawget(target,'path')=='detonation'then
+        return throwable_options(target,filter)
+    end
     local kind,weapon,field=field_of(target)
     local base={}
     if field.acknowledgement then base[#base+1]=field.acknowledgement end
@@ -194,7 +216,7 @@ end
 -- hd2.explosions.payload_options([target,] filter): a terminal action handle first lists that field's values, else
 -- every payload option.
 function M.payload_options(target,filter)
-    if type(target)=='table'and rawget(target,'path')=='terminal_action'then return M.for_target(target,filter)end
+    if type(target)=='table'and (rawget(target,'path')=='terminal_action'or(rawget(target,'resource')=='throwable'and rawget(target,'path')=='detonation'))then return M.for_target(target,filter)end
     assert(filter==nil,'payload_options(filter) or payload_options(terminal, filter)')
     return M.list(target)
 end

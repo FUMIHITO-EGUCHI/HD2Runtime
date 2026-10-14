@@ -6,6 +6,7 @@
 -- buffer; other adapters (the packaged harness, offline tests) fall back to string reads.
 local b=require('hd2runtime/core/bytes')
 local M={}
+local memory=require('hd2runtime/runtime/memory_watch')
 local MAX_BLOCK=1048576
 
 local Block={};Block.__index=Block
@@ -57,6 +58,7 @@ function M.new(runtime)
     -- A reusable slot. Returns the block (filled) or nil when the read failed.
     function view.slot()
         local block=setmetatable({size=0,capacity=0},Block)
+        memory.fields(block,'Event buffers',{'bytes'})
         if fast then block.u32p,block.f32p,block.cast=u32p,f32p,ffi.cast end
         return block
     end
@@ -67,6 +69,7 @@ function M.new(runtime)
             if block.capacity<size then
                 local capacity=math.max(size,256,block.capacity*2)
                 block.buffer=ffi.new('uint8_t[?]',capacity);block.capacity=capacity
+                memory.buffer(block.buffer,capacity,'Event buffers')
                 block.data=ffi.cast('const uint8_t *',block.buffer)
             end
             if not runtime.read_into(address,size,block.buffer)then view.failures=view.failures+1;return nil end

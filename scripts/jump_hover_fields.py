@@ -19,6 +19,8 @@ The Dark Fluid vessel backpack (record 2) shares the component but is not a cata
 Behaviour switches (+144, +145, +152..+155, +64) and members whose meaning is not decoded (+4, +8, +20, +28) are not
 offered.
 """
+# The historical jump.sustain_* IDs are retained for preset compatibility. Native collision gating and the
+# opposing horizontal impulse identify this as landing thrust (research/docs/dev16-landing-thrust-20261013.md).
 from __future__ import annotations
 
 import json
@@ -36,17 +38,17 @@ SPECS = (
     ('jump.launch_forward_ratio', '32', 32, ('jump',), (0.0, 1.0),
         'Share of the launch thrust along the travel direction; the rest pushes up (0 = straight up, 1 = flat).'),
     ('jump.sustain_thrust', '36', 36, ('jump', 'hover'), (0.0, 500.0),
-        'Peak thrust of the sustain phase (m/s^2, tapering as 1 - t^2 over jump.sustain_duration).'),
+        'Peak landing thrust (m/s^2), tapering as 1 - t^2 over the landing thrust duration.'),
     ('jump.sustain_duration', '40', 40, ('jump', 'hover'), (0.0, 10.0),
-        'Seconds the sustain thrust lasts (0 disables the sustain phase).'),
+        'Seconds the landing thrust lasts (0 disables landing thrust).'),
     ('jump.sustain_forward_ratio', '44', 44, ('jump', 'hover'), (0.0, 1.0),
-        'Share of the sustain thrust along the travel direction; the rest pushes up.'),
+        'Share of landing thrust used to brake horizontal movement; the rest pushes up.'),
     ('jump.sustain_start_delay', '48', 48, ('jump',), (0.0, 10.0),
-        'Seconds of launch before the sustain phase may start.'),
+        'Seconds after launch before landing thrust may start.'),
     ('jump.sustain_start_speed', '52', 52, ('jump', 'hover'), (0.0, 100.0),
-        'Minimum speed (m/s) to start the sustain phase (a forward probe must also be clear).'),
+        'Minimum speed (m/s) for landing thrust; the travel probe must detect a surface below the wearer.'),
     ('jump.sustain_cutoff_speed', '56', 56, ('jump', 'hover'), (0.0, 100.0),
-        'The sustain phase ends, and the pack deactivates, below this speed (m/s).'),
+        'Landing thrust ends and the pack deactivates below this speed (m/s).'),
     ('jump.air_control_acceleration', '60', 60, ('jump', 'hover'), (0.0, 200.0),
         'Mid-air steering: acceleration (m/s^2) along the movement input.'),
     ('jump.air_control_max_speed', '176[0]', 176, ('jump',), (0.0, 100.0),
@@ -144,6 +146,8 @@ def build(builder, name, target, jump_component, backing, research):
                 'sharedTypedSchema': False, 'differential': differential,
                 'codeReadCount': len(candidate['codeRefs']),   # instruction pins: research JSON only
                 'research': 'research/hoverpack-components-F5FEE03DCFDB.json'}}
+        if field_id.startswith('jump.sustain_'):
+            extra['uiGroup'] = 'landing_thrust'
         value = f32(research['matrix'][path][name])
         keys.append(builder.add(name, target, field_id, value, backing(offset), extra=extra)['instanceKey'])
     blocked = NOT_OFFERED[pack] + NOT_OFFERED['both']

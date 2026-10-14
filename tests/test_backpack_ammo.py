@@ -50,9 +50,9 @@ class BackpackAmmoTests(unittest.TestCase):
             self.assertFalse(field['allowSharedRequired'])
             self.assertEqual(field['acknowledgement'], 'allow_unverified_effect')
             self.assertEqual(field['uiGroup'], 'backpack_ammo')
-        # Call-in backpack deposits (Supply Pack, drones, Hellbomb) stay read-only.
+        # Supply Pack box semantics are now verified through native deposit readers.
         supply = [x for x in self.backpacks['fieldInstances'] if x['target']['backpack'] == 'B-1 Supply Pack']
-        self.assertTrue(supply and not any(x['editable'] for x in supply))
+        self.assertTrue(len(supply) == 3 and all(x['editable'] for x in supply))
         weapons = {item['name']: item for item in self.support['weapons']}
         link = weapons['M-1000 Maxigun']['ammoBackpack']
         self.assertEqual((link['backpack'], link['semanticId']), ('M-1000 Maxigun Backpack', maxigun['semanticId']))
@@ -96,8 +96,8 @@ rejects({id='e',allow_unverified_effect=true,target=backpack,field=hd2.fields.de
  '(1 to 1023): the live deposit amount is the engine network field')
 rejects({id='c',allow_unverified_effect=true,target=backpack,field=hd2.fields.deposit.capacity,expect=999,value=1023},
  'expect differs')
-rejects({id='d',allow_unverified_effect=true,target=hd2.backpack('B-1 Supply Pack'),field=hd2.fields.deposit.capacity,
- expect=4,value=6},'read-only')
+patches.validate{id='d',allow_unverified_effect=true,target=hd2.backpack('B-1 Supply Pack'),field=hd2.fields.deposit.capacity,
+ expect=4,value=6}
 assert(hd2.support_weapon('GR-8 Recoilless Rifle'):backpack().backpack=='GR-8 Recoilless Rifle Backpack')
 assert(hd2.backpack('GR-8 Recoilless Rifle Backpack'):describe().feeds.relationship=='team_reload')
 assert(not pcall(function()return hd2.support_weapon('EAT-17 Expendable Anti-Tank'):backpack()end))

@@ -1287,6 +1287,7 @@ local function collect_needs(needed,spec)
             if linkage:find('explosion',1,true)then add_need(needed,'explosion',true)end
             if linkage:find('arc',1,true)then add_need(needed,'arc',true)end
             if linkage:find('beam',1,true)then add_need(needed,'beam',true)end
+            if linkage:find('heat_self',1,true)then add_need(needed,'status',true)end
         end
         if change.descriptor.type=='projectile_reference'or change.descriptor.type=='function_projectile_reference'then
             add_need(needed,'projectile',true)
@@ -1322,6 +1323,7 @@ local function with_turret(names,specs)
     for _,spec in ipairs(specs)do
         for _,change in ipairs(spec.changes or{})do
             local backing=change.descriptor and change.descriptor.backing
+            if change.descriptor.missileProjectileHost then add('SeekingMissileComponentData')end
             if backing and backing.component=='TurretComponentData'then add('TurretComponentData')end
             local source=change.source_descriptor and change.source_descriptor.backing
             if source and source.kind=='component'and source.component then add(source.component)end
@@ -1340,6 +1342,7 @@ function M.capture_many(runtime,reader,specs)
         with_turret(needed.entity_deltas and ammunition_component_names or component_names,specs))
     local results={}
     for index,spec in ipairs(specs)do
+        if reader.cooperate then reader.cooperate()end
         local selected=database_for(spec.kind)
         local resolved={roots=roots,catalog=catalog,candidate=find_candidate(catalog,spec.resource),
             database=selected,
@@ -1458,6 +1461,25 @@ local function component_record_for(resolved,candidate,backing)
 end
 local function component_record(resolved,backing)
     return component_record_for(resolved,resolved.candidate,backing)
+end
+-- Only the reviewed missile hosts can carry a donor projectile. Keep both mode
+-- entity links intact and prove that neither missile overrides the shot's type.
+local function missile_projectile_host(resolved,descriptor)
+    local proof=descriptor.missileProjectileHost
+    if not proof then return false end
+    local map=resolved.candidate.ownership
+    assert(map.WeaponMagazineComponentData and not map.WeaponRoundsComponentData
+        and not map.WeaponLinkedAmmoComponentData and not map.WeaponChargeComponentData
+        and not map.WeaponHeatComponentData,'MISSILE_HOST_CHANGED: ammunition selector changed')
+    local magazine=resolved.catalog.record(resolved.candidate,'WeaponMagazineComponentData')
+    assert(magazine.bytes:sub(5,136)==string.rep('\0',132),
+        'MISSILE_HOST_CHANGED: magazine pattern selects another projectile')
+    for _,backing in ipairs(proof)do
+        local missile=component_record(resolved,backing)
+        assert(missile.bytes:byte(174)==1 and b.u32(missile.bytes,176)==0,
+            'MISSILE_HOST_CHANGED: missile no longer consumes the shot projectile')
+    end
+    return true
 end
 local function projectile_for_candidate(resolved,candidate,branch)
     local ownership=candidate.ownership
@@ -1596,6 +1618,13 @@ local function support_explosion(resolved,backing)
         'linked support projectile ExplosionSettings absent')
 end
 
+local function support_explosion_arc(resolved,backing)
+    local explosion=support_explosion(resolved,backing)
+    assert(explosion.kind==backing.explosionType,'explosion arc parent changed')
+    assert(b.u32(explosion.bytes,120)==backing.arcType,'explosion arc selector changed')
+    return assert(resolved.roots.arc.records[backing.arcType],'linked explosion ArcSettings absent')
+end
+
 -- 0.31.1 (scripts/programmable_feed_fields.py): the projectile the weapon fires while its ProgrammableAmmo function is
 -- on, ProjectileWeapon +576 (game.dll 0x615940 fires it instead of the normal projectile when it is non-zero, and the
 -- +584 entity instead when that is non-zero). Re-read on every write: a weapon that now spawns an entity through the
@@ -1611,7 +1640,10 @@ local function function_projectile(resolved)
 end
 
 local function support_damage(resolved,backing,linkage)
-    if linkage=='function_projectile_damage'then
+    if linkage=='projectile_explosion_arc_damage'then
+        local arc=support_explosion_arc(resolved,backing)
+        return assert(resolved.roots.damage.records[b.u32(arc.bytes,36)],'linked explosion arc DamageInfo absent')
+    elseif linkage=='function_projectile_damage'then
         return assert(resolved.roots.damage.records[b.u32(function_projectile(resolved).bytes,60)],
             'linked ProgrammableAmmo DamageInfo absent')
     end
@@ -1653,6 +1685,25 @@ end
 
 local function support_linked(resolved,backing)
     local linkage=assert(backing.linkage,'support settings linkage missing')
+    if linkage:find('heat_',1,true)==1 then
+        local id=assert(backing.heatRecord,'heat ownership missing')
+        local heat=component_record(resolved,{component='WeaponHeatComponentData',recordIndex=id.recordIndex,
+            indexRow=id.indexRow,ownerCount=id.ownerCount})
+        local offset=(backing.heatLevel-1)*24
+        if linkage=='heat_self_damage'or linkage=='heat_self_status_duration'then
+            assert(b.u32(heat.bytes,offset+20)==backing.statusType,'heat self-status selector changed')
+            local status=assert(resolved.roots.status.records[backing.statusType],'heat self-status absent')
+            if linkage=='heat_self_status_duration'then return status,resolved.roots.status.owner end
+            return assert(resolved.roots.damage.records[b.u32(status.bytes,44)],'heat self-damage absent'),
+                resolved.roots.damage.owner
+        end
+        assert(b.u32(heat.bytes,offset+4)==backing.projectileType,'heat projectile selector changed')
+        local projectile=assert(resolved.roots.projectile.records[backing.projectileType],'heat projectile absent')
+        if linkage=='heat_projectile'then return projectile,resolved.roots.projectile.owner end
+        assert(linkage=='heat_damage','unknown heat linkage')
+        return assert(resolved.roots.damage.records[b.u32(projectile.bytes,60)],'heat damage absent'),
+            resolved.roots.damage.owner
+    end
     if linkage=='projectile'then
         local record=projectile_for_candidate(resolved,resolved.candidate,backing.branch)
         return record,resolved.roots.projectile.owner
@@ -1662,6 +1713,8 @@ local function support_linked(resolved,backing)
     end
     if linkage=='function_projectile'then
         return function_projectile(resolved),resolved.roots.projectile.owner
+    elseif linkage=='projectile_explosion_arc'then
+        return support_explosion_arc(resolved,backing),resolved.roots.arc.owner
     end
     if linkage=='arc'then
         local component=resolved.catalog.record(resolved.candidate,'ArcWeaponComponentData')
@@ -1715,7 +1768,8 @@ function M.prepare(resolved,reader,spec,packing)
                 (beam and'beam'or'ammunition')..' source was not freshly proven')
             assert(source.entry.dataOffset==change.descriptor.dataOffset,(beam and'beam'or'ammunition')..' source changed')
             record={bytes=source.bytes,offset=change.descriptor.dataOffset};owner=source.region
-        elseif(spec.kind=='support_weapon'or spec.kind=='vehicle_weapon')and backing.linkage then
+        elseif backing.linkage and(spec.kind=='support_weapon'or spec.kind=='vehicle_weapon'
+            or backing.linkage:find('heat_',1,true)==1)then
             record,owner=support_linked(resolved,backing)
             assert(record.group==backing.group and record.row==backing.row
                 and record.kind==backing.recordType and record.settings_type==backing.settingsType,
@@ -1789,7 +1843,20 @@ function M.prepare(resolved,reader,spec,packing)
                 and settings.kind==reviewed_settings.recordType
                 and settings.settings_type==reviewed_settings.settingsType,
                 'source ProjectileSettings identity changed')
-            if change.host_proof then
+            local missile=missile_projectile_host(resolved,change.descriptor)
+            local backpack=change.descriptor.backpackProjectileHost
+            if backpack then
+                local map=resolved.candidate.ownership
+                assert(not map.WeaponMagazineComponentData and not map.WeaponRoundsComponentData
+                    and not map.WeaponChargeComponentData and not map.WeaponHeatComponentData,
+                    'BACKPACK_HOST_CHANGED: another projectile selector appeared')
+                local linked=component_record(resolved,{component='WeaponLinkedAmmoComponentData',
+                    recordIndex=backpack.recordIndex,indexRow=backpack.indexRow,ownerCount=backpack.ownerCount})
+                assert(linked.bytes==b.unhex(backpack.hex),'BACKPACK_HOST_CHANGED: linked ammunition changed')
+                assert(record.bytes:sub(41,48)==string.rep('\0',8)and record.bytes:sub(585,592)==string.rep('\0',8),
+                    'BACKPACK_HOST_CHANGED: spawned entity overrides projectile')
+            end
+            if change.host_proof and not backpack and not missile then
                 local ownership_map=resolved.candidate.ownership
                 assert(ownership_map.WeaponMagazineComponentData and not ownership_map.WeaponRoundsComponentData
                     and not ownership_map.WeaponChargeComponentData and not ownership_map.WeaponHeatComponentData,
@@ -1839,8 +1906,10 @@ function M.prepare(resolved,reader,spec,packing)
             assert((ownership_map.WeaponRoundsComponentData~=nil)==(change.descriptor.hostRounds==true),
                 'FUNCTION_HOST_CHANGED: '..spec.weapon..' rounds feed changed')
             local zero8=string.rep(string.char(0),8)
-            assert(record.bytes:sub(41,48)==zero8 and record.bytes:sub(585,592)==zero8,
-                'FUNCTION_HOST_CHANGED: '..spec.weapon..' now spawns an entity when it fires')
+            if not missile_projectile_host(resolved,change.descriptor)then
+                assert(record.bytes:sub(41,48)==zero8 and record.bytes:sub(585,592)==zero8,
+                    'FUNCTION_HOST_CHANGED: '..spec.weapon..' now spawns an entity when it fires')
+            end
             if ownership_map.WeaponMagazineComponentData then
                 local magazine=resolved.catalog.record(resolved.candidate,'WeaponMagazineComponentData')
                 assert(magazine.bytes:sub(5,136)==string.rep(string.char(0),132),

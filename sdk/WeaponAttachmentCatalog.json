@@ -1,8 +1,8 @@
 {
   "contract": "hd2runtime.weapon_attachment.catalog.v1",
   "schemaVersion": 1,
-  "hd2RuntimeVersion": "0.31.3",
-  "scope": "Read-only metadata for every weapon customization item. Writable magazine effects are in MagazineAttachmentCapabilities.json, writable muzzle, optics and underbarrel stat modifiers in WeaponAttachmentModifierCapabilities.json; selection (which attachment is equipped) is not writable.",
+  "hd2RuntimeVersion": "0.40.0",
+  "scope": "Read-only metadata for every weapon customization item. Writable magazine effects are in MagazineAttachmentCapabilities.json, writable muzzle, optics and underbarrel stat modifiers in WeaponAttachmentModifierCapabilities.json, heatsinks in HeatsinkAttachmentCapabilities.json; selection (which attachment is equipped) is not writable.",
   "consumerSources": {
     "nativeDefaultOf": "weapon resource DefaultCustomizations (pinned entity library)",
     "unlockListedFor": "per-weapon unlock lists observed in the retained snapshot"
@@ -18,6 +18,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -182,6 +183,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -219,6 +221,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -257,6 +260,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -421,6 +425,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -585,6 +590,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -749,6 +755,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -913,6 +920,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -1077,6 +1085,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -1243,6 +1252,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -1407,6 +1417,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -1571,6 +1582,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -1735,6 +1747,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -1901,6 +1914,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -2067,6 +2081,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -2233,6 +2248,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -2397,6 +2413,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -2559,6 +2576,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -2723,6 +2741,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -2885,6 +2904,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -3047,6 +3067,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -3209,6 +3230,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -3371,6 +3393,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -3533,6 +3556,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -3695,6 +3719,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -3859,6 +3884,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -4021,6 +4047,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -4183,6 +4210,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -4345,6 +4373,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -4507,6 +4536,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -4669,6 +4699,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -4831,6 +4862,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -4993,6 +5025,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -5151,6 +5184,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -5309,6 +5343,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -5467,6 +5502,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -5625,6 +5661,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -5783,6 +5820,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -5941,6 +5979,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -6099,6 +6138,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -6257,6 +6297,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -6415,6 +6456,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -6573,6 +6615,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -6731,6 +6774,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -6893,6 +6937,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -7057,6 +7102,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -7219,6 +7265,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -7381,6 +7428,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -7543,6 +7591,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -7705,6 +7754,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -7867,6 +7917,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -8029,6 +8080,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -8191,6 +8243,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -8353,6 +8406,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -8515,6 +8569,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -8677,6 +8732,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -8841,6 +8897,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -9003,6 +9060,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -9165,6 +9223,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -9327,6 +9386,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -9489,6 +9549,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -9653,6 +9714,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -9815,6 +9877,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -9977,6 +10040,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -10139,6 +10203,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -10304,6 +10369,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -10466,6 +10532,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -10628,6 +10695,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -10790,6 +10858,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -10952,6 +11021,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -11114,6 +11184,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -11276,6 +11347,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -11438,6 +11510,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -11600,6 +11673,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -11762,6 +11836,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -11924,6 +11999,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -12086,6 +12162,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -12248,6 +12325,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -12410,6 +12488,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -12572,6 +12651,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -12734,6 +12814,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -12896,6 +12977,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -13058,6 +13140,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -13220,6 +13303,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -13382,6 +13466,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -13544,6 +13629,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -13706,6 +13792,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -13735,6 +13822,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -13897,6 +13985,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -14059,6 +14148,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -14223,6 +14313,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -14385,6 +14476,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -14547,6 +14639,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -14709,6 +14802,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -14871,6 +14965,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -15033,6 +15128,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -15195,6 +15291,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -15357,6 +15454,7 @@
       "hasEntityDelta": false,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [],
       "compatibleWeapons": [
@@ -15406,6 +15504,7 @@
       "hasEntityDelta": false,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [],
       "compatibleWeapons": [
@@ -15508,6 +15607,7 @@
       "hasEntityDelta": false,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [],
       "compatibleWeapons": [
@@ -15601,6 +15701,7 @@
       "hasEntityDelta": false,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [],
       "compatibleWeapons": [
@@ -15643,6 +15744,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -15676,6 +15778,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -15709,6 +15812,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_RecoilHorizontal",
@@ -15827,6 +15931,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-5-5x50mm-standard/272e4c5f18bbd39e",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -16001,6 +16106,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-5-5x50mm-extended/bfc7127000978692",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -16094,6 +16200,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-5-5x50mm-drum/fa499a29b375c6cf",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -16254,6 +16361,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-5-5x50mm-standard-fastreload/b46fd3d0a10576b9",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -16420,6 +16528,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-5-5x50mm-extended-fastreload/b9d2c29a3b15b591",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -16561,6 +16670,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-5-5x50mm-drum-carbine/00618531fc7a3692",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -16727,6 +16837,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/karbin-rifle-standard/e2f9b6b1f2e8fddb",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -16831,6 +16942,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-8x40mm-rifle-standard/892779ea0d77aeb3",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -16900,6 +17012,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/whisper-rifle-5-5x50mm-standard/16af29c8d0590809",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -17066,6 +17179,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/whisper-rifle-5-5x50mm-drum/dc2b49810b002079",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -17216,6 +17330,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-12x25mm-standard/6c63bd137af2da1e",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -17318,6 +17433,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-12x25mm-extended/73a27ec123b6d632",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -17401,6 +17517,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-12x25mm-drum/568bc4a451110ca0",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -17567,6 +17684,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-12x25mm-standard-pummeler/ea054f1cc567db3b",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -17669,6 +17787,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-12x25mm-extended-pummeler/946ef6b4fae7c0de",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -17752,6 +17871,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-12x25mm-drum-pummeler/4fded5f56e190410",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -17918,6 +18038,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-9x20mm-top-mounted-standard/fc9cc6afc9155eb2",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -17993,6 +18114,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-9x20mm-top-mounted-extended/176c9113b2833712",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -18095,6 +18217,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-9x20mm-top-mounted-standard-solvent/80bf5c7ef57ea0e0",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -18170,6 +18293,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-9x20mm-top-mounted-extended-solvent/11156cef840b147a",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -18272,6 +18396,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-flamer-standard-magazine/e68347c558fb8b96",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -18353,6 +18478,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-flamer-drum-magazine/edd0b384b4ec7242",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -18519,6 +18645,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/smg-flamer-extended-magazine/a7609a0fd1736a11",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -18631,6 +18758,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/shotgun-12g-magazine-standard/f9f877be8deda58d",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -18767,6 +18895,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/shotgun-12g-magazine-extended/95b6103970039345",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -18876,6 +19005,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/shotgun-12g-drum/c1aeebcaa7c23988",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -19054,6 +19184,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/shotgun-12g-magazine-standard-light/6304622136df620c",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -19188,6 +19319,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/shotgun-12g-magazine-extended-light/ce3ad89a45cec7a2",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -19293,6 +19425,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/shotgun-12g-drum-light/6848f4e70d10b9a7",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -19469,6 +19602,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-9x70mm-standard/cda05894170c4de9",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -19579,6 +19713,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-9x70mm-extended/ac5002ad314cd5a3",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -19660,6 +19795,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-justice-standard/c52443137e402fe8",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -19772,6 +19908,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-justice-extended/621a26851cfd19a2",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -19882,6 +20019,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-justice-short/9deab1113f78adfa",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -19959,6 +20097,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-drake-standard/30c524ee2906dec4",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -20042,6 +20181,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/rifle-drake-short/a04c9bf6b8f34a03",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -20152,6 +20292,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": "weapon-attachment/v1/magazine/laser-heatsink-medium-standard/2df091d9af2eab4c",
       "statModifiers": [],
       "effects": [
         {
@@ -20243,6 +20384,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-heatcapacity/069dbd3233461b87",
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -20393,6 +20535,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": "weapon-attachment/v1/magazine/laser-heatsink-medium-improved-cooldown/8381cdbe3f6c43ee",
       "statModifiers": [],
       "effects": [
         {
@@ -20490,6 +20633,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": "weapon-attachment/v1/magazine/laser-heatsink-charge-standard-heatsink/8c0846d3976ee4de",
       "statModifiers": [],
       "effects": [
         {
@@ -20899,6 +21043,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": "weapon-attachment/v1/magazine/laser-heatsink-charge-extended-heatsink/a9edb5569db9ffc7",
       "statModifiers": [],
       "effects": [
         {
@@ -21304,6 +21449,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": "weapon-attachment/v1/magazine/laser-heatsink-charge-rapid-heatsink/c868016291907578",
       "statModifiers": [],
       "effects": [
         {
@@ -21717,6 +21863,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": "weapon-attachment/v1/magazine/laser-heatsink-blaster-standard/94f719641f659898",
       "statModifiers": [],
       "effects": [
         {
@@ -21752,6 +21899,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-heatcapacity/5b23c9aca9df5807",
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -21846,6 +21994,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": "weapon-attachment/v1/magazine/laser-heatsink-blaster-improved-cooldown/9bb2e5e773780873",
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -21924,6 +22073,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/plasma-medium-canister-standard/f4fa14d4afd3ea71",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -21997,6 +22147,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/plasma-medium-canister-extended/09729aaa96113627",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -22070,6 +22221,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/plasma-pistol-canister-pistol/b427e5ddcd7ebe62",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -22143,6 +22295,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/plasma-pistol-canister-extended/6ec0d8e8516cbc07",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -22212,6 +22365,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/jet-assisted-rifle-15mm-drum-standard/d973eb6ff9b6c804",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -22285,6 +22439,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/pistol-9x20mm-extended/98939255db31bed4",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -22485,6 +22640,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": "weapon-attachment/v1/magazine/pistol-12x20mm-standard/874261a0d16e5e00",
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -22568,6 +22724,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/5-5mm-muzzle-brake-custom-penetrator/7bf12048e90c4eb1",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -22700,6 +22857,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/8mm-muzzle-brake-custom-adjudicator/6ecb2d389d4c40db",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -22832,6 +22990,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/8mm-muzzle-brake-custom-tenderdizer/0dba21162292a318",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -22964,6 +23123,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/9mm-muzzle-brake-custom-diligence-counter-sniper/a7607ba6e4fed01b",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -23096,6 +23256,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/muzzle-brake-custom-drake/fdce6eb68b7ae8fd",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -23228,6 +23389,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/5mm-muzzle-brake-custom-karbin/5e6b1feddde8631a",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -23360,6 +23522,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/8mm-muzzle-brake-custom-assault-rifle-large-calibre/2a9594ff0c252e42",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -23492,6 +23655,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/5-5mm-flash-hider/3d6e793c78a01b06",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -23678,6 +23842,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/5-5mm-compensator/4ec5d2257a90f4d2",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -23816,6 +23981,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/5-5mm-muzzle-break/5514c8d6d01da45c",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -23950,6 +24116,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -23995,6 +24162,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/8mm-flash-hider/9b8b8d87e77430dc",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -24181,6 +24349,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/8mm-compensator/c2eeadc4475287e6",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -24319,6 +24488,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/8mm-muzzle-break/10170c032e91884a",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -24451,6 +24621,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -24500,6 +24671,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/9mm-flash-hider/7422f0065407a775",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -24688,6 +24860,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/9mm-compensator/16e4625033b594cb",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -24828,6 +25001,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/9mm-muzzle-break/0d5f7ca4346eda0f",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -24962,6 +25136,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -25003,6 +25178,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/12mm-flash-hider/ab06e26961a0b74b",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -25185,6 +25361,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/12mm-compensator/1dc5e77d04dc6075",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -25321,6 +25498,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/12mm-muzzle-break/a74cd729cb78bd66",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -25457,6 +25635,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -25494,6 +25673,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -25537,6 +25717,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/12g-half-choke/500e8e282a42ea8b",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -25633,6 +25814,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/12g-full-choke/d90b64b1f815ed6a",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -25729,6 +25911,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/12g-duckbill/88ac4db624cc7cd5",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -25827,6 +26010,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -25864,6 +26048,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/10g-half-choke/26a1b11d420c9e0e",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -25954,6 +26139,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/10g-full-choke/df6e05b18c5bf733",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -26044,6 +26230,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/10g-duckbill/412d31cf7c892657",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Mul_SpreadHorizontal",
@@ -26154,6 +26341,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/laser-standard-prism/46d19d5c80239703",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -26282,6 +26470,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/laser-charge-standard/999bbb1342467088",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -26408,6 +26597,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -26451,6 +26641,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/muzzle/laser-blaster-focus/6103d062b831b110",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -26545,6 +26736,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -26580,6 +26772,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/optics/iron-sights/5c0e0df266cafbb8",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -26704,6 +26897,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -26851,6 +27045,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -27001,6 +27196,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -27150,6 +27346,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -27284,6 +27481,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/optics/tube-reddot-2x/184551d23defaf96",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -27455,6 +27653,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/optics/combat-scope-4x/8fe8dedca12e8f87",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -27619,6 +27818,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/optics/sniper-scope-10x/07f1a4f0021dcf2a",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -27747,6 +27947,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/optics/sniper-scope-10x-helghast/12d1df5b4e3c311e",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -27849,6 +28050,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/optics/dune-walker-sniper-scope-10x/cb57c44bb274b8e7",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -27939,6 +28141,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -28004,6 +28207,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -28057,6 +28261,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -28102,6 +28307,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -28151,6 +28357,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -28206,6 +28413,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -28259,6 +28467,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -28732,6 +28941,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -29155,6 +29365,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -29578,6 +29789,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -30001,6 +30213,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -30424,6 +30637,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -30847,6 +31061,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -31270,6 +31485,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -31693,6 +31909,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -32116,6 +32333,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -32539,6 +32757,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -33058,6 +33277,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -33481,6 +33701,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -33558,6 +33779,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -33633,6 +33855,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -33692,6 +33915,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/laser-sight/72fb7b94663086fe",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -33775,6 +33999,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/laser-sight-flashlight/25c6efee394ddfa0",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -33918,6 +34143,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/flashlight/38587c188903ebc0",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -33994,6 +34220,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/vertical-grip/0222918bcbe339ba",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -34162,6 +34389,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/vertical-grip-flashlight/fb1ed26d82df104f",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -34326,6 +34554,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/vertical-grip-advanced/e3aa6f7576c06858",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -34456,6 +34685,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/vertical-grip-45-degree/549dd72a320448e9",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -34626,6 +34856,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/angled-foregrip/d22931feed28dbe6",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -34808,6 +35039,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/angled-foregrip-advanced/a0bc2ffdf4139c59",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -34916,6 +35148,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": "weapon-attachment/v1/underbarrel/angled-foregrip-with-laser/69abc1d6fa03d593",
+      "heatsinkAuthoring": null,
       "statModifiers": [
         {
           "type": "Add_Ergonomics",
@@ -35098,6 +35331,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -35144,6 +35378,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -35185,6 +35420,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -35214,6 +35450,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -35251,6 +35488,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -35284,6 +35522,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -35335,6 +35574,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {
@@ -35384,6 +35624,7 @@
       "hasEntityDelta": true,
       "magazineAuthoring": null,
       "modifierAuthoring": null,
+      "heatsinkAuthoring": null,
       "statModifiers": [],
       "effects": [
         {

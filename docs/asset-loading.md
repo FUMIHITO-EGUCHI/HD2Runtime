@@ -100,9 +100,50 @@ local watch = hd2.require_assets({id='warm-eat', targets={hd2.pickup('EAT-700 Ex
 -- watch.status: waiting_for_assets -> complete (result.status 'RESIDENT') | rejected (ASSET_UNAVAILABLE)
 ```
 
-`require_assets` takes typed handles only: pickups, weapons, support weapons, throwables, vehicles,
-backpacks, mounted-weapon candidates and projectile handles. There is deliberately no
+`require_assets` takes typed handles only: HUD icons, pickups, weapons, support weapons, throwables, vehicles,
+backpacks, stratagems, mounted-weapon candidates and projectile handles. There is deliberately no
 `hd2.load_package(id)`.
+
+### Preloading HUD silhouettes (0.40.0)
+
+Weapon and grenade silhouettes share the mission HUD atlas. Load its UI package
+without loading or equipping the weapons:
+
+```lua
+hd2.require_assets({id='editor-hud', targets={
+    hd2.resources.game_icon('weapon', 'AR-23 Liberator'),
+    hd2.resources.game_icon('faction', 'automatons'),
+}})
+```
+
+These two handles cover the mission and shared atlases, including the mapped
+weapon, throwable, faction and objective sprites. `asset_dependency(icon)` reports
+the proven package. Requests remain asynchronous and use the normal guarded
+loader, session retention and package budget. UI-only requests stay local; they
+are not advertised to lobby peers. Draw calls still verify sprite/page residency
+and retry after loading. Older stratagem/booster handles currently remain
+resident-only. This preload path is verified offline and awaits in-game testing.
+
+### Preloading a whole stratagem (development)
+
+The updated Runtime also accepts a root `hd2.stratagem` handle:
+
+```lua
+return hd2.require_assets({
+    id = 'warm-eagle-strafing-run',
+    targets = {hd2.stratagem('Eagle Strafing Run')},
+})
+```
+
+This requests every catalogued call-in package used by the mission loader, including the weapon
+package for support stratagems. It loads the assets without granting or equipping the stratagem.
+`hd2.asset_dependency` reports the package count in `packages`. Unknown or incomplete call-in sets
+are rejected with `ASSET_UNAVAILABLE`; they are never reported as fully resident. The existing
+16-target request limit and shared 64-package session budget still apply.
+
+See `examples/projects/EagleStrafingRunAssets` for a buildable addon for an extra-slot mod.
+It requires the updated Runtime from this checkout. Whole-stratagem preloading is tested offline;
+Eagle Strafing Run's models, effects and audio still need verification in game with nobody equipping it.
 
 `sdk/AssetDependencyCapabilities.json` (contract `hd2runtime.asset_dependencies.v1`) publishes a
 `packageDependency` entry per semantic object with these fields:

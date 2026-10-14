@@ -50,6 +50,8 @@ def sources():
         text = path.read_text(encoding='utf-8')
         for m in re.finditer(r"(?:\bT|\.t|\bboth)\(\s*" + LIT, text):
             add(_unescape(m.group(1) if m.group(1) is not None else m.group(2)))
+    for label in ('Cache payloads','Snapshot payloads','Event buffers','Native buffers','Permanent native pages'):
+        add(label)
     custom = (ROOT / 'runtime/custom_stratagems.lua').read_text(encoding='utf-8')
     for m in re.finditer(r"same_mods='((?:[^'\\]|\\.)*)'", custom):
         add(_unescape(m.group(1)))

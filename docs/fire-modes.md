@@ -1,5 +1,28 @@
 # Fire modes
 
+P-92 Warrant supports Automatic, Single and Burst, plus `fire_mode.burst_rounds`
+(1-10). Its native programmable-ammo binding stays on the left input. Adding
+two or three modes requires `weapon_function.right='fire_mode'` in the same
+transaction; the Editor pairs these automatically. Its default remains Burst,
+three rounds. These source edits apply when the weapon is rebuilt.
+
+VG-70 Variable exposes `fire_rate.modes` as its three RPM slots, initially
+`{300,550,750}` in X/Y/Z storage order. Its existing right-input selector cycles
+Y/Z/X. The special trigger modes remain unchanged. Both controls require
+`allow_unverified_effect=true`; snapshot writes and rollback have been checked,
+while changed gameplay still needs testing.
+
+PLAS-39 Accelerator Rifle also supports an experimental `{'single','unsafe'}`
+selector in 0.40.0. Only those two modes are offered on this charge trigger.
+Unsafe allows charging beyond full charge; with `charge.explode_at_overcharge`
+enabled, reaching `charge.level_3` destroys the weapon and triggers its explosion.
+The native threshold is 0.9 seconds. Modes apply to newly built weapons.
+Use `charge.burst_shots` and `charge.burst_interval_seconds` for its charged burst
+(native: two shots, 0.12 seconds apart), rather than `fire_mode.burst_rounds`.
+Charge times, projectile speed/damage/penetration multipliers, full-charge auto-fire,
+overcharge destruction and hold limit are also writable on `hd2.weapon(name)`;
+all require `allow_unverified_effect=true` and have not been gameplay-tested.
+
 A weapon's fire modes are a small, fixed list in its own `WeaponDataComponentData` record. Runtime
 edits that list directly: it can add, remove or reorder Automatic, Single and Burst, and set the
 burst length.
@@ -48,7 +71,7 @@ Answers to "what does enabling full-auto mean":
 
 `FireMode` names are published only where the type library's alias length matches the reference
 name: None (0), Automatic (1), Single (2), Burst (3). Values 4 to 8 are charge and safety states.
-They stay unnamed and read-only, and they are never offered.
+Only the reviewed PLAS-39 selector additionally offers Unsafe (6).
 
 ## Fields
 
@@ -106,19 +129,19 @@ Its `fire_mode.modes` takes up to three entries, but more than one only in the s
 
 | State | Player | Support | Meaning |
 | --- | ---: | ---: | --- |
-| `selectable` | 31 | 3 | Up to three modes; the selector is bound |
+| `selectable` | 32 | 3 | Up to three modes; the selector is bound |
 | `addable` | 20 | 10 | One mode and a free input: replace it, or list two or three with the selector binding |
 | `single_mode` | 0 | 0 | The single mode can be replaced; no free input |
-| `blocked` | 29 | 20 | Read-only, with a reason |
+| `blocked` | 28 | 20 | Read-only, with a reason |
 | `absent` | 0 | 2 | No weapon data |
 
-Full-auto can be given to every writable weapon: 64 in total. It is added where a selector exists or is bound in the
+Full-auto can be given to 64 conventional weapons. PLAS-39 only accepts Single/Unsafe charge modes. It is added where a selector exists or is bound in the
 same transaction, and it replaces the single mode otherwise. 60 weapons already list Automatic natively.
 
 **Blocked**, from native evidence:
 
-- charge, wind-up, beam, arc, spray and melee weapons (from component ownership);
-- weapons using charge or safety modes (4 to 8);
+- charge, wind-up, beam, arc, spray and melee weapons (except the reviewed PLAS-39 charge selector above);
+- weapons using charge or safety modes (4 to 8), except PLAS-39 Unsafe (6);
 - weapons binding `ProgrammableAmmo` or `LaserGuide`, whose trigger is special;
 - weapons with the special structures at +160 or +1040;
 - the weapons shown as blocked for ambiguous identity in `sdk/WeaponFireModeCapabilities.json`.
@@ -127,8 +150,9 @@ same transaction, and it replaces the single mode otherwise. 60 weapons already 
 
 - `scripts/research_weapon_fire_modes.py` proves the layout and maps every weapon
   (`research/weapon-fire-modes-F5FEE03DCFDB.json`).
-- `scripts/validate_fire_mode_authoring_snapshot.py` checks all 64 writable weapons on a
-  copy-on-write overlay of the snapshot, for both fields. It covers the guarded no-op, a changed
+- `scripts/validate_fire_mode_authoring_snapshot.py` checks 65 mode sets and 64 ordinary burst fields on a
+  copy-on-write overlay of the snapshot. PLAS-39 charge controls are separately checked by
+  `scripts/validate_dev4_controls_snapshot.py`. It covers the guarded no-op, a changed
   write with read-back (a mode added, removed, or the single mode replaced), rollback, CONFLICT on a
   third-party slot value, and the acknowledgement rejection. It also pins the JAR-5 write (only
   `tertiary_fire_mode` +152 changes, 0 to 1, 4 bytes), checks that blocked weapons refuse writes,
@@ -139,3 +163,11 @@ same transaction, and it replaces the single mode otherwise. 60 weapons already 
 - The packaged-runtime scenarios `fire-mode-jar5-full-auto` and `fire-mode-burst-and-automatic`
   apply from the built runtime ZIP and re-apply after a simulated reset. The second covers the
   Liberator's burst length and mode set, and the MG-43 made single-shot.
+
+### W.A.S.P. missile hit projectiles (0.40.0 RC7)
+
+Both modes now expose their carried projectile selector: `support_weapon("StA-X3 W.A.S.P. Launcher"):projectile_source()` and `:feed("programmable"):source()`. Pass each source's `target`, `field`, and `expect` to the normal patch API, with an `hd2.attack_output(...)` donor. Both unverified-reference and unverified-effect acknowledgements should be supplied. Restore using the source's own `expect` handle.
+
+These selectors change the missile's hit projectile (damage and impact effects). They do not replace the missile entity, its appearance, flight, guidance, or turn a missile into a pellet spread. Use the separate `missile.*` / `function_missile.*` fields for flight. Call in a new weapon after applying. Gameplay confirmation is still required.
+
+Both missile links and their carried-projectile behavior are revalidated before a swap. A foreign mod changing either missile's link or projectile selector causes refusal instead of writing through a different host.

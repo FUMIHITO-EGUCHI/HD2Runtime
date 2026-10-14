@@ -24,6 +24,9 @@ do
         -- Beam conversion sync (runtime/beam_conversion_sync.lua, development): publishes this machine's beam
         -- conversions and warns this player about another member's. Reads only (one timer) outside a joined lobby.
         pcall(function()require('hd2runtime/runtime/beam_conversion_sync').start()end)
+        -- Mission timer sync (runtime/mission_timer_sync.lua, experimental): the host's timer freeze, published to the
+        -- lobby and followed by the other Runtimes. Reads only in a mission as a client.
+        pcall(function()require('hd2runtime/runtime/mission_timer_sync').start()end)
     end
     local metadata=require('hd2runtime/domains/metadata')
     if not rawget(_G,'HD2RuntimeStartupLogged')then
@@ -67,6 +70,7 @@ end
 -- catalog-backed builders), not only the legacy metadata builder list.
 for name in pairs(require('hd2runtime/api/target').new(metadata.describe))do M[name]=metadata[name]end
 M.fields=metadata.fields;M.enums=metadata.enums
+M.melee=require('hd2runtime/api/melee')
 -- hd2.resources: the builder resource constants, and a mod's own custom resources.
 local images=require('hd2runtime/runtime/image_resources')
 local resources={}
@@ -75,13 +79,13 @@ for key,value in pairs(metadata.resources)do resources[key]=value end
 -- complete icon family (docs/custom-images.md). A value for hd2.fields.stratagem.presentation_icon. The handle names
 -- the image only; whether it is loaded is checked before each write.
 function resources.image(id)return images.handle(id,require('hd2runtime/runtime/events').owner())end
--- The game's own HUD icon of a stratagem or booster (docs/game-icons.md): kind 'stratagem' | 'booster' and its name as
+-- The game's atlas icon (docs/game-icons.md): stratagem, booster, weapon, throwable, faction or objective, named as
 -- the Runtime's catalogues name it ('EXO-45 Patriot Exosuit', 'Vitality Enhancement'). Draw it with d:image like a mod's
 -- own image; it is read from the running game (nothing shipped, nothing written) and drawn only while its atlas page is
 -- loaded (booster icons are not, during a mission). Returns the handle, or nil, code ('UNKNOWN_KIND' | 'UNKNOWN_ICON')
 -- and reason.
 function resources.game_icon(kind,name)return require('hd2runtime/runtime/game_icons').handle(kind,name)end
--- The names of every game icon of a kind ('stratagem' | 'booster'), sorted.
+-- The names of every game icon of a supported kind, sorted.
 function resources.game_icons(kind)return require('hd2runtime/runtime/game_icons').names(kind)end
 -- The calling mod's own model: models/<id>.json in its project, which the SDK build derives from its base weapon's unit
 -- and packs beside the vanilla resources (docs/custom-models.md). A value for a weapon delivery's model
@@ -103,6 +107,8 @@ local diagnostics=require('hd2runtime/runtime/diagnostics')
 M.diagnostics={telemetry=diagnostics.telemetry,write_conflicts=diagnostics.write_conflicts}
 -- Per-mod CPU time (runtime/perf_watch.lua; docs/runtime-performance.md "Which mod is slow").
 M.diagnostics.performance=require('hd2runtime/runtime/perf_watch').snapshot
+-- Diagnostic comparison only: neither mode is buffer-free or a third-party scanner fix.
+M.diagnostics.application_optimizations=require('hd2runtime/runtime/application_mode').configure
 -- In-game options (Mod Options Menu). Required at startup with the rest of the API.
 local options=require('hd2runtime/api/options')
 function M.options(spec)return options.page(spec)end
@@ -173,7 +179,7 @@ local function track(handle)
             log.emit(string.format('[HD2Runtime] %d registered operations settled in %.0f s: %d applied, '
                 ..'%d rejected, %d other (see earlier lines)',#current.handles,current.elapsed,counts.applied,
                 counts.rejected,counts.other))
-            if current.elapsed>=SLOW_SETTLE_SECONDS then
+            if current.elapsed>=SLOW_SETTLE_SECONDS and require('hd2runtime/runtime/perf_watch').recording()then
                 log.emit(require('hd2runtime/runtime/perf_watch').slowest_operations(current))
             end
             if burst==current then burst=nil end
@@ -275,12 +281,15 @@ end
 function M.inspect(request)
     local ok,adapter=pcall(require,'hd2runtime/runtime/windows_write')
     if not ok then return disabled()end
-    return require('hd2runtime/runtime/scheduler').attach(
-        require('hd2runtime/api/inspect').start(adapter.create(),log.emit,request))
+    local job=require('hd2runtime/api/inspect').start(adapter.create(),log.emit,request)
+    job.perf_owner=require('hd2runtime/runtime/events').owner()
+    return require('hd2runtime/runtime/scheduler').attach(job)
 end
 -- Values found owned by an unknown mod this session (core/foreign_values.lua): {target, field, observed, expected,
 -- owner = 'unknown', seen}.
 M.diagnostics.foreign_values=function()return require('hd2runtime/core/foreign_values').list()end
+-- Explicit read-only comparison of authored mission definitions and the active countdown.
+M.diagnostics.mission_timer=function()return require('hd2runtime/runtime/mission_timer_diagnostics').read()end
 -- Offline: is this target's package dependency known and auto-loadable? (no IDs)
 function M.asset_dependency(target)return require('hd2runtime/api/assets').describe(target)end
 function M.ensure(request)return register('ensure','hd2runtime/api/ensure',request)end
@@ -333,12 +342,18 @@ local enemy_spawns=require('hd2runtime/api/enemy_spawns')
 local list_enemies=assert(M.enemies,'the enemy name list builder is missing')
 M.enemies=setmetatable({spawn_weight=enemy_spawns.spawn_weight,spawn_list=enemy_spawns.spawn_list,
     spawn_status=enemy_spawns.spawn_status},{__call=function(_,filter)return list_enemies(filter)end})
+for name,method in pairs(require('hd2runtime/api/enemy_director'))do M.enemies[name]=method end
+local missions=require('hd2runtime/api/missions')
+M.mission=missions.get
+M.missions=missions.list
+-- EXPERIMENTAL, the host controls it (other Runtimes in the lobby follow): the game's own mission timer pause (docs/missions.md).
+function M.freeze_mission_timer(request)return require('hd2runtime/runtime/mission_timer_freeze').set(request)end
 -- Armor passives (api/player_passives.lua; docs/armor-passives.md): hd2.passives.list() every passive of the game;
 -- hd2.player_passives() the local player's, and hd2.player_passives.set (DEVELOPMENT, solo) overrides them;
 -- hd2.armor_kits(filter) / hd2.armor_kit(id or name) the game's 411 kits (read-only, offline).
 do
     local player_passives=require('hd2runtime/api/player_passives')
-    M.passives={list=player_passives.list,find=player_passives.find}
+    M.passives={list=player_passives.list,find=player_passives.find,perk=require('hd2runtime/api/armor_perks').get}
     M.armor_kits,M.armor_kit=player_passives.armor_kits,player_passives.armor_kit
     M.player_passives=setmetatable({set=player_passives.set,status=player_passives.status},
         {__call=function()return player_passives.current()end})

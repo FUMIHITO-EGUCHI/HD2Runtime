@@ -2,9 +2,11 @@
 local win32 = require('hd2runtime/runtime/windows_ffi')
 local ffi, kernel, bcrypt = win32.ffi, win32.kernel, win32.bcrypt
 
+-- Every wrapper addresses this Lua process; keep discovery proofs across per-operation adapters.
+local discovery_space={}
 local function create_runtime()
     local process = kernel.GetCurrentProcess()
-    local runtime = {mode="live"}
+    local runtime = {mode="live",_discovery_space=discovery_space}
     function runtime.address(handle) return tonumber(ffi.cast("uintptr_t",handle)) end
 
     function runtime.module(name)
@@ -79,6 +81,7 @@ local function create_runtime()
     -- Reads of up to 4 KiB (nearly all of them) share one buffer and count instead of allocating two per read; the
     -- result is copied out (ffi.string) before the next read.
     local scratch,scratch_count=ffi.new('uint8_t[4096]'),ffi.new('size_t[1]')
+    require('hd2runtime/runtime/memory_watch').buffer(scratch,4096)
     function runtime.read(address,size)
         local buffer,count
         if size<=4096 then buffer,count=scratch,scratch_count;count[0]=0

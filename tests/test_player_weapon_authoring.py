@@ -34,7 +34,13 @@ class PlayerWeaponAuthoringTests(unittest.TestCase):
                             'semanticTarget','canonical','preferred','deprecated','aliasOf',
                             'acceptedForWrites'):
                     self.assertIn(key,field)
-                if field['semanticFieldId']=='fire_mode.burst_rounds':
+                if field.get('reviewedReloadHeat') or field.get('reviewedAcceleratorCharge'):
+                    self.assertIsNotNone(field['min']);self.assertIsNotNone(field['max'])
+                    self.assertLess(field['min'],field['max'])
+                    self.assertGreaterEqual(field['currentDefault'],field['min'])
+                    self.assertLessEqual(field['currentDefault'],field['max'])
+                    self.assertEqual(field['acknowledgement'],'allow_unverified_effect')
+                elif field['semanticFieldId']=='fire_mode.burst_rounds':
                     self.assertEqual((field['min'],field['max']),(1,10))
                 elif field['semanticFieldId']=='fire_rate.modes':
                     self.assertEqual((field['min'],field['max']),(1,3000))

@@ -229,7 +229,7 @@ local flak = hd2.support_weapon('AC-8 Autocannon'):attack('programmable'):projec
   AC-8 flak to an orbital shell's, the RL-77 cluster expiry removed and the W.A.S.P. recursion refusal are exercised on
   the snapshot (`scripts/validate_explosion_catalogue_snapshot.py`). Nothing is live-tested.
 - **Not this.** These are shared row writes, like the primaries'. A payload for one weapon's shots alone, without
-  touching the row (`hd2.projectiles.payload`), is 0.32.0 work.
+  touching the row (`hd2.projectiles.payload`), is 0.40.0 work.
 
 | Support weapon | Roles (phases) |
 | --- | --- |

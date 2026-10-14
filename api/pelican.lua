@@ -89,7 +89,7 @@ local function finite(v,limit)return type(v)=='number'and v==v and math.abs(v)<=
 --             behave_as: an explicit rate in place of the Gatling rate, held on its own copy's rate slot and on every
 --             other machine's mirror), casing = 'gatling' | 'own' (with behave_as: the Gatling Sentry's casing, the
 --             default, or the chin turret's own), spread = mrad (0, 100], recoil = false (no aim recoil), unlimited_ammo =
---             true (the 2047-round safe magazine, refilled), face_target = true (the body turns toward the lock),
+--             true (the 2047-round safe magazine, refilled), face_target = true (the body follows the native target with an untouched native gun, or the Gatling lock),
 --             sound = a name of the weapon sound catalogue (hd2.sounds; docs/weapon-sounds.md: a shot such as
 --             'vehicle/maelstrom/main_gun' or a loop such as 'sentry/gatling', on its own weapon copy; the package of
 --             the stratagem that provides its bank is loaded first; other machines with the Runtime mirror it on their

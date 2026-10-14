@@ -63,20 +63,22 @@ def build():
                 if row['state'] == 'addable' and identity_ok else None,
             'burstRounds': row.get('burstRounds'),
             'writable': writable and identity_ok, 'reason': None if writable and identity_ok else reason,
-            'fields': {'modes': fire_mode_fields.MODES_FIELD, 'burstRounds': fire_mode_fields.BURST_FIELD}
+            'allowedModes': list(row.get('allowedModeValues',fire_mode_fields.MODE_VALUES)),
+            'fields': {'modes': fire_mode_fields.MODES_FIELD,
+                       'burstRounds': 'charge.burst_shots' if row.get('chargeSelector') else fire_mode_fields.BURST_FIELD}
                 if writable and identity_ok else None})
     summary = {'weapons': len(weapons),
         'byState': dict(sorted(Counter((w['kind'], w['state']) for w in weapons).items(), key=str)),
         'resolvedModeSets': sum(1 for w in weapons if w['modes']),
         'writable': sum(1 for w in weapons if w['writable']),
-        'fullAutoPossible': sum(1 for w in weapons if w['writable']),
+        'fullAutoPossible': sum(1 for w in weapons if w['writable'] and 'automatic' in w['allowedModes']),
         'fullAutoAlreadyPresent': sum(1 for w in weapons if w['modes'] and 'automatic' in w['modes'])}
     summary['byState'] = {f'{k[0]}:{k[1]}': v for k, v in summary['byState'].items()}
     public = {'contract': 'hd2runtime.weapon.fire_modes.v1', 'schemaVersion': 1,
         'hd2RuntimeVersion': (ROOT / 'VERSION').read_text().strip(),
         'nativeModel': research['model'],
         'modes': {'automatic': 'FireMode Automatic (1)', 'single': 'FireMode Single (2)', 'burst': 'FireMode Burst (3)'},
-        'unmappedNativeModes': 'FireMode values 4-8 (charge and safety states) are read-only and never offered.',
+        'unmappedNativeModes': 'Charge/safety modes remain blocked except the reviewed PLAS-39 Unsafe (6) selector. Consult each weapon allowedModes.',
         'fields': {'modes': {'constant': 'hd2.fields.fire_mode.modes', 'type': 'ordered list of mode names',
                 'default': 'the first entry', 'acknowledgement': 'allow_unverified_effect'},
             'burstRounds': {'constant': 'hd2.fields.fire_mode.burst_rounds', 'type': 'integer',
@@ -86,7 +88,7 @@ def build():
         'weapons': weapons, 'summary': summary}
     runtime = {'weapons': {f"{w['kind']}:{w['weapon']}": {key: w[key] for key in
         ('state', 'modes', 'defaultMode', 'selector', 'maxModes', 'burstRounds', 'writable', 'reason', 'bindableInputs',
-            'binding')} for w in weapons},
+            'binding','allowedModes','fields')} for w in weapons},
         'fireRate': public['fireRate']}
     return runtime, public
 

@@ -65,9 +65,9 @@ class EntityAuthoringTests(unittest.TestCase):
         self.assertEqual(backpack['teamReloadBackpacks'], 5)
         # + 26 jump / hover movement fields read by the flight code (scripts/jump_hover_fields.py), + 15 team-reload
         # deposit fields (0.31.0, readers traced in game code).
-        self.assertEqual(backpack['writableFieldInstances'], 97 + 15)
+        self.assertEqual(backpack['writableFieldInstances'], 97 + 15 + 3)
         self.assertEqual(backpack['writableByTier'], {'gameplay_proven': 2, 'schema_proven': 35,
-            'native_correlated': 34, 'native_consumer_proven': 26 + 15})
+            'native_correlated': 34, 'native_consumer_proven': 26 + 15 + 3})
 
     def test_semantic_identities_are_unique_and_stable(self):
         for collection in (self.vehicles['vehicles'], self.backpacks['backpacks'], self.vehicles['mountedWeapons']):
@@ -163,13 +163,14 @@ class EntityAuthoringTests(unittest.TestCase):
         self.assertEqual(self.field('backpack', 'LIFT-860 Hover Pack', 'recharge.time')['evidence']['tier'],
             'schema_proven')
         # Guard Dog drone magazines: exact published values on all five (research/equipment-coverage); the Supply
-        # Pack's charges stay read-only.
+        # Pack's charges now have native consumer proof.
         for name, capacity, editable in (('AX/AR-23 Guard Dog', 8, True), ('AX/LAS-5 Rover', 4, True),
-                ('B-1 Supply Pack', 4, False)):
+                ('B-1 Supply Pack', 4, True)):
             deposit = self.field('backpack', name, 'deposit.capacity')
             self.assertEqual((deposit['currentDefault'], deposit['editable']), (capacity, editable))
             if editable:
-                self.assertEqual(deposit['evidence']['tier'], 'native_correlated')
+                self.assertEqual(deposit['evidence']['tier'],
+                    'native_consumer_proven' if name == 'B-1 Supply Pack' else 'native_correlated')
                 self.assertEqual(deposit['max'], 1023)
         generator = self.field('backpack', 'SH-32 Shield Generator Pack', 'shield.durability')
         self.assertTrue(generator['editable'])

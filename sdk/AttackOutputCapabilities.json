@@ -1,7 +1,7 @@
 {
  "contract": "hd2runtime.attack_outputs.v1",
  "schemaVersion": 2,
- "hd2RuntimeVersion": "0.31.3",
+ "hd2RuntimeVersion": "0.40.0",
  "build": "F5FEE03DCFDB",
  "model": {
   "weaponComposition": "A weapon entity owns exactly one output-family component (ProjectileWeapon, BeamWeapon, ArcWeapon, SprayWeapon or MeleeWeapon) next to fire-control and resource components (WeaponData, WeaponMagazine / WeaponRounds / WeaponHeat / WeaponCharge, WeaponReload).",
@@ -1242,11 +1242,11 @@
    "status": "ACTIVE_DIRECT",
    "mechanism": "component",
    "member": "ProjectileWeapon +0",
-   "reason": "Every shot is ProjectileWeapon +0 by the data path, but the weapon is not magazine-fed and the fired-type trace (research/fired-type-callers) does not prove its structure: a linked-ammunition weapon fires the type of its linked ammunition source whenever one is linked. Its projectile reference stays read-only.",
-   "directWritable": false,
+   "reason": "Reviewed backpack-linked ammunition supplies rounds without selecting projectiles; the fired source is ProjectileWeapon +0.",
+   "directWritable": true,
    "previouslyWritable": false,
    "sharedEntity": [],
-   "write": null
+   "write": "hd2.support_weapon(name):attack(role):projectile_source() (hd2.fields.attack.projectile)"
   },
   {
    "weapon": "GL-52 De-Escalator",
@@ -1462,14 +1462,14 @@
    "weapon": "StA-X3 W.A.S.P. Launcher",
    "kind": "support_weapon",
    "attack": "primary",
-   "status": "BLOCKED",
-   "mechanism": null,
-   "member": null,
-   "reason": "The shot spawns a missile entity (ProjectileWeapon +40, ProjectileEntity), not a projectile (research/wasp-rocket: 0x6143CD, 0x615B15). The missile flies by its own SeekingMissile record: edit it with the missile.* (and function_missile.* for the ProgrammableAmmo missile) fields of this weapon. ProjectileWeapon +0 (projectile 43) reaches the missile only as its hit row (damage, impact explosion) through the shooter's spawn info (0x61604F -> 0x6414E0): a swap would change neither its flight nor its model, and how another machine's copy of the missile gets its type is not traced, so the fired projectile is not swapped.",
-   "directWritable": false,
+   "status": "ACTIVE_DIRECT",
+   "mechanism": "component",
+   "member": "ProjectileWeapon +0",
+   "reason": "Changes missile damage and impact effects. Missile flight and appearance remain controlled by the missile entity. Call in a new weapon after applying. Not yet gameplay-tested.",
+   "directWritable": true,
    "previouslyWritable": false,
    "sharedEntity": [],
-   "write": null
+   "write": "hd2.support_weapon(name):attack(role):projectile_source() (hd2.fields.attack.projectile)"
   },
   {
    "weapon": "TD-110 Maelstrom / attach_tank_gun",
@@ -1949,6 +1949,7 @@
    "FRV (Super Earth variant) / gun",
    "GATER Oil Rig / turret",
    "GL-21 Grenade Launcher",
+   "GL-28 Belt-Fed Grenade Launcher",
    "GP-20 Ultimatum",
    "LAS-99 Quasar Cannon",
    "M-102 Gunner FRV / gun",
@@ -1975,6 +1976,7 @@
    "SMG/FLAM-34 Stoker",
    "StA-11 SMG",
    "StA-52 Assault Rifle",
+   "StA-X3 W.A.S.P. Launcher",
    "VG-70 Variable"
   ],
   "ammunitionHosts": [
@@ -2316,10 +2318,10 @@
   "selectable": 111,
   "beamDonors": 7,
   "beamHosts": 7,
-  "projectileHosts": 61,
-  "componentHosts": 55,
+  "projectileHosts": 63,
+  "componentHosts": 57,
   "ammunitionHosts": 6,
-  "directWritableAttackFields": 63
+  "directWritableAttackFields": 65
  },
  "outputs": [
   {

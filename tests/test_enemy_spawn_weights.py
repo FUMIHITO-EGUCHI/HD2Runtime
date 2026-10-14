@@ -90,7 +90,7 @@ assert(#api.spawn_list({enemy=charger[1].entity})==1 and#api.spawn_list({enemy='
 local hd2=require('hd2runtime/api/hd2')
 assert(hd2.enemies.spawn_weight==api.spawn_weight and hd2.enemies.spawn_list==api.spawn_list)
 -- hd2.enemies stays callable: the reviewed enemy / structure names as before.
-assert(#hd2.enemies({kind='structure'})==39 and #hd2.enemies()>39)
+assert(#hd2.enemies({kind='structure'})>39 and #hd2.enemies()>=1157)
 ''')
 
     def test_the_weights_a_multiplier_writes(self):

@@ -1,7 +1,7 @@
 {
   "contract": "hd2runtime.weapon.fire_modes.v1",
   "schemaVersion": 1,
-  "hd2RuntimeVersion": "0.31.3",
+  "hd2RuntimeVersion": "0.40.0",
   "nativeModel": {
     "modeSet": "four packed FireMode slots at +144; slot 1 is the default mode",
     "burst": "num_burst_rounds (+140), weapon-wide",
@@ -15,7 +15,7 @@
     "single": "FireMode Single (2)",
     "burst": "FireMode Burst (3)"
   },
-  "unmappedNativeModes": "FireMode values 4-8 (charge and safety states) are read-only and never offered.",
+  "unmappedNativeModes": "Charge/safety modes remain blocked except the reviewed PLAS-39 Unsafe (6) selector. Consult each weapon allowedModes.",
   "fields": {
     "modes": {
       "constant": "hd2.fields.fire_mode.modes",
@@ -63,6 +63,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon carries a special fire-control structure (+160) whose semantics are unknown.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -85,6 +90,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -111,6 +121,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -137,6 +152,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -162,6 +182,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -188,6 +213,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -214,6 +244,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -240,6 +275,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -266,6 +306,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -292,6 +337,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon carries a special fire-control structure (+160) whose semantics are unknown.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -313,6 +363,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through arc.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -335,6 +390,11 @@
       "burstRounds": 2,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -359,6 +419,11 @@
       "burstRounds": 2,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -383,6 +448,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -404,6 +474,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -425,6 +500,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -446,6 +526,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -467,6 +552,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -488,6 +578,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -510,6 +605,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon uses a charge or safety fire mode (Safety_Off); only Automatic, Single and Burst are proven.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -531,6 +631,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through spray.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -562,6 +667,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -596,6 +706,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -630,6 +745,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -655,6 +775,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -689,6 +814,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -713,6 +843,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through beam.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -744,6 +879,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -778,6 +918,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -802,6 +947,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through beam.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -823,6 +973,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through beam.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -854,6 +1009,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -873,6 +1033,11 @@
       "burstRounds": null,
       "writable": false,
       "reason": "The weapon roots disagree on their fire-mode configuration.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -904,6 +1069,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -930,6 +1100,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -954,6 +1129,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon has weapon-function fire-mode entries whose semantics are unknown.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -977,6 +1157,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1003,6 +1188,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1037,6 +1227,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1071,6 +1266,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1096,6 +1296,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1130,6 +1335,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1154,6 +1364,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon binds ProgrammableAmmo, which changes how its trigger fires; fire modes are not authored on such weapons.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -1185,6 +1400,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1219,6 +1439,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1253,6 +1478,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1287,6 +1517,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1311,12 +1546,17 @@
       "burstRounds": 1,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through spray.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
       "kind": "player",
       "weapon": "P-92 Warrant",
-      "state": "blocked",
+      "state": "addable",
       "modes": [
         "burst"
       ],
@@ -1326,13 +1566,29 @@
         "right": "None"
       },
       "selectorBound": false,
-      "maxModes": null,
-      "bindableInputs": [],
-      "binding": null,
+      "maxModes": 3,
+      "bindableInputs": [
+        "right"
+      ],
+      "binding": {
+        "fields": [
+          "hd2.fields.weapon_function.right"
+        ],
+        "value": "fire_mode",
+        "rule": "A weapon without a fire-mode selector lists two or three modes only in the same transaction as its Firemode binding (hd2.fields.weapon_function.left or .right = \"fire_mode\" on an unbound input), and the binding only together with two or more modes (SELECTOR_REQUIRED otherwise)."
+      },
       "burstRounds": 3,
-      "writable": false,
-      "reason": "The weapon binds ProgrammableAmmo, which changes how its trigger fires; fire modes are not authored on such weapons.",
-      "fields": null
+      "writable": true,
+      "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
+      "fields": {
+        "modes": "fire_mode.modes",
+        "burstRounds": "fire_mode.burst_rounds"
+      }
     },
     {
       "kind": "player",
@@ -1353,6 +1609,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1378,6 +1639,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1402,6 +1668,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through charge, conventional_projectile.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -1423,12 +1694,17 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon uses a charge or safety fire mode (5); only Automatic, Single and Burst are proven.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
       "kind": "player",
       "weapon": "PLAS-39 Accelerator Rifle",
-      "state": "blocked",
+      "state": "selectable",
       "modes": [
         "single"
       ],
@@ -1438,13 +1714,20 @@
         "right": "Firemode"
       },
       "selectorBound": true,
-      "maxModes": null,
+      "maxModes": 2,
       "bindableInputs": [],
       "binding": null,
       "burstRounds": 3,
-      "writable": false,
-      "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through charge, conventional_projectile.",
-      "fields": null
+      "writable": true,
+      "reason": null,
+      "allowedModes": [
+        "single",
+        "unsafe"
+      ],
+      "fields": {
+        "modes": "fire_mode.modes",
+        "burstRounds": "charge.burst_shots"
+      }
     },
     {
       "kind": "player",
@@ -1466,6 +1749,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1500,6 +1788,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1524,6 +1817,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1548,6 +1846,11 @@
       "burstRounds": 2,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1572,6 +1875,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon has weapon-function fire-mode entries whose semantics are unknown.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -1593,6 +1901,11 @@
       "burstRounds": 2,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1617,6 +1930,11 @@
       "burstRounds": 2,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1641,6 +1959,11 @@
       "burstRounds": 2,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1675,6 +1998,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1699,6 +2027,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon binds Magazine, which changes how its trigger fires; fire modes are not authored on such weapons.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -1721,6 +2054,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon uses a charge or safety fire mode (Safety_Off); only Automatic, Single and Burst are proven.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -1743,6 +2081,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1768,6 +2111,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1793,6 +2141,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1827,6 +2180,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1851,6 +2209,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon has weapon-function fire-mode entries whose semantics are unknown.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -1882,6 +2245,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1906,6 +2274,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon has weapon-function fire-mode entries whose semantics are unknown.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -1927,6 +2300,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon has weapon-function fire-mode entries whose semantics are unknown.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -1950,6 +2328,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -1976,6 +2359,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2002,6 +2390,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2028,6 +2421,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2052,6 +2450,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon carries a special fire-control structure (+160) whose semantics are unknown.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2083,6 +2486,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2108,6 +2516,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2134,6 +2547,11 @@
       "burstRounds": 7,
       "writable": false,
       "reason": "The weapon uses a charge or safety fire mode (Safety_Off, 7); only Automatic, Single and Burst are proven.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2155,6 +2573,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through beam, charge.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2177,6 +2600,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon binds ProgrammableAmmo, which changes how its trigger fires; fire modes are not authored on such weapons.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2208,6 +2636,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2233,6 +2666,11 @@
       "burstRounds": 1,
       "writable": false,
       "reason": "The weapon uses a charge or safety fire mode (5, 6); only Automatic, Single and Burst are proven.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2254,6 +2692,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through spray.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2270,6 +2713,11 @@
       "burstRounds": null,
       "writable": false,
       "reason": "The weapon owns no WeaponDataComponentData record.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2291,6 +2739,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2312,6 +2765,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2333,6 +2791,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2354,6 +2817,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through melee.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2385,6 +2853,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2419,6 +2892,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2453,6 +2931,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2487,6 +2970,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2511,6 +2999,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through spray.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2533,6 +3026,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2565,6 +3063,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2590,6 +3093,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2614,6 +3122,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon binds ProgrammableAmmo, which changes how its trigger fires; fire modes are not authored on such weapons.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2635,6 +3148,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through beam.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2666,6 +3184,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2690,6 +3213,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through conventional_projectile, wind_up.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2719,6 +3247,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2751,6 +3284,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2783,6 +3321,11 @@
       "burstRounds": 3,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2809,6 +3352,11 @@
       "burstRounds": 7,
       "writable": false,
       "reason": "The weapon uses a charge or safety fire mode (Safety_Off, 7); only Automatic, Single and Burst are proven.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2830,6 +3378,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon binds LaserGuide, which changes how its trigger fires; fire modes are not authored on such weapons.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2846,6 +3399,11 @@
       "burstRounds": null,
       "writable": false,
       "reason": "The weapon owns no WeaponDataComponentData record.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2868,6 +3426,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon uses a charge or safety fire mode (6, 6); only Automatic, Single and Burst are proven.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2889,6 +3452,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon binds ProgrammableAmmo, which changes how its trigger fires; fire modes are not authored on such weapons.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2911,6 +3479,11 @@
       "burstRounds": 1,
       "writable": false,
       "reason": "The weapon uses a charge or safety fire mode (5, 6); only Automatic, Single and Burst are proven.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2932,6 +3505,11 @@
       "burstRounds": 1,
       "writable": true,
       "reason": null,
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": {
         "modes": "fire_mode.modes",
         "burstRounds": "fire_mode.burst_rounds"
@@ -2957,6 +3535,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon uses a charge or safety fire mode (Safety_Off); only Automatic, Single and Burst are proven.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2978,6 +3561,11 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "The weapon binds ProgrammableAmmo, which changes how its trigger fires; fire modes are not authored on such weapons.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     },
     {
@@ -2999,23 +3587,28 @@
       "burstRounds": 3,
       "writable": false,
       "reason": "Fire modes are authored only for conventional projectile weapons; this weapon fires through spray.",
+      "allowedModes": [
+        "automatic",
+        "single",
+        "burst"
+      ],
       "fields": null
     }
   ],
   "summary": {
     "weapons": 116,
     "byState": {
-      "player:addable": 20,
-      "player:blocked": 30,
-      "player:selectable": 31,
+      "player:addable": 21,
+      "player:blocked": 28,
+      "player:selectable": 32,
       "support:absent": 2,
       "support:addable": 10,
       "support:blocked": 20,
       "support:selectable": 3
     },
     "resolvedModeSets": 113,
-    "writable": 64,
-    "fullAutoPossible": 64,
+    "writable": 66,
+    "fullAutoPossible": 65,
     "fullAutoAlreadyPresent": 61
   }
 }

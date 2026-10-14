@@ -35,8 +35,14 @@ M.NATIVE={source='native'}        -- the shared cause of native gameplay events 
 
 local state={now=0,frame=0,epoch=0,in_mission=false,sequence=0,depth=0,current=nil,
     lists={},by_key={},timers={},timer_keys={},queue={},queue_count=0,sources={},source_order={},
-    contexts={},mission_tables={},watch=nil,pollers={},scopes={},frames={}}
+    contexts={},mission_tables={},watch=nil,pollers={},poller_keys={},scopes={},frames={}}
 M.state=state
+local function describe_work(key)return key.perf_name end
+local dispatch_work={perf_name='events: dispatch queue'}
+local timer_work={perf_name='events: timer scheduling'}
+local frame_work={perf_name='events: frame scheduling'}
+local retry_work={perf_name='events: source startup'}
+local POLLER_NAMES={input='input: key bindings',keys='input: key sampling',wheel='input: mouse wheel'}
 
 local function emit(message)pcall(log.emit,'[HD2Runtime] '..message)end
 M.emit_log=emit
@@ -66,7 +72,7 @@ end
 function M.owner(explicit,level)
     if explicit~=nil then
         assert(valid_owner(explicit),'owner must be a mod id string')
-        return explicit
+        perf.register_mod(explicit);return explicit
     end
     local scope=state.scopes[#state.scopes]
     if scope then return scope end
@@ -75,7 +81,7 @@ function M.owner(explicit,level)
     local info=debug and debug.getinfo and debug.getinfo((level or 2)+1,'S')
     local source=info and info.source or''
     source=source:gsub('^[@=]',''):gsub('%.lua$','')
-    if source:match('^mods/[%w_/]+$')then return source end
+    if source:match('^mods/[%w_/]+$')then perf.register_mod(source);return source end
     return 'unknown'
 end
 -- Run fn(...) with `owner` as the mod every registration inside it belongs to (nested scopes stack). Errors
@@ -90,6 +96,7 @@ end
 function M.run_as(owner,fn,...)
     assert(valid_owner(owner),'run_as needs a mod id string')
     assert(type(fn)=='function','run_as needs a function')
+    perf.register_mod(owner)
     local scopes=state.scopes
     scopes[#scopes+1]=owner
     local depth=#scopes
@@ -112,7 +119,7 @@ end
 local tick,source_wanted
 local function ensure_watch()
     if state.watch and state.watch.status=='waiting'then return end
-    local watch={status='waiting'}
+    local watch={status='waiting',perf_name='events: bookkeeping'}
     function watch.cancel()watch.status='cancelled'end
     function watch.tick(dt)
         tick(dt)
@@ -195,6 +202,7 @@ function M.subscribe(name,callback,opts,level)
         return sub
     end
     sub=setmetatable({id=state.sequence,seq=state.sequence,key=key,event=name,owner=owner,callback=callback,
+        perf_name='event: '..name..' / '..(opts.id or 'subscription '..state.sequence),
         priority=opts.priority or 0,scope=opts.scope or'session',epoch=state.epoch,once=opts.once==true,
         max_failures=opts.max_failures or DEFAULT_MAX_FAILURES,state='active',calls=0,failures=0,consecutive=0},
         Subscription)
@@ -282,7 +290,9 @@ function M.queue(name,event)
     state.queue[n]=event;state.queue_count=n
 end
 local after_flush={}
--- Run fn once this tick's queued events have been dispatched (mission cleanup after mission_ended).
+-- Run fn once this tick's queued events have been dispatched (mission cleanup after mission_ended). It runs also when
+-- nothing was queued: M.queue drops an event nobody listens to, and the mission cleanup must not depend on a
+-- mission_ended subscriber.
 function M.after_flush(fn)after_flush[#after_flush+1]=fn end
 local function flush()
     local i=1
@@ -530,7 +540,13 @@ function M.refresh_source(source)
     end
 end
 -- Per-frame work outside sources (input polling). poller: function(now) end
-function M.set_poller(name,fn)state.pollers[name]=fn;if fn then ensure_watch()end end
+function M.set_poller(name,fn)
+    state.pollers[name]=fn
+    if fn then
+        state.poller_keys[name]=state.poller_keys[name]or{perf_name=POLLER_NAMES[name]or('input: '..name)}
+        ensure_watch()
+    end
+end
 
 -------------------------------------------------------------------------------------------------- mission --
 function M.begin_mission(info)
@@ -563,15 +579,21 @@ function M.now()return state.now end
 ------------------------------------------------------------------------------------------------------ tick --
 local function describe_source(source)return 'event source '..tostring(source.name):gsub('_',' ')end
 tick=function(dt)
-    local started=metrics.now()
+    local started=metrics.start()
     state.now=state.now+dt
     state.frame=state.frame+1
-    for _,poller in pairs(state.pollers)do
+    for name,poller in pairs(state.pollers)do
+        local timed=perf.begin()
         local ok,why=pcall(poller,state.now)
+        perf.finish(timed,'HD2Runtime',state.poller_keys[name],describe_work)
         if not ok then emit('input poll failed: '..tostring(why))end
     end
     for _,source in ipairs(state.source_order)do
-        if source.status=='retry'and state.now>=(source.retry_at or 0)then M.refresh_source(source)end
+        if source.status=='retry'and state.now>=(source.retry_at or 0)then
+            local timed=perf.begin()
+            M.refresh_source(source)
+            perf.finish(timed,'HD2Runtime',retry_work,describe_work)
+        end
         if source.active then
             -- Timed as its own part of the Runtime (runtime/perf_watch.lua: the F10 Performance tab, the log lines).
             local timed=perf.begin()
@@ -590,9 +612,15 @@ tick=function(dt)
             end
         end
     end
-    flush()
-    run_timers()
-    if#state.frames>0 then run_frames(dt)end
+    if state.queue_count>0 or#after_flush>0 then
+        local timed=perf.begin();flush();perf.finish(timed,'HD2Runtime',dispatch_work,describe_work)
+    end
+    if#state.timers>0 then
+        local timed=perf.begin();run_timers();perf.finish(timed,'HD2Runtime',timer_work,describe_work)
+    end
+    if#state.frames>0 then
+        local timed=perf.begin();run_frames(dt);perf.finish(timed,'HD2Runtime',frame_work,describe_work)
+    end
     metrics.elapsed('events.tick',started)
 end
 -- Tests drive the engine without the scheduler.

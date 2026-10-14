@@ -35,6 +35,7 @@ import hd2_image  # noqa: E402
 SPRITES = HERE.parent / 'HudIconSprites.json'
 TEXTURE = 0xCD4238C6A0C69E32                 # murmur64('texture')
 TEXTURE_ATLAS = 0x9199BB50B6896F02           # murmur64('texture_atlas')
+KINDS = ('stratagem', 'booster', 'weapon', 'throwable', 'faction', 'objective', 'difficulty')
 RECORD = struct.Struct('<QQII4f')
 TEXTURE_HEADER = 0xC0
 # DXGI format -> (kind, bytes per 4x4 block or per pixel)
@@ -176,8 +177,9 @@ class HudIcons:
         return w, h, decode(pixels, layout, x, y, w, h)
 
     def items(self, kind: str) -> dict:
-        """{item name: sprite name} for 'stratagem' or 'booster'."""
-        return {name: int(entry['sprite'], 16) for name, entry in self.names[kind + 's'].items()}
+        """{item name: sprite name} for a supported icon kind."""
+        group='difficulties' if kind=='difficulty' else kind+'s'
+        return {name: int(entry['sprite'], 16) for name, entry in self.names[group].items()}
 
     def icon(self, kind: str, name: str):
         """(width, height, rgba) of a stratagem's or booster's HUD icon, or None."""
@@ -193,7 +195,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('out', help='output folder')
     parser.add_argument('--game', help='the Helldivers 2 data folder (default: the Steam install)')
-    parser.add_argument('--kind', choices=('stratagem', 'booster', 'all'), default='all')
+    parser.add_argument('--kind', choices=(*KINDS, 'all'), default='all')
     args = parser.parse_args(argv)
     data = None
     if args.game:
@@ -201,8 +203,8 @@ def main(argv=None):
         data = hd2_game_data.Data(args.game)
     icons = HudIcons(data)
     out = Path(args.out)
-    index = {'build': icons.names['build'], 'stratagem': {}, 'booster': {}, 'missing': dict(icons.names['missing'])}
-    for kind in (('stratagem', 'booster') if args.kind == 'all' else (args.kind,)):
+    index = {'build': icons.names['build'], **{kind: {} for kind in KINDS}, 'missing': dict(icons.names['missing'])}
+    for kind in (KINDS if args.kind == 'all' else (args.kind,)):
         (out / kind).mkdir(parents=True, exist_ok=True)
         for name, sprite in sorted(icons.items(kind).items()):
             got = icons.sprite(sprite)
@@ -213,8 +215,7 @@ def main(argv=None):
             write_png(out / file, *got)
             index[kind][name] = {'file': file, 'width': got[0], 'height': got[1]}
     (out / 'index.json').write_text(json.dumps(index, indent=1) + '\n', encoding='utf-8')
-    print('%d stratagem and %d booster icons -> %s (missing: %s)' % (len(index['stratagem']), len(index['booster']),
-          out, ', '.join(sorted(index['missing'])) or 'none'))
+    print(', '.join('%d %s' % (len(index[kind]), kind) for kind in KINDS) + ' icons -> ' + str(out))
     return 0
 
 

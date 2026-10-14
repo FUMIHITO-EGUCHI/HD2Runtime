@@ -900,7 +900,11 @@ function M.configure(world,pelican,spec,label)
     end
     local report=transaction.apply(runtime,plan)
     metrics.count('pelican_weapon.transactions')
-    if report.status~='APPLIED'then return refuse('GUARD_REJECTED','the weapon writes were refused: '..tostring(report.reason))end
+    -- Native ammunition at its native rate can already match the fresh private copy. Its guards still ran;
+    -- continue with recoil, ammunition and targeting setup instead of refusing a valid no-op transaction.
+    if report.status~='APPLIED'and report.status~='ALREADY_DESIRED'then
+        return refuse('GUARD_REJECTED','the weapon writes were refused: '..tostring(report.reason))
+    end
     local writes=report.writes
     local result={pelican=pelican,turret=t.entity,spec={projectile=projectile,rpm=rpm,rate_factor=factor,
         hold_rate=spec.hold_rate,slot_rpm=slot_rpm,pattern=spec.pattern or false,
@@ -2601,7 +2605,9 @@ function M.mirror_configure(world,turret,spec,label)
     end
     local report=transaction.apply(runtime,plan)
     metrics.count('pelican_weapon.transactions')
-    if report.status~='APPLIED'then return refuse('GUARD_REJECTED','the copy writes were refused: '..tostring(report.reason))end
+    if report.status~='APPLIED'and report.status~='ALREADY_DESIRED'then
+        return refuse('GUARD_REJECTED','the copy writes were refused: '..tostring(report.reason))
+    end
     mirrored[turret]=true
     local result={turret=turret,projectile=projectile,writes=report.writes,verify={},casing=casing,sound=sounding}
     if sounding and sounding.wanted then

@@ -1,6 +1,11 @@
 # The game's own HUD icons in mod overlays
 
-`hd2.resources.game_icon(kind, name)` names one of the game's own stratagem or booster HUD icons. A mod draws it with
+0.40.0 RC10 adds `game_icon('passive', name)` for all 32 armor perks, using the uppercase names from
+`hd2.passives.list()`. These are image sprites in the ship atlas. Their typed asset dependencies let
+`hd2.require_assets` load that atlas in missions as well as on the ship. Perk artwork is rendered from
+the installed game; no extracted textures are bundled with the Runtime.
+
+`hd2.resources.game_icon(kind, name)` names one of the game's own atlas icons. A mod draws it with
 `d:image`, exactly like one of its own images:
 
 ```lua
@@ -14,12 +19,28 @@ overlay:draw(function(d)
 end)
 ```
 
-- `kind` is `'stratagem'` or `'booster'`; `name` is the name the Runtime's catalogues use.
-  `hd2.resources.game_icons(kind)` lists every name (94 stratagems, 20 boosters in build F5FEE03DCFDB).
+- `kind` is `stratagem`, `booster`, `weapon`, `throwable`, `faction`, `objective`, or `difficulty`.
+  Difficulty names are strings `"1"` through `"10"`; they use the full-color atlas
+  images and alpha transparency from the native difficulty rows. Their proven
+  UI package can be loaded through `hd2.require_assets` like the other HUD icons.
+  `hd2.resources.game_icons(kind)` lists every name. Weapons and throwables use their catalogue names; factions
+  use `automatons`, `terminids`, `illuminate`, or `super_earth`; objectives use native names such as
+  `cy_destroy_stratagem_blocker`, `bug_shrieker_nest`, and `il_destroy_monolith`.
+- Build F5FEE03DCFDB includes 112 weapon silhouettes (all 80 primary/secondary entries), all 23 throwables,
+  four factions and 143 objective choices, alongside 94 stratagems and 20 boosters. Some support weapons retain
+  their stratagem icon because no unique silhouette was recovered.
+- Weapon/throwable silhouettes and the three enemy faction symbols draw their red mask through an existing
+  icon material owned by the overlay. Their opaque
+  atlas alpha and blue border layer stay transparent. `icon:describe()` returns `kind`, `name`, `mode`, and optional
+  native `width`/`height`. Objective icons and the Super Earth emblem use the image-material pool to preserve
+  their actual alpha transparency. Fit the native aspect ratio into the desired box to avoid stretching rifles or knives.
+  New atlas categories are tested offline; in-game visibility depends on their page being loaded.
 - Unknown names return `nil, 'UNKNOWN_ICON', reason`, and so do the two items the game has no HUD icon for
   (CQC-72 Entrenchment Tool, SG-88 Break-Action Shotgun).
-- **Nothing is shipped and nothing is written.** The pixels never leave the game: the overlay draws the game's own
-  texture with the game's own material. No game memory, file or resource is written, loaded, created or replaced.
+- **Drawing uses resident game artwork.** The overlay draws the game's own texture with its own material instance.
+  Drawing itself never loads a package. To show weapon/throwable silhouettes aboard the ship, pass a typed icon
+  to `hd2.require_assets` (see [HUD preloading](asset-loading.md#preloading-hud-silhouettes-0320-development)).
+  The guarded loader retains the mission atlas for the session; no weapon is equipped or gameplay value changed.
 - An icon is drawn only while its atlas page is loaded. The stratagem pages are loaded aboard the ship and in missions;
   **the booster page is not loaded during a mission** (all seven retained snapshots), so booster icons wait there
   (`overlay:status().waiting_images`) and come back when it is.

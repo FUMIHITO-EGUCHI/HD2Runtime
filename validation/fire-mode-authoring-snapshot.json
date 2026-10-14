@@ -1,13 +1,13 @@
 {
-  "acknowledgementRejections": 128,
+  "acknowledgementRejections": 131,
   "addedAutomatic": 11,
-  "addedSelectors": 30,
+  "addedSelectors": 31,
   "blockedRejections": 5,
-  "burstChecks": 64,
-  "changedWrites": 128,
-  "conflictRejections": 128,
+  "burstChecks": 65,
+  "changedWrites": 131,
+  "conflictRejections": 131,
   "fixtureFallback": "disabled",
-  "fourModeRejections": 30,
+  "fourModeRejections": 31,
   "hotShot": {
     "binding": {
       "after": "03000000",
@@ -37,12 +37,12 @@
     "uniqueOwner": true
   },
   "mode": "snapshot-overlay",
-  "modeSetChecks": 64,
+  "modeSetChecks": 66,
   "overlapRejected": true,
   "removedModes": 13,
-  "replacedSingleMode": 30,
-  "rollbacks": 128,
-  "selectorRejections": 60,
+  "replacedSingleMode": 31,
+  "rollbacks": 131,
+  "selectorRejections": 62,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
   "status": "VALIDATED",
   "weapons": [
@@ -391,6 +391,16 @@
     },
     {
       "from": [
+        "burst"
+      ],
+      "kind": "player_weapon",
+      "to": [
+        "automatic"
+      ],
+      "weapon": "P-92 Warrant"
+    },
+    {
+      "from": [
         "single"
       ],
       "kind": "player_weapon",
@@ -412,6 +422,17 @@
         "burst"
       ],
       "weapon": "PLAS-1 Scorcher"
+    },
+    {
+      "from": [
+        "single"
+      ],
+      "kind": "player_weapon",
+      "to": [
+        "single",
+        "unsafe"
+      ],
+      "weapon": "PLAS-39 Accelerator Rifle"
     },
     {
       "from": [

@@ -130,13 +130,13 @@ class WeaponModeCatalogTests(unittest.TestCase):
             text = (ROOT / path).read_text(encoding='utf-8')
             self.assertNotIn('0x', text, path)
         rates = load('sdk/WeaponFireRateCapabilities.json')
-        self.assertEqual(rates['summary']['writable'], 63)   # the wind-up Maxigun included; 0.30.2 roots
+        self.assertEqual(rates['summary']['writable'], 64)   # Includes the Variable's existing ROF selector.
         self.assertEqual(rates['maxSlots'], 3)
         feeds = load('sdk/WeaponFeedCapabilities.json')['summary']
         self.assertEqual(feeds['roundsDualFeeds'], ['SG-20 Halt'])
         self.assertIn('S-11 Speargun', feeds['programmableAddable'])
         self.assertEqual(feeds['programmableNativeWritable'],
-            ['AC-8 Autocannon', 'GR-8 Recoilless Rifle', 'RL-77 Airburst Rocket Launcher'])
+            ['AC-8 Autocannon', 'GR-8 Recoilless Rifle', 'RL-77 Airburst Rocket Launcher', 'StA-X3 W.A.S.P. Launcher'])
         presentation = load('sdk/WeaponPresentationCapabilities.json')
         self.assertEqual([c['value'] for c in presentation['penetrationChoices']],
             ['none', 'light', 'medium', 'heavy', 'light_anti_tank', 'anti_tank'])
@@ -275,9 +275,9 @@ return 'ok'
     def test_validation_and_scenarios(self):
         result = load('validation/weapon-modes-snapshot.json')
         self.assertEqual(result['status'], 'VALIDATED')
-        self.assertEqual((result['rates']['checked'], result['rates']['added']), (63, 59))   # (0.30.2: the seven weapons resolved to their proven roots)
+        self.assertEqual((result['rates']['checked'], result['rates']['added']), (64, 59))
         self.assertEqual((result['functions']['checked'], result['functions']['native']), (52, 3))
-        self.assertEqual((result['presentation']['checked'], result['presentation']['traits']), (105, 108))
+        self.assertEqual((result['presentation']['checked'], result['presentation']['traits']), (106, 109))
         self.assertEqual(result['hmg']['slots'], ['0000e143>0000af44', '00001644>00004843', '00803b44>00002f44'])
         self.assertIn('WeaponDataComponentData+184=02000000', result['liberator']['written'])
         self.assertEqual(result['speargun']['written'],

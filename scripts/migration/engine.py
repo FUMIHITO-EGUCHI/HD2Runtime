@@ -479,8 +479,23 @@ class Engine:
         if (b.get('group'), b.get('row')) != (group_t.group, row) or target_type != b['recordType']:
             result.flag('MOVED', f"{kind} group/row/type {b.get('group')}/{b.get('row')}/{b['recordType']} -> "
                 f'{group_t.group}/{row}/{target_type}')
-        old = source_bytes[b['offset']:b['offset'] + b['width']]
-        new = row_bytes[offset:offset + b['width']]
+        if b.get('payloadRows'):
+            if not self.same_dll:
+                result.flag('BLOCKED', 'compound explosion payload donors, recipients and native callers need review for the new build')
+            if group_s.layout.to_json() != group_t.layout.to_json():
+                result.flag('BLOCKED', 'compound explosion payload layout changed')
+            for record_type in b['payloadRows']:
+                rows_s, rows_t = group_s.row_for_type(record_type), group_t.row_for_type(record_type)
+                if len(rows_s) != 1 or len(rows_t) != 1:
+                    result.flag('BLOCKED', 'compound explosion payload row missing or ambiguous')
+                elif masked(group_s.layout, rows_s[0][1]) != masked(group_t.layout, rows_t[0][1]):
+                    result.flag('BLOCKED', 'compound explosion payload donor or recipient changed')
+            # Pointer heads relocate between snapshots; runtime reconstructs and verifies each pointed-to array.
+            old = masked(group_s.layout, source_bytes)[b['offset']:b['offset'] + b['width']]
+            new = masked(group_t.layout, row_bytes)[offset:offset + b['width']]
+        else:
+            old = source_bytes[b['offset']:b['offset'] + b['width']]
+            new = row_bytes[offset:offset + b['width']]
         self._baseline(result, field, old, new)
         if b.get('enum') == 'status':
             self._status_table(result)

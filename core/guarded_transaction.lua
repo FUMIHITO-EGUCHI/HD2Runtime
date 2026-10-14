@@ -2,6 +2,7 @@
 local metrics=require('hd2runtime/runtime/metrics')
 local protection=require('hd2runtime/core/page_protection')
 local M={}
+local memory=require('hd2runtime/runtime/memory_watch')
 local PAGE=4096
 -- Every native write a transaction has issued (rollbacks too), counted before the write: a reader that keeps game
 -- memory for one update (runtime/stratagem_slot_conversion.lua, the carrier facts) drops it when this moves.
@@ -29,6 +30,7 @@ function M.inverse(plan)
     local snapshots={}
     for index,snapshot in ipairs(assert(plan.snapshots,'transaction snapshots missing'))do
         snapshots[index]={owner=snapshot.owner,offset=snapshot.offset,bytes=snapshot.bytes}
+        memory.fields(snapshots[index],'Snapshot payloads',{'bytes'})
     end
     for _,change in ipairs(changes)do
         local address=change.owner.base+change.offset
@@ -46,7 +48,8 @@ function M.inverse(plan)
         inverse.changes[#inverse.changes+1]={label=change.label,owner=change.owner,
             offset=change.offset,expected=change.desired,desired=change.before,
             before=change.desired,already_desired=false,identity=change.identity,
-            chain=change.chain,expect=change.value,value=change.expect,packed=change.packed}
+            chain=change.chain,expect=change.value,value=change.expect,packed=change.packed,
+            compatibility_scope=change.compatibility_scope}
     end end
     return inverse
 end
@@ -77,6 +80,8 @@ function M.apply(runtime,plan)
         rollback='not_needed',protection_restored=true,non_target_bytes_unchanged=false,
         non_target_check='not_reached',fields={}}
     local changes=assert(plan.changes,'transaction changes missing')
+    local reason,code=require('hd2runtime/runtime/spawn_compatibility').plan_reason(changes)
+    if reason then report.reason,report.code=reason,code;return report end
     assert(#changes>=1 and #changes<=128,'unsupported transaction change count')
     local contexts,pages,page_by_key,total={}, {}, {},0
     local queries,bytes_read,allowance=0,0,0

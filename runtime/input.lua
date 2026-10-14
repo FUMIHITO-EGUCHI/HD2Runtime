@@ -9,8 +9,11 @@
 -- * A chord matches only its exact modifiers: 'F6' does not fire while Ctrl is held, 'Ctrl+F6' does.
 -- * Runtime cannot see the game's own bindings or whether the chat box has focus; prefer keys the game leaves
 --   unbound (F5-F12, Insert, Home, End, Page Up/Down).
+-- * spec.native = {label, category}: the binding also appears on the game's own keybind page when Mod Bindings Menu is
+--   installed (runtime/mod_bindings_bridge.lua); any input the player binds there presses it as its key does.
 local events=require('hd2runtime/runtime/events')
 local metrics=require('hd2runtime/runtime/metrics')
+local bridge=require('hd2runtime/runtime/mod_bindings_bridge')
 local KEY='HD2RuntimeInputV1'
 local existing=rawget(_G,KEY)
 if existing then return existing end
@@ -158,7 +161,7 @@ local function unclaim(binding)
 end
 function Binding:describe()
     return {id=self.id,owner=self.owner,key=self.key,default=self.default,state=self.state,
-        conflict=self.conflict,presses=self.presses,failures=self.failures}
+        conflict=self.conflict,presses=self.presses,failures=self.failures,native=bridge.describe(self.id)}
 end
 function Binding:rebind(text)
     if self.state=='rejected'or self.state=='removed'then return false,self.state end
@@ -174,6 +177,7 @@ function Binding:enable()if self.state=='disabled'then self.state=self.chord and
 function Binding:unbind()
     if bindings[self.id]~=self then return self end
     unclaim(self)
+    bridge.forget(self.id)
     bindings[self.id]=nil
     for i,b in ipairs(order)do if b==self then table.remove(order,i)break end end
     self.state='removed'
@@ -192,6 +196,7 @@ M.rejected=rejected
 
 local modifiers_down={}
 local function poll()
+    bridge.step()
     local b=get_backend()
     if not b then return end
     if not b.focused()then
@@ -201,11 +206,18 @@ local function poll()
     for name,code in pairs(MODIFIERS)do modifiers_down[name]=b.down(code)end
     for _,binding in ipairs(order)do
         local chord=binding.chord
-        if binding.state=='active'and chord then
-            local main=b.down(chord.code)
+        -- (a binding left without a key by a conflict still takes its input from the game's keybind page)
+        local live=binding.state=='active'or binding.state=='conflict'
+        -- (controlled by its input on the game's keybind page: the key is ignored while an input is set there; when that
+        -- is unknown, once that input was first used, while that page's addon answers)
+        local native_controls=binding.native_down~=nil and(binding.native_bound==true
+            or binding.native_bound==nil and binding.native_owned==true)
+        local main=live and chord~=nil and not native_controls and b.down(chord.code)
+        local native=live and binding.native_down==true
+        if live and(chord or binding.native_down~=nil)then
             if binding.held then
-                if not main then release(binding)end
-            elseif main and modifiers_down.CTRL==chord.ctrl and modifiers_down.SHIFT==chord.shift
+                if not main and not native then release(binding)end
+            elseif native or main and modifiers_down.CTRL==chord.ctrl and modifiers_down.SHIFT==chord.shift
                 and modifiers_down.ALT==chord.alt then
                 binding.held=true
                 binding.presses=binding.presses+1
@@ -219,7 +231,12 @@ local function poll()
     end
 end
 
--- spec: {key='F6', on_press=function(binding) end, on_release=function(binding) end, enabled=true}
+local function plain(value,limit,name)
+    assert(type(value)=='string'and value:find('%S')and#value<=limit and not value:find('%c'),
+        'native '..name..' must be plain text of 1 to '..limit..' bytes')
+end
+-- spec: {key='F6', on_press=function(binding) end, on_release=function(binding) end, enabled=true,
+--        native={label='Open my window', category='My Mod'}}
 function M.bind(id,spec,owner)
     local valid,why=pcall(function()
         assert(type(id)=='string'and#id<=80 and id:match('^[%a][%w_]*%.[%w_%.]*[%w_]$'),
@@ -228,6 +245,13 @@ function M.bind(id,spec,owner)
         assert(spec.on_press==nil or type(spec.on_press)=='function','on_press must be a function')
         assert(spec.on_release==nil or type(spec.on_release)=='function','on_release must be a function')
         assert(spec.on_press or spec.on_release,'a binding needs on_press or on_release')
+        if spec.native~=nil then
+            assert(type(spec.native)=='table','native must be a table {label, category}')
+            for k in pairs(spec.native)do assert(k=='label'or k=='category','unsupported native option: '..tostring(k))end
+            -- (label: text, or a function returning it in the current language)
+            if type(spec.native.label)~='function'then plain(spec.native.label,127,'label')end
+            plain(spec.native.category,64,'category')
+        end
     end)
     if not valid then return rejected(id,owner,why)end
     local ok,chord=pcall(parse,spec.key or spec.default)
@@ -239,6 +263,7 @@ function M.bind(id,spec,owner)
         end
         binding.on_press,binding.on_release=spec.on_press,spec.on_release
         if binding.default~=chord.text then binding.default=chord.text;binding:rebind(chord.text)end
+        if spec.native then bridge.declare(binding,spec.native)else bridge.forget(id)end
         return binding
     end
     binding=setmetatable({id=id,owner=owner,on_press=spec.on_press,on_release=spec.on_release,default=chord.text,
@@ -247,6 +272,7 @@ function M.bind(id,spec,owner)
     bindings[id]=binding
     order[#order+1]=binding
     claim(binding,chord)
+    if spec.native then bridge.declare(binding,spec.native)end
     events.set_poller('input',poll)
     return binding
 end

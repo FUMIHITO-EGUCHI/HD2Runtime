@@ -6,15 +6,64 @@
 -- owner) and its first whole-body gore group: the record identity, the group's actor list and flags (+866 set) and
 -- every earlier group's cleared +866 are re-proven before every write, so it never lands on a limb group.
 -- Field descriptors are built from the compact generated database (domains/enemy_authoring.lua).
+local compat=require('hd2runtime/runtime/spawn_compatibility')
 local ownership=require('hd2runtime/core/ownership')
 local b=require('hd2runtime/core/bytes')
 local discover=require('hd2runtime/runtime/discover')
 local entities=require('hd2runtime/core/entity_catalog')
 local profile=require('hd2runtime/schemas/current')
-local database=require('hd2runtime/domains/enemy_authoring')
+local legacy=require('hd2runtime/domains/enemy_authoring')
+local controls=require('hd2runtime/domains/enemy_controls')
+local function copy(v)
+    if type(v)~='table'then return v end
+    local out={};for k,x in pairs(v)do out[k]=copy(x)end;return out
+end
+local database=copy(legacy)
+for id,schema in pairs(controls.schema)do if not database.schema[id]then database.schema[id]=schema end end
+for name,extra in pairs(controls.enemies)do
+    local entry=database.enemies[name]
+    if not entry then entry=copy(extra);entry.fields={};database.enemies[name]=entry end
+    entry.displayName=extra.displayName;entry.gameName=extra.gameName
+    entry.nameSource=extra.nameSource;entry.variantLabel=extra.variantLabel
+    entry.fullDisplayName=extra.fullDisplayName
+    entry.pendingControls=extra
+end
+local function expand(entry)
+    local extra=entry.pendingControls
+    if extra then
+        entry.pendingControls=nil
+        entry.components=extra.components;entry.transport=extra.transport;entry.demolition=extra.demolition
+        entry.mountedEntities=extra.mountedEntities
+        entry.attacks=entry.attacks or{}
+        local attacks={};for _,a in ipairs(entry.attacks)do attacks[a.id]=true end
+        for _,attack in ipairs(extra.attacks or{})do if not attacks[attack.id]then entry.attacks[#entry.attacks+1]=attack end end
+        for _,zone in ipairs(entry.zones)do
+            for _,new in ipairs(extra.zones)do if zone.id==new.id then
+                zone.name=new.name;zone.nameCandidates=new.nameCandidates;zone.actors=new.actors
+            end end
+        end
+        for _,field in ipairs(extra.fields())do
+            local found
+            for _,old in ipairs(entry.fields)do
+                if old.id==field.id and old.zone==field.zone and old.path==field.path and old.attack==field.attack then
+                    found=true
+                    -- Retain existing baselines/acknowledgements, add exact zone identity guards.
+                    if field.backing.guards then old.backing.guards=field.backing.guards end
+                    break
+                end
+            end
+            if not found then entry.fields[#entry.fields+1]=field end
+        end
+    end
+    return entry
+end
+for alias,name in pairs(controls.aliases)do
+    assert(not database.aliases[alias]or database.aliases[alias]==name,'enemy alias collision')
+    database.aliases[alias]=name
+end
+local view_profile=setmetatable({components=setmetatable(controls.layouts,{__index=profile.components})},{__index=profile})
 local M={}
-local component_names={'HealthComponentData','MountComponentData','ProjectileWeaponComponentData',
-    'SprayWeaponComponentData','GoreComponentData'}
+function M.entries()return database.enemies end
 
 local function equal(a,c,storage)
     if storage=='f32'then return type(a)=='number'and type(c)=='number'
@@ -27,14 +76,14 @@ local function valid_id(value)
 end
 function M.entry(name)
     local canonical=database.enemies[name]and name or database.aliases[name]
-    return canonical and database.enemies[canonical]or nil
+    return canonical and expand(database.enemies[canonical])or nil
 end
 function M.attack(entry,id)
     for _,attack in ipairs(entry.attacks or{})do if attack.id==id then return attack end end
 end
 local function entry_for(target)
     assert(type(target)=='table'and target.resource=='enemy','unsupported enemy target')
-    local entry=assert(type(target.enemy)=='string'and database.enemies[target.enemy],
+    local entry=assert(type(target.enemy)=='string'and M.entry(target.enemy),
         'unknown reviewed enemy: '..tostring(target.enemy))
     if target.path=='damage_zone'then
         assert(type(rawget(target,'zone'))=='string','damage zone identity required')
@@ -54,7 +103,7 @@ local ATTACK_UNVERIFIED='The DamageInfo row is reached through this class\'s own
 function M.descriptor(entry,field)
     local schema=assert(database.schema[field.id],'field schema missing: '..field.id)
     local backing={}
-    if field.backing.kind~='settings'then
+    if field.backing.kind~='settings'and entry.health then
         backing={component=entry.health.component,resource=entry.resource,
             recordIndex=entry.health.recordIndex,indexRow=entry.health.indexRow,ownerCount=entry.health.ownerCount,
             uniqueOwner=entry.health.uniqueOwner}
@@ -64,6 +113,9 @@ function M.descriptor(entry,field)
     local acknowledgement=schema.acknowledgement
     local reason=schema.acknowledgement and(schema.acknowledgementReason
         or(attack and ATTACK_UNVERIFIED or HEALTH_UNVERIFIED))or nil
+    if entry.requiresAcknowledgement and not acknowledgement then
+        acknowledgement='allow_unverified_effect';reason='Newly mapped entity; its gameplay edits are not live-tested.'
+    end
     -- Structure health: offline-proven only until a structure live test passes (sdk/LiveEvidenceCatalog.json).
     local gate=database.structureAcknowledgement
     if entry.kind=='structure'and not acknowledgement and gate then
@@ -74,7 +126,10 @@ function M.descriptor(entry,field)
     return {semanticFieldId=field.id,type=schema.type,currentDefault=field.currentDefault,editable=field.editable~=false,
         reason=field.reason,target={resource='enemy',enemy=entry.name,path=field.path,zone=field.zone,
             attack=field.attack},
-        backing=backing,shared=schema.shared==true or backing.uniqueOwner==false,min=schema.min,max=schema.max,
+        backing=backing,shared=schema.shared==true or backing.uniqueOwner==false,
+        min=field.min or schema.min,max=field.max or schema.max,
+        grade=field.grade or schema.grade,lifecycle=field.lifecycle or schema.lifecycle,
+        semantics=field.semantics or schema.semantics,
         disabledValue=schema.disabledValue,
         acknowledgement=acknowledgement,
         sharedWithClasses=attack and attack.reviewedClassesReachingRow or nil,
@@ -171,6 +226,22 @@ end
 -- Class -> mount slot -> weapon entity -> weapon component -> settings links, all re-read live.
 local function prove_attack(resolved,attack)
     local entry=resolved.entry
+    if attack.source then
+        for _,step in ipairs(attack.mountChain)do
+            local candidate=find_candidate(resolved.catalog,step.resource,step.entityRow,'mount owner')
+            local record=component_record(resolved.catalog,candidate,step,'mount owner')
+            assert(b.resource(record.bytes,step.offset)==step.expect,'enemy mounted entity link changed')
+        end
+        local source=attack.source
+        local candidate=find_candidate(resolved.catalog,source.resource,source.entityRow,'attack source')
+        local record=component_record(resolved.catalog,candidate,source,'attack source')
+        assert(b.u32(record.bytes,source.offset)==source.expect,'enemy typed attack reference changed')
+        for _,link in ipairs(attack.settingsLinks)do
+            local row=settings_record(resolved.roots,link.settings,link.recordType)
+            assert(b.u32(row.bytes,link.offset)==link.expect,'enemy settings link changed')
+        end
+        return
+    end
     local mount=component_record(resolved.catalog,resolved.candidate,entry.mount,entry.name)
     assert(b.resource(mount.bytes,attack.mount.offset)==attack.mount.expect,
         entry.name..' mount slot '..attack.slot..' no longer holds the reviewed weapon')
@@ -186,12 +257,36 @@ end
 function M.capture_many(runtime,reader,specs)
     reader.stage='runtime/windows_readonly:fingerprint'
     require('hd2runtime/core/fingerprint').require(runtime)
+    assert(controls.source.gameDllSha256==profile.dll_sha,'enemy controls cover another game build')
     local needed={entity=true}
+    local names,resources={},{}
     for _,spec in ipairs(specs)do
-        if spec.target_path=='attack'then needed.projectile=true;needed.explosion=true;needed.damage=true end
+        resources[database.enemies[spec.enemy].resource]=true
+        if database.enemies[spec.enemy].health then names.HealthComponentData=true end
+        for _,change in ipairs(spec.changes)do
+            local c=change.descriptor.backing.component;if c then names[c]=true end
+        end
+        if spec.target_path=='attack'then
+            resources.all=true
+            local attack=assert(M.attack(database.enemies[spec.enemy],spec.attack))
+            if attack.source then
+                names[attack.source.component]=true
+                for _,step in ipairs(attack.mountChain)do names[step.component]=true end
+                for _,link in ipairs(attack.settingsLinks)do needed[link.settings]=true end
+                for _,change in ipairs(spec.changes)do needed[change.descriptor.backing.settings]=true end
+                -- The owner still needs a component candidate when its attack is mounted.
+                if #attack.mountChain>0 then names.MountComponentData=true end
+            else
+                needed.projectile=true;needed.explosion=true;needed.damage=true
+                names.MountComponentData=true;names.ProjectileWeaponComponentData=true;names.SprayWeaponComponentData=true
+            end
+        end
     end
-    local roots=discover.locate(runtime,reader,profile,needed)
-    local catalog=entities.capture(reader,roots.entity,profile,component_names)
+    local component_names={};for name in pairs(names)do component_names[#component_names+1]=name end
+    table.sort(component_names)
+    local roots=discover.locate(runtime,reader,view_profile,needed)
+    local catalog=entities.capture(reader,roots.entity,view_profile,component_names,
+        not resources.all and{resources=resources}or nil)
     local results={}
     for index,spec in ipairs(specs)do
         local entry=assert(database.enemies[spec.enemy],'reviewed enemy entry absent')
@@ -205,6 +300,7 @@ end
 function M.capture(runtime,reader,spec)return M.capture_many(runtime,reader,{spec})[1]end
 
 function M.prepare(resolved,reader,spec)
+    for _,c in ipairs(spec.changes)do compat.require({resource='enemy'},c.field)end
     local plan={changes={},snapshots=reader.snapshots};local physical={}
     for _,change in ipairs(spec.changes)do
         local backing=change.descriptor.backing
@@ -244,6 +340,7 @@ function M.prepare(resolved,reader,spec)
                 'overlapping enemy fields conflict')
         else
             local item={label=change.field,canonical_field=change.canonical_field,
+                compatibility_scope=compat.scope({resource='enemy'},change.field),
                 semantic_aliases={change.field},owner=owner,offset=offset,field_offset=backing.offset,
                 expected=expected,desired=change.desired,before=current,
                 already_desired=current==change.desired,expect=change.expect,value=change.value,

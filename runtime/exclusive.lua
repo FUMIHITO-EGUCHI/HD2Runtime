@@ -8,9 +8,20 @@
 -- Steady-state verification is read-only and synchronous and needs no gate.
 local metrics=require('hd2runtime/runtime/metrics')
 local M={}
-local holder
+local holder,last_acquired_serial
 function M.acquire(owner)
-    if holder==nil then holder=owner;metrics.count('exclusive.acquisitions');return true end
+    if holder==nil then
+        local scheduler=package.loaded['hd2runtime/runtime/scheduler']
+        local serial=scheduler and scheduler.serial()
+        -- Budget a burst as a whole, not 600 independent minimum read slices. Always admit one operation per
+        -- update so unrelated recurring work cannot starve pending edits. Existing holders must keep progressing.
+        if serial and last_acquired_serial==serial then
+            local spent=scheduler.tick_seconds()
+            if spent and spent>=0.001 then return false end
+        end
+        last_acquired_serial=serial
+        holder=owner;metrics.count('exclusive.acquisitions');return true
+    end
     if holder==owner then return true end
     metrics.count('exclusive.queued_ticks')
     return false

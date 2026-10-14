@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "runtime_version": "0.31.3",
+  "runtime_version": "0.40.0",
   "api_version": 1,
   "evidence_categories": [
     "structural_candidate",
@@ -2740,7 +2740,9 @@
         "rebinds?": "integer",
         "option_defaults?": "boolean",
         "recoveries?": "integer",
-        "retry_in?": "number"
+        "retry_in?": "number",
+        "verification_enabled": "boolean",
+        "set_verification_enabled": "fun(enabled: boolean)"
       },
       "HD2ObserveRequest": {
         "targets": "HD2ReadTarget[]",
@@ -2898,6 +2900,7 @@
         "key?": "string",
         "derivation?": "string",
         "package?": "string",
+        "packages?": "integer",
         "retain?": "string",
         "liveTested?": "boolean",
         "blocker?": "string"
@@ -3051,7 +3054,7 @@
           ]
         ],
         "returns": "HD2Watch",
-        "doc": "Make the game load the packages that one to 16 typed handles (hd2.pickup, hd2.weapon, hd2.support_weapon, hd2.throwable, hd2.vehicle, hd2.backpack, a mounted-weapon candidate, a projectile handle) need, through the same reference-counted package system the game uses for loadouts. Status waiting_for_assets until every package is resident, then complete (result.status RESIDENT), or rejected with code ASSET_UNAVAILABLE. Never blocks; times out after 90 s. Package identities come only from the generated catalog; mods never pass package IDs. patch, transaction, plan and ensure already do this automatically for reference swaps, so most mods never call it."
+        "doc": "Make the game load the packages that one to 16 typed handles (hd2.pickup, hd2.weapon, hd2.support_weapon, hd2.throwable, hd2.vehicle, hd2.backpack, hd2.stratagem, a mounted-weapon candidate, a projectile handle, a HUD icon handle) need, through the same reference-counted package system the game uses for loadouts. Status waiting_for_assets until every package is resident, then complete (result.status RESIDENT), or rejected with code ASSET_UNAVAILABLE. UI-only HUD icon requests stay local. Never blocks; times out after 90 s. Package identities come only from the generated catalog; mods never pass package IDs. patch, transaction, plan and ensure already do this automatically for reference swaps, so most mods never call it."
       },
       "asset_dependency": {
         "params": [

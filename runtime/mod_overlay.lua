@@ -46,6 +46,8 @@ local images=require('hd2runtime/runtime/image_resources')
 local game_icons=require('hd2runtime/runtime/game_icons')
 local input=require('hd2runtime/runtime/input')
 local cursor=require('hd2runtime/runtime/mod_cursor')
+local perf=require('hd2runtime/runtime/perf_watch')
+local function perf_stage(key)return key.perf_name end
 local KEY='HD2RuntimeModOverlaysV1'
 local existing=rawget(_G,KEY)
 if existing then return existing end
@@ -193,6 +195,7 @@ end
 -- The runs text is drawn in (runtime/ui_fonts.lua runs): one run in the role font when it has every character.
 local function text_runs(self,font,text)
     if ui_fonts.has(font,text)then return {{font=font,text=text}}end
+    self.used_extra_fonts=true
     local extra=self.extra_fonts and self.extra_fonts()
     if self.want_fonts then self.want_fonts(font,text,extra)end
     return ui_fonts.runs(font,text,extra)
@@ -261,7 +264,9 @@ end
 -- false, the number of distinct characters that would show as '?' and up to three of them.
 function Builder:can_draw(text,role)
     local font=role_font(self,role or'body')or metrics_font()
-    return ui_fonts.drawable(font,tostring(text),self.extra_fonts and self.extra_fonts())
+    text=tostring(text)
+    if ui_fonts.has(font,text)then return true,0,{}end
+    return ui_fonts.drawable(font,text,self.extra_fonts and self.extra_fonts())
 end
 -- Lines of text no wider than `width` pixels (runtime/ui_fonts.lua wrap: at spaces and between CJK characters, never
 -- inside a character), measured as d:text draws them. opts: {size = 18, font = 'body', lines = the most lines (the
@@ -269,7 +274,60 @@ end
 function Builder:wrap(text,width,opts)
     opts=opts or{}
     local font=role_font(self,opts.font or'body')or metrics_font()
-    return ui_fonts.wrap(font,tostring(text),opts.size or 18,width,opts.lines,self.extra_fonts and self.extra_fonts()or{})
+    text=tostring(text)
+    local extra
+    if not ui_fonts.has(font,text)then
+        self.used_extra_fonts=true
+        extra=self.extra_fonts and self.extra_fonts()
+    end
+    return ui_fonts.wrap(font,text,opts.size or 18,width,opts.lines,extra)
+end
+
+-- Runtime-internal retained text/rectangle group. The revision represents immutable layout/content. The caller
+-- still handles input every frame. Cached primitives re-enter the normal resource checks and engine reconciliation;
+-- fonts, screen coordinates, visibility and a new GUI invalidate the cache. Images use the ordinary dynamic path.
+function Builder:_retain(key,revision,draw)
+    local cache=self.retained
+    if not cache then return draw(self)end
+    local saved=cache[key]
+    local valid=saved and saved.revision==revision and saved.width==self.width and saved.height==self.height
+        and saved.layer==self.layer
+    if valid then
+        for role,font in pairs(saved.fonts)do
+            if (role_font(self,role)or false)~=font then valid=false;break end
+        end
+        if valid and saved.extra then
+            local extra=self.extra_fonts and self.extra_fonts()or{}
+            if #extra~=#saved.extra then valid=false
+            else for i,font in ipairs(extra)do if font~=saved.extra[i]then valid=false;break end end end
+        end
+    end
+    if valid then
+        if #self.items+#saved.items>M.MAX_ITEMS then return refuse(self,'more than '..M.MAX_ITEMS..' items in one frame')end
+        for _,item in ipairs(saved.items)do self.items[#self.items+1]=item end
+        self.retained_hits=(self.retained_hits or 0)+1
+        return
+    end
+    local first,refused_before=#self.items,self.refused
+    draw(self)
+    if self.refused~=refused_before then cache[key]=nil;return end
+    local items={}
+    for i=first+1,#self.items do
+        local item=self.items[i]
+        if item.kind~='rect'and item.kind~='text'then cache[key]=nil;return end
+        item._retained=true
+        items[#items+1]=item
+    end
+    local fonts={};for role,font in pairs(self.fonts)do fonts[role]=font end
+    local extra
+    if self.used_extra_fonts then
+        extra={};for i,font in ipairs(self.extra_fonts and self.extra_fonts()or{})do extra[i]=font end
+    end
+    if not cache[key]then
+        local n=0;for _ in pairs(cache)do n=n+1 end
+        if n>=8 then for k in pairs(cache)do cache[k]=nil end end
+    end
+    cache[key]={revision=revision,width=self.width,height=self.height,layer=self.layer,items=items,fonts=fonts,extra=extra}
 end
 
 -- Mask colours of an image (the icon material's c0-c2 for the R, G and B masks; c3 is always zero, because the BC1
@@ -304,10 +362,14 @@ function Builder:game_icon(handle,x,y,w,h,opts)
     end
     local col=colour(opts.colour or opts.color)
     if not col then return refuse(self,'invalid colour')end
-    local kind=game_icons.identity(handle).kind
+    local identity=game_icons.identity(handle)
     local vars,key
-    if kind=='stratagem'then
-        vars,key=mask_vars(opts.colours)
+    if identity.mode=='mask'then
+        local masks=opts.colours
+        if not masks and identity.kind~='stratagem'then
+            masks={r={255,255,238,255},g={0,0,0,0},b={0,0,0,0}}
+        end
+        vars,key=mask_vars(masks)
         if not vars then return refuse(self,'invalid mask colours')end
     end
     if x<0 or y<0 or x+w>self.width or y+h>self.height then return end
@@ -400,12 +462,13 @@ local function reconcile(screen,drawn,items)
     local out={}
     for i,item in ipairs(items)do
         local old=drawn[i]
+        local id
         if old and old.kind==item.kind then
-            if same(old,item)then item.id=old.id
+            if old._source==item or same(old,item)then id=old.id
             else
                 local ok,why=update(screen,old,item)
                 if not ok then return nil,why end
-                item.id=old.id
+                id=old.id
                 calls=calls+1
             end
         else
@@ -414,12 +477,20 @@ local function reconcile(screen,drawn,items)
                 if not ok then return nil,why end
                 calls=calls+1
             end
-            local id,why=create(screen,item)
+            local why
+            id,why=create(screen,item)
             if id==nil then return nil,why end
-            item.id=id
             calls=calls+1
         end
-        out[i]=item
+        -- Cached geometry is immutable: never share mutable engine IDs with a retained group.
+        -- Inserting an item before that group may shift every ID in the positional reconciliation.
+        if item._retained then
+            if old and old._source==item then out[i]=old
+            else
+                local copy={};for k,v in pairs(item)do copy[k]=v end
+                copy.id,copy._source=id,item;out[i]=copy
+            end
+        else item.id=id;out[i]=item end
     end
     for i=#items+1,#drawn do
         local ok,why=screen.destroy(drawn[i].kind,drawn[i].id)
@@ -518,6 +589,8 @@ M.reconcile_and_colour=reconcile_and_colour
 ---------------------------------------------------------------------------------------------------- overlays --
 local Overlay={};Overlay.__index=Overlay
 local function close_screen(self)
+    self.diagnostic_view=nil
+    self.retained={}
     self.coloured,self.ready,self.icons,self.icon_pages,self.icon_materials,self.carriers={},{},{},nil,nil,nil
     self.text_fonts=nil
     if self.screen then pcall(self.screen.close)end
@@ -646,8 +719,10 @@ local function frame(self,dt)
     local d=setmetatable({items={},layer=self.layer,width=screen.width,height=screen.height,scale=self.scale,
         materials={},image_ready=image_ready,icon_ready=icon_ready,extra_fonts=extra_fonts,
         want_fonts=function(font,text,list)pcall(M.hooks.want_fonts,world,font,text,list)end,
-        fonts={},refused=0,font_for=function(role)return M.hooks.font(world,role)end},Builder)
+        fonts={},refused=0,retained=self.retained,font_for=function(role)return M.hooks.font(world,role)end},Builder)
+    local layout_timed=self.perf_layout and perf.begin()
     local ok,err=xpcall(self.draw_fn,function(e)return debug.traceback(tostring(e),2)end,d,dt)
+    if self.perf_layout then perf.finish(layout_timed,self.owner,self.perf_layout,perf_stage)end
     if not ok then
         -- The mod's failure: nothing stale stays on screen; the frame callback records and logs it.
         close_screen(self)
@@ -704,15 +779,37 @@ local function frame(self,dt)
     self.waiting_text,self.text_why=d.waiting_text or 0,d.text_why
     self.refused,self.first_refusal=d.refused,d.first_refusal
     self.waiting_images,self.image_why=d.waiting_images or 0,d.image_why
+    -- Record each distinct icon failure once per overlay, including lookup and
+    -- carrier failures which otherwise leave only a blank space in the UI.
+    local image_problem=d.image_why or(dropped>0 and d.first_refusal)
+    if image_problem then
+        self.image_problems=self.image_problems or{}
+        if not self.image_problems[image_problem]then
+            self.image_problems[image_problem]=true
+            emit('overlay '..self.owner..'/'..self.id..' image unavailable: '..image_problem)
+        end
+    end
+    -- The settings panel tags view transitions for crash reports. No per-frame logging, and no tracing for mods.
+    local diagnostic=d._diagnostic_view
+    if diagnostic==self.diagnostic_view then diagnostic=nil end
+    if diagnostic then
+        self.diagnostic_view=diagnostic
+        emit(diagnostic..' GUI sync begin: '..#d.items..' items; '..self.waiting_text..' text waiting; '
+            ..self.refused..' refused')
+    end
+    local sync_timed=self.perf_sync and perf.begin()
     local passed,drawn,calls=engine_gui.temp_scope(reconcile_and_colour,screen,self.drawn,d.items,self.coloured)
+    if self.perf_sync then perf.finish(sync_timed,self.owner,self.perf_sync,perf_stage)end
     if not(passed and drawn)then
         close_screen(self)
         note(self,'failed','engine GUI call failed: '..tostring(passed and calls or drawn))
         return
     end
     self.drawn=drawn
+    self.retained_hits=(self.retained_hits or 0)+(d.retained_hits or 0)
     self.frames=self.frames+1
     self.calls=self.calls+calls
+    if diagnostic then emit(diagnostic..' GUI sync complete: '..calls..' engine calls')end
     note(self,'drawing',d.first_refusal and('refused: '..d.first_refusal)or nil)
 end
 
@@ -814,6 +911,14 @@ function M.open(owner,opts)
     self=setmetatable({owner=owner,id=id,key=key,layer=layer,visible=opts.visible~=false,state='waiting',drawn={},
         frames=0,calls=0,opened=0,refused=0},Overlay)
     self.ticker=events.frame(function(dt)return frame(self,dt)end,{owner=owner,id='hd2runtime.overlay.'..id})
+    self.retained={}
+    self.ticker.perf_group='ui'
+    if owner=='hd2runtime'and id=='settings'then
+        self.ticker.perf_group='runtime_menu'
+        self.ticker.perf_name='F10 resources/input'
+        self.perf_layout={perf_name='F10 layout',perf_group='runtime_menu'}
+        self.perf_sync={perf_name='F10 GUI sync',perf_group='runtime_menu'}
+    end
     if self.ticker.state=='rejected'then error('overlay rejected: '..tostring(self.ticker.reason),2)end
     overlays[key]=self
     return self

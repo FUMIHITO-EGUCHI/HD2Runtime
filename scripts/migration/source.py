@@ -238,6 +238,10 @@ def normalize(tables: dict, source_view=None) -> list[dict]:
                     backing = _component(b, resource)
                 else:
                     backing = _settings(b['settings'], b, [resource])
+                    if field.get('type') == 'explosion_payload':
+                        # Compound payload proofs are build-specific; never auto-migrate their donor/recipient rows.
+                        backing['payloadRows'] = sorted({r['recordType'] for r in
+                            list(field['payloadOptions'].values()) + field['payloadRecipients']})
                 records.append(_record('throwable_authoring', field['instanceKey'], name, field_id, backing,
                     field.get('currentDefault'), field.get('editable'), field.get('shared'),
                     {'path': ['throwables', name, 'targets', label, 'fields', field_id],

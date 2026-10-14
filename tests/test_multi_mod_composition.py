@@ -123,11 +123,12 @@ return json.encode(out)
         self.assertFalse(result['others']['rover_gun'])
         self.assertFalse(result['others']['rover'])
         self.assertFalse(result['others']['k9_gun'])
-        # The Arc Thrower's only cross-catalogue record is its stun status row: the A/ARC-3 Tesla Tower's, and the
-        # status's own definition (hd2.status_effect('stun_small'), 0.31.0).
+        # Stun Small is shared by the tower and both explosion-created arcs.
         self.assertEqual(result['others']['arc'],
                          ['status.primary_status_37.duration -> status_effect stun_small',
-                          'status.primary_status_37.duration -> stratagem A/ARC-3 Tesla Tower'])
+                          'status.primary_status_37.duration -> stratagem A/ARC-3 Tesla Tower',
+                          'status.primary_status_37.duration -> support_weapon GL-52 De-Escalator',
+                          'status.primary_status_37.duration -> throwable G-31 Arc'])
         self.assertIn('A/ARC-3 Tesla Tower', result['sentries'])
         self.assertIn('A/LAS-98 Laser Sentry', result['sentries'])
         self.assertGreater(result['turret'], 40)
@@ -168,7 +169,7 @@ for _,n in ipairs({'stratagem A/MG-43 Machine Gun Sentry','support_weapon MG-43 
   'vehicle_weapon EXO-45 Patriot Exosuit / right_gun'})do assert(gatling:find(','..n..',',1,true),gatling)end
 -- The Tesla Tower's stun row is the Arc Thrower's.
 local tesla=names(field(strat['A/ARC-3 Tesla Tower'],'status.duration'))
-assert(tesla==',status_effect stun_small,support_weapon ARC-3 Arc Thrower,',tesla)
+assert(tesla==',status_effect stun_small,support_weapon ARC-3 Arc Thrower,support_weapon GL-52 De-Escalator,throwable G-31 Arc,',tesla)
 -- An attack output's slot is another handle on its owner weapon's own row, never another user.
 local arbitrator=names(field(require('hd2runtime/domains/player_weapon_authoring').weapons['AR-11 Arbitrator'],
  'terminal.primary.impact.explosion'))

@@ -86,8 +86,9 @@ def load() -> dict:
     return _CACHE['catalog']
 
 
-def slot_specs(damage_type: int) -> list[dict]:
-    """Field specs for one DamageInfo row: suffix, offset, storage, current value and flags."""
+def slot_specs(damage_type: int, *, all_slots=False) -> list[dict]:
+    """Field specs for one DamageInfo row. all_slots opts into all four type/strength pairs;
+    those callers must validate the resulting packed row at write time, across the whole write set."""
     catalog = load()
     slots = catalog['slots'].get(int(damage_type))
     if slots is None:
@@ -103,11 +104,14 @@ def slot_specs(damage_type: int) -> list[dict]:
             raise ValueError(f'DamageInfo {damage_type} slot {slot} names unknown status type {kind}')
         specs.append({'suffix': f'status_{slot}_type', 'slot': slot, 'offset': 44 + 8 * (slot - 1), 'storage': 'u32',
             'current': status['semanticId'], 'role': 'type', 'attach': False, 'lastUsed': slot == used[-1]})
+        if all_slots:
+            specs.append({'suffix': f'status_{slot}_strength', 'slot': slot, 'offset': 48 + 8 * (slot - 1),
+                'storage': 'f32', 'current': slots[slot-1][1], 'role': 'strength', 'attach': False, 'lastUsed': False})
     for free in range(len(used) + 1, SLOTS + 1):
         specs.append({'suffix': f'status_{free}_type', 'slot': free, 'offset': 44 + 8 * (free - 1), 'storage': 'u32',
             'current': 'none', 'role': 'type', 'attach': True, 'lastUsed': False, 'extra': free > len(used) + 1})
         specs.append({'suffix': f'status_{free}_strength', 'slot': free, 'offset': 48 + 8 * (free - 1),
-            'storage': 'f32', 'current': 0.0, 'role': 'strength', 'attach': True, 'lastUsed': False,
+            'storage': 'f32', 'current': slots[free-1][1], 'role': 'strength', 'attach': True, 'lastUsed': False,
             'extra': free > len(used) + 1})
     return specs
 

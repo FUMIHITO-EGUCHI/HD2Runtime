@@ -1,5 +1,5 @@
 -- Generated from custom_stratagems.json by the HD2Runtime SDK (hd2.py custom-stratagem compile; format hd2runtime-custom-stratagems/1).
--- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 7f297cd05a4f18bf9cfee543dd6c055f52d71a5e4f4cafd6cbb2d62d3802eafd.
+-- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 fd3c7eeaa862cd2fa233b3936aac5293c6c95630b50a22f816bc0f37dda63308.
 local hd2=require('mods/skyeshade/hd2runtime')
 local mod=hd2.mod()
 mod:log('PelicanEmsSupport 0.3.0 BUILD: select Pelican EMS Support in the custom panel, then a mission; call it with LEFT DOWN LEFT RIGHT LEFT DOWN.')

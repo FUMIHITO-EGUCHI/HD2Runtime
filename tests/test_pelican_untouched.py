@@ -87,6 +87,29 @@ assert(#credited==0 and not configured)
 return 'ok'
 """), b'ok')
 
+    def test_native_target_facing_never_changes_the_gun_or_ai(self):
+        self.assertEqual(gunship_lua(r"""
+pworld();BOMB.set_clock(T0);tcount(0);tick(4);scene();controller();stage(0,2,0);ai(4)
+local function forbidden()error('native facing must leave the gun and AI alone')end
+weapon.configure=forbidden;weapon.refill_step=forbidden;weapon.switch_ai=forbidden;weapon.assets=forbidden
+assert(gunship.untouched({round='native',face_target=true}))
+local g=assert(gunship.arm(9501,{gun={round='native',face_target=true},label='native facing'},function()end))
+tick(16)
+local world=world_module.open();held(world)
+W.add{entity=5555,type='73F8498BFFDCF415',unit=7555,health=500};W.unit(7555,100,70,0)
+BOMB.set_clock(T0+1000000);ai(3,5555)
+local before=W.read(record(1),504)
+tick(4)
+assert(desired()>0.1,'native target did not rotate the Pelican')
+assert(W.read(record(1),504)==before,'burst timer / AI / target changed')
+assert(g.refills==0 and g.locks==0)
+local mirror=require('hd2runtime/runtime/custom_mp_pelican')
+weapon.mirror_configure=forbidden
+local m=mirror.mirror({turret=8102,pelican=8101,network=401,gun={round='native',face_target=true},label='remote'})
+assert(m.status=='complete'and m.untouched)
+return 'ok'
+"""), b'ok')
+
     def test_every_other_machine_mirrors_nothing(self):
         self.assertEqual(run(WORLD + r"""
 local mirror=require('hd2runtime/runtime/custom_mp_pelican')

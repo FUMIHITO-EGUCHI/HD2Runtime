@@ -31,8 +31,8 @@ class DepositLimitTests(unittest.TestCase):
         self.assertFalse([f for f in RESEARCH['exposedDepositFields'] if f['sdkMaxExceedsLiveLimit']])
         published = self._deposit_fields()
         # 0.31.0: + the five team-reload backpacks (research/team-reload-ammo-F5FEE03DCFDB.json), three fields each,
-        # bounded by the same 10-bit network field.
-        self.assertEqual(len(published), 24 + 15)
+        # bounded by the same 10-bit network field. 0.40.0 RC5: + the B-1 Supply Pack's boxes (capacity, start, refill).
+        self.assertEqual(len(published), 24 + 15 + 3)
         for field in published:
             self.assertEqual(field['max'], RESEARCH['liveAmountLimit']['max'], field['instanceKey'])
             self.assertIn('deposit_value (10 bits)', field['rangeReason'])

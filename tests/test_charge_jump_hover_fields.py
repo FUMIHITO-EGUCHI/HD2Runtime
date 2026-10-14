@@ -165,6 +165,30 @@ class ChargeCatalogTests(unittest.TestCase):
 
 
 class MovementCatalogTests(unittest.TestCase):
+    def test_landing_controls_keep_legacy_keys_and_have_correct_names(self):
+        self.assertEqual(run(r'''
+local packs=require('hd2runtime/domains/entity_authoring').backpacks
+for _,name in ipairs({'LIFT-850 Jump Pack','LIFT-860 Hover Pack'})do
+    local found={}
+    for _,f in ipairs(packs[name].fields)do
+        if f.semanticFieldId:match('^jump%.sustain_')then
+            assert(f.uiGroup=='landing_thrust'and f.displayName:lower():find('landing'))
+            found[f.semanticFieldId]=true
+        end
+    end
+    assert(found['jump.sustain_thrust']and found['jump.sustain_duration'])
+end
+return 'ok'
+'''),b'ok')
+        for name in ('LIFT-850 Jump Pack', 'LIFT-860 Hover Pack'):
+            fields = pack_fields(name)
+            for key, label, value in [('jump.sustain_thrust', 'Landing thrust', 60),
+                                     ('jump.sustain_duration', 'Landing thrust duration', 1)]:
+                self.assertEqual(fields[key]['displayName'], label)
+                self.assertEqual(fields[key]['currentDefault'], value)
+            self.assertIn('brake horizontal', fields['jump.sustain_forward_ratio']['acknowledgementReason'])
+            self.assertIn('below the wearer', fields['jump.sustain_start_speed']['acknowledgementReason'])
+
     def test_each_pack_offers_exactly_what_its_flight_code_reads(self):
         jump, hover = pack_fields('LIFT-850 Jump Pack'), pack_fields('LIFT-860 Hover Pack')
         self.assertTrue(set(JUMP_ONLY + SHARED) <= set(jump))

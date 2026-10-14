@@ -307,10 +307,15 @@ def _pelican_gun(problems, where, gun, fields, schema):
     for key in ('rpm', 'spread', 'aim_height'):
         _number(problems, where + '.' + key, gun.get(key), fields[key])
     gatling = gun.get('behave_as') == 'gatling_sentry'
-    for key, text in (('rpm', 'the Gatling AI\'s rate'), ('face_target', 'the Gatling AI\'s target'),
+    for key, text in (('rpm', 'the Gatling AI\'s rate'),
             ('aim_height', 'the Gatling AI\'s target')):
         if key in gun and not gatling and not (key == 'aim_height' and gun[key] == 0):
             problems.add(where + '.' + key, 'follows %s: it needs behave_as = "gatling_sentry"' % text)
+    if gun.get('face_target') and not gatling:
+        native = gun.get('round') == 'native' and all(k in ('round', 'face_target', 'sound', 'rate_multiplier') for k in gun)
+        native = native and gun.get('rate_multiplier', 1) == 1 and gun.get('sound', 'pelican/chin_autocannon') == 'pelican/chin_autocannon'
+        if not native:
+            problems.add(where + '.face_target', 'needs an untouched native gun or the Gatling AI')
     if gun.get('rate_multiplier', 1) != 1 and not gatling:
         problems.add(where + '.rate_multiplier', 'multiplies the Gatling rate: it needs behave_as = "gatling_sentry"')
     if 'rpm' in gun and gun.get('rate_multiplier', 1) != 1:

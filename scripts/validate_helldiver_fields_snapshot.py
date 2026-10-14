@@ -68,7 +68,8 @@ local function resolve(spec)
  local plan=W.prepare(resolved,reader,spec);reader.verify()
  return plan,resolved,reader
 end
-local function component(name)return name=='AvatarComponentData'and D.avatar.layout or profile.components[name]end
+local function component(name)return name=='AvatarComponentData'and D.avatar.layout
+ or name=='InventoryComponentData'and D.inventory.layout or profile.components[name]end
 local function table_of(owner,name)
  local c=component(name)
  return owner.base+c.offset+28,c.record_offset+c.records*c.stride,c
@@ -143,6 +144,7 @@ local worker=coroutine.create(function()
   reset()
  end
  round_trip('jog',patch(ENTITY,'helldiver.speed.jog',3.2,4.5),'AvatarComponentData')
+ round_trip('stim_refill',patch(ENTITY,'helldiver.supply.stims_from_supply',2,4),'InventoryComponentData')
  round_trip('stamina',W.validate_transaction({id='helldiver-stamina',target=ENTITY,allow_shared=true,
   allow_unverified_effect=true,changes={{field='helldiver.stamina.sprint_duration',expect=23,value=3},
   {field='helldiver.stamina.recover_delay',expect=1.5,value=0.5}}}),'AvatarComponentData')
@@ -180,6 +182,8 @@ local worker=coroutine.create(function()
  end
  -- 5. Rejections.
  rejects(function()patch(ENTITY,'helldiver.speed.jog',3.2,4.5,{allow_shared=false})end,'allow_shared','no allow_shared')
+ rejects(function()patch(ENTITY,'helldiver.supply.stims_from_supply',2,4,{allow_shared=false})end,
+  'allow_shared','stim refill no allow_shared')
  rejects(function()patch(ENTITY,'helldiver.speed.jog',3.2,4.5,{allow_unverified_effect=false})end,
   'allow_unverified_effect','no allow_unverified_effect')
  rejects(function()patch(ENTITY,'helldiver.speed.jog',3.2,10.5)end,'reviewed range','jog 10.5')
@@ -200,6 +204,12 @@ local worker=coroutine.create(function()
   reset()
  end
  local jog=patch(ENTITY,'helldiver.speed.jog',3.2,4.5)
+ local stim=patch(ENTITY,'helldiver.supply.stims_from_supply',2,4)
+ tamper('stim third-party value',stim,'InventoryComponentData',function(record)
+  return record.owner.base+record.offset+52 end,function()return b.encode(1,'u32')end,'CONFLICT')
+ tamper('inventory index row moved',stim,'InventoryComponentData',function(record,base)
+  return base+record.identity.indexRow*16+8 end,function(record)
+  return b.encode(record.identity.recordIndex+1,'u32')end,'record ownership changed')
  local head=patch(zone_target('head'),'zone.damage_multiplier','normal','none')
  tamper('avatar index row moved',jog,'AvatarComponentData',function(record,base)return base+record.identity.indexRow*16+8 end,
   function()return b.encode(1,'u32')end,'record ownership changed')

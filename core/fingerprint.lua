@@ -25,7 +25,7 @@ function M.matches(runtime)
     local key=tostring(runtime.mode)..'|'..identity(runtime,exe)..'|'..identity(runtime,dll)
     if verified[key]~=nil then metrics.count('fingerprint.cache_hits');return verified[key]end
     metrics.count('fingerprint.module_hashes',2)
-    local started=metrics.now()
+    local started=metrics.start()
     local exe_sha,dll_sha=runtime.module_hash(exe),runtime.module_hash(dll)
     metrics.elapsed('fingerprint.module_hash',started)
     local ok=exe_sha==profile.exe_sha and dll_sha==profile.dll_sha

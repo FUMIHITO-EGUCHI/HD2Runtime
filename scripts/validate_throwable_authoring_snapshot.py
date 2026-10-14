@@ -9,7 +9,7 @@ For every reviewed writable field, on a copy-on-write memory overlay of the snap
 3. A third-party value at the target is rejected as CONFLICT.
 
 A status slot after its row's first empty one (offered since 0.31.2) is exercised after an earlier operation fills the
-slots before it; without them, setting its status is rejected as STATUS_SLOT_GAP (core/status_slots.lua).
+slots before it; without them, setting its status is rejected as STATUS_SLOT_GAP (core/throwable_status_slots.lua).
 4. The following are rejected before any memory access:
    - a stale expect;
    - missing allow_unverified_effect;
@@ -114,7 +114,7 @@ local function target_of(name,owned)
  return {resource='throwable',throwable=name,path=owned.path,status=owned.key}
 end
 local function request(name,owned,field,expect,value,extra)
- local r={id='throwable-check',allow_shared=true,allow_unverified_effect=true,
+ local r={id='throwable-check',allow_shared=true,allow_unverified_effect=true,allow_unverified_reference=true,
   target=target_of(name,owned),field=field,expect=expect,value=value}
  for k,v in pairs(extra or{})do if v==false then r[k]=nil else r[k]=v end end
  return r
@@ -128,12 +128,27 @@ end
 -- A status slot (0.31.1): its value is a status semantic ID; the bytes are the status's native type.
 local status_catalog=require('hd2runtime/domains/status_catalog')
 local function native_status(id)return id=='none'and 0 or status_catalog.statuses[id].nativeType end
+local function read_plan(plan)
+ local out={};for _,c in ipairs(plan.changes)do out[#out+1]=runtime.read(c.owner.base+c.offset,#c.desired)end;return table.concat(out)
+end
+local function joined(plan,key)
+ local out={};for _,c in ipairs(plan.changes)do out[#out+1]=c[key]end;return table.concat(out)
+end
 local function encode(field,value)
+ if field.type=='explosion_payload'then
+  local owned=database.throwables['G-109 Urchin'].targets.pulse
+  return joined(resolve(domain.validate_patch(request('G-109 Urchin',owned,field.semanticFieldId,field.currentDefault,value))),'desired')
+ end
+ if field.type=='explosion_reference'then
+  local e=value~='none'and require('hd2runtime/api/explosion_catalogue').entry(value)
+  return b.encode(e and e.type or 0,'u32')
+ end
  if field.type=='status_reference'then return b.encode(native_status(value),'u32')end
  return b.encode(value,field.backing.storage)
 end
 -- A changed value that stays inside the reviewed range and storage (a status slot: another attachable status).
 local function changed(field)
+ if field.type=='explosion_payload'or field.type=='explosion_reference'then return 'support_weapon/plas45_epoch/impact' end
  if field.type=='status_reference'then
   local pick=field.currentDefault=='fire'and'stun_small'or'fire'
   local ok=false
@@ -204,7 +219,7 @@ local worker=coroutine.create(function()
      if filled>0 then result.statusPrefills=result.statusPrefills+1 end
      -- 1. reviewed baseline and guarded no-op
      local plan=resolve(domain.validate_patch(request(name,owned,id,field.currentDefault,field.currentDefault)))
-     assert(plan.changes[1].before==encode(field,field.currentDefault),
+     assert(joined(plan,'before')==encode(field,field.currentDefault),
       'live bytes differ from the reviewed baseline: '..field.instanceKey)
      local checked=guarded.apply(runtime,plan)
      assert(checked.status=='ALREADY_DESIRED'and checked.writes==0 and checked.protection_changes==0,
@@ -216,21 +231,23 @@ local worker=coroutine.create(function()
      local spec=domain.validate_patch(request(name,owned,id,field.currentDefault,value))
      plan=resolve(spec)
      local change=plan.changes[1]
+     local desired,before=joined(plan,'desired'),joined(plan,'before')
      local applied=guarded.apply(runtime,plan)
-     assert(applied.status=='APPLIED'and applied.writes==1 and applied.protection_restored
+     assert(applied.status=='APPLIED'and applied.writes>=1 and(field.type=='explosion_payload'or applied.writes==1)and applied.protection_restored
       and applied.non_target_bytes_unchanged,'throwable write failed: '..field.instanceKey..' '..tostring(applied.reason))
-     assert(runtime.read(change.owner.base+change.offset,field.backing.width)==change.desired,
+     assert(read_plan(plan)==desired,
       'throwable write did not land: '..field.instanceKey)
      local again=resolve(domain.validate_patch(request(name,owned,id,field.currentDefault,value)))
      assert(again.changes[1].already_desired,'changed value is not recognised as desired: '..field.instanceKey)
      local restored=guarded.apply(runtime,guarded.inverse(plan))
      assert(restored.status=='APPLIED'
-      and runtime.read(change.owner.base+change.offset,field.backing.width)==change.before,
+      and read_plan(plan)==before,
       'throwable rollback failed: '..field.instanceKey)
      for _ in pairs(protection)do error('page protection not restored for '..field.instanceKey)end
      result.changedWrites=result.changedWrites+1;result.rollbacks=result.rollbacks+1
      -- 3. third-party value at the target
-     local third=field.type=='status_reference'and b.encode(native_status(field.currentDefault)+7,'u32')
+     local third=(field.type=='explosion_payload'or field.type=='explosion_reference')and b.encode(9999,'u32')
+      or field.type=='status_reference'and b.encode(native_status(field.currentDefault)+7,'u32')
       or field.backing.storage=='f32'and b.encode(f32(field.currentDefault)+7,'f32')
       or b.encode(field.currentDefault+7,field.backing.storage)
      poke(change.owner.base+change.offset,third)
@@ -254,7 +271,17 @@ local worker=coroutine.create(function()
        {allow_shared=false}))end,'allow_shared','missing shared acknowledgement')
       result.acknowledgementRejections=result.acknowledgementRejections+1
      end
-     if field.type=='status_reference'then
+     if field.type=='explosion_payload'then
+      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,'unknown-payload'))end,
+       'UNKNOWN_EXPLOSION','unknown payload')
+      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,'throwable/g31_arc/detonation'))end,
+       'not a reviewed donor','unreviewed payload')
+     elseif field.type=='explosion_reference'then
+      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,'unknown-payload'))end,
+       'UNKNOWN_EXPLOSION','unknown payload')
+      rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,value,
+       {allow_unverified_reference=false}))end,'allow_unverified_reference','missing reference acknowledgement')
+     elseif field.type=='status_reference'then
       -- no range: an unknown status and one that no attack can apply (a weather status) are refused instead
       rejects(function()domain.validate_patch(request(name,owned,id,field.currentDefault,'no_such_status'))end,
        'unknown status','unknown status')

@@ -1,0 +1,18 @@
+{
+  "liveGameTested": false,
+  "rejections": [
+    "STATUS_SLOT_GAP",
+    "STATUS_SLOT_GAP",
+    "live status table no longer names"
+  ],
+  "scenarios": [
+    "G-12 High Explosive/explosion: four types, four strengths, exact inverse",
+    "reverse-order plan phase",
+    "K-2 Throwing Knife/damage: four types, four strengths, exact inverse",
+    "G-6 Frag/shrapnel: four types, four strengths, exact inverse",
+    "G-7 Pineapple/bomblets: four types, four strengths, exact inverse",
+    "G-7 Pineapple/bomblet_explosion: four types, four strengths, exact inverse",
+    "clear existing Gas and Gas Confusion together"
+  ],
+  "status": "VALIDATED"
+}

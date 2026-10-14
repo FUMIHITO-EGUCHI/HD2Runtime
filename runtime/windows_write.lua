@@ -1,5 +1,6 @@
 -- Loaded only by a patch-capable package when patch() is requested.
 local M={}
+local memory=require('hd2runtime/runtime/memory_watch')
 function M.create()
     local runtime=require('hd2runtime/runtime/windows_readonly')()
     local win=require('hd2runtime/runtime/windows_ffi')
@@ -101,6 +102,7 @@ function M.create()
     function runtime.owned_block(size)
         assert(type(size)=='number'and size>0 and size<=4096 and size%8==0,'unsupported owned block size')
         local block=ffi.new('uint8_t[?]',size+16)
+        memory.buffer(block,size+16)
         local base=tonumber(ffi.cast('uintptr_t',block))
         local address=base+(16-base%16)%16
         owned[address]={block=block,size=size}
@@ -127,6 +129,7 @@ function M.create()
         local size=#bytes+(4096-#bytes%4096)%4096
         local block=virtual_alloc(nil,size,0x3000,4)              -- MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE
         assert(block~=nil,'VirtualAlloc failed: '..tostring(kernel.GetLastError()))
+        memory.permanent(tonumber(ffi.cast('uintptr_t',block)),size)
         ffi.copy(block,bytes,#bytes)
         local old=ffi.new('uint32_t[1]')
         assert(kernel.VirtualProtect(block,size,2,old)~=0,'permanent block protection failed')   -- PAGE_READONLY
@@ -153,6 +156,7 @@ function M.create()
         local block=native_alloc(nil,8192,0x3000,4)                 -- MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE
         assert(block~=nil,'VirtualAlloc failed: '..tostring(kernel.GetLastError()))
         local base=tonumber(ffi.cast('uintptr_t',block))
+        memory.permanent(base,8192)
         local code=build(base+4096)
         assert(type(code)=='string'and#code>0 and#code<=4096,'a native procedure is 1 to 4096 bytes')
         ffi.copy(block,code,#code)

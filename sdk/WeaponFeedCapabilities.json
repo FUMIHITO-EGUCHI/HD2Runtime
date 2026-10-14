@@ -1,7 +1,7 @@
 {
   "contract": "hd2runtime.weapon.feeds.v1",
   "schemaVersion": 1,
-  "hd2RuntimeVersion": "0.31.3",
+  "hd2RuntimeVersion": "0.40.0",
   "mechanisms": {
     "projectile": "The weapon normal projectile (see attack:projectile_source() for where it lives).",
     "rounds_magazine": "One of the two WeaponRounds magazines (primary +64, alternate +68), switched with the Magazine weapon function. Both are built into every weapon; their projectiles are set by its default ammunition customization.",
@@ -4492,7 +4492,7 @@
             "displayName": "Artillery",
             "nativeLabel": true
           },
-          "state": "native_blocked",
+          "state": "native",
           "selector": {
             "function": "programmable_ammo",
             "input": "left",
@@ -4500,8 +4500,8 @@
             "bindableInputs": []
           },
           "field": "function_ammo.projectile",
-          "writable": false,
-          "reason": "The programmable function spawns an entity (+584 or +40), not a projectile reference.",
+          "writable": true,
+          "reason": null,
           "nativeProjectile": true,
           "compatibilityClass": "explosive_shrapnel",
           "acknowledgements": [
@@ -4583,7 +4583,8 @@
     "programmableNativeWritable": [
       "AC-8 Autocannon",
       "GR-8 Recoilless Rifle",
-      "RL-77 Airburst Rocket Launcher"
+      "RL-77 Airburst Rocket Launcher",
+      "StA-X3 W.A.S.P. Launcher"
     ],
     "roundsDualFeeds": [
       "SG-20 Halt"

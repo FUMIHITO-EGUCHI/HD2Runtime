@@ -5,6 +5,10 @@ local perf=require('hd2runtime/runtime/perf_watch')
 local telemetry=diagnostics.telemetry_state
 local M={}
 local watches={}
+local function finished(watch)
+    local s=watch.status
+    return s=='cancelled'or s=='rejected'or s=='complete'or s=='unavailable'
+end
 local callback,original
 -- Non-zero while a tick runs: the engine calls update(dt) on the game thread, and every callback, timer and keybind
 -- runs from inside it. Native game calls that must run on that thread check M.in_update().
@@ -27,15 +31,29 @@ local function tick(dt)
     depth=depth+1
     for i=#watches,1,-1 do
         local watch=watches[i]
-        local timed=perf.begin()
-        local ok,why=pcall(watch.tick,dt)
-        perf.finish(timed,watch.perf_owner or'HD2Runtime',watch,describe_watch)
-        if not ok then
-            watch.cancel()
-            require('hd2runtime/runtime/log').emit('[HD2Runtime] scheduler rejected: '..tostring(why))
+        -- Ensures sleep between verifications. Do not enter their tick/status/profiling wrappers every frame.
+        -- Keep skipped time separate: it advances the ensure's clock, never a newly woken option's debounce or
+        -- a new child operation's read/asset timeout. Other watch types retain their ordinary frame dt.
+        do
+            -- Terminal watches get their final tick/notification and cleanup immediately, even if asleep.
+            local delay=not finished(watch)and watch._sleep_for
+            if delay and delay>dt then
+                watch._sleep_for=delay-dt
+                watch._sleep_elapsed=(watch._sleep_elapsed or 0)+dt
+                if watch.status=='recovering'then watch.retry_in=watch._sleep_for end
+            else
+                local skipped=watch._sleep_elapsed or 0
+                watch._sleep_for,watch._sleep_elapsed=nil,nil
+                local timed=perf.begin()
+                local ok,why=pcall(watch.tick,dt,skipped)
+                perf.finish(timed,watch.perf_owner or'HD2Runtime',watch,describe_watch)
+                if not ok then
+                    watch.cancel()
+                    require('hd2runtime/runtime/log').emit('[HD2Runtime] scheduler rejected: '..tostring(why))
+                end
+            end
         end
-        if watch.status=='cancelled' or watch.status=='rejected' or watch.status=='complete'
-            or watch.status=='unavailable' then table.remove(watches,i)end
+        if finished(watch)then table.remove(watches,i)end
     end
     depth=depth-1
     if depth==0 then tick_started=nil;perf.update(dt)end

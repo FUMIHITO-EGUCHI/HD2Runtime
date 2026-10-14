@@ -28,6 +28,7 @@ local b=require('hd2runtime/core/bytes')
 local natives=require('hd2runtime/domains/event_natives')
 local D=require('hd2runtime/domains/enemy_spawn_weights')
 local M={}
+local compat=require('hd2runtime/runtime/spawn_compatibility')
 M.CHECK_EVERY=1.0
 M.MAX_MULTIPLIER=10
 local IMAGE=0x1000000
@@ -221,6 +222,17 @@ end
 
 local function step()
     if not next(configs)then return end
+    local compatibility=compat.status()
+    if compatibility.blocked then
+        for _,c in pairs(configs)do
+            c.compatibility_status=c.compatibility_status or c.status
+            c.status,c.code,c.reason='unavailable',compatibility.code,compatibility.reason
+        end
+        return
+    end
+    for _,c in pairs(configs)do if c.compatibility_status then
+        c.status,c.compatibility_status,c.code,c.reason=c.compatibility_status,nil,nil,nil
+    end end
     local world,why=world_module.open()
     if not world then return end
     local image,reason=image_of(world)
@@ -268,6 +280,8 @@ end
 -- same type replaces the first; another owner's is refused. Applies at once when it can. Returns the configuration,
 -- or nil, code, reason.
 function M.configure(spec)
+    local compatibility=compat.status()
+    if compatibility.blocked then return nil,compatibility.code,compatibility.reason end
     local rows=rows_by_entity[spec.entity]
     if not rows then return nil,'NOT_IN_A_ROSTER',tostring(spec.label)..' is in no spawn roster'end
     local prior=configs[spec.entity]
@@ -311,6 +325,7 @@ function M.stop(config)
         return true
     end
     config.status='stopping'
+    if config.compatibility_status then config.compatibility_status='stopping'end
     local ok,why=pcall(step)
     if not ok then log('update failed: '..tostring(why))end
     ensure_watch()

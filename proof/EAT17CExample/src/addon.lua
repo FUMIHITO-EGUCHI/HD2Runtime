@@ -1,5 +1,5 @@
 -- Generated from custom_stratagems.json by the HD2Runtime SDK (hd2.py custom-stratagem compile; format hd2runtime-custom-stratagems/1).
--- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 2da18db89efbcaee1b1df2a7a0ba532e537286c2f50a25883cd992ebaf0ee3cd.
+-- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 975e2a9c94ab90061103296eae7f2fb0568a01643db981b1f3b38db9ae29820a.
 local hd2=require('mods/skyeshade/hd2runtime')
 local mod=hd2.mod()
 mod:log('EAT77ExpendableCluster 0.3.0 BUILD: select EAT-77 Expendable Cluster in the custom panel, then a mission; call it with DOWN DOWN LEFT DOWN LEFT.')

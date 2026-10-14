@@ -31,9 +31,9 @@ class HelldiverFieldDataTests(unittest.TestCase):
     def test_every_exposed_field_is_a_live_or_spawn_research_member(self):
         research = {(f['record'], f.get('zone'), f['offset']): f for f in RESEARCH['fields']}
         instances = CATALOG['fieldInstances']
-        self.assertEqual((CATALOG['summary']['fields'], CATALOG['summary']['instances']), (27, 21 + 1 + 5 * 6))
+        self.assertEqual((CATALOG['summary']['fields'], CATALOG['summary']['instances']), (28, 22 + 1 + 5 * 6))
         avatar = [i for i in instances if i['semanticFieldId'].startswith('helldiver.')]
-        self.assertEqual(len(avatar), 21)
+        self.assertEqual(len(avatar), 22)
         for item in instances:
             self.assertEqual(item['acknowledgements'], ['allow_shared', 'allow_unverified_effect'])
             self.assertTrue(item['shared'] and item['allowSharedRequired'] and not item['liveTested'])
@@ -59,7 +59,7 @@ class HelldiverFieldDataTests(unittest.TestCase):
             self.assertEqual(grades[field_id], 'CONFIRMED', field_id)
         # Offsets and vanilla values are the research's.
         for definition in SCHEMA['fields']:
-            if 'offset' in definition:
+            if 'offset' in definition and definition['record'] != 'inventory':
                 record = 'AvatarComponentData#0' if definition['record'] == 'avatar' else 'HealthComponentData#76'
                 zone = None if record.startswith('Avatar') else 'default'
                 self.assertIn((record, zone, definition['offset']), research, definition['id'])
@@ -117,7 +117,7 @@ local h=hd2.helldiver()
 assert(h.resource=='helldiver'and h.path=='entity'and hd2.helldiver('avatar_helldiver').path=='entity')
 assert(not pcall(hd2.helldiver,'Charger'))
 local d=h:describe()
-assert(#d.fields==22 and #d.zones==6 and d.liveTested==false and d.speedCap==10)
+assert(#d.fields==23 and #d.zones==6 and d.liveTested==false and d.speedCap==10)
 assert(d.acknowledgements[1]=='allow_shared'and d.acknowledgements[2]=='allow_unverified_effect')
 local zones=h:zones()
 assert(#zones==6 and zones[1].zone=='head'and zones[6].zone=='leg_right')
@@ -305,7 +305,7 @@ class HelldiverSnapshotTests(unittest.TestCase):
         self.assertEqual((OVERLAY['status'], OVERLAY['snapshots'], OVERLAY['failed']), ('VALIDATED', 7, []))
         self.assertEqual(set(OVERLAY['results']), set(RESEARCH['source']['snapshots']))
         for name, result in OVERLAY['results'].items():
-            self.assertEqual((result['status'], result['fixtureFallback'], result['noops']), ('VALIDATED', 'disabled', 52),
+            self.assertEqual((result['status'], result['fixtureFallback'], result['noops']), ('VALIDATED', 'disabled', 53),
                 name)
             identity = result['identity']
             self.assertTrue(identity['framing'], name)
@@ -314,7 +314,7 @@ class HelldiverSnapshotTests(unittest.TestCase):
             self.assertEqual(identity['zones'], ZONES, name)
             trips = result['roundTrips']
             self.assertEqual(set(trips), {'jog', 'stamina', 'head_damage_multiplier', 'body_damage_multiplier_dps',
-                'body_health', 'explosive_share'}, name)
+                'body_health', 'explosive_share', 'stim_refill'}, name)
             for key, trip in trips.items():
                 self.assertTrue(trip['protectionRestored'] and trip['restored'], key)
                 self.assertEqual(trip['protectionChanges'], 2, key)
@@ -332,6 +332,7 @@ class HelldiverSnapshotTests(unittest.TestCase):
             self.assertEqual(trips['body_health']['otherRecordsUnchanged'], 501)
             rejections = result['rejections']
             self.assertEqual(set(rejections), {'no allow_shared', 'no allow_unverified_effect', 'jog 10.5',
+                'stim refill no allow_shared', 'stim third-party value', 'inventory index row moved',
                 'sprint duration 0', 'jog NaN', 'unknown zone', 'unknown damage multiplier name', 'stale expect',
                 'avatar index row moved', 'avatar record gains a second owner', 'health index row moved',
                 'zone name hash changed', 'avatar third-party value', 'zone third-party value'}, name)

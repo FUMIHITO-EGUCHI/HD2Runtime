@@ -12,7 +12,8 @@ published in both catalogs.
 
 | Backpack | Writable | Tier |
 | --- | --- | --- |
-| LIFT-850 Jump Pack | `recharge.time`, `jump.vertical_launch_velocity`; launch, sustain, air control and take-off `jump.*` (`allow_unverified_effect`) | gameplay_proven (JumpPackImprovements); native_consumer_proven |
+| B-1 Supply Pack | `deposit.capacity`, `deposit.start_amount` (-1 = full), `deposit.refill_amount` (`allow_unverified_effect`) | native_consumer_proven |
+| LIFT-850 Jump Pack | `recharge.time`, `jump.vertical_launch_velocity`; launch, landing thrust, air control and take-off `jump.*` (`allow_unverified_effect`) | gameplay_proven (JumpPackImprovements); native_consumer_proven |
 | LIFT-860 Hover Pack | `recharge.time`; `hover.duration`, hover speed / climb / fuel `hover.*`, sustain and air control `jump.*`, `jump.vertical_launch_velocity` (dormant) (`allow_unverified_effect`) | schema_proven; native_correlated; native_consumer_proven |
 | LIFT-182 Warp Pack | `warp.*` distance, biases, heat and per-limb injury damage (`allow_unverified_effect`) | native_correlated |
 | SH-32 Shield Generator Pack | `shield.radius`, `shield.durability`; `shield.recharge_delay`, `shield.broken_recharge_delay`, `shield.recharge_rate` (`allow_unverified_effect`) | schema_proven; native_correlated |
@@ -30,7 +31,7 @@ one) and an `effect` block (active source, lifecycle).
 
 Read-only:
 
-- **Supply Pack and Hellbomb deposits:** no published value proves what their charges do.
+- **Hellbomb deposit:** its charge semantics remain unverified.
 - **Jump / hover members not offered:** flight-model switches (+64, +144, +145, +152..+155), the alternate launch
   window (+28: its replicated toggle is not identified), members whose meaning is not decoded (+4, +8, +20), the Hover
   Pack's horizontal acceleration pair (+160/+164: blended over a zero-width speed range, a one-sided write divides by
@@ -153,10 +154,13 @@ How the flight works:
 - **Launch** (Jump Pack): for `jump.launch_duration` seconds the velocity gains `jump.vertical_launch_velocity` x
   (1 - t^2) x dt (m/s^2; downward speed is cancelled first), `jump.launch_forward_ratio` of it along the travel
   direction and the rest upward.
-- **Sustain** (both): once the launch has run `jump.sustain_start_delay` seconds (Jump Pack only) and the speed is at
-  least `jump.sustain_start_speed` with a clear path ahead, `jump.sustain_thrust` x (1 - t^2) pushes for
-  `jump.sustain_duration` seconds (`jump.sustain_forward_ratio` of it forward). The pack deactivates when the speed
-  falls below `jump.sustain_cutoff_speed`.
+- **Landing thrust** (both): after `jump.sustain_start_delay` seconds (Jump Pack only), the speed must reach
+  `jump.sustain_start_speed` and the travel probe must detect a surface below the wearer.
+  `jump.sustain_thrust` x (1 - t^2) applies for `jump.sustain_duration` seconds. The
+  `jump.sustain_forward_ratio` share brakes horizontal travel; the rest pushes upward. The pack deactivates below
+  `jump.sustain_cutoff_speed`. The historical `jump.sustain_*` API and preset keys remain compatible; the editor
+  labels these as landing controls. Both packs default to **60 m/s^2** thrust for **1 second**. The native consumer
+  is mapped; changed landing behaviour still needs in-game verification.
 - **Air control** (both): `jump.air_control_acceleration` along the movement input while the horizontal speed is
   below `jump.air_control_max_speed` (Jump Pack) or `hover.max_horizontal_speed` (Hover Pack).
 - **Take-off hop** (Jump Pack): vertical speed = clamp(max(vz, 0) + `jump.takeoff_speed`, 0.75x, 1.1x that value)
@@ -197,7 +201,7 @@ Research: `scripts/research_hover_height.py` -> `research/hover-height-F5FEE03DC
 ceiling member**: the hover code reads none. The height comes from three things:
 
 1. **The climb input.** Each frame the hover's vertical input is "climb" while the wearer has been airborne (off
-   walkable ground) for less than `hover.duration` seconds, and for the rest of the flight once the sustain phase has
+   walkable ground) for less than `hover.duration` seconds, and for the rest of the flight once the landing phase has
    started; otherwise it is "hold". `hover.duration` is this climb window, not the hover time: the pack shuts off when
    its fuel meter is full (`recharge.time`, `hover.fuel_rate_*`). (Lead, not verified: at `hover.duration` 0 the climb
    follows a held player input instead, the action the take-off code also reads, likely jump.)
@@ -251,3 +255,17 @@ Chain: stratagem -> rack -> backpack -> the backpack's `DepositComponent` +24 (t
 The assault-rifle drone backpack (`drone_assault_rifle_backpack`) is attached by a rack that no stratagem
 delivers. It is not a catalog item and is not exposed.
 
+
+## Supply Pack
+
+`hd2.backpack('B-1 Supply Pack')` exposes supply **boxes**: capacity (vanilla 4), starting boxes (4; -1 means full), and boxes restored by resupply (1). The live deposit count is limited to 1023. Starting boxes affect newly spawned packs; resupply restores at least one box, up to capacity. Using a Supply Pack cannot refill that pack itself.
+
+Supplies delivered to the player use the recipient item's existing `magazine.magazines_from_supply`, `rounds.rounds_from_supply`, `heatsink.from_supply`, or `throwable.count_from_supply` field. Edit the equipped magazine/heatsink variant when it has a separate attachment override. These fields also affect ordinary supply pickups; the pack has no separate data multiplier on the verified refill path.
+
+The shared stim refill is `hd2.helldiver()` field `hd2.fields.helldiver.supply_stims_from_supply` (vanilla 2). Armor modifiers can adjust it and the effective carrying capacity caps the result. Both `allow_shared` and `allow_unverified_effect` are required. The editor shows the same setting on the Supply Pack and Helldiver pages. These controls have offline write/rollback coverage, but have not been tested in game.
+
+### Supply Pack refill views (Editor 1.0.0 RC7)
+
+The Supply Pack page exposes the equipped items' existing refill fields under **Supplies delivered**, including magazine attachments, spare rounds, heatsinks, and throwables. Stims remain under **Player refill**. Each is a view of the item's own field: staging, applying, exporting and resetting use the same key and location as its normal page.
+
+These amounts also affect ordinary resupply. They are not a pack-only multiplier. Capacity limits, attachments, armor modifiers and private inventory copies can affect the actual amount received. The API remains the recipient's `magazine.magazines_from_supply`, `rounds.rounds_from_supply`, `heatsink.from_supply`, attachment refill, `throwable.count_from_supply`, or `helldiver.supply.stims_from_supply` field. Box capacity/start/refill controls still describe boxes in the pack itself.

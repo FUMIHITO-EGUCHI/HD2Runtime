@@ -507,7 +507,7 @@ local worker=coroutine.create(function()
  result.acknowledgementRejections=result.acknowledgementRejections+2
  -- Blocked weapons never accept these writes (other special triggers: charge, beam; charge or safety fire modes).
  for _,item in ipairs({{'player_weapon','SG-20 Halt',RATES,{0,80,0},{0,90,0}},{'player_weapon','VG-70 Variable',
-   RATES,{300,550,750},{0,550,0}},{'player_weapon','PLAS-39 Accelerator Rifle',RATES,{0,550,0},{0,600,0}},
+   LEFT,'fire_mode','none'},{'player_weapon','PLAS-39 Accelerator Rifle',RATES,{0,550,0},{0,600,0}},
    {'player_weapon','PLAS-101 Purifier',RATES,{0,1000,0},{0,900,0}},
    {'support_weapon','RS-422 Railgun',RATES,{0,60,0},{0,70,0}},
    {'support_weapon','LAS-99 Quasar Cannon',RATES,{0,10,10},{0,10,0}},

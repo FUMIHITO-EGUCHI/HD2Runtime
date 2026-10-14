@@ -199,6 +199,7 @@ function M.capture_many(runtime,reader,specs)
     local catalog=entities.capture(reader,roots.entity,profile,names_for(specs))
     local results={}
     for index,spec in ipairs(specs)do
+        if reader.cooperate then reader.cooperate()end
         local entry=assert(entry_of(spec),'reviewed entity entry absent')
         local candidate=find_candidate(catalog,entry.resource,entry.entityRow)
         local linked

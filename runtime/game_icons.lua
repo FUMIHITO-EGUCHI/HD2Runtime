@@ -20,7 +20,8 @@
 local D=require('hd2runtime/domains/hud_icons')
 local images=require('hd2runtime/runtime/image_resources')
 local M={}
-M.KINDS={stratagem='stratagems',booster='boosters'}
+M.KINDS={stratagem='stratagems',booster='boosters',weapon='weapons',throwable='throwables',
+    faction='factions',objective='objectives',difficulty='difficulties',passive='passives'}
 
 local Icon={}
 local IconMeta={__index=Icon,__tostring=function(self)return'game icon '..self.kind..': '..self.name end}
@@ -30,28 +31,35 @@ local issued={}
 -- 'EXO-45 Patriot Exosuit', 'Vitality Enhancement'); the same handle every time. nil, code and reason otherwise.
 function M.handle(kind,name)
     local list=M.KINDS[kind]
-    if not list then return nil,'UNKNOWN_KIND','game icons are of kind "stratagem" or "booster", not '..tostring(kind)end
+    if not list then return nil,'UNKNOWN_KIND','unknown game icon kind '..tostring(kind)end
     if type(name)~='string'then return nil,'UNKNOWN_ICON','a game icon is named by a string'end
     local key=kind..'|'..name
     if issued[key]then return issued[key]end
-    local sprite=D[list][name]
+    local entry=D[list][name]
+    local sprite=type(entry)=='table'and entry.sprite or entry
     if not sprite then
         local why=D.missing[name]
         return nil,'UNKNOWN_ICON',why and(name..': the game has no HUD icon for it ('..why..')')
             or(name..' is not a '..kind..' with a HUD icon (hd2.resources.game_icons("'..kind..'") lists them)')
     end
     local handle=setmetatable({kind=kind,name=name},IconMeta)
-    identities[handle]={kind=kind,name=name,sprite=sprite,high=tonumber(sprite:sub(1,8),16),
+    local detail=type(entry)=='table'and entry or{}
+    identities[handle]={kind=kind,name=name,sprite=sprite,mode=detail.mode or(kind=='stratagem'and'mask'or'image'),
+        width=detail.width,height=detail.height,high=tonumber(sprite:sub(1,8),16),
         low=tonumber(sprite:sub(9,16),16)}
     issued[key]=handle
     return handle
+end
+function Icon:describe()
+    local id=M.identity(self)
+    return {kind=id.kind,name=id.name,width=id.width,height=id.height,mode=id.mode}
 end
 function M.issued(value)return type(value)=='table'and identities[value]~=nil end
 -- {kind, name, sprite ('%016X'), high, low} of a handle.
 function M.identity(handle)return assert(identities[handle],'not a game icon from hd2.resources.game_icon')end
 -- The names of every icon of a kind, sorted.
 function M.names(kind)
-    local list=assert(M.KINDS[kind],'game icons are of kind "stratagem" or "booster"')
+    local list=assert(M.KINDS[kind],'unknown game icon kind')
     local out={}
     for name in pairs(D[list])do out[#out+1]=name end
     table.sort(out)
@@ -88,7 +96,7 @@ function M.resolve(runtime,handle)
         end
         own=id.sprite
     end
-    return {sprite=id.sprite,page=s.page,own=own,pool=id.kind=='stratagem'and'icon'or'image',w=s.w,h=s.h,
+    return {sprite=id.sprite,page=s.page,own=own,pool=id.mode=='mask'and'icon'or'image',w=s.w,h=s.h,
         rect={s.u,s.v,s.du,s.dv},page_w=s.page_w,page_h=s.page_h}
 end
 -- The UVs {u0, v0, u1, v1} that draw a resolved sprite in a w x h pixel box, inset so texture filtering never reaches a

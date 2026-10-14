@@ -641,6 +641,36 @@ mod:bind('my_mod.detonate', {key = 'F6', on_press = function() ... end, on_relea
 - Limits: Runtime cannot see the game's own bindings or whether the chat box has focus. Prefer keys the game
   leaves unbound (F5–F12, Insert, Home, End, Page Up/Down). The Mod Options Menu can later expose `rebind`.
 
+### On the game's own keybind page (Mod Bindings Menu)
+
+```lua
+mod:bind('my_mod.window', {key = 'F6', on_press = toggle,
+    native = {label = 'Open / close my window', category = 'My Mod'}})
+```
+
+With **Mod Bindings Menu** installed (CowboyBingus; the global `ModBindingsMenu`, api 1), a binding that declares
+`native` also appears on the game's Controls page, under the MODS tab. It is listed under its category (up to 64
+bytes), labelled `label`: up to 127 bytes, or a function returning it in the current language. Mod Bindings Menu 3
+asks again whenever a binding page opens; a text label is shown in the Runtime's language when the Runtime has a
+translation of it. There the player can bind any key, mouse button or controller input to it.
+
+- That input presses the binding exactly as its key does: `on_press`, `on_release`, `key_down` / `key_up`. A held
+  input is one press.
+- Mod Bindings Menu assigns no default input, so until the player picks one only the key works.
+- One input, not two: the first time the input bound there presses the binding, it takes over. From then on the
+  binding's own key is ignored while Mod Bindings Menu answers (logged once; kept between sessions in the Runtime's
+  store, `binding:describe().native.owned`). Without Mod Bindings Menu the key works again; the player changes the
+  input on that page.
+- A binding left without a key by a conflict still takes the input bound there.
+- `disable()` silences both.
+- Without the addon, or when it refuses a registration (logged once, retried when the addon's `revision` changes),
+  nothing changes.
+- `binding:describe().native` reports `{label, category, registered, owned}`.
+- Only the addon's published functions are used (`register_binding`, `is_down`).
+- HD2Runtime's own F10 settings window and the HD2R Editor's toggle declare it.
+- The game evaluates those inputs itself, so they follow its own rules for menus and chat. While a mod window asks
+  the game to ignore input (`hd2.input.block`), the game may not report them; the key still works then.
+
 ### Any key's state: `hd2.input.down / pressed / released`
 
 For a mod that needs more than a few chords (a game, a menu):

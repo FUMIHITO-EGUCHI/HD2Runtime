@@ -57,7 +57,7 @@ local function changed_modes(field)
   result[1]=current[1]=='automatic'and'single'or'automatic';return result
  end
  local present={};for _,name in ipairs(current)do present[name]=true end
- for _,name in ipairs(ORDER)do if not present[name]then result[#result+1]=name;return result end end
+ for _,name in ipairs(field.allowedModes or ORDER)do if not present[name]then result[#result+1]=name;return result end end
  result[#result]=nil;return result   -- all three present: remove the last non-default mode
 end
 local function field_of(weapon,id)
@@ -78,7 +78,9 @@ local worker=coroutine.create(function()
     local function request(field,expect,value,ack)
      return {id='fire-mode-check',target=target,field=field,expect=expect,value=value,allow_unverified_effect=ack}
     end
-    for _,item in ipairs({{MODES,modes,changed_modes(modes)},{BURST,field_of(weapon,BURST)}})do
+    local checks={{MODES,modes,changed_modes(modes)}}
+    local burst=field_of(weapon,BURST);if burst then checks[#checks+1]={BURST,burst}end
+    for _,item in ipairs(checks)do
      local id,field,value=item[1],item[2],item[3]
      if id==BURST then
       value=field.currentDefault<field.max and field.currentDefault+1 or field.currentDefault-1

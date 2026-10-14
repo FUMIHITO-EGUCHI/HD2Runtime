@@ -17,6 +17,7 @@ PRELUDE = r"""
 local metrics=require('hd2runtime/runtime/metrics')
 local perf=require('hd2runtime/runtime/perf_watch')
 perf.reset_for_tests()
+perf.record(true)
 local log_module=require('hd2runtime/runtime/log')
 local logged={}
 log_module.emit=function(line)logged[#logged+1]=line end
@@ -36,6 +37,31 @@ end
 class PerfWatchTests(unittest.TestCase):
     def lua(self, body):
         self.assertEqual(run(PRELUDE + body + "\nreturn 'ok'"), b'ok')
+
+    def test_event_poller_and_named_subscription_costs_are_separate_and_exclusive(self):
+        self.lua(r"""
+local events=require('hd2runtime/runtime/events')
+events.reset_for_tests()
+perf.record(true)
+events.subscribe('mission_started',function()T=T+0.003 end,{owner='HD2Runtime',id='test_event'})
+events.subscribe('mission_started',function()T=T+0.004 end,{owner='mods/test/listener'})
+events.set_poller('keys',function()T=T+0.001;events.dispatch('mission_started',{})end)
+events.set_poller('wheel',function()T=T+0.002 end)
+events.tick(0.25)
+perf.update(0.25)
+local totals={}
+local h=perf.history()
+for _,s in ipairs(h.list)do totals[s.name]=s.values[h.head] end
+local function near(name,v)assert(totals[name]and math.abs(totals[name]-v)<0.00001,name..': '..tostring(totals[name]))end
+near('input: key sampling',0.001)
+near('input: mouse wheel',0.002)
+near('event: mission_started / test_event',0.003)
+near('listener',0.004)
+local total=0;for _,o in ipairs(perf.snapshot().owners)do total=total+o.total_seconds end
+assert(math.abs(total-0.010)<1e-9,'nested callbacks counted twice')
+events.set_poller('keys',nil);events.set_poller('wheel',nil)
+events.tick(0.25);assert(math.abs(T-0.010)<1e-9)
+""")
 
     def test_a_slow_call_is_logged_once_per_doubling_and_at_most_three_times(self):
         self.lua(r"""
@@ -63,6 +89,23 @@ local by={}
 for _,o in ipairs(s.owners)do by[o.owner]=o end
 assert(math.abs(by['mods/outer'].total_seconds-0.001)<1e-9 and math.abs(by['mods/inner'].total_seconds-0.020)<1e-9)
 assert(s.owners[1].owner=='mods/inner','the most time first')
+""")
+
+    def test_closed_profiler_does_not_read_clock_or_log_and_registers_mods_without_timing(self):
+        self.lua(r"""
+perf.record(false)
+local reads=0
+metrics.set_clock(function()reads=reads+1;return 1 end)
+for i=1,10000 do
+ local t=perf.begin();perf.finish(t,'mods/test/closed','tick');perf.update(1)
+ metrics.elapsed('test',metrics.start())
+end
+assert(reads==0 and #logged==0 and perf.history()==nil)
+require('hd2runtime/runtime/events').run_as('mods/test/closed',function()end)
+assert(reads==0 and perf.runtime_mod('mods/test/closed') and perf.inventory()['mods/test/closed'])
+perf.record(true)
+local t=perf.begin();perf.record(false);perf.finish(t,'mods/test/closed','closing')
+local before=reads;perf.update(99);assert(reads==before and #logged==0)
 """)
 
     def test_a_heavy_mod_is_named_per_window_and_a_light_one_is_not(self):
@@ -123,6 +166,7 @@ assert(hd2.diagnostics.performance==perf.snapshot)
 
     def test_the_live_history_records_only_while_shown_per_mod_and_per_part_of_the_runtime(self):
         self.lua(r"""
+perf.record(false)
 -- Not recording: nothing is kept (the F10 Performance tab is closed).
 call('mods/a/heavy_mod','x',0.002);perf.update(1)
 assert(perf.history()==nil and not perf.recording())

@@ -1,5 +1,5 @@
 -- Generated from custom_stratagems.json by the HD2Runtime SDK (hd2.py custom-stratagem compile; format hd2runtime-custom-stratagems/1).
--- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 2ccb0f6f7abfe82ba64a4ef12f2fb9f739c1f8cefb19e018288636ee4500edfe.
+-- Edit custom_stratagems.json, not this file: the build compiles it again. Source SHA-256 168249cf10f054a10c55a5f6a91186016b7735a03eeb0fd46ac40ecb3e7d370b.
 local hd2=require('mods/skyeshade/hd2runtime')
 local mod=hd2.mod()
 mod:log('EAT23ExpendableEMS 0.1.0 BUILD: select EAT-23 Expendable EMS in the custom panel, then a mission; call it with DOWN DOWN LEFT RIGHT RIGHT.')
