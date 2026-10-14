@@ -1,231 +1,96 @@
 # HD2Runtime
 
-HD2Runtime is a modding runtime and API for Helldivers 2 mods using Bingus Shared Loader.
+HD2Runtime is a modding runtime and API for Helldivers 2, running on Bingus Shared Loader.
 
-It provides semantic access to mapped game systems so mods can modify weapons, stratagems, deployed entities, projectiles, damage, explosions and other values without manually working with memory addresses, native record offsets or resource IDs.
+It lets mods change weapons, stratagems, enemies, projectiles, damage, explosions and much more by name, for example
+`hd2.weapon('AR-23 Liberator')`, without working with memory addresses, record offsets or resource IDs.
 
-HD2Runtime is designed to fail safely when a game structure or ownership relationship cannot be verified.
-
-## Features
-
-- Player weapon authoring
-- Support weapon authoring
-- Orbital and Eagle stratagem authoring
-- Support-weapon call-in cooldowns
-- Sentry and emplacement authoring
-- Vehicle durability, damage zones and mounted-weapon swaps
-- Vehicle and Exosuit mounted-weapon stats (fire rate, magazines, reload, mount health/armor, rounds)
-- Backpack authoring (Jump Pack, Hover Pack, shields) and backpack-fed ammo (Maxigun, Cremator, GL-28)
-- Shield Generator Relay shield radius and health
-- Magazine attachments: every resolved magazine option's ammo, reload duration and ergonomics
-- Muzzle, optics and underbarrel attachments: their ergonomics, sway, recoil, climb and spread modifiers
-- Third-person reticles and native fire-mode sets (for example, adding full-auto)
-- Stratagem mission uses, including the game's real unlimited value
-- Drop-pod contents: replace the items a support, backpack or Resupply pod opens with, and the spawn count
-- Deployed entity health and armor
-- Projectile, damage and explosion editing
-- Ammo, heat, charge, beam, arc and status fields
-- Shared-object detection and acknowledgement
-- Booster authoring for 19 of 20 boosters: native Booster definition table scalars, hellpod-impact explosions,
-  stim and Dead Sprint statuses, the Surplus EAT stratagem, and the Armed Resupply Pods turret
-- Throwable authoring for all 23 throwable-slot items (`hd2.throwable`): inventory counts, fuses,
-  explosions, per-hit status and shared status definitions, frag shrapnel, Pineapple bomblets, the throwing
-  knife's direct hit, mine health and the throwable shield (see `docs/throwable-authoring.md`)
-- Throwable launch curves, speed overrides and spin; melee hit volumes, damage,
-  repeat-hit intervals and stamina (local 0.40.0; see [knife and melee controls](docs/knife-melee.md))
-- Four status types and strengths on supported throwable damage/explosion targets,
-  plus arming delay (see [throwable statuses](docs/throwable-statuses.md))
-- Automatic asset loading for reference swaps: the packages of pod pickups, mounted weapons and borrowed
-  projectiles load through the game's own package system before the write, with no package IDs in mods
-  (see `docs/asset-loading.md`)
-- Weapon movement restriction while firing (`weapon.stationary_while_firing`, the Maxigun's stationary
-  firing) on every resolved player and support weapon (see `docs/weapon-movement.md`)
-- Minefield explosions for all four mine stratagems (`hd2.stratagem(name):mine()`), and Cremator, EAT-17 and
-  LAS-98 damage authoring
-- Sentry turret motion and targeting range (`hd2.stratagem(name):deployed_entity():turret()` / `:targeting()`),
-  and every sentry's deployed lifetime (see `docs/stratagem-authoring.md`)
-- Status effects as typed references on every player, support and mounted-weapon damage object: swap the
-  status an attack applies or attach one to an attack that has none (see `docs/status-effects.md` and
-  `sdk/StatusEffectCatalog.json`)
-- Enemy and enemy-structure health, armor and damage zones (`hd2.enemy(name)`, `hd2.structure(name)`,
-  `:zone(name)`) for 177 hash-verified native classes, named by wiki name only where the anatomy proves it, and
-  169 mounted-weapon attacks on 38 classes (`:attack(name)`: their damage, projectile and explosion rows) reached
-  through each class's own mount chain (see `docs/enemy-authoring.md` and `sdk/EnemyAuthoringCapabilities.json`)
-- Minefield salvo count and mines per salvo (`hd2.stratagem(name):deployed_entity():minefield()`, reductions only)
-- Central live-test evidence: every in-game test, its result and the capability families it promoted to
-  live-proven (see `docs/live-evidence.md` and `sdk/LiveEvidenceCatalog.json`)
-- Attack outputs (`hd2.attack_output(name)`, `attack:output()`): a family-aware catalog of what every weapon attack
-  emits. A magazine-fed projectile weapon can fire another weapon's projectile output (for example the EAT-700
-  napalm rocket) and keep its own magazine and fire control. Beam and arc outputs are catalogued with the reason no
-  projectile weapon can reference them (see `docs/attack-outputs.md` and `sdk/AttackOutputCapabilities.json`)
-- Rate-of-fire modes (`hd2.fields.fire_rate.modes`, `weapon:fire_rate_modes()`): the three native rate slots in the
-  order the weapon menu lists them (MG-206 `{450, 600, 750}`, starting on the middle one), and up to three
-  selectable rates on weapons without a selector, through the game's own ROF weapon function (see
-  `docs/fire-rate-modes.md`)
-- Weapon feeds (`weapon:feeds()`, `hd2.fields.function_ammo.projectile`): the SG-20 Halt's two magazines as separate
-  targets, and a second, player-selectable projectile through the native ProgrammableAmmo function (for example a
-  Speargun with a gas mode and an EMS stun-field mode). Each mode's native label and icon can be set
-  (`hd2.fields.presentation.mode_label` / `mode_icon` on `hd2.attack_output(...)`; see `docs/weapon-feeds.md`)
-- Armory presentation (`hd2.fields.presentation.armor_penetration`, `hd2.fields.presentation.traits`): the trait
-  labels the menus show, independent of gameplay (see `docs/weapon-presentation.md`)
-- Cross-family output research: why a projectile weapon cannot fire a beam, with the exact native blockers
-  (`sdk/OutputCompositionCapabilities.json`)
-- Guarded patches, transactions and multi-object plans; `hd2.ensure` can recover by itself when the game's data was
-  not ready or moved under a check (`recover`), and report every status change (`on_status`) (see `docs/options.md`)
-- In-game options: sliders, choices and toggles on the MODS tab (CowboyBingus Mod Options Menu)
-  that drive one ensured operation live, with the same guards
-- Services for UI and game mods (not live-tested): screen overlays (`hd2.ui.overlay`, see
-  `docs/ui-overlay.md`), game sound events (`hd2.sounds.play`; every Wwise event of the game catalogued by family,
-  bank and kind, its bank loadable, pause / resume / is_playing / elapsed and per-sound game parameters and switches,
-  see `docs/sounds.md`), any key's state
-  (`hd2.input.down` / `pressed` / `released`), a per-frame callback (`hd2.on_frame`), per-mod saved data
-  (`hd2.store`, see `docs/mod-store.md`), the game build status (`hd2.build()`) and the live values of the weapon in
-  hand (`player:weapon_state()`, see `docs/player-equipment.md`)
-- The game's own names in the game's language (0.31.2, not live-tested): `hd2.text.name(kind, key)` /
-  `target:display_name()` give `AR-23 Liberator` in the player's language, read-only (see `docs/game-text.md`)
-- Explosion catalogue (not live-tested): 241 of the game's 422 explosions named from their owners
-  (`hd2.explosions.list` / `describe`, `sdk/ExplosionCatalogue.json`); edit any of them (`hd2.explosion(name)`: radii,
-  shrapnel count, damage), use one with a known package as a weapon's impact or expiry explosion, and request 141 of
-  them at a position (see `docs/explosions.md`)
-- Type-wide Helldiver fields (not live-tested; `hd2.helldiver()`): movement speeds, stamina and
-  the six body zones' damage multipliers, durable share, damage to main health and health. They change every
-  Helldiver this machine simulates, so every write needs `allow_shared` (see `docs/helldiver-fields.md`)
-- Armor rating, speed and stamina (not live-tested; `hd2.armor_stats`): an armor kit's piece weights
-  (light, medium, heavy) for every player wearing it, the local player's own armor bonus and stamina factor, and the
-  per-weight tables and damage curve, written as reviewed executable data (see `docs/armor-stats.md`;
-  `sdk/ArmorStatsCapabilities.json`). Armor passives and kits: `sdk/ArmorPassiveCatalog.json`
-- Generated SDK metadata for tools such as HD2RuntimeGUI
-
-Unsupported or ambiguous values remain read-only rather than being modified speculatively.
-
-Version 0.40.0 (release candidate; on hold) expands enemy and structure authoring, scale, spawning, ship capacities,
-shields and demolition controls. See `docs/enemy-controls.md` and `docs/releases/0.40.0.md`.
-
-Version 0.31.3 is a hotfix release from player reports: picking a custom stratagem no longer fails when the lobby's
-carrier is a stratagem this account does not own, and it adds the LAS-22 Shear to the weapon stats, the EXO-55
-Breakthrough cannon's ammunition fields and the FX-12 Shield Generator Relay's recharge rate and delays. Nothing in it
-is live-tested yet. See `docs/releases/0.31.3.md`.
-
-Version 0.31.2 is a hotfix release from player reports: custom stratagems no longer stutter every 5 seconds, beam
-conversion values can be changed again and reverted, every damage row takes up to four statuses, ammunition maxima
-follow the game's network limits, and it adds the game's own names in the game's language (`hd2.text`), support weapon
-payloads and the payload options, the Quasar's overheat cooldown, the TX-41 Sterilizer's hellpod and Acid Storm as an
-attachable status. Most new fields are not live-tested yet. See `docs/releases/0.31.2.md`.
-
-Version 0.31.1 adds a live performance graph and an interface size to the F10 panel, shows HD2Runtime's own text in
-every game language, adds the `bughole_destroyed` event, and gives the stats editor the Peacemaker, Redeemer, missile
-direct-hit and AC-8 flak damage rows. See `docs/releases/0.31.1.md`.
-
-Version 0.31.0 lets stats editors see and leave alone values other mods changed (`hd2.inspect`), draws mod windows
-in every game language's font (issue #8), and adds status effect stats, wind-up and beam pulse fields, beam swaps,
-experimental beam conversion, missile fields, team-reload ammunition, mounted spread, the Breakthrough shield arm,
-stratagem charges, orbital targeting and the fire-mode selector on single-mode weapons. Most new fields are not
-live-tested yet and need `allow_unverified_effect`. See `docs/releases/0.31.0.md`.
-
-Version 0.30.3 fixes a false "Another mod changed the stratagem data" warning in busy games, and one odd entity in
-the game's entity map no longer blocks every mod's writes. See `docs/releases/0.30.3.md`.
-
-Version 0.30.2 adds an in-game settings panel (F10), shows custom stratagem problems and their fixes before a launch,
-gives your picked custom stratagems their carriers first, and unlocks seven weapons that were refused as duplicate
-identities. See `docs/releases/0.30.2.md`.
-
-Version 0.30.1 allows Public lobbies and Quickplay again: HD2Runtime warns (log and screen) instead of switching
-privacy to Friends Only and cancelling Quickplay. See `docs/releases/0.30.1.md`.
-
-Version 0.30.0 adds custom stratagems (`docs/custom-stratagem-api.md`; solo host first, multiplayer experimental), a
-builder-facing custom-stratagem schema and project format (`docs/custom-stratagem-builder.md`), weapon variants for
-every support weapon, armor stats and passives, the event system, game sounds and icons, and many more mapped fields.
-See `docs/releases/0.30.0.md` (the development log of the test builds is `docs/releases/0.30.0-dev.md`).
-
-Version 0.28.1 is a compatibility and stability release. Mods built with SDK 0.27 keep working: an operation
-that leaves out an `allow_unverified_effect` that 0.28.0 added to a field (the PLAS-101 Purifier and five other
-weapons, 144 fields; the SH-51 body) is applied as a logged legacy operation when the mod declares an older SDK.
-Mods that declare SDK 0.28.0 or later keep the rule. `hd2.diagnostics.operations()` lists every registered
-operation, refused ones included, and the packaged validator now fails a scenario when a write it expects is
-refused or skipped. See `docs/releases/0.28.1.md` and `docs/legacy-sdk-compatibility.md`.
-
-Version 0.28.0 adds event-driven gameplay scripting and one projectile system:
-- **Scripting.** Mods react to missions, players, entities, combat and the weapon in hand (`hd2.events`,
-  `hd2.mod`). They can heal the local player and, hosting, spawn catalogued explosions and projectiles or apply
-  statuses.
-- **Projectiles.** Primary, secondary, support and mounted weapons share one projectile host rule and one donor pool.
-  A projectile builder re-points a row's direct hit and explosions. Host swaps and row writes stay separate,
-  explicit operations.
-- **Coverage.** Rate-of-fire modes, weapon feeds and programmable ammo, armory presentation, Resupply, underbarrel
-  weapons, Guard Dogs, shields, packs, sentries, minefields, enemies and structures.
-- **Fixes and diagnostics.** It fixes the SG-20 Halt bug that dropped a mod's other edits, isolates every
-  operation, and adds write-conflict diagnostics and opt-in telemetry.
-
-Live proof is recorded exactly, per target and value. Custom projectile rows owned by Runtime are later work. See
-`docs/releases/0.28.0.md`.
-
-Version 0.27.0 loads assets automatically for cross-package reference swaps. When a swap points at an item
-nobody carries (an EAT-700 in a Stalwart pod, Talon projectiles on the Reprimand, a Grenade Box in the MG-43
-pod), Runtime loads that item's package through Helldivers 2's own package loader first, waits until it is
-resident, and only then writes. If it cannot, the write fails safely with `ASSET_UNAVAILABLE`. These three
-cases were live-tested. It also adds throwable authoring for all 23 throwable-slot items. See
-`docs/releases/0.27.0.md` and `docs/asset-loading.md`.
-
-Version 0.26.1 is a documentation and example correctness release. The examples, ModTemplate, SDK project
-templates and getting-started guide now teach the current typed API (damage on the projectile, per-angle armor
-penetration, patch vs transaction vs plan), and every shipped example is validated against the current SDK on
-each release. It also adds offline game-update migration tooling: after a Helldivers 2 patch,
-`docs/game-update-migration.md` walks through re-proving every mapping, recovering safe ones automatically
-and downgrading the rest to read-only. See `docs/releases/0.26.1.md`.
-
-Version 0.26.0 adds every magazine option (reload and ergonomics too), third-person reticles, native
-fire-mode sets, vehicle and Exosuit mounted weapons, stratagem mission uses (including unlimited),
-backpack-fed support-weapon ammo, and drop-pod payload slots. Most new fields are natively proven but
-not yet live-tested, and require the published acknowledgements. See `docs/releases/0.26.0.md`, and
-`docs/magazine-attachments.md`, `docs/weapon-reticles.md`, `docs/fire-modes.md`,
-`docs/vehicle-weapons.md`, `docs/stratagem-uses.md`, `docs/backpack-ammo.md` and `docs/pod-payloads.md`.
-
-Version 0.25.1 publishes the stratagem icon identity metadata (`uiIcon`) that 0.25.0 omitted.
-It also makes Mod Options Menu a true enhancement: without it, option-bound operations run with
-their declared defaults (or stay inactive with `fallback='disable'`). See `docs/releases/0.25.1.md`.
-
-Version 0.25.0 makes 19 of 20 Boosters writable through natively traced targets and adds
-in-game options (`hd2.options`) bound to ensured operations, confirmed in game, with CowboyBingus
-Mod Options Menu as an optional dependency. See `docs/releases/0.25.0.md`.
-
-Version 0.24.0 expands support-weapon authoring to 31 weapons (reload, projectile lifetime and
-penetration slowdown, Maxigun wind-up, and four delivery-resolved identities) and adds Booster
-authoring (`hd2.booster`). See `docs/releases/0.24.0.md`.
-
-Version 0.23.2 is a critical hotfix. In 0.23.0 and 0.23.1, typed writes could fail in game with
-"module not found" once startup had finished. See `docs/releases/0.23.2.md`.
-
-Version 0.23.1 adds guarded magazine-attachment authoring: per-attachment capacity and magazine counts
-for weapons whose ammo is owned by selectable magazines (for example, the Liberator Concussive drum).
-See `docs/releases/0.23.1.md`.
-
-Version 0.23.0 adds guarded vehicle durability and mount swapping (`hd2.vehicle`), backpack authoring
-(`hd2.backpack`), and the Shield Generator Relay's shield as a separate target. Example projects recreate
-ShieldRelayImprovements, BastionReArmored, FRVWeaponSwap, and JumpPackImprovements through the public API;
-see `docs/releases/0.23.0.md`.
-
-Version 0.22.1 publishes explicit, bidirectional support-weapon <-> call-in stratagem linkage
-(stable semantic IDs, `linkedStratagem`, `delivers`, and `supportCallInLinks`) in the SDK capability
-catalogs. Runtime write semantics are unchanged; see `docs/releases/0.22.1.md`.
+Every change is guarded. If HD2Runtime cannot verify a game structure, or who else shares it, the write is refused
+and logged instead of being guessed. Values that are not fully understood stay read-only.
 
 ## Requirements
 
 - Helldivers 2
 - Bingus Shared Loader v15+
-- Optional, only for mods that use in-game options: CowboyBingus Mod Options Menu v1+ (with Bingus
-  Shared Loader v18+)
+- Optional, only for mods with in-game options: CowboyBingus Mod Options Menu v1+ (with Bingus Shared Loader v18+)
 
 ## Installation
 
-Install the HD2Runtime runtime ZIP through the same mod directory used by Bingus Shared Loader.
+1. Download `HD2Runtime-<version>-runtime.zip` from the releases page.
+2. Install it through the same mod directory you use for Bingus Shared Loader.
 
-HD2Runtime is installed once and shared by gameplay mods that depend on it.
+HD2Runtime is installed once and shared by every mod that depends on it. Mods do not bundle their own copy.
 
-Gameplay mods do not need to bundle their own copy of the runtime.
+## What you can change
 
-## Creating Mods
+**Weapons**
 
-The easiest way to create a project is with the included mod template.
+- Primary, secondary and support weapons: fire rate, ammo, reload, heat, charge, beam and arc fields
+  (`docs/player-weapon-authoring.md`, `docs/support-weapon-api.md`, `docs/reload-heat-controls.md`)
+- Melee: hit volumes, repeat hits, damage and stamina for every melee weapon and gun bash (`docs/knife-melee.md`)
+- Projectiles, damage and armor penetration, explosions and status effects (`docs/explosions.md`,
+  `docs/status-effects.md`)
+- Attachments: magazines, muzzles, optics and underbarrels (`docs/magazine-attachments.md`,
+  `docs/weapon-attachments.md`)
+- Fire modes, rate-of-fire modes, weapon feeds and selectable ammo (`docs/fire-modes.md`, `docs/fire-rate-modes.md`,
+  `docs/weapon-feeds.md`)
+- Firing another weapon's projectile, such as the EAT-700 napalm rocket (`docs/attack-outputs.md`)
+- Third-person reticles, armory trait labels and stationary firing (`docs/weapon-reticles.md`,
+  `docs/weapon-presentation.md`, `docs/weapon-movement.md`)
+
+**Stratagems and equipment**
+
+- Orbital and Eagle stratagems, call-in cooldowns, mission uses (including unlimited) and calldown codes
+  (`docs/stratagem-authoring.md`, `docs/stratagem-uses.md`)
+- Custom stratagems, with a builder schema and project format (`docs/custom-stratagem-api.md`,
+  `docs/custom-stratagem-builder.md`)
+- Sentries, emplacements and minefields, including turret motion, targeting range and lifetime
+- Drop-pod contents (`docs/pod-payloads.md`)
+- Vehicles and Exosuits: durability, damage zones and mounted weapons (`docs/vehicle-authoring.md`,
+  `docs/vehicle-weapons.md`)
+- Backpacks, shields and backpack-fed ammo (`docs/backpack-authoring.md`, `docs/backpack-ammo.md`)
+- Boosters (19 of 20) and all 23 throwables, including launch, spin, four statuses and arming delay
+  (`docs/booster-authoring.md`, `docs/throwable-authoring.md`, `docs/throwable-statuses.md`)
+
+**Enemies and players**
+
+- Enemy and structure health, armor, damage zones and mounted attacks (`docs/enemy-authoring.md`), plus size,
+  shields, jammers and spawners for all 1,178 enemies and structures (`docs/enemy-controls.md`)
+- Spawning and destruction: mission difficulty budgets, spawn rosters and compositions, breach schedules,
+  demolition templates (`docs/enemy-controls.md`)
+- Missions: timer durations (up to the game's 41:40) and a host-controlled timer freeze (`docs/missions.md`)
+- Helldiver movement, stamina and body-zone damage, not live-tested (`docs/helldiver-fields.md`)
+- Armor rating, speed, stamina, passives and armor perks, not live-tested (`docs/armor-stats.md`,
+  `docs/armor-passives.md`)
+
+**Scripting and services**
+
+- Events: react to missions, players, kills and the weapon in hand (`docs/event-scripting.md`)
+- In-game options on the MODS tab through Mod Options Menu (`docs/options.md`)
+- Screen overlays, game sounds, key input, per-frame callbacks and saved data, not live-tested (`docs/ui-overlay.md`,
+  `docs/sounds.md`, `docs/mod-store.md`)
+- Keybinds on the game's own Controls page (MODS tab) through Mod Bindings Menu (`docs/events.md`)
+- The game's own item names in the player's language, read-only (`docs/game-text.md`)
+
+**Safety and tooling**
+
+- Guarded patches, transactions and multi-object plans; `hd2.ensure` can recover when game data moves
+  (`docs/options.md`, `docs/transaction-ensure.md`)
+- Shared-object detection: a change that affects other items needs `allow_shared`
+- Automatic asset loading for swaps that point at an item nobody carries (`docs/asset-loading.md`)
+- `hd2.inspect` to see values other mods changed
+- Live-test evidence for every capability (`docs/live-evidence.md`)
+- Generated SDK metadata for tools such as HD2RuntimeGUI
+
+Features marked "not live-tested" are mapped and validated offline but have not been confirmed in game yet. Some of
+them require an `allow_unverified_effect` acknowledgement; the SDK capability files list exactly which.
+
+## Creating mods
+
+New to HD2Runtime? Start with `docs/getting-started.md`. It explains which ZIP you need and walks through your
+first mod.
+
+The quickest way to start is the mod template:
 
 1. Extract `HD2Runtime-ModTemplate-<version>.zip`
 2. Open the folder in Rider
@@ -262,20 +127,27 @@ return hd2.ensure({
 ```
 
 Weapon-local values such as fire rate are on the weapon itself (`hd2.weapon('AR-23 Liberator')`,
-`hd2.fields.weapon.fire_rate`). Armor penetration is four per-angle fields, and baselines differ
-between weapons: always take `expect` from the SDK for the exact weapon. See `docs/getting-started.md`
-and the `LiberatorDamageTransaction` example project.
+`hd2.fields.weapon.fire_rate`). Armor penetration is four per-angle fields, and baselines differ between weapons:
+always take `expect` from the SDK for the exact weapon.
+
+More help:
+
+- `HD2Runtime-<version>-sdk.zip`: the capability files (everything you can edit, with vanilla values and required
+  flags), the docs and editor stubs
+- `HD2Runtime-<version>-example-projects.zip`: small working mods, such as `LiberatorDamageTransaction`
+- Release notes for every version: `docs/releases/`
 
 ## License and credit
 
-HD2Runtime is free to use for building mods; see [LICENSE](LICENSE) for the full terms. Copying its
-code or research findings (offsets, field names, identities, catalogues) into another project is
-allowed only with visible credit to [HD2Runtime by SkyeShade](https://github.com/SkyeShade/HD2Runtime).
-Redistributing HD2Runtime itself needs permission.
+HD2Runtime is free to use for building mods; see [LICENSE](LICENSE) for the full terms. Copying its code or research
+findings (offsets, field names, identities, catalogues) into another project is allowed only with visible credit to
+[HD2Runtime by SkyeShade](https://github.com/SkyeShade/HD2Runtime). Redistributing HD2Runtime itself needs
+permission.
 
 ### Thanks
 
-- [Bans](https://ayakamods.com/members/bans.388863/), author of [True Lasgun Beam Overhaul](https://ayakamods.com/mods/true-lasgun-beam-overhaul.4681/) (LAS Beam Enhanced Overhaul): his mod was the research lead for the
-  0.31.0 laser work: the heat weapons' wind-up (firing charge), the LAS-13 Trident's pulsed beam and its fire mode,
-  and the pass that made every laser beam swappable. HD2Runtime proves each member itself from the game's data; none
-  of his code is used.
+- [Bans](https://ayakamods.com/members/bans.388863/), author of
+  [True Lasgun Beam Overhaul](https://ayakamods.com/mods/true-lasgun-beam-overhaul.4681/) (LAS Beam Enhanced
+  Overhaul): his mod was the research lead for the 0.31.0 laser work: the heat weapons' wind-up (firing charge), the
+  LAS-13 Trident's pulsed beam and its fire mode, and the pass that made every laser beam swappable. HD2Runtime
+  proves each member itself from the game's data; none of his code is used.
