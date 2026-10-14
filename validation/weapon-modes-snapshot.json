@@ -1,6 +1,6 @@
 {
-  "acknowledgementRejections": 221,
-  "adversarialRejections": 1620,
+  "acknowledgementRejections": 222,
+  "adversarialRejections": 1622,
   "blockedRejections": 9,
   "concussive": {
     "record": 104,
@@ -15,8 +15,8 @@
   "conflictRejections": 250,
   "fixtureFallback": "disabled",
   "functions": {
-    "checked": 52,
-    "native": 3
+    "checked": 53,
+    "native": 4
   },
   "hmg": {
     "bytesWritten": 12,
@@ -82,7 +82,7 @@
       "M-1000 Maxigun"
     ]
   },
-  "rollbacks": 556,
+  "rollbacks": 557,
   "snapshot": "F5FEE03DCFDB-20260926T222226Z.hd2snap",
   "speargun": {
     "assetDependency": {
@@ -767,6 +767,7 @@
     },
     {
       "armorPenetration": "anti_tank",
+      "functionAmmo": "native",
       "kind": "support_weapon",
       "weapon": "StA-X3 W.A.S.P. Launcher"
     },

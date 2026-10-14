@@ -79,6 +79,7 @@
     }
   },
   "mode": "snapshot-overlay",
+  "nonHostSupportWeapon": "AC-8 Autocannon",
   "proofScope": "guarded write mechanics; every composition here is pending a live test",
   "protectionChanges": 64,
   "rejections": {

@@ -185,7 +185,7 @@ return 'ok'
         self.assertEqual(snapshot['transaction'], {'attachment': '5,5mm. Flash Hider', 'slot': 'muzzle', 'changes': 6,
             'applied': True, 'rolledBack': True})
         magazine = json.loads((ROOT / 'validation/magazine-attachment-snapshot.json').read_text())
-        self.assertEqual((magazine['attachments'], magazine['fieldChecks']), (43, 233))
+        self.assertEqual((magazine['attachments'], magazine['fieldChecks']), (52, 283))
 
 
 if __name__ == '__main__':

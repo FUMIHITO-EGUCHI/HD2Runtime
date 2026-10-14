@@ -193,11 +193,16 @@ local worker=coroutine.create(function()
       changes[2]},{allow_unverified_reference=true})end,'INCOMPATIBLE_OUTPUT_FAMILY','beam donor')
      result.acknowledgementRejections=result.acknowledgementRejections+1
      result.adversarialRejections=result.adversarialRejections+1
-     -- A changed host (it now spawns an entity) is refused.
+     -- A changed host (it now spawns an entity) is refused: by the spawned-entity guard (0.40.0) where the host has a
+     -- reviewed spawned entity, otherwise by the function-host check.
      local host=plan.changes[1]
      for _,part in ipairs(plan.changes)do if part.field_offset==576 then host=part end end
      poke(host.owner.base+host.offset-576+40,b.encode(1,'u32'))
-     rejects(function()resolve(spec)end,'FUNCTION_HOST_CHANGED','changed host')
+     local ok,why=pcall(resolve,spec)
+     assert(not ok,name..' changed host was not rejected')
+     why=tostring(why)
+     assert(why:find('FUNCTION_HOST_CHANGED',1,true)or why:find('SPAWNED_ENTITY_CHANGED',1,true),
+      name..' changed host rejected for the wrong reason: '..why)
      result.adversarialRejections=result.adversarialRejections+1
      reset()
      result.functions.checked=result.functions.checked+1

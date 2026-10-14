@@ -368,12 +368,18 @@ local worker=coroutine.create(function()
   and swapped.notes[1]:find('do not follow a swapped projectile',1,true),'no swapped-owner note')
  result.swappedOwnerSlot={row=swapped.changes[1].identity.record_kind,note=swapped.notes[1]}
  reset()
- -- A support weapon that is not a host.
- local gl28=hd2.support_weapon('GL-28 Belt-Fed Grenade Launcher')
- assert(not gl28:projectile_source().writable,'GL-28 became a host')
- result.rejections.nonHostSupport=rejects(function()stage({id='g',target=gl28:attack('primary'),
+ -- A support weapon that is not a host (the GL-28 became one in 0.40.0: its backpack-fed projectile swap).
+ local nonhost
+ for _,name in ipairs({'GL-21 Grenade Launcher','AC-8 Autocannon','MG-43 Machine Gun','M-105 Stalwart'})do
+  local weapon=hd2.support_weapon(name)
+  if not weapon:projectile_source().writable and pcall(function()return weapon:attack('primary'):projectile()end)then
+   nonhost=weapon;result.nonHostSupportWeapon=name;break
+  end
+ end
+ assert(nonhost,'every candidate non-host support weapon became a host')
+ result.rejections.nonHostSupport=rejects(function()stage({id='g',target=nonhost:attack('primary'),
   allow_unverified_effect=true,allow_unverified_reference=true,changes={{field='attack.projectile',
-  expect=gl28:attack('primary'):projectile(),value=hd2.attack_output('AR-2 Coyote')}}})end,'field is not exposed',
+  expect=nonhost:attack('primary'):projectile(),value=hd2.attack_output('AR-2 Coyote')}}})end,'field is not exposed',
   'non-host support weapon')
  result.writes=counts.writes;result.protectionChanges=counts.protection_changes
  source.close()

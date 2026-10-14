@@ -113,11 +113,11 @@ return 'ok'
     def test_snapshot_validation_and_recreation(self):
         snapshot = json.loads((ROOT / 'validation/magazine-attachment-snapshot.json').read_text())
         self.assertEqual(snapshot['status'], 'VALIDATED')
-        self.assertEqual((snapshot['fieldChecks'], snapshot['alreadyDesired']), (233, 233))
+        self.assertEqual((snapshot['fieldChecks'], snapshot['alreadyDesired']), (283, 283))
         for key in ('changedWrites', 'rollbacks', 'isolationChecks', 'conflictRejections'):
-            self.assertEqual(snapshot[key], 233, key)
-        self.assertEqual(snapshot['guardRejections'], 24)
-        self.assertEqual(snapshot['unalignedPackedFields'], 70)
+            self.assertEqual(snapshot[key], 283, key)
+        self.assertEqual(snapshot['guardRejections'], 27)
+        self.assertEqual(snapshot['unalignedPackedFields'], 79)
         self.assertEqual(snapshot['multiVariant'], {'weapon': 'AR-23 Liberator', 'options': 3,
             'distinctRecords': 3, 'independentEdits': True})
         recreations = json.loads((ROOT / 'validation/reference-mod-recreations.json').read_text())
