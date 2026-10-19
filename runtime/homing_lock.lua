@@ -1,18 +1,20 @@
 -- Pre-fire acquisition and assignment. No process writes: the shared homing engine
 -- retains projectile ownership, transactions, slot generation and write budgets.
 local P=require('hd2runtime/runtime/homing_lock_policy')
-local M={}
+local M={MAX_VALIDATIONS=8}
 local function copy(t)local r={}for k,v in pairs(t)do r[k]=v end return r end
 local function finite(v)return type(v)=='number'and v==v and math.abs(v)<1000000 end
 function M.new(deps)
     local world,aim=deps.world,deps.aim
     local sources={};for _,source in ipairs(deps.weapon.sources)do sources[source]=true end
     local aim_height=deps.aim_height or 1
+    local position_age=deps.position_age or .5
     local c={};local config=assert(P.validate_config(deps.config))
     local policy=P.new();local stopped=false
     local context,session,frame;local basis,view_reason='weapon_root','not_observed'
     local state,reason='waiting',nil;local assigned=0
     local status={locked={},acquiring={}};local los_cache={};local visual_error
+    local validation_cursor=0
     local function log(event,fields)
         fields=fields or{};fields.event=event
         if deps.log then deps.log(fields)end
@@ -34,7 +36,7 @@ function M.new(deps)
         elseif ok then visual_error=nil end
     end
     local function reset(why)
-        context=nil;frame=nil;view_reason=why;los_cache={};P.reset(policy,why)
+        context=nil;frame=nil;view_reason=why;los_cache={};validation_cursor=0;P.reset(policy,why)
         status={locked={},acquiring={}};state,reason='waiting',why;publish()
     end
     local function target_live(w,t)
@@ -64,32 +66,73 @@ function M.new(deps)
         context=current;frame=observed;basis=next_basis;view_reason=view_why
         local origin=frame and frame.origin or current.origin
         local forward=frame and frame.forward or current.forward
-        local candidates={};local los_missing=false
+        local function geometry(p)
+            if not p or not finite(p.x)or not finite(p.y)or not finite(p.z)then return end
+            local dx,dy,dz=p.x-origin.x,p.y-origin.y,p.z+aim_height-origin.z
+            local distance=math.sqrt(dx*dx+dy*dy+dz*dz)
+            if not finite(distance)or distance<=0 or distance>config.range then return end
+            local cosine=math.max(-1,math.min(1,(dx*forward.x+dy*forward.y+dz*forward.z)/distance))
+            local angle=math.deg(math.acos(cosine))
+            if angle<=config.half_angle then return angle,distance end
+        end
+        -- Reuse the shared engine's bounded, aged position scan. Do not turn a
+        -- 256-enemy list into 256 health/position/native reads every frame.
+        local shortlist={}
         for _,item in ipairs(items or{})do
+            if finite(item.at)and now>=item.at and now-item.at<=position_age then
+                local angle,distance=geometry(item)
+                if angle then shortlist[#shortlist+1]={item=item,angle=angle,distance=distance}end
+            end
+        end
+        table.sort(shortlist,function(a,b)
+            if a.angle~=b.angle then return a.angle<b.angle end
+            if a.distance~=b.distance then return a.distance<b.distance end
+            return a.item.entity<b.item.entity
+        end)
+        -- Keep in-progress acquisition continuous, while the remaining budget
+        -- advances through other candidates (blocked front rows cannot starve
+        -- every later visible enemy). Both groups still get fresh validation.
+        local prior={}
+        for _,name in ipairs({'locked','acquiring'})do for _,t in ipairs(status[name])do
+            prior[t.entity]=t.unit
+        end end
+        local selected,chosen={},{}
+        local function choose(item)
+            if not selected[item.entity]and #chosen<M.MAX_VALIDATIONS then
+                selected[item.entity]=true;chosen[#chosen+1]=item
+            end
+        end
+        for _,entry in ipairs(shortlist)do
+            if prior[entry.item.entity]==entry.item.unit then
+                choose(entry.item)
+            end
+        end
+        for _=1,#shortlist do
+            if #chosen>=M.MAX_VALIDATIONS then break end
+            validation_cursor=validation_cursor%#shortlist+1
+            choose(shortlist[validation_cursor].item)
+        end
+        local candidates={};local los_missing=false
+        for _,item in ipairs(chosen)do
             local live=world.entity_state(w,item.entity)
-            local p=live and live.life==0 and world.entity_exists(w,item.entity)==true
+            local p=live and live.life==0 and live.descriptor.unit==item.unit
+                and world.entity_exists(w,item.entity)==true
                 and world.unit_position(w,live.descriptor.unit)
-            if p then
+            local angle,distance=geometry(p)
+            if angle then
                 local point={x=p.x,y=p.y,z=p.z+aim_height}
-                local dx,dy,dz=point.x-origin.x,point.y-origin.y,point.z-origin.z
-                local distance=math.sqrt(dx*dx+dy*dy+dz*dz)
-                if finite(distance)and distance>0 and distance<=config.range then
-                    local f=forward
-                    local cosine=math.max(-1,math.min(1,(dx*f.x+dy*f.y+dz*f.z)/distance))
-                    local angle=math.deg(math.acos(cosine))
-                    local projectable=true
-                    if frame then
-                        local ok,result=pcall(deps.view.project,frame,point)
-                        projectable=ok and result~=nil
-                    end
-                    if angle<=config.half_angle and projectable then
-                        local net=world.entity_network(w,item.entity)
-                        if type(net)=='number'then
-                            candidates[#candidates+1]={key=session..':'..item.entity..':'..live.descriptor.pointer,
-                                entity=item.entity,descriptor=live.descriptor.pointer,unit=live.descriptor.unit,
-                                net=net,node=16,name=item.name or tostring(item.entity),
-                                x=p.x,y=p.y,z=p.z,angle_deg=angle,distance=distance,alive=true}
-                        end
+                local projectable=true
+                if frame then
+                    local ok,result=pcall(deps.view.project,frame,point)
+                    projectable=ok and result~=nil
+                end
+                if projectable then
+                    local net=world.entity_network(w,item.entity)
+                    if type(net)=='number'then
+                        candidates[#candidates+1]={key=session..':'..item.entity..':'..live.descriptor.pointer,
+                            entity=item.entity,descriptor=live.descriptor.pointer,unit=live.descriptor.unit,
+                            net=net,node=16,name=item.name or tostring(item.entity),
+                            x=p.x,y=p.y,z=p.z,angle_deg=angle,distance=distance,alive=true}
                     end
                 end
             end
@@ -103,7 +146,7 @@ function M.new(deps)
         -- 0.1 seconds. Acquisition uses the camera, LOS uses the weapon root.
         local next_cache={};local rays=0
         for _,t in ipairs(candidates)do
-            local point={x=t.x,y=t.y,z=t.z+1};local cached=los_cache[t.key]
+            local point={x=t.x,y=t.y,z=t.z+aim_height};local cached=los_cache[t.key]
             local function close(a,b)return math.abs(a.x-b.x)+math.abs(a.y-b.y)+math.abs(a.z-b.z)<.1 end
             if cached and now>=cached.at and now-cached.at<=.1
                 and close(cached.origin,current.origin)and close(cached.point,point)then

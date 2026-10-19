@@ -24,6 +24,50 @@ local function finish()
 end
 """
 class LockIntegrationTests(unittest.TestCase):
+ def test_observation_failure_drops_allocations_without_erasing_mission_totals(self):
+  failures=(
+   ('world', 'local previous=f.world_api.open;f.world_api.open=function()return nil end', 'f.world_api.open=previous'),
+   ('game state', 'local previous=f.world_api.game_state;f.world_api.game_state=function()return nil end', 'f.world_api.game_state=previous'),
+   ('proof', "local previous=f.engine.prove;f.engine.prove=function()return nil,'proof unavailable'end", 'f.engine.prove=previous'),
+   ('counter', 'local previous=f.world_api.projectile_counter;f.world_api.projectile_counter=function()return nil end', 'f.world_api.projectile_counter=previous'),
+   ('update', "local previous=f.world_api.game_state;f.world_api.game_state=function()error('unreadable state')end", 'f.world_api.game_state=previous'))
+  for name,fail,restore in failures:
+   with self.subTest(failure=name):
+    self.check('''
+finish();f.spawn();f.engine.step(.005)
+local before=h:stats();local writes=#f.writes
+assert(before.shots>0 and before.writes>0 and before.locks>0)
+'''+fail+'''
+f.watch.tick(.01)
+local after=h:stats()
+for _,key in ipairs({'shots','writes','locks'})do
+ assert(after[key]==before[key],'temporary observation loss erased mission '..key)
+end
+local _,count=f.engine.tracked()
+assert(count==0 and #h:lock_state().locked==0 and #f.writes==writes)
+'''+restore+'''
+f.engine.step(.01);finish();f.spawn();f.engine.step(.005)
+assert(h:stats().writes>before.writes,'new observations must recover without old allocations')
+f.world_api.game_state=function()return{mission=false,host=true,mode_entity=99}end
+f.engine.step(.01)
+assert(h:stats().shots==0 and h:stats().writes==0,'actual mission end must reset totals')
+''')
+
+ def test_los_uses_the_same_configured_aim_point_as_locks_and_steering(self):
+  self.check('''
+h:stop()
+local rays={}
+require('hd2runtime/runtime/homing_aim').visible=function(_,origin,point)
+ rays[#rays+1]=point;return true,'clear'
+end
+h=api.homing('AR-23 Liberator',{acquisition='pre_fire',lock_time=0,max_targets=3,
+ cone=30,range=200,aim_height=4,require_los=true})
+for i=1,6 do f.engine.step(.06)end
+local snapshot=h:lock_state();assert(#snapshot.locked==3 and #rays>=3)
+for _,ray in ipairs(rays)do assert(ray.z==4,'LOS differs from configured aim point')end
+for _,target in ipairs(snapshot.locked)do assert(target.position.z==4)end
+''')
+
  def test_invalid_lock_options_do_not_replace_a_working_handle(self):
   self.check('''
 for _,opts in ipairs({{acquisition=false},{acquisition='unknown'},{max_targets=2},

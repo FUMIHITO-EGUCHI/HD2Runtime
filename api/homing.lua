@@ -121,6 +121,7 @@ function M.homing(name,opts)
         lock=require('hd2runtime/runtime/homing_lock').new({weapon=weapon,
             world=require('hd2runtime/runtime/event_world'),aim=require('hd2runtime/runtime/homing_aim'),
             view=require('hd2runtime/runtime/homing_view'),aim_height=values.aim_height,
+            position_age=homing.POSITION_AGE,
             config={enabled=true,mode=values.max_targets==1 and'single'or'multi',lock_time=values.lock_time,
                 max_targets=values.max_targets,half_angle=values.cone,range=values.range,require_los=opts.require_los==true}})
     elseif opts.lock_time~=nil or opts.max_targets~=nil or opts.require_los~=nil then

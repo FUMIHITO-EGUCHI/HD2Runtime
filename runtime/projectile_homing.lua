@@ -539,7 +539,9 @@ local function summary(config,why)
         config.other_sources,#parts>0 and('; flew straight: '..table.concat(parts,', '))or''))
 end
 
-local function reset_mission(why)
+-- A lost observation invalidates every in-flight identity/lock, but says nothing
+-- about the mission ending. Preserve :stats() totals until a confirmed boundary.
+local function invalidate_observations(why)
     for slot,shot in pairs(tracked)do drop(slot,shot,why)end
     tracked,tracked_count,pool={},0,{}
     cache=fresh_cache()
@@ -547,12 +549,18 @@ local function reset_mission(why)
     for _,config in ipairs(configs)do
         if config.lock_control then config.lock_control.reset(why)end
         config.lock_ready,config.lock_identity=nil,nil
+    end
+    multiplayer_logged=false
+end
+
+local function reset_mission(why)
+    invalidate_observations(why)
+    for _,config in ipairs(configs)do
         summary(config,why)
         config.shots,config.steered,config.writes,config.locks,config.others,config.no_target=0,0,0,0,0,0
         config.other_sources=0
         config.refused={}
     end
-    multiplayer_logged=false
 end
 
 -- One observation per controller, shared by every projectile type of its weapon.
@@ -599,9 +607,10 @@ local function step(dt)
     clock=clock+(dt or 0)
     if not in_mission and clock-off_mission_at<M.OFF_MISSION_EVERY then return end
     local world,why=world_module.open()
-    if not world then reset_mission('world unavailable');return end
+    if not world then invalidate_observations('world unavailable');return end
     local game=world_module.game_state(world)
-    if not(game and game.mission)then
+    if not game then invalidate_observations('game state unavailable');return end
+    if not game.mission then
         if in_mission then reset_mission('the mission ended')end
         in_mission=false
         off_mission_at=clock
@@ -610,7 +619,7 @@ local function step(dt)
     in_mission=true
     local ok,reason=M.prove(world)
     if not ok then
-        reset_mission('projectile proof unavailable')
+        invalidate_observations('projectile proof unavailable')
         if unavailable_logged~=reason then
             unavailable_logged=reason
             log('UNAVAILABLE: every homing shot flies straight: '..tostring(reason))
@@ -618,7 +627,7 @@ local function step(dt)
         return
     end
     local counter,system=world_module.projectile_counter(world)
-    if not counter then reset_mission('projectile counter unavailable');return end
+    if not counter then invalidate_observations('projectile counter unavailable');return end
     if pool.system~=system or not pool.counter then
         pool.system,pool.counter,pool.observed_at=system,counter,clock
         for slot,shot in pairs(tracked)do drop(slot,shot,'the projectile system changed')end
@@ -677,7 +686,7 @@ end
 local function tick(dt)
     local started=metrics.start()
     local ok,why=pcall(step,dt)
-    if not ok then reset_mission('update failed');log('update failed: '..tostring(why))end
+    if not ok then invalidate_observations('update failed');log('update failed: '..tostring(why))end
     metrics.elapsed('projectile_homing.tick',started)
 end
 M.step=step
