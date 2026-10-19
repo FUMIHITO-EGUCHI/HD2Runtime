@@ -67,6 +67,9 @@ package.preload['hd2runtime/runtime/runtime_settings']=function()return{visible=
 package.preload['hd2runtime/runtime/homing_aim_state']=function()
  return{active=function()return true,'native_aim_action_2_8'end}
 end
+package.preload['hd2runtime/runtime/homing_drop_state']=package.preload['hd2runtime/runtime/homing_drop_state']or function()
+ return{active=function()return false,'no_active_player_drop',{state='none',count=0}end}
+end
 stingray={Window={show_cursor=function()return false end}}
 local Visibility=require('hd2runtime/runtime/homing_visibility')
 '''

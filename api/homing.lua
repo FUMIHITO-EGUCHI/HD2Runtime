@@ -198,6 +198,7 @@ function Handle:lock_state()
     local V=require('hd2runtime/runtime/homing_view');local frame=visual.frame
     if frame then
         out.width,out.height=frame.width,frame.height
+        out.vertical_fov=frame.vertical_fov
         out.radius=V.radius(frame,visual.half_angle)
     end
     for _,name in ipairs({'locked','acquiring'})do for _,t in ipairs(visual[name])do

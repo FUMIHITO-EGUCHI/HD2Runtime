@@ -56,9 +56,17 @@ function M.new(deps)
         end
         state.state,state.reason=value,reason
     end
+    local function observe_drop(drop)
+        state.drop_state=type(drop)=='table'and drop.state or nil
+        state.drop_phase=type(drop)=='table'and drop.phase or nil
+        state.drop_entity=type(drop)=='table'and drop.entity or nil
+        state.drop_type=type(drop)=='table'and drop.type or nil
+        state.drop_records=type(drop)=='table'and drop.count or nil
+    end
     local function blocked()
-        if not deps.blocked then return false end
-        local ok,value,why=pcall(deps.blocked)
+        if not deps.blocked then observe_drop(nil);return false end
+        local ok,value,why,drop=pcall(deps.blocked)
+        observe_drop(drop)
         return not ok or value~=false,ok and why or'menu_gate_failed'
     end
     local function destroy(gui)
@@ -324,7 +332,7 @@ function M.new(deps)
         return items
     end
     local function render(snapshot,mark)
-        if type(snapshot)~='table'or snapshot.visible~=true then clear();set_status('hidden');return end
+        if type(snapshot)~='table'or snapshot.visible~=true then observe_drop(nil);clear();set_status('hidden');return end
         local hidden,why=blocked()
         if hidden then clear();set_status('suppressed',why);return end
         local frame=snapshot.frame

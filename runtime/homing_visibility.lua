@@ -20,6 +20,8 @@ local function player_context(world)
     local W=require('hd2runtime/runtime/event_world')
     local game=W.game_state(world)
     if not game or game.mission~=true then return true,'mission_required'end
+    local dropping,drop_reason,drop=require('hd2runtime/runtime/homing_drop_state').active(world)
+    if dropping~=false then return true,drop_reason or'hellpod_state_unavailable',drop end
     local players=W.players(world,true)
     if type(players)~='table'then return true,'local_player_unavailable'end
     local player
@@ -39,7 +41,7 @@ local function player_context(world)
     if flags.weapon_menu then return true,'weapon_menu'end
     if not flags.alive then return true,'local_avatar_not_alive'end
     if flags.seated then return true,'avatar_seated'end
-    return false
+    return false,nil,drop
 end
 local function read(world,aim_only)
     local ok,settings=pcall(require,'hd2runtime/runtime/runtime_settings')
@@ -60,17 +62,17 @@ local function read(world,aim_only)
     local depth=u32(bytes,4*ENTRIES)
     if not depth or depth>ENTRIES then return true,'menu_state_unavailable'end
     for i=0,depth-1 do if u32(bytes,i*4)==ESCAPE then return true,'escape_menu'end end
-    local hidden,why=player_context(world)
-    if hidden then return true,why end
+    local hidden,why,drop=player_context(world)
+    if hidden then return true,why,drop end
     if aim_only~=false then
         local aiming,why=require('hd2runtime/runtime/homing_aim_state').active(world)
-        if aiming~=true then return true,aiming==false and'not_aiming'or(why or'aim_state_unavailable')end
+        if aiming~=true then return true,aiming==false and'not_aiming'or(why or'aim_state_unavailable'),drop end
     end
-    return false
+    return false,nil,drop
 end
 function M.blocked(world,aim_only)
-    local ok,hidden,why=pcall(read,world,aim_only)
+    local ok,hidden,why,drop=pcall(read,world,aim_only)
     if not ok then return true,'menu_state_unavailable'end
-    return hidden,why
+    return hidden,why,drop
 end
 return M

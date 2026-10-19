@@ -179,14 +179,35 @@ cleanup removes retained ring/stock/label GUIs while acquisition is idle. The fl
 layout reuses `player_equipment` proofs; semantic bits are retained from C4 Quick
 Actions 1.13.1. Unknown state hides conservatively. This is a positive gameplay
 eligibility check, not a claim that any specific lifecycle value means descent.
-Actual descent flag coverage still requires a live regression. Other UI without
-these indicators may remain unknown; do not infer universal menu coverage.
+The `2d1bfa8` user test demonstrated that these avatar conditions do not identify
+hellpod descent: a healthy/spawned avatar can still be attached to that view.
+The private HUD gate therefore reads the actual HellpodComponent manager now.
+Only the known initial/reinforcement player-pod types owned by this machine are
+considered; phase 0 (falling) and 1 (braking) hide the HUD, phase 2 (landed) releases
+this gate subject to the other avatar/menu checks. The existing same-build
+HellpodDropHold v1.2 was the lead; globals, record/hash/array layout, owner bit and
+phase instructions were independently checked in the retained unpacked game.dll
+and are code-pinned again at runtime. An unavailable/changed manager, unstable
+identity, unknown phase or scan-budget excess hides instead of claiming no drop.
+The scan inspects at most 64 records and at most 64 hash probes per relevant pod.
+There are no FOV thresholds, delay timers, native calls or writes in this reader.
+This latest direct-pod gate still needs a live descent/landing regression. Other
+UI without these indicators may remain unknown; universal menu coverage is not claimed.
+
+HUD `status()` also records the last admission observation's `drop_state`,
+`drop_phase`, game `drop_entity`, `drop_type` and `drop_records` when available.
+These are actual manager observations, not a custom test ID. Raw camera FOV and
+capture radius may change during descent even while `ui_visible` is false: the
+radius follows projection, and is not a descent detector. The 0.3.0 user log
+showed roughly 164 -> 651 px at the same 12-degree cone and 1080p height; through
+the projection formula these imply vertical FOVs about 70 -> 20 degrees. The old
+log did not store FOV directly, so that numerical reconstruction is an inference.
 
 ## Custom renderers
 
 `handle:lock_state()` returns nil for in-flight acquisition, otherwise a detached
 observation: `state`, `reason`, `aim_basis`, `observed_at`, `locked`, `acquiring`,
-`visible`, `ui_visible`, optional `width`, `height` and capture `radius`.
+`visible`, `ui_visible`, optional `width`, `height`, native `vertical_fov` (radians) and capture `radius`.
 With the optional Aim gate, `aim_active` is true/false when observed and nil when
 unknown; `aim_reason` explains the observation or `not_required` for the default.
 

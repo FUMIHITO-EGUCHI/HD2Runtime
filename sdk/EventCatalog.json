@@ -6655,7 +6655,7 @@
      [
       "ui_visible",
       "boolean",
-      "Standard menu and native Aim-action display gate."
+      "Standard menu, avatar, actual player-drop and native Aim-action display gate."
      ],
      [
       "aim_basis",
@@ -6696,6 +6696,11 @@
       "height",
       "number|nil",
       ""
+     ],
+     [
+      "vertical_fov",
+      "number|nil",
+      "Native render-camera vertical FOV in radians; observational, not a gameplay-camera or descent classification."
      ],
      [
       "radius",

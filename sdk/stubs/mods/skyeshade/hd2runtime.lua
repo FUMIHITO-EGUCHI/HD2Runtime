@@ -4223,7 +4223,7 @@ local HD2HomingLockTarget = {}
 ---@field state string
 ---@field reason string|nil
 ---@field visible boolean Usable acquisition camera frame; does not apply menu/aim suppression.
----@field ui_visible boolean Standard menu and native Aim-action display gate.
+---@field ui_visible boolean Standard menu, avatar, actual player-drop and native Aim-action display gate.
 ---@field aim_basis string Camera, or weapon root when camera discovery fails.
 ---@field aim_active boolean|nil Native Aim activation when require_aim=true; nil when not required, unobserved or unavailable.
 ---@field aim_reason string|nil Aim observation reason. not_required means this configuration does not gate acquisition by Aim.
@@ -4232,6 +4232,7 @@ local HD2HomingLockTarget = {}
 ---@field acquiring HD2HomingLockTarget[]
 ---@field width number|nil
 ---@field height number|nil
+---@field vertical_fov number|nil Native render-camera vertical FOV in radians; observational, not a gameplay-camera or descent classification.
 ---@field radius number|nil Capture cone projected to pixels, before cosmetic override.
 local HD2HomingLockState = {}
 

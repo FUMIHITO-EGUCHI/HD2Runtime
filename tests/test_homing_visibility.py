@@ -18,6 +18,8 @@ package.preload['hd2runtime/runtime/event_world']=function()return {
  entity_state=function()return{life=0,descriptor={owned=true}}end}end
 package.preload['hd2runtime/runtime/player_equipment']=function()return{
  avatar_flags=function()return{alive=true,seated=false,tactical_map=false,weapon_menu=false}end}end
+package.preload['hd2runtime/runtime/homing_drop_state']=function()return{
+ active=function()return false,'no_active_player_drop',{state='none',count=0}end}end
 aiming=true
 package.preload['hd2runtime/runtime/homing_aim_state']=function()return {active=function()return aiming,'aim_state_unavailable'end}end
 runtime_open=false

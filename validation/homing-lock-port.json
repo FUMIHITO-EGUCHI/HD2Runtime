@@ -84,6 +84,24 @@
       "live_verified": false,
       "web_reference": "https://www.nexusmods.com/helldivers2/mods/2388",
       "web_limit": "author text opened; comparison-image visual inspection unavailable, no exact native appearance claim"
+    },
+    "drop_followup": {
+      "previous_commit": "2d1bfa8",
+      "user_report": "large capture ring persisted during hellpod descent",
+      "old_radius_px": [
+        163.92352194905266,
+        650.9528278001886
+      ],
+      "fov_deg_inferred_from_radius": [
+        70,
+        20
+      ],
+      "previous_avatar_gate_insufficient": true,
+      "actual_pod_gate": "read-only known owned initial/reinforcement HellpodComponent; phase0/1 hide,2 releases other checks still required",
+      "source": "Vanilla Plus HellpodDropHold v1.2 same-build source; independently inspected retained unpacked game.dll; eleven live code pins",
+      "offline_tests": 137,
+      "live_verified": false,
+      "limits": "Old log had no raw pod state or FOV. Latest gate awaits actual descent/landing. No size clamp/FOV heuristic/native calls/writes."
     }
   }
 }
