@@ -98,6 +98,32 @@ end
 '''
 
 class ReticleTests(unittest.TestCase):
+    def test_vanilla_defaults_show_only_marker_art_without_mod_decorations(self):
+        self.check('''
+for _,assets in ipairs({false,true})do
+ if assets then enable_stock_assets()end
+ local previous_rects=calls.rects
+ local h=Hud.new({view=View,style={marker_shape='vanilla',ring=false}})
+ h:update(snapshot())
+ assert(not text_present('LOCK')and not text_present('ACQ')and not text_present('LOS'),
+  'Vanilla defaults must not include mod labels')
+ if assets then
+  assert(calls.rects==previous_rects,'stock marker mode must not add bars or numbers')
+  assert(calls.bitmaps==6)
+ else
+  for _,gui in ipairs(guis)do if not gui.dead then
+   local n=0;for _ in pairs(gui.rects)do n=n+1 end
+   assert(n==96,'fallback should contain only three chevrons per target')
+  end end
+ end
+ h:shutdown()
+end
+local decorated=Hud.validate_style({marker_shape='vanilla',show_numbers=true})
+assert(decorated.show_numbers==true and decorated.show_labels==false)
+local standard=Hud.validate_style({marker_shape='corners'})
+assert(standard.show_labels and standard.show_numbers and standard.show_progress and standard.show_los)
+''')
+
     def test_vanilla_null_lightuserdata_material_never_reaches_texture_setter(self):
         script=modules(('runtime/homing_reticle_style','runtime/homing_reticle'))+PRELUDE+'''
 assert(type(NULL_MATERIAL)=='userdata' and tostring(NULL_MATERIAL):find('NULL',1,true))
@@ -235,7 +261,8 @@ h:shutdown();assert(live_gui_count()==0)
 
     def test_vanilla_labels_and_progress_stay_outside_the_orbit(self):
         self.check('''
-local h=Hud.new({view=View,style={marker_shape='vanilla',ring=false,show_numbers=false,show_los=false}})
+local h=Hud.new({view=View,style={marker_shape='vanilla',ring=false,show_numbers=false,show_los=false,
+ show_labels=true,show_progress=true}})
 local s=snapshot();s.locked={};s.acquiring={{key='a',x=500,y=300,z=10,progress=0}}
 h:update(s)
 local label_y
@@ -246,7 +273,8 @@ assert(label_y and label_y>337,'the acquiring label must clear the 28px outer ch
     def test_vanilla_replica_preserves_multi_target_numbers_los_and_menu_gate(self):
         self.check('''
 local blocked=false
-local h=Hud.new({view=View,style={marker_shape='vanilla'},blocked=function()return blocked,'not_aiming'end})
+local h=Hud.new({view=View,style={marker_shape='vanilla',show_labels=true,show_numbers=true,
+ show_progress=true,show_los=true},blocked=function()return blocked,'not_aiming'end})
 local s=snapshot();s.locked={};s.acquiring={};s.max_targets=6
 for i=1,6 do s.locked[i]={key='t'..i,x=200+i*200,y=400,z=10,los=i==1 and'blocked'or'clear'}end
 h:update(s)

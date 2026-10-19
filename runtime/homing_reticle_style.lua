@@ -29,6 +29,13 @@ function M.validate(opts)
         assert(DEFAULTS[key]~=nil or key=='ring_radius','unknown reticle style: '..tostring(key))
         style[key]=value
     end
+    -- Vanilla selects the stock marker art without the mod's diagnostic overlay.
+    -- Explicit decorations remain available to API clients that ask for them.
+    if style.marker_shape=='vanilla'then
+        for _,key in ipairs({'show_labels','show_numbers','show_progress','show_los'})do
+            if not opts or opts[key]==nil then style[key]=false end
+        end
+    end
     for key,value in pairs(style)do
         if key:match('_color$')then style[key]=assert(colour(value),'invalid colour: '..key)
         elseif BOUNDS[key]then assert(finite(value,BOUNDS[key][1],BOUNDS[key][2]),'invalid '..key)

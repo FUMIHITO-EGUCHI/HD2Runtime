@@ -4251,10 +4251,10 @@ local HD2HomingLockState = {}
 ---@field clear_color table|string|nil Default blue.
 ---@field blocked_color table|string|nil Default red.
 ---@field unknown_color table|string|nil Default grey.
----@field show_labels boolean|nil Default true.
----@field show_numbers boolean|nil Default true.
----@field show_progress boolean|nil Default true.
----@field show_los boolean|nil Default true.
+---@field show_labels boolean|nil Default false for vanilla, true for other shapes; explicit true opts into mod decorations.
+---@field show_numbers boolean|nil Default false for vanilla, true for other shapes; explicit true opts into mod decorations.
+---@field show_progress boolean|nil Default false for vanilla, true for other shapes; explicit true opts into mod decorations.
+---@field show_los boolean|nil Default false for vanilla, true for other shapes; explicit true opts into mod decorations.
 ---@field aim_only boolean|nil HUD-only native Aim display gate (default true). Gameplay acquisition is controlled separately by require_aim.
 local HD2HomingReticleStyle = {}
 

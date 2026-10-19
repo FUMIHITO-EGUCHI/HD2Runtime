@@ -7,7 +7,9 @@ The shared engine is used; a mod does not bundle another homing implementation.
 **Validation:** the originating AR-23 mod was user-confirmed on build 25480438.
 The `cb8f9a3` Runtime port also has live AR-23 steering-write and multi-lock logs
 from 2026-10-19; no hit or damage outcome was measured. The subsequent `require_aim`
-gate and vanilla marker path are offline-tested and await their own live check.
+gate and stock marker path were user-tested on `9aaba06`; logs show the actual
+stock-asset renderer. The newest avatar/map HUD gate and undecorated defaults are
+offline-tested and await live regression. No per-shot impact or damage is recorded.
 See `validation/homing-lock-port.json` for the exact distinction and native provenance.
 
 ```lua
@@ -134,7 +136,7 @@ each other. Hiding/stopping the HUD never stops homing.
 | `scale` | 1, .5..3; markers and labels, not the capture angle |
 | `acquiring_color`, `locked_color` | amber / green |
 | `clear_color`, `blocked_color`, `unknown_color` | blue / red / grey |
-| `show_labels`, `show_numbers`, `show_progress`, `show_los` | true |
+| `show_labels`, `show_numbers`, `show_progress`, `show_los` | false for vanilla, true for other shapes; explicit values override |
 | `aim_only` | true; false still suppresses menus |
 
 Colours use `{r,g,b[,a]}` in 0..255 or `#RRGGBB[AA]`. Inputs are copied. Omit
@@ -145,8 +147,9 @@ renderer. Fonts are optional: geometric progress/number markers remain available
 `vanilla` uses the stock P-92 Warrant atlas marker when its material/texture and
 bitmap bindings are resident. Three markers orbit each actual Runtime target,
 rotate once as its acquisition progresses, and contract from 24 to 10 pixels at
-1080p. Complete locks are compact and green by default. The same numbers, LOS
-labels and custom colours remain available for multiple targets. This draws stock
+1080p. Complete locks are compact and green by default. Mod-added numbers, LOCK/ACQ text, LOS labels/bars and progress bars are off
+by default for this shape. Explicit `show_* = true` opts into those decorations;
+custom colours and independent markers for multiple targets remain available. This draws stock
 art; it does not activate the game's native TargetLock or change the weapon's
 crosshair enum. The reference is Guided Rounds' `markers_setup`, `quad` and
 `markers_draw` in commit `71303dd35954f94f57f8308fb6e2c86d8e22abc4`.
@@ -157,15 +160,27 @@ reports `marker_renderer` as `vanilla_asset` / `vanilla_geometry` and supplies
 just by creating a reticle. A caller may explicitly warm a known semantic package
 with `hd2.require_assets({id='homing-stock-markers', targets={hd2.weapon('P-92 Warrant')}})`;
 normal package proofs, asynchronous readiness and session retention still apply.
-The actual sprite residency and drawing path require a live check on the target build.
+The `9aaba06` local test logged `vanilla_asset` and completed the explicit
+Warrant package request. That verifies this resource path on the tested build,
+not pixel-identical native timing, colour, circle dimensions or TargetLock behavior.
+Web comparison reference: [Better Aim Reticles](https://www.nexusmods.com/helldivers2/mods/2388),
+the author's lock-on circle/triangle sections. The comparison image could not be
+visually inspected through the available browser; no exact appearance match is claimed.
 
 Aim-only reads the game's resolved Aim action (group 2/index 8), not a hardcoded
 mouse button or guessed zoom threshold. The input layout is code-pinned. This is
 action activation, not proof of completion of an aiming animation. Remapped input,
 toggle aim and controllers need separate device coverage in the generic integration.
-ESC stack, Runtime settings and a visible cursor suppress drawing. Unknown menu or
-input state hides the HUD conservatively. The menu gate cannot prove every game UI
-without an ESC stack/cursor.
+ESC stack, Runtime settings and a visible cursor suppress drawing. The private
+gate also requires the current local player's spawned lifecycle (3), living owned
+health record and proven avatar flags: alive, not seated, tactical map closed and
+weapon menu closed. These gates apply even with `aim_only = false`, and frame
+cleanup removes retained ring/stock/label GUIs while acquisition is idle. The flag
+layout reuses `player_equipment` proofs; semantic bits are retained from C4 Quick
+Actions 1.13.1. Unknown state hides conservatively. This is a positive gameplay
+eligibility check, not a claim that any specific lifecycle value means descent.
+Actual descent flag coverage still requires a live regression. Other UI without
+these indicators may remain unknown; do not infer universal menu coverage.
 
 ## Custom renderers
 

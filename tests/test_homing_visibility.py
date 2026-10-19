@@ -12,7 +12,12 @@ world={game=0x100000,key='proven',view={
   if broken then return nil end
   local s='';for i=1,5 do s=s..u32(stack[i])end;return s..u32(depth)
  end}}
-package.preload['hd2runtime/runtime/event_world']=function()return {open=function()return world end}end
+package.preload['hd2runtime/runtime/event_world']=function()return {
+ open=function()return world end,game_state=function()return{mission=true}end,
+ players=function()return{{['local']=true,avatar=100,lifecycle=3}}end,
+ entity_state=function()return{life=0,descriptor={owned=true}}end}end
+package.preload['hd2runtime/runtime/player_equipment']=function()return{
+ avatar_flags=function()return{alive=true,seated=false,tactical_map=false,weapon_menu=false}end}end
 aiming=true
 package.preload['hd2runtime/runtime/homing_aim_state']=function()return {active=function()return aiming,'aim_state_unavailable'end}end
 runtime_open=false

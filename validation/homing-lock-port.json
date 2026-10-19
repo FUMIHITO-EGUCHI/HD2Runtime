@@ -69,6 +69,21 @@
     "require_aim": "Opt-in pre-fire gameplay gate; new client enables it. Release/unknown clears new assignments; existing allocated rounds continue.",
     "vanilla_markers": "Resident Warrant stock sprite preferred, bounded geometric fallback otherwise. Availability/appearance unverified in game.",
     "reference": "Guided Rounds 71303dd35954f94f57f8308fb6e2c86d8e22abc4 markers_setup/quad/markers_draw; native TargetLock is not activated.",
-    "live_verified": false
+    "live_verified": false,
+    "reported_live": {
+      "commit": "9aaba06",
+      "stock_asset_renderer_logged": true,
+      "explicit_package_request": "complete",
+      "user_report": "extra mod text/bars; HUD leaks on tactical-map Aim and descent",
+      "descent_lifecycle_observed": false
+    },
+    "hud_followup": {
+      "offline_tests": 132,
+      "decorations": "vanilla defaults false; explicit API flags supported; client uses pure stock mode regardless stored labels",
+      "gate": "existing proven avatar layout; C4 flags1/84/86/114; spawned lifecycle3 and living owned local health; unknown hidden",
+      "live_verified": false,
+      "web_reference": "https://www.nexusmods.com/helldivers2/mods/2388",
+      "web_limit": "author text opened; comparison-image visual inspection unavailable, no exact native appearance claim"
+    }
   }
 }

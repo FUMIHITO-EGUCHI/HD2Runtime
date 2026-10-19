@@ -6750,22 +6750,22 @@
      [
       "show_labels",
       "boolean|nil",
-      "Default true."
+      "Default false for vanilla, true for other shapes; explicit true opts into mod decorations."
      ],
      [
       "show_numbers",
       "boolean|nil",
-      "Default true."
+      "Default false for vanilla, true for other shapes; explicit true opts into mod decorations."
      ],
      [
       "show_progress",
       "boolean|nil",
-      "Default true."
+      "Default false for vanilla, true for other shapes; explicit true opts into mod decorations."
      ],
      [
       "show_los",
       "boolean|nil",
-      "Default true."
+      "Default false for vanilla, true for other shapes; explicit true opts into mod decorations."
      ],
      [
       "aim_only",
