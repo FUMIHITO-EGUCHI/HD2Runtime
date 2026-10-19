@@ -3240,6 +3240,31 @@
     "doc": "",
     "fields": [
      [
+      "acquisition",
+      "\"in_flight\"|\"pre_fire\"|nil",
+      "Default in_flight preserves the original API. pre_fire requires solo/host enemy targeting, cone <=30 and range <=300, without retargeting."
+     ],
+     [
+      "lock_time",
+      "number|nil",
+      "pre_fire only: seconds before a target locks (0..2, default .3)."
+     ],
+     [
+      "max_targets",
+      "integer|nil",
+      "pre_fire only: 1..6 targets (default 1). Newly observed shots rotate over the prelocked set."
+     ],
+     [
+      "require_los",
+      "boolean|nil",
+      "pre_fire only: reject blocked AND unknown rays (default false). LOS is a weapon-root straight ray, not projectile collision prediction."
+     ],
+     [
+      "lateral_acceleration",
+      "number|nil",
+      "Optional acceleration budget in m/s\u00b2 (1..100000): angular speed = min(rad(turn_rate), budget/current speed). Unset preserves fixed-rate steering."
+     ],
+     [
       "target",
       "\"enemy\"|\"friendly\"|nil",
       "What the shots home on: a living catalogued enemy (default) or another player's living Helldiver (never the shooter)."
@@ -3247,17 +3272,17 @@
      [
       "turn_rate",
       "number|nil",
-      "Degrees per second the shot may turn (1..1440, default 90). Fast bullets need a high rate."
+      "Angular cap in degrees/second (1..1440, default 90); fixed rate when lateral_acceleration is unset."
      ],
      [
       "cone",
       "number|nil",
-      "Half angle in degrees around the shot's direction a target must be inside to be acquired (1..180, default 30)."
+      "Half angle in degrees (in_flight: shot direction, 1..180; pre_fire: camera/weapon root, 1..30)."
      ],
      [
       "range",
       "number|nil",
-      "Metres from the shot a target may be (1..500, default 100)."
+      "Target selection distance in metres (in_flight: from shot, 1..500; pre_fire: from camera/weapon root, 1..300)."
      ],
      [
       "arm_distance",
@@ -3272,7 +3297,7 @@
      [
       "retarget",
       "boolean|nil",
-      "Acquire another target when the first dies (default true)."
+      "Acquire another target when it dies (in_flight default true; pre_fire requires false)."
      ],
      [
       "multiplayer",
@@ -3307,7 +3332,7 @@
      [
       "status",
       "string",
-      "'active', 'stopped' or 'refused'."
+      "'active', 'stopped', 'replaced' or 'refused'."
      ],
      [
       "code",
@@ -3353,6 +3378,23 @@
       "params": [],
       "returns": "table",
       "doc": "A copy for logs."
+     },
+     {
+      "name": "lock_state",
+      "params": [],
+      "returns": "HD2HomingLockState|nil",
+      "doc": "Detached pre-fire observation; top-left pixels. ui_visible includes menu/aim gate. No hit/damage confirmation."
+     },
+     {
+      "name": "reticle",
+      "params": [
+       [
+        "style",
+        "HD2HomingReticleStyle|nil"
+       ]
+      ],
+      "returns": "HD2HomingReticle",
+      "doc": "Optional standard HUD for active pre_fire acquisition. Invalid styles raise. Generic Runtime integration not live-tested."
      }
     ]
    },
@@ -6530,6 +6572,261 @@
       "boolean",
       "A member holds this Runtime's value."
      ]
+    ]
+   },
+   "HD2HomingLockTarget": {
+    "doc": "Pre-fire homing; docs/homing-lock-on.md.",
+    "fields": [
+     [
+      "id",
+      "string",
+      "Observation-scoped identity; not a lifetime-stable target identifier."
+     ],
+     [
+      "entity",
+      "integer",
+      "Game entity ID, not a synthetic shot ID."
+     ],
+     [
+      "name",
+      "string",
+      "Catalogued display name."
+     ],
+     [
+      "position",
+      "{x:number,y:number,z:number}",
+      "Target root plus aim_height."
+     ],
+     [
+      "screen",
+      "{x:number,y:number}|nil",
+      "Top-left pixels; absent if projection is unavailable."
+     ],
+     [
+      "progress",
+      "number",
+      "Lock progress from 0 to 1."
+     ],
+     [
+      "los",
+      "\"clear\"|\"blocked\"|\"unknown\"",
+      ""
+     ],
+     [
+      "los_reason",
+      "string|nil",
+      ""
+     ],
+     [
+      "los_observed_at",
+      "number|nil",
+      "Homing engine elapsed seconds, not wall/game time."
+     ],
+     [
+      "acquired_at",
+      "number|nil",
+      "Homing engine elapsed seconds."
+     ]
+    ]
+   },
+   "HD2HomingLockState": {
+    "doc": "Pre-fire homing; docs/homing-lock-on.md.",
+    "fields": [
+     [
+      "state",
+      "string",
+      ""
+     ],
+     [
+      "reason",
+      "string|nil",
+      ""
+     ],
+     [
+      "visible",
+      "boolean",
+      "Usable acquisition camera frame; does not apply menu/aim suppression."
+     ],
+     [
+      "ui_visible",
+      "boolean",
+      "Standard menu and native Aim-action display gate."
+     ],
+     [
+      "aim_basis",
+      "string",
+      "Camera, or weapon root when camera discovery fails."
+     ],
+     [
+      "observed_at",
+      "number|nil",
+      "Homing engine elapsed seconds; not hd2.events time or wall time."
+     ],
+     [
+      "locked",
+      "HD2HomingLockTarget[]",
+      ""
+     ],
+     [
+      "acquiring",
+      "HD2HomingLockTarget[]",
+      ""
+     ],
+     [
+      "width",
+      "number|nil",
+      ""
+     ],
+     [
+      "height",
+      "number|nil",
+      ""
+     ],
+     [
+      "radius",
+      "number|nil",
+      "Capture cone projected to pixels, before cosmetic override."
+     ]
+    ]
+   },
+   "HD2HomingReticleStyle": {
+    "doc": "Pre-fire homing; docs/homing-lock-on.md.",
+    "fields": [
+     [
+      "ring",
+      "boolean|nil",
+      "Draw capture ring (default true)."
+     ],
+     [
+      "ring_color",
+      "table|string|nil",
+      "RGBA (0..255) or #RRGGBB[AA]."
+     ],
+     [
+      "ring_width",
+      "number|nil",
+      ".5..8 pixels, default 1.2."
+     ],
+     [
+      "ring_segments",
+      "integer|nil",
+      "24..128, default 96."
+     ],
+     [
+      "ring_radius",
+      "number|nil",
+      "Optional cosmetic pixel override (8..2000); never changes acquisition."
+     ],
+     [
+      "marker_shape",
+      "\"corners\"|\"box\"|\"cross\"|nil",
+      "Default corners."
+     ],
+     [
+      "marker_size",
+      "number|nil",
+      "Half size at 1080p (4..64, default 12)."
+     ],
+     [
+      "line_width",
+      "number|nil",
+      ".5..8 pixels, default 1.5."
+     ],
+     [
+      "scale",
+      "number|nil",
+      ".5..3, default 1; marker/label scale, not capture angle."
+     ],
+     [
+      "acquiring_color",
+      "table|string|nil",
+      "Default amber."
+     ],
+     [
+      "locked_color",
+      "table|string|nil",
+      "Default green."
+     ],
+     [
+      "clear_color",
+      "table|string|nil",
+      "Default blue."
+     ],
+     [
+      "blocked_color",
+      "table|string|nil",
+      "Default red."
+     ],
+     [
+      "unknown_color",
+      "table|string|nil",
+      "Default grey."
+     ],
+     [
+      "show_labels",
+      "boolean|nil",
+      "Default true."
+     ],
+     [
+      "show_numbers",
+      "boolean|nil",
+      "Default true."
+     ],
+     [
+      "show_progress",
+      "boolean|nil",
+      "Default true."
+     ],
+     [
+      "show_los",
+      "boolean|nil",
+      "Default true."
+     ],
+     [
+      "aim_only",
+      "boolean|nil",
+      "Native Aim action active only (default true); menu gate always applies."
+     ]
+    ]
+   },
+   "HD2HomingReticle": {
+    "doc": "Visual-only homing HUD; appearance updates never reset acquisition.",
+    "methods": [
+     {
+      "name": "style",
+      "params": [
+       [
+        "patch",
+        "HD2HomingReticleStyle"
+       ]
+      ],
+      "returns": "HD2HomingReticle",
+      "doc": "Partial style update, validated before changing the HUD."
+     },
+     {
+      "name": "show",
+      "params": [],
+      "returns": "HD2HomingReticle",
+      "doc": "Show on the next fresh eligible observation."
+     },
+     {
+      "name": "hide",
+      "params": [],
+      "returns": "HD2HomingReticle",
+      "doc": "Hide the HUD; keep homing active."
+     },
+     {
+      "name": "status",
+      "params": [],
+      "returns": "table",
+      "doc": "HUD state, visibility and drawing counts; not hit confirmation."
+     },
+     {
+      "name": "stop",
+      "params": [],
+      "returns": "HD2HomingReticle",
+      "doc": "Remove this HUD and its frame callback; keep homing active."
+     }
     ]
    }
   },

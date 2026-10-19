@@ -1,0 +1,38 @@
+{
+  "origin": "Standalone AR-23 Homing Lab 0.4.1",
+  "game_build": 25480438,
+  "exe_sha256": "F5FEE03DCFDB2E553A4752C283590950AC13316B376D8196AA556FF0400D5F06",
+  "game_dll_sha256": "2E2C3B7C2500646DADD5F2B4C6E0504DBB7E7896139F64CDDC0D1813C718F51E",
+  "origin_user_report": {
+    "date": "2026-10-19",
+    "statement": "Implementation confirmed; preceding reports confirm reticle/lock display, LOS and multi-lock.",
+    "coverage": "User observation, no supplied video or controlled device matrix."
+  },
+  "runtime_port": {
+    "live_verified": false,
+    "offline_fixture": "tests/fixtures/homing_pool.lua",
+    "scope": "Public API through shared Runtime engine into guarded synthetic memory; not game outcomes."
+  },
+  "native_los": {
+    "entry_rva": "0x77DEC0",
+    "output_offset": 0,
+    "hit_stride": 44,
+    "distance_offset": 24,
+    "unit_offset": 28,
+    "descriptor": 0,
+    "physics_world": 2,
+    "max_hits": 8,
+    "saturation": "unknown",
+    "protection_changes": 0,
+    "provenance": "Guided Rounds 71303dd35954f94f57f8308fb6e2c86d8e22abc4 as research lead; current unpacked EXE independently inspected for wrapper, descriptor and called implementation. Full code pins are retained in runtime/homing_los_pins.lua. No original binary distributed."
+  },
+  "aim_input": {
+    "group": 2,
+    "index": 8,
+    "reference": "C4 Quick Actions 1.13.1 AimInputState/catalog, https://www.nexusmods.com/helldivers2/mods/16340",
+    "layout": "HD2Runtime domains/input_bindings.lua code pins",
+    "limits": "Resolved action state, not animation completion; toggle/controller/remap coverage not established for port."
+  },
+  "camera_and_gui_reference": "Guided Rounds, https://github.com/cancan23333/Helldiver2-Guided-Rounds-v1.8.5 commit 71303dd35954f94f57f8308fb6e2c86d8e22abc4; engine calls guarded and temporary ring restored.",
+  "unavailable_validation": "Full research/snapshot tests and SDK/release generation require unavailable research submodule files. Class stubs were regenerated using generate_events.stub_lines; unchanged action catalogue was preserved."
+}

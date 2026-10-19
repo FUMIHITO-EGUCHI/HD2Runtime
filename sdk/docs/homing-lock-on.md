@@ -1,0 +1,159 @@
+# Pre-fire lock-on and reticles
+
+An opt-in extension of `hd2.projectiles.homing`. Calls without `acquisition = 'pre_fire'`
+retain in-flight target acquisition, the existing defaults and the velocity-only write path.
+The shared engine is used; a mod does not bundle another homing implementation.
+
+**Validation:** the originating AR-23 mod was user-confirmed on build 25480438. This
+generic Runtime integration has offline tests, but has **not** been tested in game.
+See `validation/homing-lock-port.json` for the exact distinction and native provenance.
+
+```lua
+local hd2 = require('mods/skyeshade/hd2runtime')
+local gun = hd2.projectiles.homing('AR-23 Liberator', {
+    acquisition = 'pre_fire',
+    lock_time = 0.3, max_targets = 3,
+    cone = 12, range = 100, arm_distance = 0,
+    lateral_acceleration = 600, turn_rate = 1440,
+    require_los = true,
+})
+if gun.status == 'active' then
+    local hud = gun:reticle({
+        marker_shape = 'corners', marker_size = 12,
+        acquiring_color = '#FFB420', locked_color = '#40FF60',
+        ring_width = 1.5, aim_only = true,
+    })
+    -- Appearance changes preserve acquisition and rounds already in flight.
+    hud:style({marker_shape = 'cross', locked_color = '#00CCFF'})
+    -- hud:hide(); hud:show(); hud:stop() -- visual only
+end
+-- gun:stop() also removes its HUD and frame callback.
+```
+
+This example requires a development build containing this extension, not the stock
+0.40.0 release. Stock 0.40.0 safely refuses the new options. Do not replace a user's
+installed Runtime solely because the version string is 0.40.0.
+
+## Acquisition contract
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `acquisition` | `'in_flight'` | Existing behavior, or `'pre_fire'`. |
+| `lock_time` | 0.3 | Pre-fire only, 0..2 seconds of uninterrupted acquisition. |
+| `max_targets` | 1 | Pre-fire only, integer 1..6. New rounds rotate over the locked set. |
+| `require_los` | false | Pre-fire only. When true, both blocked and unknown rays are rejected. |
+| `lateral_acceleration` | unset | Optional 1..100000 m/s² budget, available with either acquisition mode. |
+
+Pre-fire currently requires **solo/host**, enemy targets, `cone <= 30`, `range <= 300`
+and no retargeting. `retarget` defaults to false in this mode; explicitly requesting
+true is refused. Friendly/multiplayer support remains the original in-flight API's
+experimental behavior; it is not silently enabled for pre-fire. The weapon must be
+held, not merely present in the inventory. The public weapon catalogue still decides
+which projectile types and firing entity types belong to it; unit-driven projectiles
+are still refused.
+
+Capture uses a verified current camera when available. If discovery fails, new
+acquisition falls back to the held weapon's root direction and the HUD hides. Changing
+this basis restarts acquisition but does not terminate valid allocated flying rounds.
+Weapon/owner/session changes, stale observations, unknown spawn windows or reused
+slots invalidate the relevant allocation. A target's health descriptor and unit are
+rechecked, not only its entity number.
+
+A round is assigned once, at first observation. A target must have locked before the
+**previous** observation of that spawn window. A round fired before locking never
+acquires later. The set is ordered by identity so angular jitter does not reshuffle
+the rotation; losing and reacquiring a target restarts its timer. Lock completion
+does not imply that a particular future shot will hit.
+
+Budgets remain the shared engine's: 16 tracked rounds, 64 new slots per update,
+10 seconds of follow-up, bounded incremental target scans. There are at most eight
+LOS queries per controller observation, with 0.1-second reuse for unchanged rays.
+These are observation/processing limits, not a fire-rate limit or hit guarantee.
+
+## Speed-aware steering
+
+With no acceleration setting the original fixed angular rate is unchanged. With it:
+
+```
+angular_rate_rad_s = min(rad(turn_rate), lateral_acceleration / current_speed_m_s)
+maximum_turn = angular_rate_rad_s * update_seconds
+```
+
+Speed magnitude is preserved. `turn_rate` remains the angular safety cap; the existing
+default is 90 degrees/second. To compare with the originating mod's 600 setting, use
+`turn_rate = 1440`: at 900 m/s the calculated rate is about 38.2 degrees/second.
+This is a calculation, not a guaranteed AR-23 speed. Lower acceleration gives gentler
+curves at the same speed and can make nearby/off-axis targets harder to hit. There
+is no predictive lead, obstacle avoidance or forced hit.
+
+## Standard HUD
+
+`handle:reticle(style)` is optional and needs an active pre-fire handle. It returns
+a visual handle with `:style(partial)`, `:show()`, `:hide()`, `:status()` and `:stop()`.
+Invalid style raises, as `hd2.ui.overlay` does; gameplay refusals still return a
+refused homing handle. A bad style update leaves the previous HUD intact. Stopping
+or replacing gameplay removes its HUD; two different owners' HUDs do not destroy
+each other. Hiding/stopping the HUD never stops homing.
+
+| Style | Default / allowed values |
+| --- | --- |
+| `ring` | true |
+| `ring_color` | amber |
+| `ring_width` | 1.2, .5..8 pixels |
+| `ring_segments` | 96, integer 24..128 |
+| `ring_radius` | unset: current capture cone/FOV; optional 8..2000 pixel cosmetic override |
+| `marker_shape` | `'corners'`, `'box'` or `'cross'` |
+| `marker_size` | 12, half size at 1080p, 4..64 |
+| `line_width` | 1.5, .5..8 pixels |
+| `scale` | 1, .5..3; markers and labels, not the capture angle |
+| `acquiring_color`, `locked_color` | amber / green |
+| `clear_color`, `blocked_color`, `unknown_color` | blue / red / grey |
+| `show_labels`, `show_numbers`, `show_progress`, `show_los` | true |
+| `aim_only` | true; false still suppresses menus |
+
+Colours use `{r,g,b[,a]}` in 0..255 or `#RRGGBB[AA]`. Inputs are copied. Omit
+`ring_radius` to keep the drawn ring faithful to acquisition; a cosmetic override
+never enlarges the actual capture cone. Resolution/FOV changes are handled by the
+renderer. Fonts are optional: geometric progress/number markers remain available.
+
+Aim-only reads the game's resolved Aim action (group 2/index 8), not a hardcoded
+mouse button or guessed zoom threshold. The input layout is code-pinned. This is
+action activation, not proof of completion of an aiming animation. Remapped input,
+toggle aim and controllers need separate device coverage in the generic integration.
+ESC stack, Runtime settings and a visible cursor suppress drawing. Unknown menu or
+input state hides the HUD conservatively. The menu gate cannot prove every game UI
+without an ESC stack/cursor.
+
+## Custom renderers
+
+`handle:lock_state()` returns nil for in-flight acquisition, otherwise a detached
+observation: `state`, `reason`, `aim_basis`, `observed_at`, `locked`, `acquiring`,
+`visible`, `ui_visible`, optional `width`, `height` and capture `radius`.
+
+Targets carry an observation-scoped `id`, game `entity`, catalogued `name`, root plus
+`aim_height` `position`, optional top-left pixel `screen`, `progress`, `acquired_at`,
+and LOS state/reason/time. No native pointer, camera handle or mutable engine record
+is published. `visible` means a usable acquisition camera frame; custom HUDs should
+also respect `ui_visible` for the standard menu/aim gate. Observation times use the
+homing engine's elapsed clock, not wall time, native game time or `hd2.events` time.
+
+Entity IDs may be reused and are not persistent lifetime identifiers. These fields
+are acquisition/steering observations: they do not identify a projectile collision,
+hit body part, armor, health loss or final damage. LOS is the weapon-root straight
+ray to the aim point, not a muzzle/barrel clearance proof or curved-flight prediction.
+A failed, saturated, ambiguous or unavailable native query remains `'unknown'`.
+
+## Repeating the live check
+
+1. Use the development Runtime with `examples/projects/HomingLockOn`; disable another
+   writer for the same weapon. Start solo/host with normal AR-23 rounds.
+2. Confirm the HUD hides/reappears on aim release/press and stays hidden in menus.
+3. Fire before lock: no retroactive steering. Lock three targets and burst: inspect
+   `lock_state()`/`stats()` separately from hit outcomes.
+4. Compare the same geometry at acceleration 300/600/1200, then without the setting.
+5. Exercise an occluded target with `require_los` false/true; unknown must not count
+   as clear. Replace/stop the handle and cross a mission transition.
+
+Offline tests do not replace this test. The repository's full research/snapshot suite
+also requires the separately hosted research submodule and retained snapshots; they
+were unavailable for this contribution's full release validation.

@@ -71,6 +71,7 @@ local tracked={}          -- pool slot -> shot
 local tracked_count=0
 local pool={}
 local clock=0
+local shot_serial=0
 local last_shot=-math.huge
 local next_id=0
 local watch
@@ -345,8 +346,9 @@ local function shot_records(world,system,slot)
     local hit=world.view.read(system+H.base+slot*H.stride,H.stride)
     local kind=world.view.read(system+PO.types.base+slot*PO.types.stride,PO.types.stride)
     local flags=world.view.read(system+FL.base+slot*FL.stride,FL.stride)
-    if not(flight and hit and kind and flags)then return nil end
-    return {flight=flight,hit=hit,kind=kind,flags=flags,flag_word=flags:byte(1)+flags:byte(2)*256}
+    local source=world.view.read(system+PO.source.base+slot*PO.source.stride,PO.source.stride)
+    if not(flight and hit and kind and flags and source)then return nil end
+    return {flight=flight,hit=hit,kind=kind,flags=flags,source=source,flag_word=flags:byte(1)+flags:byte(2)*256}
 end
 
 local function drop(slot,shot,why)
@@ -376,7 +378,7 @@ local function consider(world,system,slot,kind,local_lo,local_hi,player_count)
         for _,c in ipairs(list)do if c.status=='active'then c.others=c.others+1;break end end
         return
     end
-    local source=world.view.u32(system+PO.source.base+slot*PO.source.stride+PO.source.entity)
+    local source=u32(r.source,PO.source.entity)
     local source_type=source and world_module.entity_type(world,source)
     local config
     for _,c in ipairs(list)do
@@ -396,13 +398,26 @@ local function consider(world,system,slot,kind,local_lo,local_hi,player_count)
     if u32(r.flight,F.unit)~=0 then
         return count(config,'UNIT_DRIVEN','a unit drives this projectile (its velocity is recomputed from the unit)',slot)
     end
+    if tracked[slot]then drop(slot,tracked[slot],'its slot was reused')end
     if tracked_count>=M.MAX_TRACKED then
         return count(config,'BUSY','already steering '..M.MAX_TRACKED..' shots',slot)
     end
-    if tracked[slot]then drop(slot,tracked[slot],'its slot was reused')end
     tracked[slot]={config=config,type=kind,owner=u32(r.hit,H.owner),creditor_lo=clo,creditor_hi=chi,source=source,
         at=clock,distance=f32(r.flight,F.distance)or 0,writes=0,next_acquire=clock}
     tracked_count=tracked_count+1
+    if config.lock_control then
+        shot_serial=shot_serial+1
+        local shot=tracked[slot]
+        shot.observed_after=pool.previous_at
+        if config.lock_ready then
+            shot.target=config.lock_control.spawn(world,slot,shot,clock,tostring(shot_serial)..':'..slot)
+        end
+        if not shot.target then
+            count(config,'NOT_PRELOCKED','no eligible target before this spawn observation window',slot)
+            return drop(slot,shot,'not prelocked')
+        end
+        config.locks=config.locks+1
+    end
     metrics.count('projectile_homing.shots')
 end
 
@@ -412,7 +427,7 @@ local function steer(world,system,slot,shot,dt,positions)
     if config.status~='active'then return drop(slot,shot,'its configuration stopped')end
     local r=shot_records(world,system,slot)
     if not r then return drop(slot,shot,'its records are unreadable')end
-    if u32(r.kind,0)~=shot.type or u32(r.hit,H.owner)~=shot.owner or u32(r.hit,H.creditor)~=shot.creditor_lo
+    if u32(r.source,PO.source.entity)~=shot.source or u32(r.kind,0)~=shot.type or u32(r.hit,H.owner)~=shot.owner or u32(r.hit,H.creditor)~=shot.creditor_lo
             or u32(r.hit,H.creditor+4)~=shot.creditor_hi then
         return drop(slot,shot,'its slot holds another projectile now')
     end
@@ -435,7 +450,9 @@ local function steer(world,system,slot,shot,dt,positions)
     local dx,dy,dz=vx/speed,vy/speed,vz/speed
     local ax,ay,az
     if shot.target then
-        ax,ay,az=aim_point(world,shot,config,positions)
+        if not config.lock_control or config.lock_control.target_valid(world,shot.target)==true then
+            ax,ay,az=aim_point(world,shot,config,positions)
+        end
         if not ax then
             detail(('(%s): shot in pool slot %d lost its target %s'):format(config.label,slot,shot.target.name))
             shot.target=nil
@@ -444,6 +461,7 @@ local function steer(world,system,slot,shot,dt,positions)
     end
     if shot.done then return end
     if not shot.target then
+        if config.lock_control then return drop(slot,shot,'no pre-fire allocation')end
         if clock<shot.next_acquire then return end
         shot.next_acquire=clock+M.ACQUIRE_EVERY
         local found,range=acquire(world,config,px,py,pz,dx,dy,dz)
@@ -478,15 +496,16 @@ local function steer(world,system,slot,shot,dt,positions)
     local hit_address=system+H.base+slot*H.stride
     local type_address=system+PO.types.base+slot*PO.types.stride
     local flags_address=system+FL.base+slot*FL.stride
+    local source_address=system+PO.source.base+slot*PO.source.stride
     local owner=owner_of(world,flight_address,F.read)
     if not(owner and owner_of(world,hit_address,H.stride)and owner_of(world,type_address,PO.types.stride)
-            and owner_of(world,flags_address,FL.stride))then
+            and owner_of(world,flags_address,FL.stride)and owner_of(world,source_address,PO.source.stride))then
         count(config,'NOT_PRIVATE','the projectile pool is not in private read-write memory',slot)
         return drop(slot,shot,'not private memory')
     end
     local function context(address,bytes)return {owner=owner,offset=address-owner.base,bytes=bytes}end
     local plan={snapshots={context(flight_address,r.flight),context(hit_address,r.hit),context(type_address,r.kind),
-            context(flags_address,r.flags)},
+            context(flags_address,r.flags),context(source_address,r.source)},
         changes=velocity_changes(owner,flight_address+F.velocity,before,desired,slot)}
     local report=transaction.apply(world.runtime,plan)
     metrics.count('projectile_homing.transactions')
@@ -497,6 +516,10 @@ local function steer(world,system,slot,shot,dt,positions)
     shot.writes=shot.writes+1
     config.writes=config.writes+1
     if config.writes==1 then
+        if config.lateral_acceleration then
+            log(('(%s): effective turn %.3f deg/s at %.3f m/s, acceleration budget %g m/s^2')
+                :format(config.label,math.deg(turn_rate),speed,config.lateral_acceleration))
+        end
         log(('(%s): first steering write: pool slot %d velocity turned %.2f deg toward %s (%d write%s, %d bytes; '
             ..'non-target bytes unchanged %s; protection restored %s; speed kept %.1f m/s)'):format(config.label,slot,
             math.deg(math.min(between,turn_rate*(dt or 0))),shot.target.name,report.writes,
@@ -522,12 +545,35 @@ local function reset_mission(why)
     cache=fresh_cache()
     last_shot=-math.huge
     for _,config in ipairs(configs)do
+        if config.lock_control then config.lock_control.reset(why)end
+        config.lock_ready,config.lock_identity=nil,nil
         summary(config,why)
         config.shots,config.steered,config.writes,config.locks,config.others,config.no_target=0,0,0,0,0,0
         config.other_sources=0
         config.refused={}
     end
     multiplayer_logged=false
+end
+
+-- One observation per controller, shared by every projectile type of its weapon.
+-- Losing the camera restarts NEW acquisition, not valid rounds already allocated.
+local function observe_locks(world)
+    local seen={}
+    for _,config in ipairs(configs)do
+        local control=config.lock_control
+        if control then
+            if not seen[control]then
+                local ok,ready,identity=pcall(control.before,world,clock,cache.enemies.list)
+                if not ok then control.unavailable('lock_observation_failed');ready=false end
+                seen[control]={ready==true,identity}
+            end
+            local result=seen[control]
+            if result[1]~=true or config.lock_identity~=result[2]then
+                for slot,shot in pairs(tracked)do if shot.config==config then drop(slot,shot,'lock ownership changed')end end
+            end
+            config.lock_ready,config.lock_identity=result[1],result[2]
+        end
+    end
 end
 
 -- Whether the local player holds a weapon of a configured entity type (checked every HELD_EVERY seconds).
@@ -553,7 +599,7 @@ local function step(dt)
     clock=clock+(dt or 0)
     if not in_mission and clock-off_mission_at<M.OFF_MISSION_EVERY then return end
     local world,why=world_module.open()
-    if not world then return end
+    if not world then reset_mission('world unavailable');return end
     local game=world_module.game_state(world)
     if not(game and game.mission)then
         if in_mission then reset_mission('the mission ended')end
@@ -564,6 +610,7 @@ local function step(dt)
     in_mission=true
     local ok,reason=M.prove(world)
     if not ok then
+        reset_mission('projectile proof unavailable')
         if unavailable_logged~=reason then
             unavailable_logged=reason
             log('UNAVAILABLE: every homing shot flies straight: '..tostring(reason))
@@ -571,18 +618,39 @@ local function step(dt)
         return
     end
     local counter,system=world_module.projectile_counter(world)
-    if not counter then pool={};return end
+    if not counter then reset_mission('projectile counter unavailable');return end
     if pool.system~=system or not pool.counter then
-        pool.system,pool.counter=system,counter
+        pool.system,pool.counter,pool.observed_at=system,counter,clock
         for slot,shot in pairs(tracked)do drop(slot,shot,'the projectile system changed')end
         return
     end
+    -- Warm targets and acquire before examining a spawn window. The controller
+    -- refuses a lock completed after the PREVIOUS observation of that window.
+    if wants_enemies and(tracked_count>0 or clock-last_shot<=M.ACTIVE_WINDOW or holds_configured(world))then
+        scan_enemies(world)
+        refresh_positions(world)
+    end
+    observe_locks(world)
+    pool.previous_at,pool.observed_at=pool.observed_at,clock
     local n=(counter-pool.counter)%COUNTER_RANGE
     local from=pool.counter
     pool.counter=counter
+    if n>M.MAX_READS then
+        for _,config in ipairs(configs)do if config.lock_control then
+            config.lock_control.reset('spawn observation overflow');config.lock_ready=false
+        end end
+        for slot,shot in pairs(tracked)do if shot.config.lock_control then drop(slot,shot,'spawn observation overflow')end end
+    end
     if n>0 and n<=PO.slots then
         if n>M.MAX_READS then from=(from+n-M.MAX_READS)%COUNTER_RANGE;n=M.MAX_READS end
         local slots=world_module.projectile_types(world,system,from,n)
+        if not slots or #slots~=n then
+            for _,config in ipairs(configs)do if config.lock_control then
+                config.lock_control.reset('new projectile slots unreadable');config.lock_ready=false
+            end end
+            for slot,shot in pairs(tracked)do if shot.config.lock_control then drop(slot,shot,'new slots unreadable')end end
+            slots={}
+        end
         local lo,hi
         local player_count
         for _,item in ipairs(slots or{})do
@@ -601,11 +669,6 @@ local function step(dt)
             end
         end
     end
-    -- The enemy list stays warm while it can be needed: a configured weapon in hand, or a configured shot lately.
-    if wants_enemies and(tracked_count>0 or clock-last_shot<=M.ACTIVE_WINDOW or holds_configured(world))then
-        scan_enemies(world)
-        refresh_positions(world)
-    end
     if tracked_count==0 then return end
     local positions={}
     for slot,shot in pairs(tracked)do steer(world,system,slot,shot,dt,positions)end
@@ -614,7 +677,7 @@ end
 local function tick(dt)
     local started=metrics.start()
     local ok,why=pcall(step,dt)
-    if not ok then log('update failed: '..tostring(why))end
+    if not ok then reset_mission('update failed');log('update failed: '..tostring(why))end
     metrics.elapsed('projectile_homing.tick',started)
 end
 M.step=step
@@ -672,6 +735,7 @@ function M.configure(spec)
     if not next(sources)then return nil,'UNKNOWN_WEAPON','no entity type fires '..tostring(spec.weapon)end
     local config={id=next_id,status='active',owner=spec.owner,output=spec.output,weapon=spec.weapon,type=spec.type,
         sources=sources,target=spec.target,turn_rate=spec.turn_rate,cone=spec.cone,lateral_acceleration=spec.lateral_acceleration,
+        lock_control=spec.lock_control,
         cone_cos=math.cos(spec.cone),range=spec.range,arm_distance=spec.arm_distance,aim_height=spec.aim_height,
         retarget=spec.retarget,multiplayer=spec.multiplayer,label=spec.label or(spec.owner..' '..spec.weapon),
         shots=0,steered=0,writes=0,locks=0,others=0,no_target=0,other_sources=0,refused={}}
@@ -685,6 +749,7 @@ function M.stop(config)
     if not config or config.status~='active'then return false end
     summary(config,'stopped')
     config.status='stopped'
+    for slot,shot in pairs(tracked)do if shot.config==config then drop(slot,shot,'stopped')end end
     for index,item in ipairs(configs)do if item==config then table.remove(configs,index)break end end
     rebuild_types()
     return true
