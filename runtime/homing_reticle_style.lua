@@ -32,7 +32,7 @@ function M.validate(opts)
     for key,value in pairs(style)do
         if key:match('_color$')then style[key]=assert(colour(value),'invalid colour: '..key)
         elseif BOUNDS[key]then assert(finite(value,BOUNDS[key][1],BOUNDS[key][2]),'invalid '..key)
-        elseif key=='marker_shape'then assert(value=='corners'or value=='box'or value=='cross','invalid marker_shape')
+        elseif key=='marker_shape'then assert(value=='corners'or value=='box'or value=='cross'or value=='vanilla','invalid marker_shape')
         else assert(type(value)=='boolean','invalid '..key)end
     end
     assert(style.ring_segments%1==0,'ring_segments must be an integer')

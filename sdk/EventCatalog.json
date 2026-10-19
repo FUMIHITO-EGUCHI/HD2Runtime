@@ -3260,9 +3260,14 @@
       "pre_fire only: reject blocked AND unknown rays (default false). LOS is a weapon-root straight ray, not projectile collision prediction."
      ],
      [
+      "require_aim",
+      "boolean|nil",
+      "pre_fire only: require the proven native Aim action for new acquisition/assignment (default false). Release clears locks; already allocated rounds continue. Independent of HUD visibility."
+     ],
+     [
       "lateral_acceleration",
       "number|nil",
-      "Optional acceleration budget in m/s\u00b2 (1..100000): angular speed = min(rad(turn_rate), budget/current speed). Unset preserves fixed-rate steering."
+      "Optional acceleration budget in m/s² (1..100000): angular speed = min(rad(turn_rate), budget/current speed). Unset preserves fixed-rate steering."
      ],
      [
       "target",
@@ -3394,7 +3399,7 @@
        ]
       ],
       "returns": "HD2HomingReticle",
-      "doc": "Optional standard HUD for active pre_fire acquisition. Invalid styles raise. Generic Runtime integration not live-tested."
+      "doc": "Optional standard HUD for active pre_fire acquisition. Invalid styles raise. Vanilla asset drawing requires a separate live check."
      }
     ]
    },
@@ -6658,6 +6663,16 @@
       "Camera, or weapon root when camera discovery fails."
      ],
      [
+      "aim_active",
+      "boolean|nil",
+      "Native Aim activation when require_aim=true; nil when not required, unobserved or unavailable."
+     ],
+     [
+      "aim_reason",
+      "string|nil",
+      "Aim observation reason. not_required means this configuration does not gate acquisition by Aim."
+     ],
+     [
       "observed_at",
       "number|nil",
       "Homing engine elapsed seconds; not hd2.events time or wall time."
@@ -6719,13 +6734,13 @@
      ],
      [
       "marker_shape",
-      "\"corners\"|\"box\"|\"cross\"|nil",
-      "Default corners."
+      "\"corners\"|\"box\"|\"cross\"|\"vanilla\"|nil",
+      "Default corners. vanilla uses resident Warrant stock marker sprites, otherwise geometric replicas; not native target-lock state."
      ],
      [
       "marker_size",
       "number|nil",
-      "Half size at 1080p (4..64, default 12)."
+      "Base size at 1080p (4..64, default 12): normal shape half size; vanilla scales its stock 48px sprites relative to 12."
      ],
      [
       "line_width",
@@ -6785,7 +6800,7 @@
      [
       "aim_only",
       "boolean|nil",
-      "Native Aim action active only (default true); menu gate always applies."
+      "HUD-only native Aim display gate (default true). Gameplay acquisition is controlled separately by require_aim."
      ]
     ]
    },

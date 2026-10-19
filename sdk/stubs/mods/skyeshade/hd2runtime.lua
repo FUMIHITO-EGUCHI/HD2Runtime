@@ -3150,6 +3150,7 @@ function HD2Projectiles.modify_shots_status() end
 ---@field lock_time number|nil pre_fire only: seconds before a target locks (0..2, default .3).
 ---@field max_targets integer|nil pre_fire only: 1..6 targets (default 1). Newly observed shots rotate over the prelocked set.
 ---@field require_los boolean|nil pre_fire only: reject blocked AND unknown rays (default false). LOS is a weapon-root straight ray, not projectile collision prediction.
+---@field require_aim boolean|nil pre_fire only: require the proven native Aim action for new acquisition/assignment (default false). Release clears locks; already allocated rounds continue. Independent of HUD visibility.
 ---@field lateral_acceleration number|nil Optional acceleration budget in m/s² (1..100000): angular speed = min(rad(turn_rate), budget/current speed). Unset preserves fixed-rate steering.
 ---@field target "enemy"|"friendly"|nil What the shots home on: a living catalogued enemy (default) or another player's living Helldiver (never the shooter).
 ---@field turn_rate number|nil Angular cap in degrees/second (1..1440, default 90); fixed rate when lateral_acceleration is unset.
@@ -3186,7 +3187,7 @@ function HD2HomingHandle:describe() end
 ---Detached pre-fire observation; top-left pixels. ui_visible includes menu/aim gate. No hit/damage confirmation.
 ---@return HD2HomingLockState|nil
 function HD2HomingHandle:lock_state() end
----Optional standard HUD for active pre_fire acquisition. Invalid styles raise. Generic Runtime integration not live-tested.
+---Optional standard HUD for active pre_fire acquisition. Invalid styles raise. Vanilla asset drawing requires a separate live check.
 ---@param style? HD2HomingReticleStyle
 ---@return HD2HomingReticle
 function HD2HomingHandle:reticle(style) end
@@ -4224,6 +4225,8 @@ local HD2HomingLockTarget = {}
 ---@field visible boolean Usable acquisition camera frame; does not apply menu/aim suppression.
 ---@field ui_visible boolean Standard menu and native Aim-action display gate.
 ---@field aim_basis string Camera, or weapon root when camera discovery fails.
+---@field aim_active boolean|nil Native Aim activation when require_aim=true; nil when not required, unobserved or unavailable.
+---@field aim_reason string|nil Aim observation reason. not_required means this configuration does not gate acquisition by Aim.
 ---@field observed_at number|nil Homing engine elapsed seconds; not hd2.events time or wall time.
 ---@field locked HD2HomingLockTarget[]
 ---@field acquiring HD2HomingLockTarget[]
@@ -4239,8 +4242,8 @@ local HD2HomingLockState = {}
 ---@field ring_width number|nil .5..8 pixels, default 1.2.
 ---@field ring_segments integer|nil 24..128, default 96.
 ---@field ring_radius number|nil Optional cosmetic pixel override (8..2000); never changes acquisition.
----@field marker_shape "corners"|"box"|"cross"|nil Default corners.
----@field marker_size number|nil Half size at 1080p (4..64, default 12).
+---@field marker_shape "corners"|"box"|"cross"|"vanilla"|nil Default corners. vanilla uses resident Warrant stock marker sprites, otherwise geometric replicas; not native target-lock state.
+---@field marker_size number|nil Base size at 1080p (4..64, default 12): normal shape half size; vanilla scales its stock 48px sprites relative to 12.
 ---@field line_width number|nil .5..8 pixels, default 1.5.
 ---@field scale number|nil .5..3, default 1; marker/label scale, not capture angle.
 ---@field acquiring_color table|string|nil Default amber.
@@ -4252,7 +4255,7 @@ local HD2HomingLockState = {}
 ---@field show_numbers boolean|nil Default true.
 ---@field show_progress boolean|nil Default true.
 ---@field show_los boolean|nil Default true.
----@field aim_only boolean|nil Native Aim action active only (default true); menu gate always applies.
+---@field aim_only boolean|nil HUD-only native Aim display gate (default true). Gameplay acquisition is controlled separately by require_aim.
 local HD2HomingReticleStyle = {}
 
 ---Visual-only homing HUD; appearance updates never reset acquisition.

@@ -11,7 +11,21 @@
   "runtime_port": {
     "live_verified": false,
     "offline_fixture": "tests/fixtures/homing_pool.lua",
-    "scope": "Public API through shared Runtime engine into guarded synthetic memory; not game outcomes."
+    "scope": "Public API/shared engine tested offline; limited live AR-23 steering evidence recorded for cb8f9a3. Latest Aim gate and vanilla markers await their own live check.",
+    "live_evidence": {
+      "date": "2026-10-19",
+      "runtime_commit": "cb8f9a3a84efd3268b75c4ccafa432c474cdb2c8",
+      "source": "User-operated solo AR-23 session, five native Runtime stop summaries and periodic client records.",
+      "own_shots_observed": 413,
+      "completed_steered_rounds": 225,
+      "velocity_writes": 986,
+      "assignments": 225,
+      "max_observed_simultaneous_locks": 3,
+      "game_runtime_errors_observed": 0,
+      "user_report": "Hip-fired rounds can steer while the aim-only HUD is hidden.",
+      "evidence_limit": "No per-shot Aim telemetry, impact, hit-body, armor, HP or damage observation. Periodic UI state is not a shot timestamp.",
+      "collector_limit": "External collector stopped near test end when Windows denied status-file replacement; original logs retained and final source context recovered."
+    }
   },
   "design_review": {
     "date": "2026-10-19",
@@ -49,5 +63,12 @@
     "limits": "Resolved action state, not animation completion; toggle/controller/remap coverage not established for port."
   },
   "camera_and_gui_reference": "Guided Rounds, https://github.com/cancan23333/Helldiver2-Guided-Rounds-v1.8.5 commit 71303dd35954f94f57f8308fb6e2c86d8e22abc4; engine calls guarded and temporary ring restored.",
-  "unavailable_validation": "Full research/snapshot tests and SDK/release generation require unavailable research submodule files. Class stubs were regenerated using generate_events.stub_lines; unchanged action catalogue was preserved."
+  "unavailable_validation": "Full research/snapshot tests and SDK/release generation require unavailable research submodule files. Class stubs were regenerated using generate_events.stub_lines; unchanged action catalogue was preserved.",
+  "followup": {
+    "offline_tests": 126,
+    "require_aim": "Opt-in pre-fire gameplay gate; new client enables it. Release/unknown clears new assignments; existing allocated rounds continue.",
+    "vanilla_markers": "Resident Warrant stock sprite preferred, bounded geometric fallback otherwise. Availability/appearance unverified in game.",
+    "reference": "Guided Rounds 71303dd35954f94f57f8308fb6e2c86d8e22abc4 markers_setup/quad/markers_draw; native TargetLock is not activated.",
+    "live_verified": false
+  }
 }

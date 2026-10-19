@@ -8,6 +8,10 @@ M.validate_style=Style.validate
 local FONT='core/performance_hud/monaco' -- verified font AND material name in domains/ui_fonts.lua
 local DIM={180,20,24,28}
 local DIGITS={'bc','abged','abgcd','fgbc','afgcd','afgecd'}
+-- Guided Rounds reticle_step: the P-92 Warrant marker in its stock atlas.
+-- Only use already-resident resources; never force a weapon package to load.
+local STOCK={material='5af18dfb697cfef2',texture='f9a3f22a93eedcbd',slot='3aa8b87e00000000',
+    uv={.5712890625,.0078125,.03125,.0625}}
 local function finite(n,lo,hi)return type(n)=='number' and n==n and n>=lo and n<=hi end
 local function callable(v)
     if type(v)=='function'then return true end
@@ -26,6 +30,13 @@ local function same(a,b)
     for k,v in pairs(b)do if a[k]~=v then return false end end
     return true
 end
+local function material_handle(value)
+    -- Same boundary as engine_gui.screen.material: a failed lookup is a NULL
+    -- lightuserdata, not Lua nil. It must never reach a Material.* setter.
+    if type(value)~='userdata'and type(value)~='table'then return false end
+    local text=tostring(value)
+    return not(text:match('NULL$')or text:match(':%s*0x0+$')or text:match(':%s*0+$'))
+end
 
 function M.new(deps)
     assert(type(deps)=='table' and type(deps.view)=='table','HUD requires view')
@@ -36,6 +47,7 @@ function M.new(deps)
     local SEGMENTS=style.ring_segments
     local hud={};local stopped=false
     local s,world,width,height,session,ring,markers,ring_key
+    local stock_gui,stock_key,stock_family;local stock_quads={}
     local primitives,numbers={},{}
     local state={state='hidden',markers=0,locked=0,acquiring=0,ring=false,text_supported=false,live_verified=false}
     local function set_status(value,reason)
@@ -53,11 +65,15 @@ function M.new(deps)
         -- A removed world already released its native containers. Never call it.
         if gui and listed(s,world)then pcall(s.World.destroy_gui,world,gui)end
     end
+    local function drop_stock()
+        destroy(stock_gui);stock_gui,stock_key,stock_family=nil,nil,nil;stock_quads={}
+    end
     local function clear()
-        destroy(ring);destroy(markers)
+        destroy(ring);destroy(markers);drop_stock()
         ring,markers,ring_key=nil,nil,nil;primitives,numbers={},{}
         world,width,height,session=nil,nil,nil,nil
         state.markers,state.locked,state.acquiring,state.ring,state.text_supported=0,0,0,false,false
+        state.marker_renderer,state.renderer_reason=nil,nil
     end
     local function require_api(api)
         assert(type(api)=='table','engine_api_missing')
@@ -74,6 +90,72 @@ function M.new(deps)
         return gui
     end
     local function color(c)return s.Color(c[1],c[2],c[3],c[4])end
+    local function stock_assets()
+        for module,methods in pairs({Application={'can_get'},IdString64={'from_hex'},Material={'set_texture'},
+            Gui={'material','bitmap_3d_uv','update_bitmap_3d_uv'},Quaternion={'axis_angle'},
+            Matrix4x4={'from_quaternion_position'}})do
+            if type(s[module])~='table'then return nil,'marker_api_missing'end
+            for _,name in ipairs(methods)do if not callable(s[module][name])then return nil,'marker_api_missing'end end
+        end
+        local material,texture,slot=s.IdString64.from_hex(STOCK.material),s.IdString64.from_hex(STOCK.texture),
+            s.IdString64.from_hex(STOCK.slot)
+        if not material or not texture or not slot then return nil,'marker_resource_id_missing'end
+        if s.Application.can_get('material',material)~=true then return nil,'material_not_loaded'end
+        if s.Application.can_get('texture',texture)~=true then return nil,'texture_not_loaded'end
+        return{material=material,texture=texture,slot=slot}
+    end
+    local stock_marker
+    local function prepare_stock(items,scale)
+        local ok,family,why=pcall(stock_assets)
+        if not ok then family,why=nil,'marker_asset_query_failed'end
+        if not family then drop_stock();return false,why end
+        local keys={};for _,item in ipairs(items)do keys[#keys+1]=item.target.key end
+        table.sort(keys);local key=table.concat(keys,'\0')
+        if stock_key~=key then drop_stock()end
+        if #items>0 and not stock_gui then
+            local setup=pcall(function()
+                stock_gui=new_gui()
+                stock_family=family
+                -- A GUI has no material instance until a bitmap using it exists
+                -- (engine_gui.screen.material). Seed the first real target's
+                -- three quads, then bind the atlas before this update returns.
+                local first=items[1];local p=first.point;local t=first.target
+                local progress=first.locked and 1 or(finite(t.progress,0,1)and t.progress or 0)
+                stock_marker(t.key,math.floor(p.x*2+.5)/2,math.floor(p.y*2+.5)/2,
+                    progress,scale,first.locked and GREEN or AMBER)
+                local material=s.Gui.material(stock_gui,family.material)
+                assert(material_handle(material),'marker_material_unavailable')
+                s.Material.set_texture(material,family.slot,family.texture)
+            end)
+            if not setup then drop_stock();return false,'marker_setup_failed'end
+        end
+        stock_key,stock_family=key,family
+        return true
+    end
+    stock_marker=function(key,x,y,progress,scale,c)
+        local unit=scale*style.marker_size/12;local radius=(24-14*progress)*unit;local size=48*unit
+        for i=0,2 do
+            local angle=progress*2*math.pi+i*2*math.pi/3
+            local px,py=x+math.sin(angle)*radius,y+math.cos(angle)*radius
+            local spec={x=px,y=py,size=size,angle=angle,a=c[1],r=c[2],g=c[3],b=c[4]}
+            local id=key..'/'..i;local old=stock_quads[id]
+            if not old or not same(old.spec,spec)then
+                local sine,cosine=math.sin(angle),math.cos(angle)
+                local rotation=s.Quaternion.axis_angle(s.Vector3(0,1,0),angle)
+                local pose=s.Matrix4x4.from_quaternion_position(rotation,
+                    s.Vector3(px-size/2*(cosine+sine),0,py-size/2*(cosine-sine)))
+                local uv=STOCK.uv;local uv0,uv1=s.Vector2(uv[1],uv[2]),s.Vector2(uv[1]+uv[3],uv[2]+uv[4])
+                local pos,tint=s.Vector3(0,0,0),color(c)
+                if old then
+                    s.Gui.update_bitmap_3d_uv(stock_gui,old.id,stock_family.material,uv0,uv1,pose,pos,1011,s.Vector2(size,size),tint)
+                    old.spec=spec
+                else
+                    local bitmap=s.Gui.bitmap_3d_uv(stock_gui,stock_family.material,uv0,uv1,pose,pos,1011,s.Vector2(size,size),tint)
+                    assert(type(bitmap)=='number','bitmap_id_missing');stock_quads[id]={id=bitmap,spec=spec}
+                end
+            end
+        end
+    end
     local function draw_ring(radius)
         local key=tostring(radius)
         if ring_key==key and ring then return end
@@ -136,12 +218,46 @@ function M.new(deps)
             local q=lines[name];rect(key..'/digit/'..name,x+q[1]*scale,y+q[2]*scale,q[3]*scale,q[4]*scale,c)
         end
     end
+    local function stroke(key,ax,ay,bx,by,thick,c)
+        -- Eight retained, clipped rectangles approximate a rotated stroke. The
+        -- existing rectangle API supplies updates; no sprite/native API is added.
+        for i=0,7 do
+            local x0,y0=ax+(bx-ax)*i/8,ay+(by-ay)*i/8
+            local x1,y1=ax+(bx-ax)*(i+1)/8,ay+(by-ay)*(i+1)/8
+            rect(key..'/'..i,math.min(x0,x1)-thick/2,math.min(y0,y1)-thick/2,
+                math.abs(x1-x0)+thick,math.abs(y1-y0)+thick,c)
+        end
+    end
+    local function vanilla_marker(key,x,y,progress,scale,thick,c)
+        -- Asset-free Warrant-style replica, not the native target-lock HUD or
+        -- stock atlas sprite. Guided Rounds reticle_step/markers_draw places
+        -- three marks 120 degrees apart, rotates once over acquisition and
+        -- contracts their orbit 24 -> 10 pixels. Use this target's real progress.
+        local unit=scale*style.marker_size/12
+        local radius=(24-14*progress)*unit
+        for i=0,2 do
+            local angle=progress*2*math.pi+i*2*math.pi/3
+            local dx,dy=math.sin(angle),math.cos(angle)
+            local tx,ty=x+dx*(radius-4*unit),y+dy*(radius-4*unit)
+            local bx,by=x+dx*(radius+3*unit),y+dy*(radius+3*unit)
+            local marker=key..'/vanilla/'..i
+            stroke(marker..'/left',bx-dy*4*unit,by+dx*4*unit,tx,ty,thick,c)
+            stroke(marker..'/right',tx,ty,bx+dy*4*unit,by-dx*4*unit,thick,c)
+        end
+    end
     local function target_marker(t,p,locked,scale,fonts)
         local progress=locked and 1 or(finite(t.progress,0,1)and t.progress or 0)
         local half=(style.marker_size+(locked and 0 or 4-4*progress))*scale
         local x,y=math.floor(p.x*2+.5)/2,math.floor(p.y*2+.5)/2
         local thick,arm=style.line_width*scale,style.marker_size/2*scale;local c=locked and GREEN or AMBER
-        if style.marker_shape=='box'then
+        if style.marker_shape=='vanilla'then
+            local extent=state.marker_renderer=='vanilla_asset'and 48 or 28
+            half=(extent-14*progress)*style.marker_size/12*scale+thick/2
+        end
+        if style.marker_shape=='vanilla'then
+            if state.marker_renderer=='vanilla_asset'then stock_marker(t.key,x,y,progress,scale,c)
+            else vanilla_marker(t.key,x,y,progress,scale,thick,c)end
+        elseif style.marker_shape=='box'then
             rect(t.key..'/box/t',x-half,y+half,2*half,thick,c)
             rect(t.key..'/box/b',x-half,y-half,2*half,thick,c)
             rect(t.key..'/box/l',x-half,y-half,thick,2*half,c)
@@ -230,12 +346,20 @@ function M.new(deps)
         local fonts=font_loaded();wanted={}
         local scale=style.scale*math.max(.7,math.min(2,math.min(width/1920,height/1080)))
         local count,locked,acquiring=0,0,0
+        local drawable={}
         for _,item in ipairs(targets(snapshot))do
             local p=deps.view.project(frame,item.target)
             if type(p)=='table'and finite(p.x,0,width)and finite(p.y,0,height)and finite(p.depth,.000001,1e9)then
-                target_marker(item.target,p,item.locked,scale,fonts);count=count+1
-                if item.locked then locked=locked+1 else acquiring=acquiring+1 end
+                drawable[#drawable+1]={target=item.target,point=p,locked=item.locked}
             end
+        end
+        if style.marker_shape=='vanilla'then
+            local ready,why=prepare_stock(drawable,scale)
+            state.marker_renderer,state.renderer_reason=ready and'vanilla_asset'or'vanilla_geometry',why
+        else state.marker_renderer,state.renderer_reason='geometry',nil end
+        for _,item in ipairs(drawable)do
+            target_marker(item.target,item.point,item.locked,scale,fonts);count=count+1
+            if item.locked then locked=locked+1 else acquiring=acquiring+1 end
         end
         for key,item in pairs(primitives)do if not wanted[key]then
             if item.spec.kind=='rect'then s.Gui.destroy_rect(markers,item.id)else s.Gui.destroy_text(markers,item.id)end

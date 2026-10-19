@@ -4,8 +4,10 @@ An opt-in extension of `hd2.projectiles.homing`. Calls without `acquisition = 'p
 retain in-flight target acquisition, the existing defaults and the velocity-only write path.
 The shared engine is used; a mod does not bundle another homing implementation.
 
-**Validation:** the originating AR-23 mod was user-confirmed on build 25480438. This
-generic Runtime integration has offline tests, but has **not** been tested in game.
+**Validation:** the originating AR-23 mod was user-confirmed on build 25480438.
+The `cb8f9a3` Runtime port also has live AR-23 steering-write and multi-lock logs
+from 2026-10-19; no hit or damage outcome was measured. The subsequent `require_aim`
+gate and vanilla marker path are offline-tested and await their own live check.
 See `validation/homing-lock-port.json` for the exact distinction and native provenance.
 
 ```lua
@@ -15,7 +17,7 @@ local gun = hd2.projectiles.homing('AR-23 Liberator', {
     lock_time = 0.3, max_targets = 3,
     cone = 12, range = 100, arm_distance = 0,
     lateral_acceleration = 600, turn_rate = 1440,
-    require_los = true,
+    require_los = true, require_aim = true,
 })
 if gun.status == 'active' then
     local hud = gun:reticle({
@@ -42,6 +44,7 @@ installed Runtime solely because the version string is 0.40.0.
 | `lock_time` | 0.3 | Pre-fire only, 0..2 seconds of uninterrupted acquisition. |
 | `max_targets` | 1 | Pre-fire only, integer 1..6. New rounds rotate over the locked set. |
 | `require_los` | false | Pre-fire only. When true, both blocked and unknown rays are rejected. |
+| `require_aim` | false | Pre-fire only. New acquisition and shot assignment require the native Aim action. Release or unknown input clears locks; previously allocated rounds continue. |
 | `lateral_acceleration` | unset | Optional 1..100000 m/s² budget, available with either acquisition mode. |
 
 Pre-fire currently requires **solo/host**, enemy targets, `cone <= 30`, `range <= 300`
@@ -64,6 +67,14 @@ A round is assigned once, at first observation. A target must have locked before
 acquires later. The set is ordered by identity so angular jitter does not reshuffle
 the rotation; losing and reacquiring a target restarts its timer. Lock completion
 does not imply that a particular future shot will hit.
+
+`require_aim` controls gameplay independently of the HUD's `aim_only`. The latter
+only hides drawing: a configuration omitting `require_aim` can still acquire and
+steer hip-fired rounds while its HUD is hidden. This default preserves the original
+API. To require aiming, opt in explicitly as the example does. Releasing Aim clears
+pending and completed locks; re-aiming starts the timer again. A round already
+assigned while aiming remains fire-and-forget, subject to the normal owner/slot
+guards. Unknown input refuses new assignments without cancelling valid old rounds.
 
 The shared engine retains 16 tracked rounds, 64 new slots per update, 10 seconds
 of follow-up and its bounded incremental target scan (12 cached position refreshes
@@ -117,7 +128,7 @@ each other. Hiding/stopping the HUD never stops homing.
 | `ring_width` | 1.2, .5..8 pixels |
 | `ring_segments` | 96, integer 24..128 |
 | `ring_radius` | unset: current capture cone/FOV; optional 8..2000 pixel cosmetic override |
-| `marker_shape` | `'corners'`, `'box'` or `'cross'` |
+| `marker_shape` | `'corners'`, `'box'`, `'cross'` or `'vanilla'` |
 | `marker_size` | 12, half size at 1080p, 4..64 |
 | `line_width` | 1.5, .5..8 pixels |
 | `scale` | 1, .5..3; markers and labels, not the capture angle |
@@ -130,6 +141,23 @@ Colours use `{r,g,b[,a]}` in 0..255 or `#RRGGBB[AA]`. Inputs are copied. Omit
 `ring_radius` to keep the drawn ring faithful to acquisition; a cosmetic override
 never enlarges the actual capture cone. Resolution/FOV changes are handled by the
 renderer. Fonts are optional: geometric progress/number markers remain available.
+
+`vanilla` uses the stock P-92 Warrant atlas marker when its material/texture and
+bitmap bindings are resident. Three markers orbit each actual Runtime target,
+rotate once as its acquisition progresses, and contract from 24 to 10 pixels at
+1080p. Complete locks are compact and green by default. The same numbers, LOS
+labels and custom colours remain available for multiple targets. This draws stock
+art; it does not activate the game's native TargetLock or change the weapon's
+crosshair enum. The reference is Guided Rounds' `markers_setup`, `quad` and
+`markers_draw` in commit `71303dd35954f94f57f8308fb6e2c86d8e22abc4`.
+
+Missing resources or bindings use three geometric chevrons instead. HUD `status()`
+reports `marker_renderer` as `vanilla_asset` / `vanilla_geometry` and supplies
+`renderer_reason` for a fallback. Runtime does not force a weapon package to load
+just by creating a reticle. A caller may explicitly warm a known semantic package
+with `hd2.require_assets({id='homing-stock-markers', targets={hd2.weapon('P-92 Warrant')}})`;
+normal package proofs, asynchronous readiness and session retention still apply.
+The actual sprite residency and drawing path require a live check on the target build.
 
 Aim-only reads the game's resolved Aim action (group 2/index 8), not a hardcoded
 mouse button or guessed zoom threshold. The input layout is code-pinned. This is
@@ -144,6 +172,8 @@ without an ESC stack/cursor.
 `handle:lock_state()` returns nil for in-flight acquisition, otherwise a detached
 observation: `state`, `reason`, `aim_basis`, `observed_at`, `locked`, `acquiring`,
 `visible`, `ui_visible`, optional `width`, `height` and capture `radius`.
+With the optional Aim gate, `aim_active` is true/false when observed and nil when
+unknown; `aim_reason` explains the observation or `not_required` for the default.
 
 Targets carry an observation-scoped `id`, game `entity`, catalogued `name`, root plus
 `aim_height` `position`, optional top-left pixel `screen`, `progress`, `acquired_at`,
@@ -168,11 +198,15 @@ reused query buffers and stops further calls if their guard is overwritten.
 1. Use the development Runtime with `examples/projects/HomingLockOn`; disable another
    writer for the same weapon. Start solo/host with normal AR-23 rounds.
 2. Confirm the HUD hides/reappears on aim release/press and stays hidden in menus.
+   With `require_aim=true`, hip fire must not acquire or assign new shots. Previously
+   assigned rounds may keep steering after release; re-aim must restart acquisition.
 3. Fire before lock: no retroactive steering. Lock three targets and burst: inspect
    `lock_state()`/`stats()` separately from hit outcomes.
 4. Compare the same geometry at acceleration 300/600/1200, then without the setting.
 5. Exercise an occluded target with `require_los` false/true; unknown must not count
    as clear. Replace/stop the handle and cross a mission transition.
+6. Select `vanilla`, inspect `marker_renderer`, and compare acquisition/locked
+   appearance on several targets. Keep a geometry fallback distinct from stock art.
 
 Offline tests do not replace this test. The repository's full research/snapshot suite
 also requires the separately hosted research submodule and retained snapshots; they

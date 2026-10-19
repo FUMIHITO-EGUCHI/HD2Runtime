@@ -3,7 +3,7 @@ local hd2=require('mods/skyeshade/hd2runtime')
 -- Offline integration example; this exact Runtime package has not been live-tested.
 local gun=hd2.projectiles.homing('AR-23 Liberator',{
     acquisition='pre_fire',lock_time=.3,max_targets=3,
-    cone=12,range=100,arm_distance=0,require_los=true,
+    cone=12,range=100,arm_distance=0,require_los=true,require_aim=true,
     lateral_acceleration=600,turn_rate=1440,
 })
 if gun.status~='active'then

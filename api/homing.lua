@@ -21,7 +21,7 @@ M.DEFAULTS.lock_time,M.DEFAULTS.max_targets=.3,1
 M.LIMITS.lock_time,M.LIMITS.max_targets={0,2},{1,6}
 local OPTIONS={target=true,turn_rate=true,cone=true,range=true,arm_distance=true,aim_height=true,retarget=true,
     multiplayer=true,label=true,owner=true,lateral_acceleration=true,
-    acquisition=true,lock_time=true,max_targets=true,require_los=true}
+    acquisition=true,lock_time=true,max_targets=true,require_los=true,require_aim=true}
 local handles={}
 
 local by_name={}
@@ -95,7 +95,7 @@ function M.homing(name,opts)
         values.lateral_acceleration=number(opts,'lateral_acceleration',handle)
         if values.lateral_acceleration==nil then return handle end
     end
-    for _,key in ipairs({'retarget','multiplayer'})do
+    for _,key in ipairs({'retarget','multiplayer','require_aim'})do
         if opts[key]~=nil and type(opts[key])~='boolean'then
             return refuse(handle,'INVALID_OPTION','opts.'..key..' must be true or false')
         end
@@ -120,12 +120,14 @@ function M.homing(name,opts)
         end
         lock=require('hd2runtime/runtime/homing_lock').new({weapon=weapon,
             world=require('hd2runtime/runtime/event_world'),aim=require('hd2runtime/runtime/homing_aim'),
+            require_aim=opts.require_aim==true,
+            aim_state=opts.require_aim==true and require('hd2runtime/runtime/homing_aim_state')or nil,
             view=require('hd2runtime/runtime/homing_view'),aim_height=values.aim_height,
             position_age=homing.POSITION_AGE,
             config={enabled=true,mode=values.max_targets==1 and'single'or'multi',lock_time=values.lock_time,
                 max_targets=values.max_targets,half_angle=values.cone,range=values.range,require_los=opts.require_los==true}})
-    elseif opts.lock_time~=nil or opts.max_targets~=nil or opts.require_los~=nil then
-        return refuse(handle,'INVALID_OPTION','lock_time, max_targets and require_los need acquisition = "pre_fire"')
+    elseif opts.lock_time~=nil or opts.max_targets~=nil or opts.require_los~=nil or opts.require_aim~=nil then
+        return refuse(handle,'INVALID_OPTION','lock_time, max_targets, require_los and require_aim need acquisition = "pre_fire"')
     end
     local retarget=acquisition=='in_flight'and opts.retarget~=false
     if opts.label~=nil and(type(opts.label)~='string'or#opts.label>64)then
@@ -155,7 +157,8 @@ function M.homing(name,opts)
     handle.options={turn_rate=values.turn_rate,cone=values.cone,range=values.range,arm_distance=values.arm_distance,
         lateral_acceleration=values.lateral_acceleration,
         aim_height=values.aim_height,retarget=retarget,multiplayer=opts.multiplayer==true,
-        acquisition=acquisition,lock_time=values.lock_time,max_targets=values.max_targets,require_los=opts.require_los==true}
+        acquisition=acquisition,lock_time=values.lock_time,max_targets=values.max_targets,
+        require_los=opts.require_los==true,require_aim=opts.require_aim==true}
     handle.status='active'
     local key=owner..'\0'..weapon.name
     local previous=handles[key]

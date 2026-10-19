@@ -9,12 +9,14 @@ function M.new(deps)
     local sources={};for _,source in ipairs(deps.weapon.sources)do sources[source]=true end
     local aim_height=deps.aim_height or 1
     local position_age=deps.position_age or .5
+    local require_aim=deps.require_aim==true
     local c={};local config=assert(P.validate_config(deps.config))
     local policy=P.new();local stopped=false
     local context,session,frame;local basis,view_reason='weapon_root','not_observed'
     local state,reason='waiting',nil;local assigned=0
     local status={locked={},acquiring={}};local los_cache={};local visual_error
     local validation_cursor=0
+    local aim_active,aim_reason=nil,'not_observed'
     local function log(event,fields)
         fields=fields or{};fields.event=event
         if deps.log then deps.log(fields)end
@@ -35,9 +37,13 @@ function M.new(deps)
             visual_error=tostring(why);log('hud_callback_error',{reason=visual_error})
         elseif ok then visual_error=nil end
     end
+    local function clear_acquisition(why)
+        los_cache={};validation_cursor=0;P.reset(policy,why)
+        status={locked={},acquiring={}};state,reason='waiting',why
+    end
     local function reset(why)
-        context=nil;frame=nil;view_reason=why;los_cache={};validation_cursor=0;P.reset(policy,why)
-        status={locked={},acquiring={}};state,reason='waiting',why;publish()
+        context=nil;frame=nil;view_reason=why;aim_active=nil;aim_reason=why
+        clear_acquisition(why);publish()
     end
     local function target_live(w,t)
         if not context or not config.enabled or not t or world.entity_exists(w,t.entity)~=true then return false end
@@ -64,6 +70,23 @@ function M.new(deps)
             log('session',{session=session,aim_basis=next_basis,view_reason=view_why})
         end
         context=current;frame=observed;basis=next_basis;view_reason=view_why
+        local identity=current.session_key..':weapon:'..tostring(current.weapon_id)..':'..tostring(current.weapon_unit)
+        if require_aim then
+            aim_active=nil
+            local reader=deps.aim_state and deps.aim_state.active
+            if type(reader)=='function'then
+                local ok,value,detail=pcall(reader,w)
+                if ok and type(value)=='boolean'then aim_active=value end
+                aim_reason=ok and type(detail)=='string'and detail or'aim_state_read_failed'
+            else aim_reason='aim_state_unavailable'end
+            if aim_active~=true then
+                clear_acquisition(aim_active==false and'not_aiming'or aim_reason)
+                publish()
+                -- Aim release prevents new allocations. The same verified
+                -- owner/weapon identity preserves already launched rounds.
+                return true,identity
+            end
+        else aim_active=nil;aim_reason='not_required'end
         local origin=frame and frame.origin or current.origin
         local forward=frame and frame.forward or current.forward
         local function geometry(p)
@@ -177,10 +200,11 @@ function M.new(deps)
         publish()
         -- A view/basis change restarts acquisition and HUD, but is not a new
         -- owner/weapon session. Keep already allocated flying rounds steering.
-        return true,current.session_key..':weapon:'..tostring(current.weapon_id)..':'..tostring(current.weapon_unit)
+        return true,identity
     end
     local function spawn(w,slot,shot,now,key)
         if not context or shot.source~=context.weapon_id then return nil,'not_current_weapon'end
+        if require_aim and aim_active~=true then return nil,reason or'aim_state_unavailable'end
         local target,why=P.assign(policy,key,now)
         if target and shot.observed_after and target.acquired_at>shot.observed_after then
             target,why=nil,'lock_after_observation_boundary'
@@ -198,7 +222,8 @@ function M.new(deps)
         unavailable=function(why)reset(why);state,reason='unavailable',why end}
     function c:stop()stopped=true;reset('stopped');state='stopped'end
     function c:status()return{state=state,reason=reason,locked=#status.locked,acquiring=#status.acquiring,
-        assigned=assigned,aim_basis=basis,view_reason=view_reason,observed_at=policy.snapshot_time}end
+        assigned=assigned,aim_basis=basis,view_reason=view_reason,observed_at=policy.snapshot_time,
+        aim_active=aim_active,aim_reason=aim_reason}end
     return c
 end
 return M
