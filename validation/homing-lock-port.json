@@ -100,8 +100,22 @@
       "actual_pod_gate": "read-only known owned initial/reinforcement HellpodComponent; phase0/1 hide,2 releases other checks still required",
       "source": "Vanilla Plus HellpodDropHold v1.2 same-build source; independently inspected retained unpacked game.dll; eleven live code pins",
       "offline_tests": 137,
-      "live_verified": false,
-      "limits": "Old log had no raw pod state or FOV. Latest gate awaits actual descent/landing. No size clamp/FOV heuristic/native calls/writes."
+      "live_verified": true,
+      "limits": "Latest direct-pod HUD regression user-confirmed with phase0/1 suppression and phase2 drawing logs. Not an exhaustive phase/device/multiplayer matrix. No size clamp/FOV heuristic/native calls/writes.",
+      "verified_commit": "53c7630eaabee0c118d7d16f18db90355a66aa65",
+      "live_evidence": {
+        "date_jst": "2026-10-20",
+        "user_confirmation": "Reported HUD regression resolved",
+        "client_version": "0.4.0",
+        "observed_pod_types": [
+          "initial",
+          "reinforcement"
+        ],
+        "initial_braking_utc": "2026-10-19T17:37:54Z",
+        "reinforcement_falling_utc": "2026-10-19T17:38:17Z",
+        "landed_drawing_utc": "2026-10-19T17:37:59Z",
+        "scope": "Observed phase0/1 suppressed ring/markers, phase2 resumed ring; user confirmation. No hit/damage or complete device/multiplayer/phase matrix claim."
+      }
     }
   }
 }

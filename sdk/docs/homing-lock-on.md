@@ -191,8 +191,12 @@ and are code-pinned again at runtime. An unavailable/changed manager, unstable
 identity, unknown phase or scan-budget excess hides instead of claiming no drop.
 The scan inspects at most 64 records and at most 64 hash probes per relevant pod.
 There are no FOV thresholds, delay timers, native calls or writes in this reader.
-This latest direct-pod gate still needs a live descent/landing regression. Other
-UI without these indicators may remain unknown; universal menu coverage is not claimed.
+The `53c7630` / local client 0.4.0 user test on 2026-10-20 confirmed the reported
+descent/landing HUD issue resolved. Logs show initial-pod braking (phase 1) and
+reinforcement falling (phase 0) suppressing ring/markers, then landed phase 2
+drawing again. This is observed coverage, not every phase for every drop type,
+input device or multiplayer role. Other UI without these indicators may remain
+unknown; universal menu coverage is not claimed.
 
 HUD `status()` also records the last admission observation's `drop_state`,
 `drop_phase`, game `drop_entity`, `drop_type` and `drop_records` when available.
