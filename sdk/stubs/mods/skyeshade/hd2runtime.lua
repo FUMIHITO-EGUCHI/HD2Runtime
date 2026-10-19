@@ -3146,6 +3146,7 @@ function HD2Projectiles.modify_shots(weapon, opts) end
 function HD2Projectiles.modify_shots_status() end
 
 ---@class HD2HomingOptions
+---@field lateral_acceleration number|nil Optional acceleration budget in m/s² (1..100000): angular speed = min(rad(turn_rate), budget/current speed). Unset preserves fixed-rate steering.
 ---@field target "enemy"|"friendly"|nil What the shots home on: a living catalogued enemy (default) or another player's living Helldiver (never the shooter).
 ---@field turn_rate number|nil Degrees per second the shot may turn (1..1440, default 90). Fast bullets need a high rate.
 ---@field cone number|nil Half angle in degrees around the shot's direction a target must be inside to be acquired (1..180, default 30).

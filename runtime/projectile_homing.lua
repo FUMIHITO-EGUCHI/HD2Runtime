@@ -104,6 +104,12 @@ end
 
 ------------------------------------------------------------------------------------------------------- vectors --
 local function length(x,y,z)return math.sqrt(x*x+y*y+z*z)end
+-- Optional acceleration budget: omega = a / speed (rad/s), under the existing
+-- angular cap. No option preserves the original fixed-rate behavior exactly.
+function M.angular_limit(config,speed)
+    if config.lateral_acceleration then return math.min(config.turn_rate,config.lateral_acceleration/speed)end
+    return config.turn_rate
+end
 local function finite(v)return type(v)=='number'and v==v and v>-1e9 and v<1e9 end
 -- An f32 member, or nil when it is not finite (b.value refuses those).
 local function f32(bytes,offset)
@@ -456,7 +462,8 @@ local function steer(world,system,slot,shot,dt,positions)
     local tx,ty,tz=ax-px,ay-py,az-pz
     local to=length(tx,ty,tz)
     if to<0.25 then return end
-    local nx,ny,nz,between=turn_toward(dx,dy,dz,tx/to,ty/to,tz/to,config.turn_rate*math.max(0,dt or 0))
+    local turn_rate=M.angular_limit(config,speed)
+    local nx,ny,nz,between=turn_toward(dx,dy,dz,tx/to,ty/to,tz/to,turn_rate*math.max(0,dt or 0))
     if between<M.MIN_TURN then return end
     local before=r.flight:sub(F.velocity+1,F.velocity+12)
     local desired=b.encode(nx*speed,'f32')..b.encode(ny*speed,'f32')..b.encode(nz*speed,'f32')
@@ -492,7 +499,7 @@ local function steer(world,system,slot,shot,dt,positions)
     if config.writes==1 then
         log(('(%s): first steering write: pool slot %d velocity turned %.2f deg toward %s (%d write%s, %d bytes; '
             ..'non-target bytes unchanged %s; protection restored %s; speed kept %.1f m/s)'):format(config.label,slot,
-            math.deg(math.min(between,config.turn_rate*(dt or 0))),shot.target.name,report.writes,
+            math.deg(math.min(between,turn_rate*(dt or 0))),shot.target.name,report.writes,
             report.writes==1 and''or's',report.bytes_written,tostring(report.non_target_bytes_unchanged==true),
             tostring(report.protection_restored==true),speed))
     end
@@ -664,7 +671,7 @@ function M.configure(spec)
     for _,kind in ipairs(spec.sources or{})do sources[kind]=true end
     if not next(sources)then return nil,'UNKNOWN_WEAPON','no entity type fires '..tostring(spec.weapon)end
     local config={id=next_id,status='active',owner=spec.owner,output=spec.output,weapon=spec.weapon,type=spec.type,
-        sources=sources,target=spec.target,turn_rate=spec.turn_rate,cone=spec.cone,
+        sources=sources,target=spec.target,turn_rate=spec.turn_rate,cone=spec.cone,lateral_acceleration=spec.lateral_acceleration,
         cone_cos=math.cos(spec.cone),range=spec.range,arm_distance=spec.arm_distance,aim_height=spec.aim_height,
         retarget=spec.retarget,multiplayer=spec.multiplayer,label=spec.label or(spec.owner..' '..spec.weapon),
         shots=0,steered=0,writes=0,locks=0,others=0,no_target=0,other_sources=0,refused={}}

@@ -16,8 +16,9 @@ local M={}
 
 M.DEFAULTS={target='enemy',turn_rate=90,cone=30,range=100,arm_distance=2,aim_height=1}
 M.LIMITS={turn_rate={1,1440},cone={1,180},range={1,500},arm_distance={0,100},aim_height={-5,10}}
+M.LIMITS.lateral_acceleration={1,100000}
 local OPTIONS={target=true,turn_rate=true,cone=true,range=true,arm_distance=true,aim_height=true,retarget=true,
-    multiplayer=true,label=true,owner=true}
+    multiplayer=true,label=true,owner=true,lateral_acceleration=true}
 
 local by_name={}
 for _,weapon in ipairs(D.weapons)do by_name[weapon.name:lower()]=weapon end
@@ -86,6 +87,10 @@ function M.homing(name,opts)
         values[key]=number(opts,key,handle)
         if values[key]==nil then return handle end
     end
+    if opts.lateral_acceleration~=nil then
+        values.lateral_acceleration=number(opts,'lateral_acceleration',handle)
+        if values.lateral_acceleration==nil then return handle end
+    end
     for _,key in ipairs({'retarget','multiplayer'})do
         if opts[key]~=nil and type(opts[key])~='boolean'then
             return refuse(handle,'INVALID_OPTION','opts.'..key..' must be true or false')
@@ -98,6 +103,7 @@ function M.homing(name,opts)
     for _,kind in ipairs(weapon.types)do
         local config,ccode,creason=homing.configure({owner=owner,output=weapon.name..'#'..kind,weapon=weapon.name,
             type=kind,sources=weapon.sources,target=target,turn_rate=math.rad(values.turn_rate),
+            lateral_acceleration=values.lateral_acceleration,
             cone=math.rad(values.cone),range=values.range,arm_distance=values.arm_distance,
             aim_height=values.aim_height,retarget=opts.retarget~=false,multiplayer=opts.multiplayer==true,
             label=opts.label or(owner..': '..weapon.name)})
@@ -112,6 +118,7 @@ function M.homing(name,opts)
     handle.types=weapon.types
     handle.target=target
     handle.options={turn_rate=values.turn_rate,cone=values.cone,range=values.range,arm_distance=values.arm_distance,
+        lateral_acceleration=values.lateral_acceleration,
         aim_height=values.aim_height,retarget=opts.retarget~=false,multiplayer=opts.multiplayer==true}
     handle.status='active'
     events.emit_log(('projectile homing (%s): %s shots (projectile type%s %s) home on %s: turn %g deg/s, cone %g deg, '

@@ -79,6 +79,7 @@ A Lua update runs before the game update that steps projectiles, so the turned v
 |---|---|---|
 | `target` | `'enemy'` | `'enemy'`: a living catalogued enemy. `'friendly'`: another player's living Helldiver (never the shooter). |
 | `turn_rate` | 90 | Degrees per second the shot may turn (1..1440). Bullets at 900 m/s need a high rate to curve noticeably. |
+| `lateral_acceleration` | unset | Optional steering acceleration budget in m/s² (1..100000). Angular speed is `min(rad(turn_rate), lateral_acceleration / current_speed)` for each shot; speed itself stays unchanged. Unset retains fixed-rate steering. |
 | `cone` | 30 | Half angle in degrees around the shot's direction a target must be inside to be acquired (1..180). |
 | `range` | 100 | Metres from the shot a target may be (1..500). |
 | `arm_distance` | 2 | Metres the shot flies straight before it steers (0..100). |
