@@ -4,12 +4,14 @@ An opt-in extension of `hd2.projectiles.homing`. Calls without `acquisition = 'p
 retain in-flight target acquisition, the existing defaults and the velocity-only write path.
 The shared engine is used; a mod does not bundle another homing implementation.
 
-**Validation:** the originating AR-23 mod was user-confirmed on build 25480438.
-The `cb8f9a3` Runtime port also has live AR-23 steering-write and multi-lock logs
-from 2026-10-19; no hit or damage outcome was measured. The subsequent `require_aim`
-gate and stock marker path were user-tested on `9aaba06`; logs show the actual
-stock-asset renderer. The newest avatar/map HUD gate and undecorated defaults are
-offline-tested and await live regression. No per-shot impact or damage is recorded.
+**Validation:** the Runtime port has partial live solo AR-23 coverage on build
+25480438: steering/LOS/multi-lock records on `cb8f9a3`, actual stock-asset rendering
+on `9aaba06`, and user-confirmed initial/reinforcement descent suppression with
+landed HUD recovery on `53c7630`. Remaining validation includes explicit latest
+hip-fire/re-aim and broader map/menu transitions, controller/toggle/remapped Aim,
+and other weapons. Native-looking art is not a claim of exact native timing or
+appearance. No hit, HP or damage outcome is recorded. Full research/snapshot and
+SDK/release generation still require inputs unavailable in this checkout.
 See `validation/homing-lock-port.json` for the exact distinction and native provenance.
 
 ```lua

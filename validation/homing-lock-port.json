@@ -11,7 +11,7 @@
   "runtime_port": {
     "live_verified": false,
     "offline_fixture": "tests/fixtures/homing_pool.lua",
-    "scope": "Public API/shared engine tested offline; limited live AR-23 steering evidence recorded for cb8f9a3. Latest Aim gate and vanilla markers await their own live check.",
+    "scope": "Partially live-verified solo AR-23 port: cb8f9a3 steering/LOS/multi-lock observations, 9aaba06 stock-asset rendering, 53c7630 initial/reinforcement descent and landing HUD regression. Full weapon/input matrix and explicit hip-fire/re-aim regression remain incomplete; no hit/damage claim.",
     "live_evidence": {
       "date": "2026-10-19",
       "runtime_commit": "cb8f9a3a84efd3268b75c4ccafa432c474cdb2c8",
@@ -25,7 +25,8 @@
       "user_report": "Hip-fired rounds can steer while the aim-only HUD is hidden.",
       "evidence_limit": "No per-shot Aim telemetry, impact, hit-body, armor, HP or damage observation. Periodic UI state is not a shot timestamp.",
       "collector_limit": "External collector stopped near test end when Windows denied status-file replacement; original logs retained and final source context recovered."
-    }
+    },
+    "partial_live_verified": true
   },
   "design_review": {
     "date": "2026-10-19",
@@ -67,7 +68,7 @@
   "followup": {
     "offline_tests": 126,
     "require_aim": "Opt-in pre-fire gameplay gate; new client enables it. Release/unknown clears new assignments; existing allocated rounds continue.",
-    "vanilla_markers": "Resident Warrant stock sprite preferred, bounded geometric fallback otherwise. Availability/appearance unverified in game.",
+    "vanilla_markers": "Resident Warrant stock-sprite renderer logged in game on 9aaba06 and 53c7630; bounded geometric fallback covered offline. Exact native appearance/timing is not claimed.",
     "reference": "Guided Rounds 71303dd35954f94f57f8308fb6e2c86d8e22abc4 markers_setup/quad/markers_draw; native TargetLock is not activated.",
     "live_verified": false,
     "reported_live": {
@@ -117,5 +118,22 @@
         "scope": "Observed phase0/1 suppressed ring/markers, phase2 resumed ring; user confirmation. No hit/damage or complete device/multiplayer/phase matrix claim."
       }
     }
+  },
+  "review_readiness": {
+    "date_jst": "2026-10-20",
+    "reviewed_head": "71ca4988b06611da3ec29018afa6e72d48c6832f",
+    "blocking_findings": [],
+    "review_scope": [
+      "public API/backward compatibility and pre-fire ownership/allocation",
+      "native adapter/LOS and direct pod admission",
+      "HUD/material/world lifetime and SDK/docs consistency"
+    ],
+    "remaining_verification": [
+      "controller, toggle Aim and remapped input coverage",
+      "explicit latest-revision hip-fire/re-aim and broader map/menu transitions",
+      "other supported weapons beyond local AR-23 client",
+      "full research/snapshot suite and full SDK/release generation with required inputs"
+    ],
+    "release_verified": false
   }
 }
