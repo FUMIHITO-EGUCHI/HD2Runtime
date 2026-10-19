@@ -65,10 +65,25 @@ acquires later. The set is ordered by identity so angular jitter does not reshuf
 the rotation; losing and reacquiring a target restarts its timer. Lock completion
 does not imply that a particular future shot will hit.
 
-Budgets remain the shared engine's: 16 tracked rounds, 64 new slots per update,
-10 seconds of follow-up, bounded incremental target scans. There are at most eight
-LOS queries per controller observation, with 0.1-second reuse for unchanged rays.
-These are observation/processing limits, not a fire-rate limit or hit guarantee.
+The shared engine retains 16 tracked rounds, 64 new slots per update, 10 seconds
+of follow-up and its bounded incremental target scan (12 cached position refreshes
+per update). Pre-fire filters that cache by its 0.5-second position age and current
+cone/range, then freshly validates at most eight candidates per controller
+observation. Existing locks/acquisitions retain their validation slots; remaining
+slots rotate through the other candidates so blocked front rows do not starve later
+clear targets. Each validated target's current identity, position and cone/range
+are checked again before acquisition. A dense scene can delay discovery until that
+target's cache position and rotating validation slot are both available.
+
+There are at most eight LOS queries per observation, with 0.1-second reuse for
+unchanged rays. LOS uses the same `aim_height` as acquisition, steering and the HUD.
+The policy also retains at most 4096 assigned generation keys for 120 seconds to
+reject duplicate observations. Reaching any tracking/assignment/window limit can
+leave a shot flying straight; these budgets are not a hit guarantee.
+
+A transient read/proof failure clears locks and in-flight identities without
+erasing `stats()` totals for the current mission. A confirmed mission end resets
+those totals as before.
 
 ## Speed-aware steering
 
@@ -142,6 +157,11 @@ are acquisition/steering observations: they do not identify a projectile collisi
 hit body part, armor, health loss or final damage. LOS is the weapon-root straight
 ray to the aim point, not a muzzle/barrel clearance proof or curved-flight prediction.
 A failed, saturated, ambiguous or unavailable native query remains `'unknown'`.
+The native call goes through the writable adapter's private `native_raycast`
+capability during a scheduler update, after code/descriptor/physics-world checks.
+A read-only or custom adapter without that capability reports unknown; it never
+falls back to calling an absolute engine address. The adapter owns and accounts for
+reused query buffers and stops further calls if their guard is overwritten.
 
 ## Repeating the live check
 

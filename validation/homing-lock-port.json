@@ -13,6 +13,21 @@
     "offline_fixture": "tests/fixtures/homing_pool.lua",
     "scope": "Public API through shared Runtime engine into guarded synthetic memory; not game outcomes."
   },
+  "design_review": {
+    "date": "2026-10-19",
+    "base_commit": "34fba0887b196130df4142933fbe1b6ff6be5020",
+    "fixed": [
+      "Rejected reticle frame ID: register through the real event scheduler without an invalid weapon-name ID.",
+      "LOS point honors aim_height exactly like acquisition, steering and public snapshots.",
+      "Transient observation loss invalidates identities without erasing current-mission stats.",
+      "Candidate validation reuses the shared aged position cache with eight fresh reads at most; retained acquisitions and rotating other candidates avoid starvation and duplicate rows cannot bypass the budget.",
+      "LOS ABI and accounted scratch buffers belong to the native adapter capability; read-only adapters and calls outside a scheduler update remain unknown."
+    ],
+    "offline_tests": 112,
+    "native_adapter_test": "Real writable adapter calls a local LuaJIT C callback, not a game function.",
+    "live_verified": false,
+    "full_research_suite": "Still unavailable: separately hosted research fixtures and retained game snapshots are absent."
+  },
   "native_los": {
     "entry_rva": "0x77DEC0",
     "output_offset": 0,

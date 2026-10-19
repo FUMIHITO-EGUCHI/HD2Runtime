@@ -6,10 +6,10 @@
 -- Query result starts at output+0; stride44, distance+24, unit+28.
 -- Descriptor0 selects world2 and all-hit mode. Reference argument5 is preserved
 -- as UINT_MAX; its full filter semantics are not assumed here.
-local M={MAX_HITS=8,OUT_SIZE=16384,WORLDS=0x27BA870,DESCRIPTORS=0x27B9440}
+local M={MAX_HITS=8,WORLDS=0x27BA870,DESCRIPTORS=0x27B9440}
 local pins=require('hd2runtime/runtime/homing_los_pins')
 local b=require('hd2runtime/core/bytes')
-local cache,failed
+local cache
 local function finite(n)return type(n)=='number'and n==n and math.abs(n)<math.huge end
 local function descriptor(world)
     return world.view.proves(world.exe+M.DESCRIPTORS,'0200000002000000050000000c8fc36a01000080')
@@ -37,10 +37,7 @@ local function bind(world)
         if not world.view.proves(world.exe+pin.rva,pin.hex)then return nil,'raycast_code_changed'end
     end
     if not descriptor(world)then return nil,'raycast_descriptor_changed'end
-    local ffi=require('ffi')
-    return{key=world.key,ffi=ffi,fn=ffi.cast(
-        'uint32_t (*)(uint32_t, const float *, const float *, float, uint32_t, void *, uint32_t)',world.exe+0x77DEC0),
-        origin=ffi.new('float[3]'),direction=ffi.new('float[3]'),out=ffi.new('uint8_t[?]',M.OUT_SIZE+64)}
+    return{key=world.key}
 end
 -- Kept pure and exposed for binary-layout regression checks, without invoking
 -- the engine. A saturated count is conservatively unknown, never no-hit/clear.
@@ -57,7 +54,6 @@ function M.decode(bytes,count,distance)
     return hits
 end
 function M.read(world,q)
-    if failed then return nil,failed end
     if type(q)~='table'or not finite(q.distance)or q.distance<1 or q.distance>400 then return nil,'invalid_native_query'end
     local length=0
     for _,k in ipairs({'x','y','z'})do
@@ -69,6 +65,11 @@ function M.read(world,q)
     end
     if length<.99 or length>1.01 then return nil,'invalid_native_query'end
     if type(world)~='table'or not world.exe or not world.view or world.key~=q.world_key then return nil,'world_unavailable'end
+    -- The proven world may use a read-only diagnostic/test adapter. Native calls
+    -- are a capability of the write adapter, never an absolute-address fallback.
+    local runtime=world.runtime
+    if not runtime or type(runtime.native_raycast)~='function'then return nil,'raycast_adapter_unavailable'end
+    if not require('hd2runtime/runtime/scheduler').in_update()then return nil,'game_update_required'end
     local W=require('hd2runtime/runtime/event_world')
     local game=W.game_state(world);local players=W.players(world,true)
     if not game or game.mission~=true or game.host~=true or not players or#players~=1 then return nil,'solo_mission_required'end
@@ -77,13 +78,9 @@ function M.read(world,q)
     end
     if not descriptor(world)then return nil,'raycast_descriptor_changed'end
     local pw,why=physics(world);if not pw then return nil,why end
-    local c=cache;local F=c.ffi
-    for i,k in ipairs({'x','y','z'})do c.origin[i-1]=q.origin[k];c.direction[i-1]=q.direction[k]end
-    F.fill(c.out,M.OUT_SIZE+64,0)
-    F.fill(c.out+M.OUT_SIZE,64,0xA5)
-    local n=tonumber(c.fn(0,c.origin,c.direction,q.distance,4294967295,c.out,M.MAX_HITS))
-    for i=M.OUT_SIZE,M.OUT_SIZE+63 do if c.out[i]~=0xA5 then cache=nil;failed='raycast_buffer_guard';return nil,failed end end
-    local hits,why=M.decode(F.string(c.out,M.MAX_HITS*44),n,q.distance)
+    local bytes,n,call_why=runtime.native_raycast(world.exe+0x77DEC0,q.origin,q.direction,q.distance)
+    if not bytes then return nil,call_why or'raycast_call_unavailable'end
+    local hits,why=M.decode(bytes,n,q.distance)
     if not hits then return nil,why end
     return{abi_verified=true,world_verified=true,world_key=world.key,complete=true,overflow=false,hits=hits,
         query='reference_descriptor_0',physics_world=2,hit_observed=n>0}
