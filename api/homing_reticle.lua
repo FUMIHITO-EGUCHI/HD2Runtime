@@ -31,7 +31,7 @@ function M.open(handle,opts)
     handle._lock.on_visual=publish
     timer=events.frame(function()
         if handle.status~='active'then c:stop()else renderer:tick()end
-    end,{owner=handle.owner,id='homing-reticle:'..handle.weapon,scope='session'})
+    end,{owner=handle.owner,scope='session'})
     function c:style(patch)
         assert(not stopped,'reticle is stopped')
         assert(type(patch)=='table','reticle style patch must be a table')
